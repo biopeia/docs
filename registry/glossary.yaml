@@ -56,3 +56,17 @@ terms:
       - component.world-causal-manifest
     canonical_refs:
       - explanation/world/causal-manifest.md
+
+  owner-checkpoint-contract:
+    term: "Owner checkpoint contract"
+    definition: >
+      A capability supplied by an owner that answers whether given checkpoint
+      bytes are valid for a given identity and schema, at validation and after
+      restoration. World calls it without understanding the bytes; it is
+      trusted code and not a proof of honesty or completeness.
+    distinguishes_from:
+      - checkpoint-reference
+    owners:
+      - component.world-durable-runtime
+    canonical_refs:
+      - explanation/world/durable-runtime.md

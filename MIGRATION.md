@@ -76,6 +76,27 @@ reproduction) are still those of the source registry. They were kept, but two
 of the five are not applicable to this component, which suggests they may not
 be the right axes for World, Environment or Observation components.
 
+### Lifecycle axes after four World units
+
+Four World components are now registered: the causal journal, the causal
+manifest, the journal snapshot store and the durable runtime. How the five
+lifecycle axes of the source registry applied to them:
+
+| Axis | Journal | Manifest | Snapshot store | Durable runtime |
+|---|---|---|---|---|
+| birth | empty | initialize | empty | initialize |
+| checkpoint | preserve | not applicable | not applicable | not applicable |
+| restart | reset | preserve | preserve | reset |
+| re-embodiment | not applicable | not applicable | not applicable | not applicable |
+| reproduction | not applicable | not applicable | not applicable | not applicable |
+
+Re-embodiment and reproduction applied to none of the four, and checkpoint to
+one. Only birth and restart distinguished these components. What the four
+documents needed to say, and the axes do not capture, was whether the
+component's state is durable, whether it is part of a causal cut, and what a
+failed transition leaves behind. This is the evidence the agreed review of
+the lifecycle vocabulary was waiting for; the vocabulary is not changed here.
+
 ## Design register
 
 The source repository kept a design status register
