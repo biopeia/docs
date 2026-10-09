@@ -93,11 +93,17 @@ into independent decision records that continue the numbering: `AD-0001` to
   their rows in `.audit/registers/decisions.md`; `AD-0021` to `AD-0036` from
   their sections in `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md`, with
   their register rows.
-- Disposition: `SPLIT`. Decision, status and ratification texts are verbatim
-  and were checked mechanically against the source. Added in transcription:
-  the record number, section headings, a provenance note, a References list
-  mapping cited `AD-` identifiers to records here, and, for `AD-0001` to
-  `AD-0020` only, a title, because the source rows have none.
+- Disposition: `SPLIT`, as documentary normalization only, with no semantic
+  change. Decision, status and ratification texts are verbatim and were
+  checked mechanically against the source. Added: the record number, section
+  headings, a Provenance section, a References list mapping cited `AD-`
+  identifiers to records here, and, for `AD-0001` to `AD-0020` only, a title,
+  because the source rows have none. Those titles are editorial and
+  non-normative, and each record says so.
+- Where the source does not record an acceptance date or an authority, the
+  record says `NOT RECORDED IN SOURCE`. Neither was reconstructed. The
+  register rows of `AD-0001` to `AD-0020` carry no date; the row of `AD-0003`
+  names no authority.
 - The opening and closing statements of the ratification apply to all sixteen
   of its decisions and are reproduced in each of those records. The addenda of
   the register are attached to the decision they concern (`AD-0015`,

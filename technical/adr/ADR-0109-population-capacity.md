@@ -1,21 +1,27 @@
 # ADR-0109 — Population capacity
 
-> **Provenance.** Transcription of `AD-0035` from the sealed architecture audit
-> dossier of `alessbarb/symbiont-lab` (archive `.audit.zip`, SHA-256
-> `ff258afcb1c80b9feefacc28575d1e5ccd5f15c062dd36499498747df4d57df2`): `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md` (SHA-256 `bb70560e0eedffab619199da9b804de15f7b9b4d30c6dc4757b703d5312939c9`), section `AD-0035`, and its row in `.audit/registers/decisions.md` (SHA-256 `0c03a0d438ff4a38337c683ecd4649ce3862cf600b6f3e2f2baf1ab421e5d43d`).
-> The decision, status and ratification texts below are verbatim. The title is the source section title.
-> Section headings were added. Identifiers of the form `AD-NNNN` inside the
-> text are the source identifiers; see References for the corresponding
-> records here. Identifiers of the form `ADR-NNNN` up to `ADR-0072` name the
-> historical decision records of `symbiont-lab`, which were not copied.
+## Provenance
+
+- **Original decision:** AD-0035
+- **Source:** sealed Biopeia Architecture v1 audit dossier of `alessbarb/symbiont-lab`,
+  `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md` (SHA-256 `bb70560e0eedffab619199da9b804de15f7b9b4d30c6dc4757b703d5312939c9`), section `AD-0035`, and its row in `.audit/registers/decisions.md` (SHA-256 `0c03a0d438ff4a38337c683ecd4649ce3862cf600b6f3e2f2baf1ab421e5d43d`)
+- **Source integrity:** archive `.audit.zip`, SHA-256 `ff258afcb1c80b9feefacc28575d1e5ccd5f15c062dd36499498747df4d57df2`,
+  recorded in the source repository as `BIOPEIA_ARCHITECTURE_V1_AUDIT_BASELINE`
+- **Original authority:** Architecture Owner
+- **Original acceptance date:** 2026-10-09
+- **Transformation:** DOCUMENTARY NORMALIZATION ONLY
+- **Semantic changes:** NONE
+
+The decision, status and ratification texts below are verbatim from the source.
+The record number, the section headings, this provenance section and the
+References list were added. Identifiers of the form `AD-NNNN` inside the text
+are the source identifiers. Identifiers of the form `ADR-NNNN` up to `ADR-0072`
+name the historical decision records of `symbiont-lab`, which were not copied.
 
 ## Status
 
 - **Status:** ACCEPTED
 - **Type:** CONSTITUTIONAL NORMATIVE
-- **Source identifier:** AD-0035
-- **Ratification authority:** Architecture Owner
-- **Ratification date:** 2026-10-09
 
 ## Decision
 
