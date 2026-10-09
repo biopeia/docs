@@ -1,0 +1,4 @@
+schema_version: 1
+
+# Measurement semantics. A lab metric never implies organism visibility.
+metrics: {}
