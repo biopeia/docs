@@ -65,6 +65,33 @@ lifecycle:
   reembodiment: [invalidate_authority, preserve, rebind, reset]
   reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
 
+# Design register (registry/designs.yaml). Three independent axes.
+design_document_statuses:
+  - proposed
+  - in_review
+  - reviewed
+  - approved
+  - frozen
+  - reference
+  - closed
+  - rejected
+  - superseded
+
+# Implementation in the Biopeia repositories. not_evaluated means nobody has
+# checked yet; it is not a claim that nothing exists.
+design_implementation_statuses:
+  - not_evaluated
+  - not_started
+  - pending
+  - in_progress
+  - partial
+  - implemented
+  - on_hold
+  - not_applicable
+
+# UNRESOLVED: not yet assessed against the accepted Biopeia architecture.
+design_architecture_scopes: [CURRENT, TARGET, HISTORICAL, UNRESOLVED]
+
 parameter_sources: [CODE, DESIGN, STUDY, FORMAL]
 
 metric_classes: [organism_internal, scientific_evaluation, operational, historical]

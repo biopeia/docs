@@ -1,0 +1,74 @@
+schema_version: 1
+
+# Design register. The only authority for the document status, implementation
+# status and architecture scope of every design under technical/design/.
+# Design documents do not carry these states themselves.
+#
+# implementation_status describes the Biopeia repositories. A state recorded in
+# the source repository is kept under `source` as provenance and is never
+# inherited: a copied design starts as not_evaluated.
+designs:
+
+  design.runtime.biopeia-physical-step-integration-v1:
+    title: "Biopeia Physical-Step and Causal-Commit Integration v1"
+    path: technical/design/runtime/biopeia-physical-step-integration-v1.md
+    domain: world
+    participating_domains: [embodiment, environment, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
+      date: "2026-10-09"
+    source:
+      repository: symbiont-lab
+      commit: cfa137e167081acac3590fb52ae069adfda605d4
+      path: docs/design/runtime/biopeia-physical-step-integration-v1.md
+      document_status: Approved
+      implementation_status: Partial
+
+  design.observability.observation-semantic-model-v1:
+    title: "Observation Semantic Model v1"
+    path: technical/design/observability/observation-semantic-model-v1.md
+    domain: observation
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "Architecture Owner decision recorded in the document's status line"
+      date: "2026-10-09"
+    source:
+      repository: symbiont-lab
+      commit: cfa137e167081acac3590fb52ae069adfda605d4
+      path: docs/design/observability/observation-semantic-model-v1.md
+      document_status: Approved
+      implementation_status: Not started
+    notes: >
+      Approved as a conceptual model only. The document states that concrete
+      record, delivery, schema, transport and storage decisions are not
+      authorized by it. It refines the Observation Architecture v1 target
+      design, whose scope is UNRESOLVED here.
+
+  design.observability.observation-architecture-target-design-v1:
+    title: "Observation Architecture v1 — Target Design"
+    path: technical/design/observability/observation-architecture-target-design-v1.md
+    domain: observation
+    participating_domains: [lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    decision:
+      reference: "Architecture-owner disposition recorded in the document's status line"
+      date: "2026-10-07"
+    source:
+      repository: symbiont-lab
+      commit: cfa137e167081acac3590fb52ae069adfda605d4
+      path: docs/design/observability/observation-architecture-target-design-v1.md
+      document_status: Approved
+      implementation_status: Not started
+    notes: >
+      Approved on 2026-10-07 as the target for operational observation in the
+      source repository, two days before the Biopeia Architecture v1 baseline
+      (ADR-0095 to ADR-0110) was ratified. It has not been reviewed against
+      that baseline, in particular against ADR-0100, so it is not recorded as
+      Biopeia TARGET. Copied because the semantic model depends on it.

@@ -59,6 +59,50 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
   Observation and Modality are not state owners: their retained state is
   `implementation-local` or belongs to the authority it describes.
 
+## Design register
+
+The source repository kept a design status register
+(`docs/design/register.md`) with two states per design: a design state and an
+implementation state. Its method was migrated; its 91 rows were not.
+
+| Original source path | Disposition | Target path | Notes |
+|---|---|---|---|
+| `docs/design/register.md` (method and state vocabularies) | `REWRITE` | `registry/designs.yaml`, `registry/schema.yaml`, `tools/validate_registry.py` | A validated registry instead of a Markdown table. A third axis, architecture scope, was added, because the source register could not say whether a design described the current or the target architecture. `not_evaluated` was added to the implementation states. |
+| `docs/design/register.md` (91 rows) | not migrated | — | They describe designs of the historical system and their implementation in the source repository. They are evidence to consult, not a backlog to recreate. |
+
+Reasons for the changes, from the source at `cfa137e`:
+
+- The source implementation state describes code in the source repository. It
+  is recorded per design under `source` as provenance and never inherited;
+  every copied design starts as `not_evaluated`.
+- The source kept the states twice, in the register and in the front matter of
+  each document. Of the 64 registered designs with front matter, 37 disagreed
+  with their register row, and 27 registered designs had no front matter. Here
+  the register is the only authority and the validator rejects a design
+  document that declares a status.
+- Four non-archived designs had no register row, against the register's own
+  rule. Here the validator requires an entry for every design document.
+
+### Copied designs
+
+| Original source path | Source blob | Target path | Scope recorded here |
+|---|---|---|---|
+| `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/` | `TARGET` |
+| `docs/design/observability/observation-semantic-model-v1.md` | `9aeb1e9a8` | `technical/design/observability/` | `TARGET` |
+| `docs/design/observability/observation-architecture-target-design-v1.md` | `72da79533` | `technical/design/observability/` | `UNRESOLVED` |
+
+All three were copied from `cfa137e`. The Observation target design was
+approved on 2026-10-07, before the Biopeia Architecture v1 baseline was
+ratified, and has not been reviewed against it; it is recorded as `UNRESOLVED`
+rather than as Biopeia target. It was copied because the semantic model
+depends on it. The `status` and `implementation_status` keys were removed from
+the front matter of the physical-step design.
+
+`docs/design/world/world-responsibility-map-v1.md` was **not** copied. Its own
+front matter classes it as a reference document: an inventory of the
+historical system. A Biopeia design for the World runtime, if needed, is to be
+written new.
+
 ## Copied Biopeia decision records
 
 By owner decision the Biopeia decision records were **copied**, not moved. The
@@ -79,7 +123,6 @@ at the source commit.
 |---|---|---|
 | `docs/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` | `07b7b8abd` | `technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` |
 | `docs/adr/ADR-0074-biopeia-world-environment-authority-split.md` | `22a5732f5` | `technical/adr/ADR-0074-biopeia-world-environment-authority-split.md` |
-| `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/biopeia-physical-step-integration-v1.md` |
 
 ### Architecture decisions AD-0001 to AD-0036
 

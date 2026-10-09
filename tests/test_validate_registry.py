@@ -67,7 +67,28 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
                 "status": "DESIGN",
                 "owner_domain": "organism",
                 "canonical_docs": ["explanation/organism.md"],
+                "design": ["docs:technical/design/genome/inheritance-v1.md"],
                 "depends_on": ["component.genome"],
+            },
+        },
+        "designs": {
+            "design.genome.inheritance-v1": {
+                "title": "Inheritance v1",
+                "path": "technical/design/genome/inheritance-v1.md",
+                "domain": "organism",
+                "participating_domains": ["world"],
+                "document_status": "approved",
+                "implementation_status": "not_evaluated",
+                "architecture_scope": "TARGET",
+                "decision": {
+                    "reference": "docs:technical/adr/ADR-0001.md",
+                    "date": "2026-10-09",
+                },
+                "source": {
+                    "repository": "symbiont-lab",
+                    "commit": "80d372a",
+                    "path": "docs/design/genome/genome-v3.md",
+                },
             },
         },
         "components": {
@@ -150,6 +171,9 @@ class Workspace:
         (self.docs / "explanation" / "organism.md").write_text("# Organism\n")
         (self.docs / "technical" / "adr").mkdir(parents=True)
         (self.docs / "technical" / "adr" / "ADR-0001.md").write_text("# ADR-0001\n")
+        self.design_doc = self.docs / "technical" / "design" / "genome" / "inheritance-v1.md"
+        self.design_doc.parent.mkdir(parents=True)
+        self.design_doc.write_text("---\ntitle: Inheritance v1\n---\n# Inheritance v1\n")
         self.registry.mkdir()
         shutil.copy(ROOT / "registry" / "schema.yaml", self.registry / "schema.yaml")
         (self.organism / "src" / "organism").mkdir(parents=True)
@@ -194,6 +218,25 @@ def test_missing_checkout_is_unresolved_not_an_error(ws: Workspace) -> None:
     assert len(unresolved) == 3
 
 
+def test_design_document_must_not_declare_its_own_status(ws: Workspace) -> None:
+    ws.design_doc.write_text("---\ntitle: Inheritance v1\nstatus: approved\n---\n# Inheritance v1\n")
+    errors, _ = ws.validate()
+    assert any("front matter declares a status" in e for e in errors)
+
+
+def test_every_design_document_needs_a_register_entry(ws: Workspace) -> None:
+    (ws.design_doc.parent / "unregistered.md").write_text("# Unregistered\n")
+    errors, _ = ws.validate()
+    assert any("unregistered.md has no entry in designs.yaml" in e for e in errors)
+
+
+def test_two_entries_cannot_register_the_same_document(ws: Workspace) -> None:
+    ws.data["designs"]["design.genome.copy-v1"] = dict(ws.data["designs"][D])
+    ws.write()
+    errors, _ = ws.validate()
+    assert any("path already registered by" in e for e in errors)
+
+
 def test_duplicate_yaml_keys_are_rejected(ws: Workspace) -> None:
     (ws.registry / "metrics.yaml").write_text("schema_version: 1\nmetrics: {}\nmetrics: {}\n")
     errors, _ = ws.validate()
@@ -219,6 +262,8 @@ def _rename_component(data: dict) -> None:
     data["coverage"]["component.genome"]["component_id"] = "EMB-GEN"
 
 
+D = "design.genome.inheritance-v1"
+
 SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("coverage", "component.genome", "kind", "module"), "kind 'module' not in"),
     (_set("coverage", "component.genome", "status", "DONE"), "status 'DONE' not in"),
@@ -241,6 +286,27 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
         _set("coverage", "component.genome", "design", ["docs:technical/design/absent.md"]),
         "references missing path",
     ),
+    (
+        _set("coverage", "component.genome", "design", ["docs:technical/design/genome/other.md"]),
+        "is not in designs.yaml",
+    ),
+    (_set("designs", D, "document_status", "accepted"), "document_status 'accepted' not in"),
+    (_set("designs", D, "implementation_status", "done"), "implementation_status 'done' not in"),
+    (_set("designs", D, "implementation_status", None), "implementation_status None not in"),
+    (_set("designs", D, "architecture_scope", "FUTURE"), "architecture_scope 'FUTURE' not in"),
+    (_set("designs", D, "domain", "runtime"), "domain 'runtime' not in"),
+    (_set("designs", D, "participating_domains", ["organism"]), "invalid participating_domain"),
+    (_set("designs", D, "path", "explanation/organism.md"), "path must live under technical/design/"),
+    (_set("designs", D, "path", "technical/design/genome/gone.md"), "missing document"),
+    (_set("designs", D, "decision", None), "requires decision.reference"),
+    (_set("designs", D, "decision.date", "October 2026"), "requires decision.date"),
+    (
+        _set("designs", D, "decision.reference", "docs:technical/adr/ADR-9999.md"),
+        "references missing path",
+    ),
+    (_set("designs", D, "document_status", "superseded"), "requires superseded_by"),
+    (_set("designs", D, "source.commit", "main"), "source.commit is not a commit SHA"),
+    (_set("designs", D, "source.repository", "elsewhere"), "source.repository 'elsewhere'"),
     (
         _set("coverage", "component.genome", "implementation", ["src/organism/genome.py"]),
         "is not '<repository>:<path>'",
