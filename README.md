@@ -121,8 +121,14 @@ python tools/render_units.py --check   # the generated reference page is current
 # From the integration workspace: also resolve references into the sibling
 # checkouts and report units whose sources changed since their review basis.
 uv run --no-project --with pyyaml python repos/docs/tools/validate_registry.py \
-    --repos-root repos --stale
+    --repos-root repos --stale --coverage
 ```
+
+`--coverage` lists, per domain repository, the source modules that no unit
+names. It is the measure of how much of the code the documentation reaches,
+and it is how a file added after a unit was written becomes visible: the
+staleness check sees changes to paths already named, coverage sees modules
+not named at all.
 
 CI runs two jobs. `registry` needs only this repository and blocks on registry
 integrity. `cross-repository` clones the seven domain repositories with a

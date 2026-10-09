@@ -638,6 +638,37 @@ def find_stale_units(
     return stale, downstream
 
 
+def source_coverage(registry_dir: Path, repos_root: Path) -> dict[str, dict[str, Any]]:
+    """Per domain repository: which source modules are named by some unit.
+
+    A module is a ``.py`` file under ``src/`` other than ``__init__.py``. It is
+    covered when a unit's ``implementation`` names it or a directory above it.
+    Unlike staleness, this sees files that are new since a unit was written:
+    they are simply not covered.
+    """
+    reg = load_registry(registry_dir)
+    named: dict[str, set[str]] = {}
+    for unit in reg["coverage"].values():
+        for ref in as_list(unit.get("implementation")):
+            parsed = parse_reference(ref)
+            if parsed:
+                named.setdefault(parsed[0], set()).add(parsed[1].rstrip("/"))
+    report: dict[str, dict[str, Any]] = {}
+    for repo in reg["schema"]["domains"]:
+        root = repos_root / repo
+        if not (root / "src").is_dir():
+            continue
+        modules = sorted(
+            p.relative_to(root).as_posix()
+            for p in (root / "src").rglob("*.py")
+            if p.name != "__init__.py"
+        )
+        refs = named.get(repo, set())
+        uncovered = [m for m in modules if not any(m == r or m.startswith(r + "/") for r in refs)]
+        report[repo] = {"modules": len(modules), "covered": len(modules) - len(uncovered), "uncovered": uncovered}
+    return report
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--registry", type=Path, default=ROOT / "registry")
@@ -646,6 +677,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--stale", action="store_true", help="also report stale units")
     parser.add_argument("--against", default="origin/main", help="revision compared to the basis")
     parser.add_argument("--fail-on-stale", action="store_true")
+    parser.add_argument("--coverage", action="store_true", help="also report source modules no unit names")
     args = parser.parse_args(argv)
 
     errors, unresolved = validate(args.registry, args.docs_root, args.repos_root)
@@ -673,6 +705,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Staleness: {len(stale)} stale, {len(downstream)} downstream")
         if stale and args.fail_on_stale:
             return 1
+
+    if args.coverage:
+        if args.repos_root is None:
+            parser.error("--coverage requires --repos-root")
+        print("Source modules named by a unit, per repository:")
+        for repo, row in source_coverage(args.registry, args.repos_root).items():
+            print(f"  {repo}: {row['covered']} of {row['modules']}")
+            for module in row["uncovered"]:
+                print(f"    not named: {repo}:{module}")
     return 0
 
 
