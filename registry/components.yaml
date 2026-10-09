@@ -125,3 +125,30 @@ components:
       - "the committed manifest of each cut, through the manifest store"
     consumers:
       - "compositions that drive a World, such as the integration tests and Lab (not registered as units)"
+
+  WLD-RTM:
+    coverage_unit: component.world-in-memory-runtime
+    name: "In-memory World runtime"
+    authority:
+      owns: "an in-memory World identity, one presence, a tick counter and its causal journal, and the in-process refusal to continue after a failed transition"
+      may_decide:
+        - "whether a tick may start"
+        - "whether a returned payload is publishable"
+      must_not:
+        - "interpret the transition it runs or roll back what it changed"
+        - "claim durable state or recovery"
+    state:
+      owner: world
+      family: ephemeral
+    lifecycle:
+      birth: initialize
+      checkpoint: not_applicable
+      restart: reset
+      reembodiment: not_applicable
+      reproduction: not_applicable
+    inputs:
+      - "a transition callback supplied by the caller"
+    outputs:
+      - "one causal record per committed tick"
+    consumers:
+      - "bounded compositions such as the first causal tick integration test (not registered as units)"

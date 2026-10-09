@@ -46,18 +46,21 @@ designs:
         MuJoCo candidate followed by a World commit, and publication and
         restore of an owner-checkpoint closure.
       limits: >
-        The tests no longer import modality: it removed its unratified
-        transduction operators and the causal-tick test passes the
-        environmental signal through unchanged, so no transduction is
-        exercised. The items the design lists for conformance were not checked
-        one by one: stable effector identity under permutation, omitted
-        channel as no command, roster completeness against the genesis
-        specification, partial-cut recovery and the single-writer assumption
-        are not confirmed here. Lab's operator intervention is not covered by
-        these tests; it is exercised by Lab's own integration suite, which
-        passes at the revisions Lab pins (lab 3b84a25, with environment
-        f2ef8c277a42). Passing tests are not a physical calibration or
-        equivalence claim.
+        The step is carried out by a test fixture; no component in any
+        repository orchestrates it and no solver adapter exists outside the
+        fixture (see explanation/world/physical-step.md). Of the conformance
+        items the design lists, the tests exercise stable effector identity
+        under permutation, an omitted channel as no command, repeated
+        deterministic results, and rejection of a stale morphology with no
+        committed next cut. Not exercised by them: roster completeness
+        against the genesis specification and partial-cut recovery, which
+        World's unit tests cover in isolation, and the single-writer
+        assumption, which nothing tests. The organism owner's checkpoint is a
+        fixture stand-in, the body's physiology is created inside the step,
+        the scene is static, and modality takes no part. Lab's operator
+        intervention is exercised separately by Lab's own integration suite
+        at the revisions Lab pins. Passing tests are not a physical
+        calibration or equivalence claim.
     decision:
       reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
       date: "2026-10-09"
