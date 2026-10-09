@@ -27,7 +27,7 @@ never restated as a second source of truth.
 | Path | Purpose |
 |---|---|
 | `explanation/` | Explanatory documents. Created with the first documented unit |
-| `technical/adr/`, `technical/design/` | Decision records and design documents. Created with the first record |
+| `technical/adr/`, `technical/design/` | Decision records and design documents |
 | `registry/schema.yaml` | Closed vocabularies: domains and their component prefixes, statuses, state owners, lifecycle values |
 | `registry/coverage.yaml` | Canonical units: owner, explanation, and the code, tests, design and decisions each is traced to |
 | `registry/components.yaml` | Authority, state ownership and lifecycle of each component |

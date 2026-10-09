@@ -59,8 +59,31 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
   Observation and Modality are not state owners: their retained state is
   `implementation-local` or belongs to the authority it describes.
 
+## Copied Biopeia decision records
+
+By owner decision the Biopeia decision records were **copied**, not moved. The
+originals are retained unchanged in the source repository.
+
+- Source commit: `cfa137e167081acac3590fb52ae069adfda605d4`, the head of the
+  open candidate alessbarb/symbiont-lab#465. It was **not** on the source
+  `main` branch when copied; `main` was at `80d372a` and contained none of
+  these three documents.
+
+| Original source path | Source blob | Target path |
+|---|---|---|
+| `docs/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` | `07b7b8abd` | `technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` |
+| `docs/adr/ADR-0074-biopeia-world-environment-authority-split.md` | `22a5732f5` | `technical/adr/ADR-0074-biopeia-world-environment-authority-split.md` |
+| `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/biopeia-physical-step-integration-v1.md` |
+
+Each copy carries a provenance note under its title. The text is otherwise
+unchanged, except that relative links to documents that were not copied
+(the constitution, ADR-0060, ADR-0066, ADR-0070, ADR-0072 and the World
+responsibility map) now point to the source commit. The other 73 decision
+records and the remaining design documents of the source repository describe
+the historical system and were not copied.
+
 ## Open
 
-- Whether ADR-0073, ADR-0074 and the physical-step integration design move
-  here from `symbiont-lab`, and under which acceptance procedure new decision
-  records are admitted in this repository.
+- Under which acceptance procedure new decision records are admitted in this
+  repository, and how the copies below are kept consistent with their
+  originals while the source candidate is still open.
