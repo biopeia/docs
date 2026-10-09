@@ -150,3 +150,20 @@ designs:
       Compatible: its rule against hidden transfer of authority, the
       distinction between a semantic claim and its delivery, and the limit of
       Lab authority to meaning Lab itself creates.
+
+  design.observation.observation-architecture-biopeia-v1:
+    title: "Observation Architecture for Biopeia v1"
+    path: technical/design/observation/observation-architecture-biopeia-v1.md
+    domain: observation
+    participating_domains: [organism, embodiment, environment, world, lab, modality]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    editorial_notes: >
+      Written new on 2026-10-09 from the ratified decision records, the
+      approved Observation Semantic Model v1 and the observation repository at
+      cb07ace. Proposed only: its seven proposals await a decision, and three
+      questions are put to the Architecture Owner. It is intended to replace
+      design.observability.observation-architecture-target-design-v1 once
+      approved; until then that entry stays superseded by decisions.
+
