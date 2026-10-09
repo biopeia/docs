@@ -1,8 +1,10 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`,
-with `organism@f15c4c5`, `embodiment@3fe3cda`, `environment@f2ef8c2` and
-`observation@cb07ace`, the revisions pinned by World's integration extra.
+Reviewed against `world` at commit `c162b67e698de9b47450264402677b0165e6e20e`,
+with `organism@f15c4c5`, `embodiment@3fe3cda`, `environment@f97ec22` and
+`observation@cb07ace`, the revisions pinned by World's integration extra at
+that commit. First written against `world@cb4bd6b`; corrected when a second
+fixture was found to exist.
 
 ## What this is about
 
@@ -14,13 +16,16 @@ computes a candidate, each owner validates and adopts its own part, and World
 commits the cut.
 
 This document describes where that sequence exists in code today. The answer
-needs stating plainly at the start: **it exists as an integration test
-fixture, not as a component.** No module in `world`, or in any other
+needs stating plainly at the start: **it exists in two integration test
+fixtures, not as a component.** No module in `world`, or in any other
 repository, orchestrates a physical step. The sequence below is carried out
 by one function inside
-`world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`.
-The fixture says of itself that it is "not a scientific validation or a
-production solver adapter".
+`world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`,
+which says of itself that it is "not a scientific validation or a
+production solver adapter". A second fixture,
+`world:tests/integration/physical_step/test_procedural_sphere_world_step.py`,
+carries out a shorter version of it over a generated scene and is described
+in its own section below.
 
 What is real production code are the pieces the fixture calls: the
 [durable World runtime](durable-runtime.md), and functions and types of
@@ -83,14 +88,40 @@ Run by World's integration job in CI at the pinned revisions.
 - **An articulated body can be stepped, restored and stepped again**
   (`test_articulated_mujoco_candidate_is_adopted_and_world_committed`).
 
+## The second fixture: a generated scene
+
+`test_procedural_sphere_world_step.py` exercises the same owner adoption and
+World commit without an organism. It generates a scene with
+[procedural genesis](../environment/procedural-genesis.md), places its
+spheres in the solver, lets a body fall and touch them, has Embodiment and
+Environment adopt, commits through the durable World runtime, restores both
+owners from the committed cut, and takes one further step
+(`test_procedural_spheres_are_adopted_committed_restored_and_reused`).
+
+What it adds to the first fixture:
+
+- **Generated geometry reaches the solver and changes the result.** The body
+  touches a generated sphere, and the same step computed with and without the
+  spheres gives a different outcome.
+- **The generated scene survives the cut.** The Environment checkpoint named
+  by the committed manifest restores the same scene with the same genesis
+  provenance.
+- **A step can follow a restore.**
+
+It has its own function that runs the solver. It involves no Organism code
+and no command. It describes itself as "a contract integration test, not
+evidence of ecological quality, calibration, physical material properties,
+or production crash durability".
+
 ## What they do not establish
 
 Stated by the fixture or evident from it:
 
 - **No orchestrating component exists.** The order of the steps above is the
   order of statements in a test. Nothing enforces it elsewhere.
-- **The solver call belongs to the fixture.** There is no solver adapter in
-  any repository's source.
+- **The solver calls belong to the fixtures.** Each of the two has its own
+  function that advances the simulation. There is no solver adapter in any
+  repository's source.
 - **The organism's state is a stand-in.** The organism owner's checkpoint is
   a small JSON object under a schema named for the fixture, not an Organism
   checkpoint. The action path uses real Organism types fed with fixed values;
@@ -98,8 +129,9 @@ Stated by the fixture or evident from it:
   learning.
 - **The body's physiology is created inside the step**, with fixed values,
   rather than restored from the body's checkpointed state.
-- **The scene is static.** Environment adopts an unchanged scene; nothing in
-  the environment evolves.
+- **The scene is static.** Environment adopts an unchanged scene, written by
+  hand in one fixture and generated in the other; nothing in the environment
+  evolves.
 - **Modality takes no part.** The fixture notes that its current contract is
   sensory transduction only.
 - **Durability and replay.** Local checkpoint writes "do not test power-loss
@@ -112,5 +144,5 @@ Stated by the fixture or evident from it:
 | Claim | Support |
 |---|---|
 | The sequence | Code of the fixture, read in full |
-| Determinism, permutation, omitted channel, gravity, stale morphology, articulated restore | The tests named, run in World's CI at pinned revisions |
-| Absence of an orchestrating component and of a solver adapter | A search of the source trees of all seven repositories at their main branches on 2026-10-09 found no call that advances a MuJoCo simulation outside this fixture; the fixture's own statements |
+| Determinism, permutation, omitted channel, gravity, stale morphology, articulated restore, and the generated scene's effect, persistence and reuse | The tests named, run by World's integration job in CI at pinned revisions |
+| Absence of an orchestrating component and of a solver adapter | A search of the source and test trees of all seven repositories at their main branches on 2026-10-09 found the call that advances a MuJoCo simulation in these two fixtures and nowhere else; the fixtures' own statements |

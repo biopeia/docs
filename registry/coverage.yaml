@@ -210,9 +210,11 @@ units:
       - explanation/world/physical-step.md
     implementation:
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
       - world:src/world/durable_runtime.py
     tests:
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -224,7 +226,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: c162b67e698de9b47450264402677b0165e6e20e
 
   component.environment-finite-resource:
     kind: component

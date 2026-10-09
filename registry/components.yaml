@@ -213,6 +213,7 @@ components:
       - "a static scene carrying its genesis provenance"
     consumers:
       - component.environment-static-scene
+      - mechanism.physical-causal-step
 
   ENV-GEO:
     coverage_unit: component.environment-resource-geometry
