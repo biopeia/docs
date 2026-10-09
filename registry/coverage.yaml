@@ -225,3 +225,54 @@ units:
       status: RECORDED
       basis:
         world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  component.environment-finite-resource:
+    kind: component
+    title: Finite resource
+    status: CURRENT
+    owner_domain: environment
+    participating_domains:
+      - world
+      - lab
+    component_id: ENV-RES
+    canonical_docs:
+      - explanation/environment/finite-resource.md
+    implementation:
+      - environment:src/environment/resource.py
+      - environment:src/environment/identified_resource.py
+    tests:
+      - environment:tests/unit/test_resource.py
+      - environment:tests/test_identified_resource.py
+    adrs:
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  component.environment-static-scene:
+    kind: component
+    title: Static scene and its owner
+    status: CURRENT
+    owner_domain: environment
+    participating_domains:
+      - world
+    component_id: ENV-SCN
+    canonical_docs:
+      - explanation/environment/static-scene.md
+    implementation:
+      - environment:src/environment/static_scene.py
+    tests:
+      - environment:tests/test_static_scene.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc

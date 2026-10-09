@@ -109,6 +109,24 @@ One limit already visible: `in_causal_cut` is true or false, and the journal
 needed a sentence to say that its records are named by a cut only when a
 durable runtime drives it.
 
+### Environment, the second domain
+
+Two Environment components were documented from `environment@f97ec22`: the
+finite resource and the static scene with its owner. No state dimensions were
+defined for Environment. What the two documents had to say about state, as
+input for that later decision:
+
+| Question | Finite resource | Static scene |
+|---|---|---|
+| Does the state change? | Yes, by consumption only | No; only the last accepted step is recorded |
+| Does it carry a revision? | No | Yes, a string set by its builder |
+| Does it carry units? | No | Yes, in field names |
+| Does it take part in a causal cut? | Through an identified checkpoint | Through its owner's checkpoint |
+| Does it adopt candidates? | No | Yes, and only an unchanged one |
+
+A state family, `environmental_state`, was added: none of the existing
+families described environmental truth.
+
 ### Findings
 
 `registry/findings.yaml` was added so that what documentation discovers
