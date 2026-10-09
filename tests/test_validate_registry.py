@@ -294,6 +294,10 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("designs", D, "document_status", "accepted"), "document_status 'accepted' not in"),
     (_set("designs", D, "implementation_status", "done"), "implementation_status 'done' not in"),
     (_set("designs", D, "implementation_status", None), "implementation_status None not in"),
+    (
+        _set("designs", D, "implementation_status", "implemented"),
+        "requires implementation_evidence with basis and observed",
+    ),
     (_set("designs", D, "architecture_scope", "FUTURE"), "architecture_scope 'FUTURE' not in"),
     (_set("designs", D, "domain", "runtime"), "domain 'runtime' not in"),
     (_set("designs", D, "participating_domains", ["organism"]), "invalid participating_domain"),
@@ -306,6 +310,13 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
         "references missing path",
     ),
     (_set("designs", D, "document_status", "superseded"), "requires superseded_by"),
+    (
+        lambda data: data["designs"][D].update(
+            document_status="superseded",
+            superseded_by_decisions=["docs:technical/adr/ADR-9999.md"],
+        ),
+        "references missing path",
+    ),
     (_set("designs", D, "source.commit", "main"), "source.commit is not a commit SHA"),
     (_set("designs", D, "source.repository", "elsewhere"), "source.repository 'elsewhere'"),
     (
@@ -410,3 +421,13 @@ def test_unknown_basis_commit_is_reported_not_ignored(ws: Workspace) -> None:
 def test_cli_passes_on_repository_registry(capsys: pytest.CaptureFixture[str]) -> None:
     assert vr.main([]) == 0
     assert "Registry integrity: PASS" in capsys.readouterr().out
+
+
+def test_design_may_be_superseded_by_decisions(ws: Workspace) -> None:
+    ws.data["designs"][D].update(
+        document_status="superseded",
+        superseded_by_decisions=["docs:technical/adr/ADR-0001.md"],
+    )
+    ws.write()
+    errors, _ = ws.validate()
+    assert errors == []

@@ -8,6 +8,9 @@ schema_version: 1
 # the source repository is kept under `source` as provenance and is never
 # inherited: a copied design starts as not_evaluated.
 #
+# implementation_evidence lists what the status rests on and at which
+# revision. A status other than not_evaluated requires it.
+#
 # source.register_entry is the triage text of the design's row in the source
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
@@ -18,8 +21,31 @@ designs:
     domain: world
     participating_domains: [embodiment, environment, lab]
     document_status: approved
-    implementation_status: not_evaluated
+    implementation_status: partial
     architecture_scope: TARGET
+    implementation_evidence:
+      evaluated_on: "2026-10-09"
+      basis:
+        world: dce2c944abaa
+        embodiment: 77b128d4636a
+        environment: cd98a8d
+        lab: 974f978131d4
+      observed: >
+        The workspace integration suite passed (10 tests) with the checkouts at
+        the revisions above. It includes an end-to-end deterministic physical
+        causal step, rejection of a stale-morphology candidate without
+        publishing the next World cut, adoption of an articulated MuJoCo
+        candidate followed by a World commit, and publication and restore of
+        an owner-checkpoint closure.
+      limits: >
+        The integration tests live in the unversioned integration workspace,
+        and the environment checkout was on a feature branch, not its main
+        branch. The items the design lists for conformance were not checked
+        one by one: stable effector identity under permutation, omitted
+        channel as no command, roster completeness against the genesis
+        specification, partial-cut recovery and the single-writer assumption
+        are not confirmed here. Passing tests are not a physical calibration
+        or equivalence claim.
     decision:
       reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
       date: "2026-10-09"
@@ -36,8 +62,22 @@ designs:
     path: technical/design/observability/observation-semantic-model-v1.md
     domain: observation
     document_status: approved
-    implementation_status: not_evaluated
+    implementation_status: partial
     architecture_scope: TARGET
+    implementation_evidence:
+      evaluated_on: "2026-10-09"
+      basis:
+        observation: a768bd94da1e
+      observed: >
+        observation:src/observation/semantic.py defines types for authority
+        domain, identity and identity links, subject scope, domain time,
+        acquisition basis, lineage, conditions, semantic claim and semantic
+        observation, with tests in observation:tests/test_semantic_model.py.
+      limits: >
+        Existence of the types was checked, not their agreement with each
+        section of the model. No semantic-family contract and no concrete
+        record, schema, transport or storage was found or looked for; the
+        model itself does not authorize them.
     decision:
       reference: "Architecture Owner decision recorded in the document's status line"
       date: "2026-10-09"
@@ -52,16 +92,33 @@ designs:
       Approved as a conceptual model only. The document states that concrete
       record, delivery, schema, transport and storage decisions are not
       authorized by it. It refines the Observation Architecture v1 target
-      design, whose scope is UNRESOLVED here.
+      design, which is recorded here as HISTORICAL and superseded. Its own section on authority
+      names Organism and World among the authorities and says Modality does
+      not automatically become one, which agrees with ADR-0095 and ADR-0099
+      and differs from the list in that target design.
 
   design.observability.observation-architecture-target-design-v1:
     title: "Observation Architecture v1 — Target Design"
     path: technical/design/observability/observation-architecture-target-design-v1.md
     domain: observation
     participating_domains: [lab]
-    document_status: approved
-    implementation_status: not_evaluated
-    architecture_scope: UNRESOLVED
+    document_status: superseded
+    implementation_status: not_applicable
+    architecture_scope: HISTORICAL
+    superseded_by_decisions:
+      - "docs:technical/adr/ADR-0095-surviving-semantic-authorities.md"
+      - "docs:technical/adr/ADR-0099-modality-contract-library.md"
+      - "docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md"
+      - "docs:technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md"
+    disposition:
+      by: Architecture Owner
+      date: "2026-10-09"
+      reference: "https://github.com/biopeia/docs/pull/8#pullrequestreview-5473645274"
+      statement: >
+        No longer a valid Biopeia TARGET design. Preserved unchanged as
+        evidence of the earlier design state; not to be rewritten to repair
+        it. No design replaces it yet: a Biopeia Observation design is to be
+        written new.
     decision:
       reference: "Architecture-owner disposition recorded in the document's status line"
       date: "2026-10-07"
@@ -75,6 +132,21 @@ designs:
     editorial_notes: >
       Approved on 2026-10-07 as the target for operational observation in the
       source repository, two days before the Biopeia Architecture v1 baseline
-      (ADR-0095 to ADR-0110) was ratified. It has not been reviewed against
-      that baseline, in particular against ADR-0100, so it is not recorded as
-      Biopeia TARGET. Copied because the semantic model depends on it.
+      (ADR-0095 to ADR-0110) was ratified. Copied because the semantic model
+      depends on it. Reviewed against that baseline on 2026-10-09, and
+      classed HISTORICAL and superseded by the Architecture Owner on the same
+      day; the findings of that review follow.
+      Direct conflicts, both in its section 4.1: it lists Modality among the
+      authority domains, while ADR-0099 ratifies Modality as a contract,
+      library or capability and not an independent semantic authority; and it
+      classes World as a subject or context identity and not an authority
+      domain, while ADR-0095 ratifies World as one of the four semantic
+      authorities. It also names the organism Symbiont, against ADR-0085.
+      Tension, not contradiction: it assigns operational coordination,
+      materialization and delivery of observations to Lab and defers a
+      standalone package, while ADR-0100 treats Observation as a passive
+      capability with transport as application or infrastructure, and Biopeia
+      already has a separate observation repository holding the plane.
+      Compatible: its rule against hidden transfer of authority, the
+      distinction between a semantic claim and its delivery, and the limit of
+      Lab authority to meaning Lab itself creates.

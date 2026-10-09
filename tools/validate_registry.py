@@ -236,6 +236,16 @@ def validate(
             allowed = schema[f"design_{axis}es" if axis.endswith("status") else f"design_{axis}s"]
             if design.get(axis) not in allowed:
                 errors.append(f"{where}: {axis} {design.get(axis)!r} not in {allowed}")
+        if design.get("implementation_status") not in ("not_evaluated", "not_applicable", None):
+            evidence = design.get("implementation_evidence") or {}
+            if not evidence.get("basis") or not str(evidence.get("observed", "")).strip():
+                errors.append(
+                    f"{where}: implementation_status {design.get('implementation_status')!r} "
+                    "requires implementation_evidence with basis and observed"
+                )
+            for repo, sha in (evidence.get("basis") or {}).items():
+                if repo not in domains or not SHA_RE.match(str(sha)):
+                    errors.append(f"{where}: implementation_evidence.basis.{repo} is not a domain commit")
         if design.get("document_status") == "approved":
             decision = design.get("decision") or {}
             if not str(decision.get("reference", "")).strip():
@@ -244,8 +254,15 @@ def validate(
                 check_reference(where, "adrs", decision["reference"])
             if not DATE_RE.match(str(decision.get("date", ""))):
                 errors.append(f"{where}: an approved design requires decision.date as YYYY-MM-DD")
-        if design.get("document_status") == "superseded" and design.get("superseded_by") not in designs:
-            errors.append(f"{where}: a superseded design requires superseded_by naming a design")
+        if design.get("document_status") == "superseded":
+            decisions = as_list(design.get("superseded_by_decisions"))
+            if design.get("superseded_by") not in designs and not decisions:
+                errors.append(
+                    f"{where}: a superseded design requires superseded_by naming a design "
+                    "or superseded_by_decisions"
+                )
+            for ref in decisions:
+                check_reference(where, "adrs", ref)
         source = design.get("source")
         if source is not None:
             if source.get("repository") not in domains and source.get("repository") not in extra:
