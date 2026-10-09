@@ -62,7 +62,12 @@ uv run --no-project --with pyyaml python repos/docs/tools/validate_registry.py \
     --repos-root repos --stale
 ```
 
-CI blocks on registry integrity only. It cannot read the other private
-repositories, so cross-repository references are reported as unresolved there
-and staleness is not evaluated. Staleness is informative: it exits non-zero
-only with `--fail-on-stale`. No domain repository runs a documentation check.
+CI runs two jobs. `registry` needs only this repository and blocks on registry
+integrity. `cross-repository` clones the seven domain repositories with a
+short-lived token from the read-only `biopeia-ci-read` GitHub App
+(`CI_READ_APP_ID` variable, `CI_READ_APP_PRIVATE_KEY` secret), blocks when a
+reference into them does not resolve, and reports staleness in the job summary
+without blocking. It can also be started by hand, since a unit becomes stale
+when a domain repository changes, not when this one does. References to
+`symbiont-lab` are never resolved in CI. No domain repository runs a
+documentation check.

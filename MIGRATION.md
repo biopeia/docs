@@ -64,5 +64,3 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
 - Whether ADR-0073, ADR-0074 and the physical-step integration design move
   here from `symbiont-lab`, and under which acceptance procedure new decision
   records are admitted in this repository.
-- Read access from this repository's CI to the other private repositories,
-  required before cross-repository checks can run in CI.
