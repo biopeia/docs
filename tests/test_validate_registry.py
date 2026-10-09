@@ -293,6 +293,10 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("designs", D, "document_status", "accepted"), "document_status 'accepted' not in"),
     (_set("designs", D, "implementation_status", "done"), "implementation_status 'done' not in"),
     (_set("designs", D, "implementation_status", None), "implementation_status None not in"),
+    (
+        _set("designs", D, "implementation_status", "implemented"),
+        "requires implementation_evidence with basis and observed",
+    ),
     (_set("designs", D, "architecture_scope", "FUTURE"), "architecture_scope 'FUTURE' not in"),
     (_set("designs", D, "domain", "runtime"), "domain 'runtime' not in"),
     (_set("designs", D, "participating_domains", ["organism"]), "invalid participating_domain"),
