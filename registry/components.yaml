@@ -33,3 +33,33 @@ components:
     consumers:
       - "World runtimes, the journal snapshot store and the World causal manifest (not yet registered as units)"
 
+  WLD-MAN:
+    coverage_unit: component.world-causal-manifest
+    name: "World causal manifest"
+    authority:
+      owns: "the durable record of a World causal cut: its tick, rosters, opaque owner checkpoint references, journal boundary and commit or recovery status"
+      may_decide:
+        - "whether a manifest is well formed"
+        - "whether a proposed cut matches the transition that was opened"
+        - "whether ordinary execution is refused because a transition is pending"
+      must_not:
+        - "decode, write or judge the owner state its references point to"
+        - "restore owner state during recovery"
+        - "claim to be a transaction across owners, a multi-writer protocol or a security boundary"
+    state:
+      owner: world
+      family: causal_history
+    lifecycle:
+      birth: initialize
+      checkpoint: not_applicable
+      restart: preserve
+      reembodiment: not_applicable
+      reproduction: not_applicable
+    inputs:
+      - "owner checkpoint references and rosters proposed by the durable World runtime"
+      - "a dependency verifier supplied by the caller"
+    outputs:
+      - "the committed manifest of each cut"
+      - "recovery receipts"
+    consumers:
+      - "the durable World runtime (not yet registered as a unit)"

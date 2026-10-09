@@ -22,3 +22,27 @@ units:
       status: RECORDED
       basis:
         world: dce2c944abaab87e2c75f4fe49d9aa9dadc33a00
+
+  component.world-causal-manifest:
+    kind: component
+    title: World causal manifest
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-MAN
+    canonical_docs:
+      - explanation/world/causal-manifest.md
+    implementation:
+      - world:src/world/manifest.py
+    tests:
+      - world:tests/test_manifest.py
+    adrs:
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+      - docs:technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md
+      - docs:technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md
+      - docs:technical/adr/ADR-0086-capture-manifest-last-sequence-semantics.md
+    depends_on:
+      - component.world-causal-journal
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504

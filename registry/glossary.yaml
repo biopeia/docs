@@ -29,3 +29,30 @@ terms:
       - component.world-causal-journal
     canonical_refs:
       - explanation/world/causal-journal.md
+
+  causal-cut:
+    term: "Causal cut"
+    definition: >
+      The set of owner states and the journal position that belong together at
+      one committed causal tick of a World. World names a cut in its causal
+      manifest by reference; it does not hold the states themselves.
+    distinguishes_from:
+      - causal-record
+      - checkpoint-reference
+    owners:
+      - component.world-causal-manifest
+    canonical_refs:
+      - explanation/world/causal-manifest.md
+
+  checkpoint-reference:
+    term: "Checkpoint reference"
+    definition: >
+      An opaque pointer from World to one owner's checkpoint: owner, identity,
+      checkpoint identifier, schema version, locator and hash. It lets World
+      name a state without being able to read or judge it.
+    distinguishes_from:
+      - causal-cut
+    owners:
+      - component.world-causal-manifest
+    canonical_refs:
+      - explanation/world/causal-manifest.md
