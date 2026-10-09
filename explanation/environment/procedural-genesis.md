@@ -12,12 +12,13 @@ generated. Procedural genesis is one generator: given a seed and an explicit
 configuration, it produces a ground plane and a number of spheres placed
 inside a box.
 
-Its purpose is reproducibility, not realism. The same inputs always give the
-same scene, on any machine, and the scene records how it was made. The
-module is explicit about how little it claims: it "makes no guarantee of
-non-overlap, terrain quality, ecological meaning, or scientific suitability",
-and describes itself as "one genesis capability, not a universal Environment
-representation or a solver scene format".
+Its purpose is reproducibility, not realism. At this generator revision, the
+test gives equal scenes for identical complete specifications, and the scene
+records how it was made. Cross-machine portability has not been tested and is
+not claimed. The module is explicit about the limits of its claims: it "makes
+no guarantee of non-overlap, terrain quality, ecological meaning, or
+scientific suitability", and describes itself as "one genesis capability,
+not a universal Environment representation or a solver scene format".
 
 ## What goes in
 

@@ -193,7 +193,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md) |
 | Tests | `environment:tests/unit/test_resource.py`, `environment:tests/test_identified_resource.py` |
 | Reviewed at | environment@f97ec22272b6 (RECORDED) |
-| Known findings | F-0014 implementation finding (open); F-0015 contract gap (accepted); F-0016 implementation finding (open) |
+| Known findings | F-0014 implementation finding (open); F-0015 contract gap (open); F-0016 implementation finding (open) |
 
 ### Static scene and its owner
 
@@ -250,7 +250,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md) |
 | Tests | `environment:tests/unit/test_physical_projection.py`, `environment:tests/test_boundary.py` |
 | Reviewed at | environment@f97ec22272b6 (RECORDED) |
-| Known findings | F-0015 contract gap (accepted); F-0018 implementation finding (open) |
+| Known findings | F-0015 contract gap (open); F-0018 implementation finding (open) |
 
 ## Embodiment
 
