@@ -98,3 +98,130 @@ units:
       status: RECORDED
       basis:
         world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  component.world-in-memory-runtime:
+    kind: component
+    title: In-memory World runtime
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-RTM
+    canonical_docs:
+      - explanation/world/in-memory-runtime.md
+    implementation:
+      - world:src/world/runtime.py
+    tests:
+      - world:tests/test_runtime.py
+      - world:tests/integration/test_first_biopeia_causal_tick.py
+    adrs:
+      - docs:technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+      - docs:technical/adr/ADR-0096-world-participation-including-singleton.md
+    depends_on:
+      - component.world-causal-journal
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  mechanism.world-causal-transition:
+    kind: mechanism
+    title: World causal transition
+    status: CURRENT
+    owner_domain: world
+    canonical_docs:
+      - explanation/world/durable-runtime.md
+      - explanation/world/causal-manifest.md
+    implementation:
+      - world:src/world/durable_runtime.py
+      - world:src/world/manifest.py
+    tests:
+      - world:tests/test_durable_runtime.py
+      - world:tests/test_manifest.py
+    adrs:
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+    depends_on:
+      - component.world-durable-runtime
+      - component.world-causal-manifest
+      - component.world-journal-snapshot-store
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  mechanism.world-genesis-and-rosters:
+    kind: mechanism
+    title: World genesis, rosters and participant closure
+    status: CURRENT
+    owner_domain: world
+    canonical_docs:
+      - explanation/world/genesis-and-rosters.md
+    implementation:
+      - world:src/world/durable_runtime.py
+      - world:src/world/manifest.py
+    tests:
+      - world:tests/test_durable_runtime.py
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0096-world-participation-including-singleton.md
+    depends_on:
+      - component.world-durable-runtime
+      - component.world-causal-manifest
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  mechanism.world-recovery:
+    kind: mechanism
+    title: World recovery
+    status: CURRENT
+    owner_domain: world
+    canonical_docs:
+      - explanation/world/recovery.md
+    implementation:
+      - world:src/world/durable_runtime.py
+      - world:src/world/manifest.py
+    tests:
+      - world:tests/test_durable_runtime.py
+      - world:tests/test_manifest.py
+    adrs:
+      - docs:technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - mechanism.world-causal-transition
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  mechanism.physical-causal-step:
+    kind: mechanism
+    title: Physical causal step
+    status: EXPERIMENTAL
+    owner_domain: world
+    participating_domains:
+      - organism
+      - embodiment
+      - environment
+      - observation
+    canonical_docs:
+      - explanation/world/physical-step.md
+    implementation:
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:src/world/durable_runtime.py
+    tests:
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+    depends_on:
+      - mechanism.world-causal-transition
+      - mechanism.world-genesis-and-rosters
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
