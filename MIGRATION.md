@@ -94,8 +94,29 @@ Re-embodiment and reproduction applied to none of the four, and checkpoint to
 one. Only birth and restart distinguished these components. What the four
 documents needed to say, and the axes do not capture, was whether the
 component's state is durable, whether it is part of a causal cut, and what a
-failed transition leaves behind. This is the evidence the agreed review of
-the lifecycle vocabulary was waiting for; the vocabulary is not changed here.
+failed transition leaves behind.
+
+The review followed. `registry/schema.yaml` now says which block describes a
+component's state by owning domain: the lifecycle axes for Organism and
+Embodiment, and a `causal_state` block for World that answers exactly those
+three questions. The lifecycle axes were not stretched: the `not_applicable`
+value added for re-embodiment was removed again, and the validator rejects
+lifecycle axes on a World component. Environment, Observation, Modality and
+Lab have no required block; none is defined before their components have been
+documented. The five World components were migrated.
+
+One limit already visible: `in_causal_cut` is true or false, and the journal
+needed a sentence to say that its records are named by a cut only when a
+durable runtime drives it.
+
+### Findings
+
+`registry/findings.yaml` was added so that what documentation discovers
+becomes work that can be tracked instead of prose that can be missed. The
+classes are those set by the owner: implementation finding, contract gap,
+evidence gap, performance concern, recovery or durability gap, documentation
+inconsistency. The first twelve entries come from the World documents; six
+are material and each has an issue in `biopeia/world`.
 
 ## Design register
 

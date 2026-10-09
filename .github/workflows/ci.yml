@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  # A unit becomes stale when a domain repository changes, not when this one
+  # does, so the staleness report is also produced once a day.
+  schedule:
+    - cron: "17 5 * * *"
 
 defaults:
   run:

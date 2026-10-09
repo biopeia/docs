@@ -39,6 +39,7 @@ REGISTRY_KEYS = {
     "notation": "symbols",
     "glossary": "terms",
     "designs": "designs",
+    "findings": "findings",
 }
 REFERENCE_FIELDS = ("implementation", "tests", "design", "adrs")
 CODE_FIELDS = ("implementation", "tests")
@@ -390,12 +391,24 @@ def validate(
             if not authority.get(key):
                 errors.append(f"{where}: authority.{key} is missing or empty")
 
-        lifecycle = comp.get("lifecycle") or {}
-        for axis, allowed in schema["lifecycle"].items():
-            if lifecycle.get(axis) not in allowed:
-                errors.append(
-                    f"{where}: lifecycle.{axis} value {lifecycle.get(axis)!r} not in {allowed}"
-                )
+        block = schema["component_state_dimensions"].get(owner)
+        if block == "lifecycle":
+            lifecycle = comp.get("lifecycle") or {}
+            for axis, allowed in schema["lifecycle"].items():
+                if lifecycle.get(axis) not in allowed:
+                    errors.append(
+                        f"{where}: lifecycle.{axis} value {lifecycle.get(axis)!r} not in {allowed}"
+                    )
+        elif block == "causal_state":
+            causal = comp.get("causal_state") or {}
+            for key in ("durable", "in_causal_cut"):
+                if not isinstance(causal.get(key), bool):
+                    errors.append(f"{where}: causal_state.{key} must be true or false")
+            if not str(causal.get("failed_transition_residue", "")).strip():
+                errors.append(f"{where}: causal_state.failed_transition_residue is missing")
+        for other in ("lifecycle", "causal_state"):
+            if block is not None and other != block and other in comp:
+                errors.append(f"{where}: {other} does not apply to components owned by {owner!r}")
 
         for consumer in as_list(comp.get("consumers")):
             if UNIT_ID_RE.match(str(consumer)) and consumer not in units:
@@ -404,6 +417,42 @@ def validate(
     for cid, uid in component_ids.items():
         if cid not in reg["components"]:
             errors.append(f"Unit {uid}: component_id {cid} has no entry in components.yaml")
+
+    # --- findings ---------------------------------------------------------
+    for fid, finding in reg["findings"].items():
+        where = f"Finding {fid}"
+        if not re.match(r"^F-\d{4}$", str(fid)):
+            errors.append(f"{where}: id must look like 'F-0001'")
+        if finding.get("class") not in schema["finding_classes"]:
+            errors.append(f"{where}: class {finding.get('class')!r} not in {schema['finding_classes']}")
+        if finding.get("status") not in schema["finding_statuses"]:
+            errors.append(
+                f"{where}: status {finding.get('status')!r} not in {schema['finding_statuses']}"
+            )
+        if finding.get("repository") not in domains:
+            errors.append(f"{where}: repository {finding.get('repository')!r} not in {sorted(domains)}")
+        if not as_list(finding.get("units")):
+            errors.append(f"{where}: at least one unit is required")
+        for unit_id in as_list(finding.get("units")):
+            if unit_id not in units:
+                errors.append(f"{where}: unit {unit_id!r} missing from coverage.yaml")
+        if not str(finding.get("summary", "")).strip():
+            errors.append(f"{where}: summary is missing")
+        if not isinstance(finding.get("material"), bool):
+            errors.append(f"{where}: material must be true or false")
+        if not SHA_RE.match(str(finding.get("observed_at", ""))):
+            errors.append(f"{where}: observed_at must be a commit of the repository")
+        check_doc_paths(where, "canonical_docs", finding.get("documented_in"))
+        if not as_list(finding.get("documented_in")):
+            errors.append(f"{where}: documented_in is required")
+        if finding.get("status") == "issue_opened" and not str(finding.get("issue", "")).startswith(
+            "https://github.com/biopeia/"
+        ):
+            errors.append(f"{where}: status issue_opened requires the issue URL")
+        if finding.get("status") in ("accepted", "resolved") and not str(
+            finding.get("disposition", "")
+        ).strip():
+            errors.append(f"{where}: status {finding.get('status')} requires a disposition")
 
     # --- parameters -------------------------------------------------------
     for pid, param in reg["parameters"].items():

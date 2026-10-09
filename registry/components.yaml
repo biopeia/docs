@@ -18,12 +18,10 @@ components:
     state:
       owner: world
       family: causal_history
-    lifecycle:
-      birth: empty
-      checkpoint: preserve
-      restart: reset
-      reembodiment: not_applicable
-      reproduction: not_applicable
+    causal_state:
+      durable: false
+      in_causal_cut: true
+      failed_transition_residue: "staged records remain staged after a failed batch commit; nothing durable. Its records are named by a cut through the journal boundary only when a durable runtime drives it"
     inputs:
       - "causal records built by a World runtime"
     outputs:
@@ -50,12 +48,10 @@ components:
     state:
       owner: world
       family: causal_history
-    lifecycle:
-      birth: initialize
-      checkpoint: not_applicable
-      restart: preserve
-      reembodiment: not_applicable
-      reproduction: not_applicable
+    causal_state:
+      durable: true
+      in_causal_cut: true
+      failed_transition_residue: "a preparing or recovery-required record naming the failed transition, its proposed rosters and the failure; after recovery, an immutable receipt"
     inputs:
       - "owner checkpoint references and rosters proposed by the durable World runtime"
       - "a dependency verifier supplied by the caller"
@@ -80,12 +76,10 @@ components:
     state:
       owner: world
       family: causal_history
-    lifecycle:
-      birth: empty
-      checkpoint: not_applicable
-      restart: preserve
-      reembodiment: not_applicable
-      reproduction: not_applicable
+    causal_state:
+      durable: true
+      in_causal_cut: true
+      failed_transition_residue: "a snapshot file for the failed tick, referenced by no committed cut"
     inputs:
       - "a journal and the causal tick it is being saved for"
     outputs:
@@ -110,12 +104,10 @@ components:
     state:
       owner: world
       family: ephemeral
-    lifecycle:
-      birth: initialize
-      checkpoint: not_applicable
-      restart: reset
-      reembodiment: not_applicable
-      reproduction: not_applicable
+    causal_state:
+      durable: false
+      in_causal_cut: false
+      failed_transition_residue: "an in-memory latch that refuses further ticks; owner checkpoints written by the callback, referenced by no committed cut"
     inputs:
       - "a genesis specification"
       - "a callback that persists owner state and returns checkpoint references"
@@ -140,12 +132,10 @@ components:
     state:
       owner: world
       family: ephemeral
-    lifecycle:
-      birth: initialize
-      checkpoint: not_applicable
-      restart: reset
-      reembodiment: not_applicable
-      reproduction: not_applicable
+    causal_state:
+      durable: false
+      in_causal_cut: false
+      failed_transition_residue: "an in-memory latch that refuses further ticks; whatever the opaque transition changed before failing is not rolled back"
     inputs:
       - "a transition callback supplied by the caller"
     outputs:

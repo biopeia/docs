@@ -58,12 +58,32 @@ state_families:
   - causal_history
   - infrastructure
 
-# What happens to a component's state at each lifecycle boundary.
+# Which block describes a component's state, by the domain that owns it. The
+# dimensions are per nature of component: the lifecycle axes below came from
+# the organism and are required only where they have meaning. A domain not
+# listed here has no required block yet; none is invented before components of
+# that domain have been documented.
+component_state_dimensions:
+  organism: lifecycle
+  embodiment: lifecycle
+  world: causal_state
+
+# For World components. Three questions the first World units had to answer
+# and the lifecycle axes could not express.
+#   durable                    does the state survive the process?
+#   in_causal_cut              is the state named by, or part of, a causal cut?
+#   failed_transition_residue  what a failed transition can leave behind,
+#                              in words; "none" when nothing
+causal_state:
+  required: [durable, in_causal_cut, failed_transition_residue]
+
+# What happens to a component's state at each lifecycle boundary. Organism and
+# Embodiment components.
 lifecycle:
   birth: [empty, initialize]
   checkpoint: [not_applicable, preserve, reset]
   restart: [preserve, reset]
-  reembodiment: [invalidate_authority, not_applicable, preserve, rebind, reset]
+  reembodiment: [invalidate_authority, preserve, rebind, reset]
   reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
 
 # Design register (registry/designs.yaml). Three independent axes.
@@ -92,6 +112,22 @@ design_implementation_statuses:
 
 # UNRESOLVED: not yet assessed against the accepted Biopeia architecture.
 design_architecture_scopes: [CURRENT, TARGET, HISTORICAL, UNRESOLVED]
+
+# Findings discovered while documenting. They are recorded, classified and,
+# when material, raised as an issue in the owning repository. They are never
+# fixed as part of documentation work.
+finding_classes:
+  - implementation_finding
+  - contract_gap
+  - evidence_gap
+  - performance_concern
+  - recovery_durability_gap
+  - documentation_inconsistency
+
+# open: recorded, no issue. issue_opened: an issue exists in the owning
+# repository. accepted: the owner decided it is not a defect; the decision is
+# recorded. resolved: no longer true of the code; the resolution is recorded.
+finding_statuses: [open, issue_opened, accepted, resolved]
 
 parameter_sources: [CODE, DESIGN, STUDY, FORMAL]
 

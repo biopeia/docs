@@ -1,0 +1,187 @@
+schema_version: 1
+
+# Findings discovered while documenting. Recorded and classified here; when
+# material, raised as an issue in the owning repository and linked. Never
+# fixed as part of documentation work. A finding describes the code at
+# observed_at; it is not a decision and creates no requirement by itself.
+findings:
+
+  F-0001:
+    class: contract_gap
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - mechanism.world-genesis-and-rosters
+    summary: >
+      Participant closure is an exact match against a roster declared by the caller of a tick; World keeps no relation between presences and owners after genesis and does not derive the required participants. ADR-0073 says World derives and validates the participant set and that callers cannot establish completeness by supplying a list.
+    documented_in:
+      - explanation/world/genesis-and-rosters.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/28"
+
+  F-0002:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - mechanism.physical-causal-step
+    summary: >
+      The physical causal step is orchestrated only by a test fixture. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
+    documented_in:
+      - explanation/world/physical-step.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/29"
+
+  F-0003:
+    class: recovery_durability_gap
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - mechanism.world-recovery
+      - component.world-durable-runtime
+      - component.world-journal-snapshot-store
+    summary: >
+      A transition that fails after the owners saved leaves owner checkpoints, and possibly a journal snapshot, referenced by no committed cut. Recovery removes nothing.
+    documented_in:
+      - explanation/world/recovery.md
+      - explanation/world/durable-runtime.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/30"
+
+  F-0004:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-durable-runtime
+    summary: >
+      The recovery receipt built during checkpoint validation is compared with the reference it was built from, so the comparison cannot fail, and it is neither stored nor returned.
+    documented_in:
+      - explanation/world/durable-runtime.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/31"
+
+  F-0005:
+    class: performance_concern
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-journal-snapshot-store
+      - component.world-durable-runtime
+      - component.world-causal-journal
+    summary: >
+      Every tick copies and re-encodes the whole journal and writes the full prefix to a new immutable snapshot; no snapshot is removed. Not measured.
+    documented_in:
+      - explanation/world/journal-snapshot-store.md
+      - explanation/world/causal-journal.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/32"
+
+  F-0006:
+    class: evidence_gap
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - mechanism.world-recovery
+      - component.world-causal-manifest
+      - component.world-durable-runtime
+    summary: >
+      No test exercises a crash, power loss or a second process during a transition. That a second actor's activity check marks an open transition as interrupted, and that a runtime notices an externally changed manifest only at its next tick, rest on code reading and an ad hoc run.
+    documented_in:
+      - explanation/world/causal-manifest.md
+      - explanation/world/durable-runtime.md
+      - explanation/world/recovery.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/world/issues/33"
+
+  F-0007:
+    class: recovery_durability_gap
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-causal-manifest
+      - component.world-durable-runtime
+    summary: >
+      One logical writer is assumed and not enforced by the storage: the advisory lock protects each change to the manifest, not a whole transition.
+    documented_in:
+      - explanation/world/causal-manifest.md
+      - explanation/world/durable-runtime.md
+    material: true
+    status: accepted
+    disposition: >
+      Architecture Owner, 2026-10-09: a single logical writer is today a precondition of the contract, not a property the storage enforces. Not treated as a defect to be fixed; the boundary between operating requirement, enforcement and guarantee is to stay documented. The missing evidence is tracked separately as F-0006.
+
+  F-0008:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-causal-journal
+    summary: >
+      The journal does not enforce unique record identifiers, a single World per journal, or tick order. The durable runtime checks World and tick range when validating a cut; identifier uniqueness holds only because callers derive identifiers from World and tick.
+    documented_in:
+      - explanation/world/causal-journal.md
+    material: false
+    status: open
+
+  F-0009:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-causal-journal
+    summary: >
+      Staged batches are implemented and tested but have no caller in the repository; after a failed batch commit the staged records remain staged.
+    documented_in:
+      - explanation/world/causal-journal.md
+    material: false
+    status: open
+
+  F-0010:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-journal-snapshot-store
+    summary: >
+      The snapshot store does not check which World a snapshot belongs to: a store created for another World reads it. The check is made by the durable runtime.
+    documented_in:
+      - explanation/world/journal-snapshot-store.md
+    material: false
+    status: open
+
+  F-0011:
+    class: implementation_finding
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-causal-manifest
+      - mechanism.world-recovery
+    summary: >
+      Recovery receipts accumulate in a directory and nothing in World reads them back; their intended consumer is not recorded.
+    documented_in:
+      - explanation/world/causal-manifest.md
+      - explanation/world/recovery.md
+    material: false
+    status: open
+
+  F-0012:
+    class: recovery_durability_gap
+    repository: world
+    observed_at: cb4bd6b0506b554bf4187b36c23095a7521c4504
+    units:
+      - component.world-in-memory-runtime
+    summary: >
+      The in-memory runtime latches on failure but has no recovery call, and does not roll back what its opaque transition changed.
+    documented_in:
+      - explanation/world/in-memory-runtime.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it is not durable recovery and does not by itself satisfy the target post-failure contract. The durable runtime is the component that does.
