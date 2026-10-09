@@ -81,6 +81,19 @@ at the source commit.
 | `docs/adr/ADR-0074-biopeia-world-environment-authority-split.md` | `22a5732f5` | `technical/adr/ADR-0074-biopeia-world-environment-authority-split.md` |
 | `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/biopeia-physical-step-integration-v1.md` |
 
+A fourth document was copied from the sealed architecture audit dossier, which
+is kept outside the source repository's history as an archive:
+
+| Original source | Target path |
+|---|---|
+| `.audit.zip` (SHA-256 `ff258afc…57df2`), member `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md` (SHA-256 `bb70560e…939c9`) | `technical/adr/AD-0021-AD-0036-biopeia-architecture-v1-ratification.md` |
+
+It is the Architecture Owner's ratification of AD-0021 to AD-0036, the
+Biopeia Architecture v1 baseline. It is kept as one document, as in the
+source, and its text is unchanged. The earlier decisions and the review,
+evidence, finding and open-point records it cites by identifier stay in the
+dossier and were not copied.
+
 Each copy carries a provenance note under its title. The text is otherwise
 unchanged, except that relative links to documents that were not copied
 (the constitution, ADR-0060, ADR-0066, ADR-0070, ADR-0072 and the World

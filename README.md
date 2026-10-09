@@ -13,8 +13,10 @@ here and in the other Biopeia repositories.
 
 This repository holds no domain logic and no semantic authority. Recording a
 decision here does not accept it, and green CI never stands in for acceptance.
-For now, a decision record is accepted by the repository owner, and the
-acceptance is written in the record's own Status section with its date. Scientific evidence and experiment records are **not** kept here;
+During the migration, acceptance of a decision record is delegated by the
+repository owner to the advisor, the independent reviewer of the migration.
+The acceptance is written in the record's own Status section with its date and
+who accepted it. Outside the migration, the repository owner accepts. Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
