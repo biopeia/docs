@@ -235,3 +235,73 @@ components:
       - "a sphere in metres that records the scale used"
     consumers:
       - "none found in the source of any repository at the revision reviewed"
+
+  EMB-PHY:
+    coverage_unit: component.embodiment-physical-state
+    name: "Body physical state and adoption of a solver candidate"
+    authority:
+      owns: "the free-root pose and velocities of one body in one embodiment episode at one World causal tick, and the correlation of the last physical step accepted for it"
+      may_decide:
+        - "whether a solver candidate matches the expected correlation and this state's World, tick, body, episode, morphology revision and frames"
+        - "whether checkpoint bytes decode to a consistent state under its schema"
+      must_not:
+        - "execute a solver or let a solver change the state"
+        - "commit a World cut or claim a durable checkpoint reference"
+        - "mint the authority of a physical step"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code. The code has no
+    # path for re-embodiment or reproduction: those two values record the
+    # intent of ADR-0094, not observed behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "a solver candidate with its correlation, and the correlation to expect"
+    outputs:
+      - "a new state one causal tick later"
+      - "deterministic checkpoint bytes and their digest"
+    consumers:
+      - mechanism.physical-causal-step
+
+  EMB-SOM:
+    coverage_unit: component.embodiment-somatic-state
+    name: "Somatic state, metabolic ledger and body checkpoint"
+    authority:
+      owns: "one body's energy reserve and maximum, structural integrity and per-structure records, vital state, age, stored temperature, fatigue, growth and senescence values, and the per-kind metabolic accounts"
+      may_decide:
+        - "how much of a charge or an intake the body's energy pool absorbs"
+        - "the pressure for an energy ratio and the vital state for a pressure"
+        - "whether a material transfer is addressed to this body and how much of it is accepted"
+        - "whether checkpoint bytes are a valid state of this body under its schema"
+      must_not:
+        - "leave the dead state"
+        - "create physical energy by refilling accounting channels"
+        - "assign Organism identity or World commit authority to Embodiment"
+        - "obtain or authorise a material transfer"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code; the checkpoint
+    # loses the physiology configuration and the per-tick spent amounts
+    # (F-0025). The code has no path for re-embodiment or reproduction: those
+    # two values record the intent of ADR-0094, not observed behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "charges by kind, intakes, material transfers addressed to the body"
+      - "a caller-supplied tick and resting flag when the controller is advanced"
+    outputs:
+      - "metabolic and physiology snapshots"
+      - "a read-only export of the record for observation"
+      - "a checkpoint of body and ledger under body and episode identifiers"
+    consumers:
+      - "Lab's operator material transfer and World's durable checkpoint integration tests (not registered as units)"
