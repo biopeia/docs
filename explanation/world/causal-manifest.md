@@ -44,6 +44,16 @@ it. It carries:
 The reference to the journal itself is recognisable by its owner name and is
 not counted as a participant.
 
+## Recovery limitation: presence-to-owner association
+
+The manifest records active presence identities and participant owner
+identities as separate collections. In the reviewed World revision, the
+presence-to-owner links supplied at genesis are not persisted in this
+manifest. The cut therefore does not by itself provide enough information to
+reconstruct that association after restart. This is narrower than the
+participant checkpoint-reference guarantees described above; do not infer
+complete World reconstruction from the manifest alone.
+
 ## What a manifest must satisfy to exist
 
 A manifest that breaks any of these cannot be constructed. They are read from

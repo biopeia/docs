@@ -31,7 +31,8 @@ components:
       - "prefix digests"
       - "plain-data snapshots"
     consumers:
-      - "World runtimes, the journal snapshot store and the World causal manifest (not yet registered as units)"
+      - "World runtimes and the journal snapshot store (not currently registered as units)"
+      - "WLD-MAN, the registered World causal manifest unit"
 
   WLD-MAN:
     coverage_unit: component.world-causal-manifest
