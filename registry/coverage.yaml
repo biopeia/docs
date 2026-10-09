@@ -46,3 +46,55 @@ units:
       status: RECORDED
       basis:
         world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  component.world-journal-snapshot-store:
+    kind: component
+    title: World journal snapshot store
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-SNP
+    canonical_docs:
+      - explanation/world/journal-snapshot-store.md
+    implementation:
+      - world:src/world/durable_runtime.py
+    tests:
+      - world:tests/test_durable_runtime.py
+    adrs:
+      - docs:technical/adr/ADR-0107-journal-role.md
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+    depends_on:
+      - component.world-causal-journal
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+
+  component.world-durable-runtime:
+    kind: component
+    title: Durable World runtime
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-DRT
+    canonical_docs:
+      - explanation/world/durable-runtime.md
+    implementation:
+      - world:src/world/durable_runtime.py
+    tests:
+      - world:tests/test_durable_runtime.py
+      - world:tests/integration/test_durable_checkpoint_restore_slice.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+      - docs:technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md
+      - docs:technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+    depends_on:
+      - component.world-causal-journal
+      - component.world-causal-manifest
+      - component.world-journal-snapshot-store
+    review:
+      status: RECORDED
+      basis:
+        world: cb4bd6b0506b554bf4187b36c23095a7521c4504

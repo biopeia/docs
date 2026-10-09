@@ -64,3 +64,64 @@ components:
       - "recovery receipts"
     consumers:
       - "the durable World runtime (not yet registered as a unit)"
+
+  WLD-SNP:
+    coverage_unit: component.world-journal-snapshot-store
+    name: "World journal snapshot store"
+    authority:
+      owns: "the immutable on-disk snapshots of the World causal journal and the checkpoint references to them"
+      may_decide:
+        - "whether a reference names an intact journal snapshot"
+        - "whether an existing snapshot file is identical to a candidate"
+      must_not:
+        - "decide whether a causal tick commits"
+        - "interpret the records it stores"
+        - "remove or rewrite a snapshot"
+    state:
+      owner: world
+      family: causal_history
+    lifecycle:
+      birth: empty
+      checkpoint: not_applicable
+      restart: preserve
+      reembodiment: not_applicable
+      reproduction: not_applicable
+    inputs:
+      - "a journal and the causal tick it is being saved for"
+    outputs:
+      - "one immutable snapshot file per request"
+      - "a checkpoint reference under the owner name world-journal"
+    consumers:
+      - component.world-durable-runtime
+
+  WLD-DRT:
+    coverage_unit: component.world-durable-runtime
+    name: "Durable World runtime"
+    authority:
+      owns: "the coordination of a World causal transition from one committed cut to the next, and the in-process refusal to continue after a failure"
+      may_decide:
+        - "whether a transition may open, given the durable manifest and the requested roster changes"
+        - "whether the references returned by the owners name the proposed participants and intact, owner-validated checkpoints"
+        - "whether the cut is published"
+      must_not:
+        - "hold, read or interpret the state of an Organism, an Embodiment or an Environment"
+        - "restore owner state itself during recovery"
+        - "claim crash consistency, rollback across owners or a multi-writer protocol"
+    state:
+      owner: world
+      family: ephemeral
+    lifecycle:
+      birth: initialize
+      checkpoint: not_applicable
+      restart: reset
+      reembodiment: not_applicable
+      reproduction: not_applicable
+    inputs:
+      - "a genesis specification"
+      - "a callback that persists owner state and returns checkpoint references"
+      - "owner checkpoint contracts, a dependency verifier and a restorer supplied by the caller"
+    outputs:
+      - "one causal record per committed tick"
+      - "the committed manifest of each cut, through the manifest store"
+    consumers:
+      - "compositions that drive a World, such as the integration tests and Lab (not registered as units)"
