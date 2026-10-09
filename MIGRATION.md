@@ -45,7 +45,7 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
   records the layout and the validator enforces it. `symbiont-lab` remains an
   accepted historical source for the `design` and `adrs` fields, because the
   Biopeia decisions taken so far (ADR-0073, ADR-0074 and the physical-step
-  integration design) are still recorded there. They have not been moved.
+  integration design) are still recorded there. They were later copied here; see below.
 - **`lab` as a state owner.** Kept. The migration records show Lab owning
   durable apparatus state: `lab:MIGRATION.md` describes a Lab
   intervention-evidence checkpoint written before World publishes a causal cut

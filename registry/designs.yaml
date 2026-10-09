@@ -7,6 +7,9 @@ schema_version: 1
 # implementation_status describes the Biopeia repositories. A state recorded in
 # the source repository is kept under `source` as provenance and is never
 # inherited: a copied design starts as not_evaluated.
+#
+# source.register_entry is the triage text of the design's row in the source
+# register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
   design.runtime.biopeia-physical-step-integration-v1:
@@ -24,6 +27,7 @@ designs:
       repository: symbiont-lab
       commit: cfa137e167081acac3590fb52ae069adfda605d4
       path: docs/design/runtime/biopeia-physical-step-integration-v1.md
+      register_entry: "Architecture-owner approved 2026-10-09 (ADR-0073): stable Embodiment command identity and descriptors; owner adoption of solver candidates; World-owned complete roster, durable owner-closed cuts and single logical writer; attributable Lab intervention with distinct intervention/run identities; and the minimum end-to-end physical causal-step milestone. World #10 and Embodiment #11 are integrated; Embodiment #13 adds owner-side adoption/checkpoint support. Lab #4 and the first integrated end-to-end slice remain incomplete. Observation Semantic Model v1 is approved conceptually; semantic-family contracts may proceed, but concrete schema/transport/storage remain unapproved."
       document_status: Approved
       implementation_status: Partial
 
@@ -41,9 +45,10 @@ designs:
       repository: symbiont-lab
       commit: cfa137e167081acac3590fb52ae069adfda605d4
       path: docs/design/observability/observation-semantic-model-v1.md
+      register_entry: "Architecture Owner approved the transport-independent conceptual semantics on 2026-10-09. The model resolves claim atomicity, typed subject/identity, authority/epistemic basis, domain time/revision, provenance, availability, family/revision, units/frames, snapshots/replay, delivery principles, and scientific evidence admission. Semantic-family contracts may proceed; later record/envelope design remains separate. Observation #3's transport-neutral primitives are integrated without selecting the final record/wire/API/transport/storage contract; no cutover is authorized."
       document_status: Approved
       implementation_status: Not started
-    notes: >
+    editorial_notes: >
       Approved as a conceptual model only. The document states that concrete
       record, delivery, schema, transport and storage decisions are not
       authorized by it. It refines the Observation Architecture v1 target
@@ -64,9 +69,10 @@ designs:
       repository: symbiont-lab
       commit: cfa137e167081acac3590fb52ae069adfda605d4
       path: docs/design/observability/observation-architecture-target-design-v1.md
+      register_entry: "Architecture owner approved with refinements on 2026-10-07 for target direction/boundaries: domain-owned observation production with Lab-owned operational coordination/materialization/delivery (Option C), observation-oriented/event-delivered where needed, explicit identity/time/lineage, consumer-driven coherence and full replacement. Project owner froze this macro-architecture slice on 2026-10-08; the Observation Semantic Model v1 is now approved conceptually, while semantic-family contracts, concrete record/envelope design, family-specific identity/time/provenance representation, snapshots/replay/delivery and transport remain open. Embodiment accepted the backend-neutral Physical Body Pose semantic contract with refinements; project-owner unit disposition excludes any Physics3D capability with implicit/unknown units until explicit declaration or conversion to metres is demonstrated. Observation #3's transport-neutral primitives are integrated; no concrete family schema, delivery API, transport, storage, or cutover is approved."
       document_status: Approved
       implementation_status: Not started
-    notes: >
+    editorial_notes: >
       Approved on 2026-10-07 as the target for operational observation in the
       source repository, two days before the Biopeia Architecture v1 baseline
       (ADR-0095 to ADR-0110) was ratified. It has not been reviewed against
