@@ -70,3 +70,59 @@ terms:
       - component.world-durable-runtime
     canonical_refs:
       - explanation/world/durable-runtime.md
+
+  organism-checkpoint-envelope:
+    term: "Organism checkpoint envelope"
+    definition: >
+      The Organism-defined value that carries an identity, private state as
+      uninterpreted bytes with their digest, and the references needed to
+      restore that state. It is what a checkpoint reference of World would
+      point to; it does not say how the state is assembled or restored.
+    distinguishes_from:
+      - checkpoint-reference
+      - dependency-closure
+    owners:
+      - component.organism-identity-checkpoint
+    canonical_refs:
+      - explanation/organism/identity-and-checkpoint.md
+
+  dependency-closure:
+    term: "Dependency closure"
+    definition: >
+      The set of external contents a checkpoint needs in order to be restored.
+      The envelope can verify the dependencies it declares, each by locator
+      and digest; it cannot tell whether the declared set is the required one.
+    distinguishes_from:
+      - organism-checkpoint-envelope
+    owners:
+      - component.organism-identity-checkpoint
+    canonical_refs:
+      - explanation/organism/identity-and-checkpoint.md
+
+  action-commitment:
+    term: "Action commitment"
+    definition: >
+      The mutable Organism record under which motor commands may be issued: it
+      names a proposal, a controller and an actuator surface fingerprint, and
+      is active until ended once. It is a record, not an enforcement: the code
+      does not require that it result from an arbitration.
+    distinguishes_from:
+      - motor-command
+    owners:
+      - mechanism.organism-action-path
+    canonical_refs:
+      - explanation/organism/action-path.md
+
+  motor-command:
+    term: "Motor command"
+    definition: >
+      An immutable Organism value naming activations for some channels of one
+      actuator surface, with the commitment, controller and tick it was issued
+      under. It lists only the channels commanded. It is not an execution and
+      not the effector command of Embodiment.
+    distinguishes_from:
+      - action-commitment
+    owners:
+      - mechanism.organism-action-path
+    canonical_refs:
+      - explanation/organism/action-path.md

@@ -276,3 +276,93 @@ units:
       status: RECORDED
       basis:
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  mechanism.organism-action-path:
+    kind: mechanism
+    title: From an affordance to a motor command
+    status: CURRENT
+    owner_domain: organism
+    participating_domains:
+      - world
+      - embodiment
+    canonical_docs:
+      - explanation/organism/action-path.md
+    implementation:
+      - organism:src/organism/agency/affordance.py
+      - organism:src/organism/agency/prospective.py
+      - organism:src/organism/agency/intention.py
+      - organism:src/organism/actuation/action.py
+      - organism:src/organism/actuation/arbitration.py
+      - organism:src/organism/actuation/commitment.py
+      - organism:src/organism/actuation/controller.py
+      - organism:src/organism/actuation/command.py
+      - organism:src/organism/actuation/surface.py
+      - organism:src/organism/actuation/system.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    tests:
+      - organism:tests/source_unit/agency/test_executive_admission.py
+      - organism:tests/source_unit/actuation/test_command_binding.py
+      - organism:tests/source_unit/actuation/test_surface.py
+      - organism:tests/source_unit/actuation/test_system.py
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    depends_on:
+      - mechanism.physical-causal-step
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  component.organism-identity-checkpoint:
+    kind: component
+    title: Organism identity and the checkpoint envelope
+    status: CURRENT
+    owner_domain: organism
+    participating_domains:
+      - world
+    component_id: ORG-IDC
+    canonical_docs:
+      - explanation/organism/identity-and-checkpoint.md
+    implementation:
+      - organism:src/organism/identity.py
+      - organism:src/organism/checkpoint.py
+      - organism:src/organism/cognition/portable_checkpoint.py
+    tests:
+      - organism:tests/test_identity.py
+      - organism:tests/test_checkpoint.py
+      - organism:tests/source_unit/cognition/test_portable_checkpoint.py
+    adrs:
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-executive-outcome-ledger:
+    kind: component
+    title: Executive outcome ledger
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-EOL
+    canonical_docs:
+      - explanation/organism/executive-outcome-ledger.md
+    implementation:
+      - organism:src/organism/agency/executive_outcome.py
+      - organism:src/organism/agency/prospective.py
+    tests:
+      - organism:tests/source_unit/agency/test_executive_outcome.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
