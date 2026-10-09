@@ -1,0 +1,4 @@
+schema_version: 1
+
+# Formal notation. A global symbol cannot have two canonical meanings.
+symbols: {}

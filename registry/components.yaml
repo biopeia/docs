@@ -1,0 +1,4 @@
+schema_version: 1
+
+# Authority, state ownership and lifecycle behaviour of each component unit.
+components: {}

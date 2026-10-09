@@ -1,0 +1,65 @@
+schema_version: 1
+
+# Closed vocabularies for the Biopeia documentation registry.
+# tools/validate_registry.py reads this file; it holds no vocabulary of its own.
+
+# Owning domains. `prefix` is the mandatory prefix of the component identifiers
+# owned by that domain. `nature` follows the accepted migration topology:
+# seven repositories are not seven semantic authorities.
+domains:
+  organism: {prefix: ORG, nature: semantic-authority}
+  embodiment: {prefix: EMB, nature: semantic-authority}
+  environment: {prefix: ENV, nature: semantic-authority}
+  world: {prefix: WLD, nature: semantic-authority}
+  modality: {prefix: MOD, nature: capability}
+  observation: {prefix: OBS, nature: capability}
+  lab: {prefix: LAB, nature: apparatus}
+
+# Repositories a reference (`<repository>:<path>`) may name, beyond the domains
+# above. `historical` repositories may be cited as design/decision sources but
+# never as the implementation or tests of a Biopeia unit.
+extra_repositories:
+  docs: {historical: false}
+  symbiont-lab: {historical: true}
+
+unit_kinds: [algorithm, component, concept, equation, mechanism, metric]
+
+# Architectural status of a unit. TARGET is accepted architecture that the
+# extracted code is not yet claimed to implement.
+unit_statuses: [CURRENT, TARGET, DESIGN, HISTORICAL, EXPERIMENTAL, UNRESOLVED]
+
+# Review status of a unit's documentation. This is a coordination label about
+# the review, not a statement about the strength of the evidence; see
+# reference/evidence-status.md.
+review_statuses:
+  - RECORDED
+  - REVIEW_PENDING
+  - CONFIRMED
+  - CONFIRMED_WITH_LIMITATIONS
+  - NOT_REPRODUCED
+  - SUPERSEDED
+
+# Semantic owner every persistent state item must declare.
+state_owners: [organism, embodiment, environment, world, lab, implementation-local]
+
+state_families:
+  - ephemeral
+  - episode_bound
+  - adaptive_longitudinal
+  - identity_longitudinal
+  - embodiment_local
+  - infrastructure
+
+# What happens to a component's state at each lifecycle boundary.
+lifecycle:
+  birth: [empty, initialize]
+  checkpoint: [not_applicable, preserve, reset]
+  restart: [preserve, reset]
+  reembodiment: [invalidate_authority, preserve, rebind, reset]
+  reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
+
+parameter_sources: [CODE, DESIGN, STUDY, FORMAL]
+
+metric_classes: [organism_internal, scientific_evaluation, operational, historical]
+
+notation_scopes: [global, local, contextual]
