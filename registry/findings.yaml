@@ -226,13 +226,23 @@ findings:
     observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
     units:
       - component.environment-finite-resource
+      - component.environment-resource-geometry
     summary: >
-      The finite resource's position, radii and quantity carry no unit, while
-      the static scene in the same repository labels its lengths in metres.
+      The finite resource's quantity remaining and transfer bound carry no
+      unit. Its lengths carry none either, but that is declared: they are
+      relative lengths, realised in metres only through an explicit
+      projection with a caller-supplied scale.
     documented_in:
       - explanation/environment/finite-resource.md
+      - explanation/environment/resource-geometry.md
     material: false
-    status: open
+    status: accepted
+    disposition: >
+      Corrected on review of the projection module. As first recorded this
+      finding said the resource carried no units as if that were an omission.
+      For lengths the code declares relative values and provides the
+      projection, so that part is the stated design. What remains open is
+      only that the quantity has no unit, which no decision record requires.
 
   F-0016:
     class: implementation_finding
@@ -245,6 +255,53 @@ findings:
       it is unchanged until the quantity reaches zero and then vanishes.
     documented_in:
       - explanation/environment/finite-resource.md
+    material: false
+    status: open
+
+  F-0017:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-procedural-genesis
+    summary: >
+      Generated spheres may overlap one another and may cross or lie under
+      the ground plane; the placement box is independent of the plane.
+    documented_in:
+      - explanation/environment/procedural-genesis.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it makes no guarantee of non-overlap,
+      terrain quality, ecological meaning or scientific suitability.
+
+  F-0018:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-resource-geometry
+    summary: >
+      No consumer of the resource geometry projection exists in the source or
+      tests of any other repository; where a projected resource sphere enters
+      a physical scene is not established by any code.
+    documented_in:
+      - explanation/environment/resource-geometry.md
+    material: false
+    status: open
+
+  F-0019:
+    class: evidence_gap
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-procedural-genesis
+    summary: >
+      A generated scene is checkpointed in full and its provenance kept as an
+      opaque record; nothing checks that the recorded seed and configuration
+      still regenerate the stored scene.
+    documented_in:
+      - explanation/environment/procedural-genesis.md
     material: false
     status: open
 

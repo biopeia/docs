@@ -1,0 +1,63 @@
+schema_version: 1
+
+# Cross-domain contracts: where one domain relies on another, who the parties
+# are, how the two sides are bound in code, which decisions govern the
+# contract, which tests exercise it and which findings bear on it. This file
+# describes what the code does. It defines no contract and has no authority
+# over any of them.
+contracts:
+
+  contract.owner-checkpoint-validation:
+    title: Owner checkpoint validation
+    summary: >
+      During a causal cut and after a restoration, World asks each owner
+      whether given checkpoint bytes are valid for a given identity and
+      schema. World defines the two questions as a protocol; each owner
+      answers them without importing World.
+    agreement: structural
+    parties:
+      - unit: component.world-durable-runtime
+        role: defines the two questions and calls them on the exact bytes it has hashed
+      - unit: component.environment-finite-resource
+        role: answers them for an identified resource
+      - unit: component.environment-static-scene
+        role: answers them for a static scene owner
+    governed_by:
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    evidence:
+      - world:tests/test_durable_runtime.py
+      - environment:tests/test_identified_resource.py
+      - environment:tests/test_static_scene.py
+    findings:
+      - F-0004
+    documented_in:
+      - explanation/world/durable-runtime.md
+      - explanation/environment/finite-resource.md
+
+  contract.physical-step-correlation:
+    title: Correlation of a physical step
+    summary: >
+      Every owner taking part in a physical step accepts a result only if it
+      carries the correlation the owner was told to expect: World, source
+      tick, step, and the owner's own identity and revision. Each domain
+      defines its own correlation type and nothing in code ties them or shows
+      that World authorised them.
+    agreement: fixture_only
+    parties:
+      - unit: mechanism.physical-causal-step
+        role: builds the correlations of one step and passes them to the owners
+      - unit: component.environment-static-scene
+        role: adopts a candidate only against the expected correlation
+    governed_by:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+    evidence:
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - environment:tests/test_static_scene.py
+    findings:
+      - F-0013
+      - F-0002
+    documented_in:
+      - explanation/environment/static-scene.md
+      - explanation/world/physical-step.md
