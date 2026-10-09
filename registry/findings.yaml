@@ -384,3 +384,18 @@ findings:
       - explanation/modality/current-state.md
     material: false
     status: open
+
+  F-0058:
+    class: documentation_inconsistency
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - concept.modality-current-state
+    summary: >
+      environment MIGRATION.md lists transduction among the stages of World's
+      first integration test. That test passes a constant through unchanged
+      and no transduction code takes part.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open

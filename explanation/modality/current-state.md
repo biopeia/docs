@@ -208,8 +208,9 @@ number; it neither imports nor requires anything from Modality. The phrase
 names a role for the input, not a dependency.
 
 The other integration fixture, the
-[physical causal step](../world/physical-step.md), has no sensory input at
-all, and its outbound path from command to effector does not pass through
+[physical causal step](../world/physical-step.md), feeds no sensory input to
+Organism (a search of the fixture for a cognitive transition, a sense node,
+a signal or a receptor found none), and its outbound path from command to effector does not pass through
 Modality either. ADR-0099 includes effectors in what Modality defines; the
 fixture's comment says Modality's contract is "sensory transduction only, not
 motor-command adaptation". The decision and the comment are set side by side
@@ -218,8 +219,10 @@ comment refers to does not exist in either direction.
 
 ### Transduction that exists elsewhere
 
-One piece of code in the seven repositories does turn body quantities into
-anonymous numbers, and it is not in Modality. Lab's
+A search of the seven repositories for the words transduction and modality
+found one piece of code that turns body quantities into anonymous numbers,
+and it is not in Modality. Code doing similar work under other names would
+not have been found by that search. Lab's
 `lab:src/lab/apparatus/interoception.py::OpaqueBodyInteroception` is
 documented as: "Transduce selected body-state scalars into anonymous receptor
 slots." It derives four values from a body's state, limits each to the range
@@ -228,8 +231,8 @@ order set by a permutation. It can save and restore that permutation
 ("Persist only the slot permutation, never physiology labels."). Within Lab's
 source it is used only by its own unit tests.
 
-This is mentioned because it is the only current answer to "where does
-transduction happen". It is Lab apparatus, it holds a small piece of
+This is mentioned because it is the only code found that calls itself a
+transducer. It is Lab apparatus, it holds a small piece of
 transducer state, and ADR-0099 assigns episode transducer state to
 Embodiment. Whether that is a conflict is for the owners; it is recorded as a
 finding and not judged here.
@@ -282,7 +285,7 @@ Found while tracing the above. Recorded as findings; nothing was changed.
 | No repository imports or depends on Modality | A search of the source, test and packaging files of the six other repositories at the commits listed; World's migration record |
 | The signal in World's fixture is a constant passed through unchanged to Organism | Code of the fixture, read in full; an ad hoc run of its two tests without Modality installed |
 | That the equality assertion cannot fail | Reading of the fixture: the second value is assigned from the first |
-| Lab's interoception transducer | Code of the module, read in full; not run |
+| Lab's interoception transducer, and that it is the only one found | Code of the module, read in full; not run. A search by the words transduction and modality, which would miss code named otherwise |
 | That no transduction contract exists in either direction | Absence in the code at the commit reviewed; a negative result of reading and searching, not of a test |
 
 Not verified: whether World's integration job ran in continuous integration
