@@ -247,3 +247,144 @@ findings:
       - explanation/environment/finite-resource.md
     material: false
     status: open
+
+  F-0020:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-physical-state
+      - mechanism.physical-causal-step
+    summary: >
+      Candidate adoption compares the candidate with an expected correlation
+      that the caller also supplies, so Embodiment cannot verify that World
+      authorised the step; environment and solver revisions are compared with
+      nothing the state holds; and because adoption returns a new value, one
+      state can adopt several candidates for the same step. Embodiment's side
+      of F-0013.
+    documented_in:
+      - explanation/embodiment/physical-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/25"
+
+  F-0021:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-physical-state
+      - component.embodiment-somatic-state
+    summary: >
+      The physical state offers no owner validation methods; its owner
+      contract and schema name exist only in World's integration fixture. A
+      body has two unrelated checkpoints, physical and somatic, and only the
+      physical one names a World and a causal tick.
+    documented_in:
+      - explanation/embodiment/physical-state.md
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: open
+
+  F-0022:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-actuation-projection
+    summary: >
+      The actuation projection reads its pose and checkpoint arguments for
+      identifiers only and accepts any object that has them; projects commands
+      for a dead body; compares the command's issue tick with nothing; ties
+      its result to no World or physical step; and accepts whitespace-only
+      identifiers that the physical state in the same package refuses.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
+
+  F-0023:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-actuation-projection
+    summary: >
+      ADR-0073 item 1 words the neutral value as optional and lets a
+      descriptor declare saturation. The code requires a numeric neutral value
+      and accepts only the saturation policy reject. Quantity and unit are
+      required but are uninterpreted text.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
+
+  F-0024:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Emptying the energy reserve through the metabolic ledger leaves the
+      body active until a controller is advanced, while the same depletion
+      through the body record is death at once. The tick of death is the
+      body's age on one path and a caller-supplied tick on the other. Body
+      age, ledger tick, controller tick and World causal tick are unrelated.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/26"
+
+  F-0025:
+    class: recovery_durability_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      The somatic checkpoint saves neither the physiology configuration nor
+      the amounts spent in the current tick. A body with non-default
+      thresholds reported a different pressure after restore.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/27"
+
+  F-0026:
+    class: documentation_inconsistency
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Comments in the somatic modules cite an audit file and a homeostatic
+      repair cycle that are not in the repository, name the Symbiont
+      scheduler, and state that direct assignment of integrity routes through
+      the structural write path; no such attribute exists and direct
+      assignment of the aggregate drifts from the per-structure records.
+      Bounds are not enforced on assignment.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: open
+
+  F-0027:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Temperature, fatigue, growth progress, senescence and per-structure
+      functional capacity are stored and checkpointed but never changed, and
+      twenty-six of twenty-nine physiology configuration values are never
+      read. Nothing advances a body through time. The absence of somatic
+      dynamics is already tracked by the owner.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/20"

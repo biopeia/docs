@@ -276,3 +276,83 @@ units:
       status: RECORDED
       basis:
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  component.embodiment-physical-state:
+    kind: component
+    title: Body physical state and adoption of a solver candidate
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+    component_id: EMB-PHY
+    canonical_docs:
+      - explanation/embodiment/physical-state.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/physical_transition.py
+      - embodiment:src/embodiment/observation.py
+    tests:
+      - embodiment:tests/test_physical_transition.py
+      - embodiment:tests/test_body_pose_sample.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  mechanism.embodiment-actuation-projection:
+    kind: mechanism
+    title: Actuation projection by stable effector identity
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - organism
+    canonical_docs:
+      - explanation/embodiment/actuation-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/actuation_projection.py
+    tests:
+      - embodiment:tests/test_actuation_projection.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+
+  component.embodiment-somatic-state:
+    kind: component
+    title: Somatic state, metabolic ledger and body checkpoint
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - lab
+      - world
+    component_id: EMB-SOM
+    canonical_docs:
+      - explanation/embodiment/somatic-state.md
+    implementation:
+      - embodiment:src/embodiment/physiology.py
+      - embodiment:src/embodiment/metabolism.py
+      - embodiment:src/embodiment/physiology_config.py
+      - embodiment:src/embodiment/intake.py
+      - embodiment:src/embodiment/checkpoint.py
+    tests:
+      - embodiment:tests/test_somatic_state.py
+      - embodiment:tests/test_intake.py
+      - embodiment:tests/test_checkpoint.py
+    adrs:
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c

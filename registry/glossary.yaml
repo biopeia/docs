@@ -70,3 +70,30 @@ terms:
       - component.world-durable-runtime
     canonical_refs:
       - explanation/world/durable-runtime.md
+
+  solver-candidate:
+    term: "Solver candidate"
+    definition: >
+      A numerical result proposed by a physical solver for one correlated
+      step. It has no authority: it becomes owner state only when the owning
+      domain validates and adopts it, and it is distinct from the state that
+      adoption produces.
+    distinguishes_from:
+      - checkpoint-reference
+    owners:
+      - component.embodiment-physical-state
+    canonical_refs:
+      - explanation/embodiment/physical-state.md
+
+  effector:
+    term: "Effector"
+    definition: >
+      A place on a body's morphology where something physical can be
+      commanded, with a stable identifier and a declared quantity, unit, range
+      and neutral value. Distinct from an actuator, which is the opaque
+      identifier a motor command addresses; an actuator surface associates the
+      two explicitly.
+    owners:
+      - mechanism.embodiment-actuation-projection
+    canonical_refs:
+      - explanation/embodiment/actuation-projection.md
