@@ -667,8 +667,13 @@ findings:
     documented_in:
       - explanation/lab/study-utilities.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/lab/issues/34"
+    disposition: >
+      Resolved in lab PR #36 (commit c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4).
+      Introduced v2 canonical JSON serialization with length-prefixed framing and
+      domain separators for world and config digests, preserving numeric types
+      without separator collisions. Tested in lab:tests/unit/test_digests.py.
 
   F-0065:
     class: evidence_gap
