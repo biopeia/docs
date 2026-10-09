@@ -247,3 +247,128 @@ findings:
       - explanation/environment/finite-resource.md
     material: false
     status: open
+
+  F-0060:
+    class: recovery_durability_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The World record of a transfer carries nothing about the intervention, and the manifest references the Lab evidence checkpoint for one tick only. A tick that fails after the callback leaves a complete evidence file in the store. Once the World has committed a later tick, the durable state examined no longer distinguishes an evidence file whose transfer committed from one whose transfer did not. The repository declares that the record carries no payload and how a leftover file must be read; it does not declare the loss of the link.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/31"
+
+  F-0061:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The same intervention identifier is accepted for several committed transfers in one World; nothing checks uniqueness. ADR-0073 says the identifier identifies the intervention.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/32"
+
+  F-0062:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The body's reserve ratio that Lab passes to Observation's projection after a transfer appears in no projected event, because the projection copies only keys it knows. The projection also returns an event of type cognition holding only source, instance and tick, although no organism takes part. The integration test asserts the event types, not their content.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/33"
+
+  F-0063:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The transfer requires the World's registered owners to be exactly one resource and one body, so it is refused in any World that registers an Organism owner; this refusal has no test. Lab offers no recovery step after a failed transfer, a non-experimental request may carry study and protocol identifiers, and the evidence contract checks only the schema version and the intervention identifier.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: false
+    status: open
+
+  F-0064:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-study-utilities
+    summary: >
+      The event stream digest joins fields and events with unescaped separators, so different streams can give equal digests; an integer and the equal float, and a missing and an empty observation, also coincide. No Biopeia code calls it or produces the event shape it hashes, and it is unrelated to the World domain despite its name. The configuration digest has no test.
+    documented_in:
+      - explanation/lab/study-utilities.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/34"
+
+  F-0065:
+    class: evidence_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The integration tests of the material transfer are not run by Lab's continuous integration, which runs the unit suite only. The revisions pinned for them are one to four commits behind the main branches of the other repositories; the tests passed at both when run for the documentation.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the repository itself: its README states that a green package CI run validates only the isolated unit suite and is not integration evidence, because the default token cannot clone the other private repositories.
+
+  F-0066:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-study-utilities
+    summary: >
+      The scalar summaries pair by position, cut unequal lists short without notice, do not report how many values or pairs they dropped, report a standard deviation of zero for a single value, and raise an unrelated error on a not-a-number value. The paired and disjoint seed checks accept repeated seeds, and seeds are compared by numeric equality.
+    documented_in:
+      - explanation/lab/study-utilities.md
+    material: false
+    status: open
+
+  F-0067:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-body-interoception-transducer
+    summary: >
+      The interoception transducer has no consumer in Biopeia. Its checkpoint does not bind the receptor identifiers, so restoring with reordered identifiers silently changes which source each receives. A not-a-number reserve, integrity or temperature is reported as one. Its one piece of state, the permutation, is held by Lab, while ADR-0099 assigns episode transducer state to Embodiment; the code has no notion of episode or calibration.
+    documented_in:
+      - explanation/lab/body-interoception-transducer.md
+    material: false
+    status: open
+
+  F-0068:
+    class: documentation_inconsistency
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+      - component.lab-body-interoception-transducer
+    summary: >
+      The revisions of the other repositories named in Lab's migration notes differ from those pinned in its pyproject file, and the notes give test paths without the unit directory the tests now live in. The interoception module describes itself as used by a Physics3D apparatus that is not in the repository.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+      - explanation/lab/body-interoception-transducer.md
+    material: false
+    status: open

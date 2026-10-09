@@ -70,3 +70,46 @@ terms:
       - component.world-durable-runtime
     canonical_refs:
       - explanation/world/durable-runtime.md
+
+  intervention-identity:
+    term: "Intervention identity"
+    definition: >
+      The caller-supplied identifier of one act of intervening from outside
+      the simulated life. Lab files its evidence under it. It is not the
+      identity of a run and not the identifier of the World transition that
+      commits the act.
+    distinguishes_from:
+      - run-identity
+    owners:
+      - component.lab-operator-material-transfer
+    canonical_refs:
+      - explanation/lab/operator-material-transfer.md
+
+  run-identity:
+    term: "Run identity"
+    definition: >
+      The identifier of a scientific execution an intervention is declared to
+      have taken place in. Required when the intervention is declared
+      experimental and refused when it is declared non-experimental. The code
+      checks that it is present, not that the run exists.
+    distinguishes_from:
+      - intervention-identity
+    owners:
+      - component.lab-operator-material-transfer
+    canonical_refs:
+      - explanation/lab/operator-material-transfer.md
+
+  evidence-checkpoint:
+    term: "Evidence checkpoint"
+    definition: >
+      The record Lab writes for one intervention: who asked, what was asked,
+      and the quantities requested, offered, accepted and debited. It takes
+      part in one World causal cut as a participant of that step only. It is
+      Lab's provenance of an act, not a state of any owner and not a
+      scientific result.
+    distinguishes_from:
+      - checkpoint-reference
+    owners:
+      - component.lab-operator-material-transfer
+    canonical_refs:
+      - explanation/lab/operator-material-transfer.md

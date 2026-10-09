@@ -191,3 +191,77 @@ components:
       - "a checkpoint holding the scene and the last accepted correlation"
     consumers:
       - mechanism.physical-causal-step
+
+  LAB-OMT:
+    coverage_unit: component.lab-operator-material-transfer
+    name: "Operator material transfer"
+    authority:
+      owns: "the intervention request as declared by the caller, the order in which Environment, Embodiment and World are asked, and the intervention evidence checkpoint with the files of its store"
+      may_decide:
+        - "whether a request is well formed and agrees with the identities the owners carry"
+        - "how much to ask the resource for, within the bound the caller declared"
+        - "whether bytes are a valid evidence checkpoint for an intervention identity"
+      must_not:
+        - "decide how much the resource offers or is debited, or how much the body accepts"
+        - "change the owners' objects in place or adopt a state World has not committed"
+        - "treat the operator identifier as authentication or authorisation"
+        - "claim equivalence to an endogenous physical mechanism, or present a transfer as a scientific result"
+    state:
+      owner: lab
+      family: evidence_record
+    inputs:
+      - "a caller-declared intervention request and a requested quantity"
+      - "Environment's identified resource and Embodiment's checkpoint object, matching the World's committed cut"
+      - "a durable World runtime whose registered owners are exactly those two"
+    outputs:
+      - "one committed World tick with new Environment and Embodiment checkpoints"
+      - "an evidence checkpoint filed under the intervention identity"
+      - "three events from Observation's projection, returned to the caller"
+    consumers:
+      - "none registered; called by its own integration tests only"
+
+  LAB-STU:
+    coverage_unit: component.lab-study-utilities
+    name: "Study utilities"
+    authority:
+      owns: "nothing persistent; pure computations over seed lists, lists of scalar measurements, an event stream of one historical shape and a configuration dictionary"
+      may_decide:
+        - "whether seed lists are unique, disjoint or equal in order"
+        - "which values count as missing in a summary"
+      must_not:
+        - "run experiments, own simulated life or carry scientific artifacts"
+        - "be read as a test of significance or as evidence of an effect"
+        - "be taken for a digest of a Biopeia World"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "lists of seeds, lists of numbers with missing values, events, a dictionary"
+    outputs:
+      - "an error or nothing; means, differences and an aggregate; SHA-256 text"
+    consumers:
+      - "none in the Biopeia repositories"
+
+  LAB-INT:
+    coverage_unit: component.lab-body-interoception-transducer
+    name: "Body interoception transducer"
+    authority:
+      owns: "the permutation that assigns four body-state sources to four caller-named slots"
+      may_decide:
+        - "whether a mapping is a permutation of the four sources"
+        - "how each source is limited to the range from zero to one"
+      must_not:
+        - "assign labels, valence or action meaning to the values"
+        - "change the body state it reads or own any physiology"
+        - "claim scientific validity"
+    state:
+      owner: lab
+      family: infrastructure
+    inputs:
+      - "any object exposing energy reserve, maximum energy, structural integrity, temperature and fatigue"
+      - "four distinct receptor identifiers supplied by the caller"
+    outputs:
+      - "four values between zero and one under the caller's identifiers"
+      - "a checkpoint holding only the permutation"
+    consumers:
+      - "none in the Biopeia repositories"

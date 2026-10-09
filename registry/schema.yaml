@@ -58,6 +58,7 @@ state_families:
   - causal_history
   - environmental_state
   - infrastructure
+  - evidence_record
 
 # Which block describes a component's state, by the domain that owns it. The
 # dimensions are per nature of component: the lifecycle axes below came from
