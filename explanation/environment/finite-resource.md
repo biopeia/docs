@@ -28,9 +28,14 @@ checked on creation: finite numbers, positive sizes, a non-negative quantity,
 and a field wider than the resource itself
 (`test_resource_rejects_invalid_configuration`).
 
-None of these values carries a unit. Positions, radii and the quantity are
-bare numbers. The module that describes static scenes, in the same
-repository, labels its lengths in metres; this one does not.
+None of these values carries a unit, and for the lengths that is deliberate.
+The module that gives a resource a physical shape states that "The resource
+model stores relative lengths rather than calibrated SI values": position,
+radius and field radius share one relative scale, and become metres only when
+a caller supplies a frame and a scale; see
+[giving a resource a physical shape](resource-geometry.md). The quantity
+remaining and the transfer bound are bare numbers with no unit and no such
+projection.
 
 ## The field around it
 
@@ -121,5 +126,5 @@ not reviewed for this document.
 |---|---|
 | Validation, the field, offer and acceptance, checkpoint round trip and strictness, owner validation | Code and tests in `environment:tests/unit/test_resource.py` and `environment:tests/test_identified_resource.py` |
 | The field does not shrink with use; the bound is per call; direct assignment is possible | Code, and one ad hoc run of the module at that revision |
-| Absence of units | Code |
+| Lengths are relative, by declaration; the quantity has no unit | Code of this module and of `environment:src/environment/physical.py` |
 | Why the quantity belongs to Environment | Accepted decision ADR-0095; a statement of intent |
