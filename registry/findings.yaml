@@ -236,13 +236,15 @@ findings:
       - explanation/environment/finite-resource.md
       - explanation/environment/resource-geometry.md
     material: false
-    status: accepted
+    status: open
     disposition: >
-      Corrected on review of the projection module. As first recorded this
-      finding said the resource carried no units as if that were an omission.
-      For lengths the code declares relative values and provides the
-      projection, so that part is the stated design. What remains open is
-      only that the quantity has no unit, which no decision record requires.
+      The geometry module explicitly declares relative lengths and requires
+      a caller-supplied scale for projection to metres. The remaining
+      quantity and transfer bound have no declared units. Their intended
+      meaning (including whether they are abstract, dimensionless values or
+      physical quantities) is unresolved; no unit or physical interpretation
+      is inferred here. Define that meaning before treating the contract gap
+      as closed.
 
   F-0016:
     class: implementation_finding
@@ -282,9 +284,11 @@ findings:
     units:
       - component.environment-resource-geometry
     summary: >
-      No consumer of the resource geometry projection exists in the source or
-      tests of any other repository; where a projected resource sphere enters
-      a physical scene is not established by any code.
+      No consumer of the resource geometry projection was found by source
+      search in the inspected Biopeia code snapshots; where a projected
+      resource sphere enters a physical scene is not established by that
+      code. This bounded search does not assert that no external consumer
+      exists.
     documented_in:
       - explanation/environment/resource-geometry.md
     material: false
