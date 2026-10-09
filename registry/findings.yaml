@@ -247,3 +247,140 @@ findings:
       - explanation/environment/finite-resource.md
     material: false
     status: open
+
+  F-0050:
+    class: implementation_finding
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      The modality repository holds no capability: the package exports
+      nothing, has no submodule, and its only test asserts that emptiness. No
+      other Biopeia repository imports or depends on it.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: true
+    status: accepted
+    disposition: >
+      The repository declares this itself. Its README and package docstring
+      say that no concrete operator or catalogue is ratified, and its
+      migration record states that the Architecture Owner ratified the removal
+      of the copied operators and catalogue on 2026-10-09 (commit 709996a).
+
+  F-0051:
+    class: documentation_inconsistency
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      ADR-0073 item 9 and the approved physical-step design (section
+      "Modality repository disposition") keep the repository separate because
+      of its reusable transduction contracts. The repository contains none
+      since commit 709996a, and nothing records whether the design's own
+      conditions for reconsidering the repository were re-evaluated.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/modality/issues/11"
+
+  F-0052:
+    class: documentation_inconsistency
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      AGENTS.md says the repository owns bounded sensory transduction and
+      modality capability contracts in its current extracted slice. That code
+      was removed by commit 709996a, which did not change AGENTS.md; the file
+      contradicts the README, the migration record and the code.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/modality/issues/12"
+
+  F-0053:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      World's physical step fixture comments that Modality's current target
+      contract is sensory transduction only, and the causal tick fixture
+      records a field named transduced_signal, although no transduction
+      contract exists and the value is passed through unchanged.
+      environment MIGRATION.md likewise lists transduction among the stages
+      of that test.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0054:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - concept.modality-current-state
+    summary: >
+      organism MIGRATION.md describes Modality as a repository whose
+      extracted v1 API is sensory transduction only. That API was removed
+      from modality by commit 709996a.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0055:
+    class: evidence_gap
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      No test carries an environmental phenomenon to an organism. In World's
+      causal tick fixture the environmental signal is a constant, the opaque
+      signal is assigned from it, and the assertion that the two are equal
+      cannot fail. Environment code and Modality code take no part.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0056:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - concept.modality-current-state
+    summary: >
+      The only transducing code in the seven repositories is Lab's
+      OpaqueBodyInteroception, which maps body scalars to anonymous slots and
+      can save and restore its slot permutation. ADR-0099 assigns episode
+      transducer state to Embodiment. Not ruled on; within Lab's source the
+      class is used only by its unit tests.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0057:
+    class: contract_gap
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      A World unit test (tests/test_durable_runtime.py) registers a step
+      participant labelled "modality" that writes a checkpoint. The label is
+      an arbitrary string, but the decisions allow no persistent state owned
+      by Modality and World does not restrict owner kinds.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open

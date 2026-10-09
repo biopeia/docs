@@ -70,3 +70,16 @@ terms:
       - component.world-durable-runtime
     canonical_refs:
       - explanation/world/durable-runtime.md
+
+  transduction:
+    term: "Transduction"
+    definition: >
+      The conversion between a physical or environmental phenomenon and an
+      opaque signal or effector command. It carries no interpretation: what a
+      signal means belongs to the Organism. Modality is decided to define it
+      (ADR-0099); no Biopeia code in the modality repository implements it at
+      the commit reviewed.
+    owners:
+      - concept.modality-current-state
+    canonical_refs:
+      - explanation/modality/current-state.md

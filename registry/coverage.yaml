@@ -276,3 +276,31 @@ units:
       status: RECORDED
       basis:
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  concept.modality-current-state:
+    kind: concept
+    title: "Modality: decided role and current state of the repository"
+    status: TARGET
+    owner_domain: modality
+    participating_domains:
+      - world
+      - organism
+    canonical_docs:
+      - explanation/modality/current-state.md
+    implementation:
+      - modality:src/modality/__init__.py
+    tests:
+      - modality:tests/test_unratified_surface.py
+      - world:tests/integration/test_first_biopeia_causal_tick.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        modality: 9bd1b77c9eabc271969109cfab52394dc5b52012
+        world: c162b67e698de9b47450264402677b0165e6e20e
