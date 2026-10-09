@@ -720,3 +720,197 @@ findings:
       - explanation/lab/body-interoception-transducer.md
     material: false
     status: open
+
+  F-0040:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      Clearing the plane signals a run boundary only to the streams open at
+      that moment and does not record it in the delivery sequence. A consumer
+      that reconnects afterwards with its last watermark receives no rebase
+      request: nothing if no publication followed, or only the later
+      messages. It keeps the discarded view with no indication. Confirmed by
+      an ad hoc run; no test calls clear.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/13"
+
+  F-0041:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+      - component.observation-semantic-claim-model
+    summary: >
+      Observations are held and delivered by reference and their freezing is
+      shallow: the claim value is the producer's own object, neither copied
+      nor made immutable. A consumer in the same process can change what the
+      plane holds and what other consumers see, and, if a producer publishes
+      live owner state, that state. This is what the code permits; no
+      consumer has been shown to do it. Bears on ADR-0078.
+    documented_in:
+      - explanation/observation/observation-plane.md
+      - explanation/observation/semantic-claim-model.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/14"
+
+  F-0042:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-inherited-projection
+    summary: >
+      The inherited projection is decided to be transitional (design point
+      P8) but carries no such mark in code and is exported from the top of
+      the package beside the plane. Its callers are Lab's material transfer,
+      in source, and one World integration test; both pass a metabolic
+      reserve ratio that the projection discards without a signal, as it
+      does any key it does not know. ObservedFrame has no caller and
+      requires a mind mapping that nothing in Biopeia produces.
+    documented_in:
+      - explanation/observation/inherited-projection.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/15"
+
+  F-0043:
+    class: evidence_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      Several plane behaviours rest on code reading and ad hoc runs only: a
+      successful replay, the rebase reasons future_watermark,
+      replay_unavailable and replay_exceeds_subscriber_bound, sequence gaps
+      on a family-filtered stream, delivery after an overflow, clear and its
+      run_boundary signal, and any use from more than one thread. No test
+      examines whether anything can flow from a consumer back to a producer.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/16"
+
+  F-0044:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+      - component.observation-semantic-claim-model
+    summary: >
+      Nothing publishes to or reads from the observation plane outside its
+      own tests, and no adapter from an authority's boundary exists in any
+      repository. World's integration tests build semantic observations and
+      publish them nowhere.
+    documented_in:
+      - explanation/observation/observation-plane.md
+      - explanation/observation/semantic-claim-model.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the repository itself: its migration record excludes
+      domain-specific readers and says not to add source-domain adapters
+      until their design gates are approved. Recorded so that the plane is
+      not read as a running part of the cross-domain flow.
+
+  F-0045:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      The plane's current view holds the last observation published for a
+      key, not the latest in domain time: publishing causal tick 10 and then
+      tick 3 leaves tick 3 as current. The key leaves out asserter, producer
+      and acquisition, so an observation from a different asserter replaces
+      the earlier one. The view declares no coherence scope.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: false
+    status: open
+
+  F-0046:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-semantic-claim-model
+    summary: >
+      The claim model's rules are checks on labels. The lab_derived kind is
+      accepted under any authority; the asserter is not tied to the
+      authority; primary domain time is checked by its domain field only, so
+      a World causal tick can be given as Embodiment time, as World's own
+      integration test does; only three delivery-sequence kind names are
+      refused; a derived claim needs no lineage; epistemic and condition
+      kinds are free tokens; and there is no field for units, frames or
+      observation identity.
+    documented_in:
+      - explanation/observation/semantic-claim-model.md
+    material: false
+    status: open
+
+  F-0047:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      A stream delivers each sequence at most once and replaces lost
+      messages by a rebase request, while the approved semantic model names
+      at-least-once as the default target for reliable streaming.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: the documentation of open_stream states
+      at-most-once delivery within a healthy subscription, completeness
+      limited to the retained range, and rebase on loss. The model allows a
+      declared lossy contract and makes at-least-once the default only where
+      a family requires reliable streaming; no family exists.
+
+  F-0048:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-inherited-projection
+    summary: >
+      The inherited projection coerces without telling: an integer key
+      truncates 3.9 to 3 and turns a boolean into 1 or 0, not-a-number passes
+      through, some values are passed through by reference, an empty joint
+      list is kept while an empty link list is dropped. Its keys keep
+      historical names, including symbiont_tick, and its frame writes
+      feeds_back false as a constant label that nothing measures.
+    documented_in:
+      - explanation/observation/inherited-projection.md
+    material: false
+    status: open
+
+  F-0049:
+    class: performance_concern
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      A stream that is never closed stays registered for the life of the
+      plane, and every publication visits every registered stream while
+      holding the plane's lock; opening a stream with a watermark scans the
+      whole replay history. Not measured.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: false
+    status: open

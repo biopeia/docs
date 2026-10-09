@@ -152,3 +152,60 @@ terms:
       - component.lab-operator-material-transfer
     canonical_refs:
       - explanation/lab/operator-material-transfer.md
+
+  semantic-claim:
+    term: "Semantic claim"
+    definition: >
+      One assertion under one semantic family, hence one authority, about one
+      subject and with one epistemic kind. Its value is opaque to the common
+      model. A claim says what is asserted; it does not say who produced the
+      representation or when it held.
+    distinguishes_from:
+      - semantic-observation
+      - causal-record
+    owners:
+      - component.observation-semantic-claim-model
+    canonical_refs:
+      - explanation/observation/semantic-claim-model.md
+
+  semantic-observation:
+    term: "Semantic observation"
+    definition: >
+      A semantic claim together with the circumstances of its making:
+      acquisition, asserter, producer, domain time, context time, identity
+      links, lineage, conditions and optional run context. Its authority is
+      that of its claim. It is a value, not a delivery or a record of
+      evidence.
+    distinguishes_from:
+      - semantic-claim
+    owners:
+      - component.observation-semantic-claim-model
+    canonical_refs:
+      - explanation/observation/semantic-claim-model.md
+
+  delivery-sequence:
+    term: "Delivery sequence"
+    definition: >
+      The count of publications to one observation plane instance, assigned
+      in the order the plane received them and shared by all families. It
+      orders delivery. It is not domain time, is not a causal tick, and has
+      no meaning outside the plane instance that issued it.
+    distinguishes_from:
+      - causal-tick
+    owners:
+      - component.observation-plane
+    canonical_refs:
+      - explanation/observation/observation-plane.md
+
+  rebase-request:
+    term: "Rebase request"
+    definition: >
+      The observation plane's signal to one stream that what the consumer
+      holds may be incomplete and must be replaced from the current view. It
+      reports a loss of delivery, never the absence of the source state.
+    distinguishes_from:
+      - delivery-sequence
+    owners:
+      - component.observation-plane
+    canonical_refs:
+      - explanation/observation/observation-plane.md
