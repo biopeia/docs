@@ -136,6 +136,50 @@ is it revisioned; and are its quantities physical or relative. These are
 still not turned into required dimensions here; that is a decision to take
 with the other domains in view.
 
+### All seven domains
+
+Embodiment, Organism, Observation, Modality and Lab were then documented in
+parallel, each from the main branch of its repository on 2026-10-09, bringing
+the registry to units in all seven domains. What that did to the schema:
+
+- **Lifecycle axes on Organism and Embodiment.** Birth, checkpoint and restart
+  had meaning for every component. Re-embodiment and reproduction had no code
+  path in any of the four components documented; their values were taken from
+  the intent of the decision records and say so. No allowed value means "no
+  code path". The axes also cannot tell "this component can export and restore
+  its state" from "the composed organism keeps it": one Organism component
+  round-trips exactly and is carried by no checkpoint.
+- **A stateless function is not well described as a component.** Embodiment's
+  actuation projection was registered as a mechanism for that reason, and so
+  has no authority block.
+- **Whether a mechanism that exists only as separate pieces is CURRENT.**
+  Organism's action path is CURRENT because every stage is merged source, and
+  its document states that the stages are joined only in a World fixture.
+- **Observation.** No state block. The plane holds references to values owned
+  by each claim's authority, which a single owner field cannot express; it is
+  recorded as implementation-local.
+- **Lab.** A state family, `evidence_record`, was added for the evidence
+  checkpoint. Lab's store also holds files whose bytes belong to Environment
+  and Embodiment; the schema cannot express that split.
+- **Modality.** No state to ask about: the package is empty, and its unit is
+  a concept with status TARGET.
+- **Findings can only name a domain repository**, so a tension between two
+  decision records kept in this repository cannot be registered as one.
+
+The questions about state that recurred, by domain, and are still not turned
+into required dimensions:
+
+| Domain | Questions its documents had to answer |
+|---|---|
+| Environment | Does the state change; does it adopt candidates; is it revisioned; are its quantities physical or relative |
+| Observation | Is it durable; whose are the values it holds, and are they copies; is an absence evidence of anything; is its ordering a domain time |
+| Lab | Whose is a record Lab wrote about another owner's state; is the record in a causal cut, and for how long; what marks a record of a failed transition |
+| Modality | None today; by decision, who would own a transducer's state |
+
+A registry of cross-domain contracts and a generated reference page were
+added at the same time, and the first explanation that crosses all the
+domains, derived from the unit documents.
+
 ### Findings
 
 `registry/findings.yaml` was added so that what documentation discovers

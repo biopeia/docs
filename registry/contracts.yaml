@@ -22,6 +22,10 @@ contracts:
         role: answers them for an identified resource
       - unit: component.environment-static-scene
         role: answers them for a static scene owner
+      - unit: component.embodiment-physical-state
+        role: takes part in a causal cut but provides neither method; a caller must wrap it
+      - unit: component.lab-operator-material-transfer
+        role: supplies the contracts of the owners it composes and of its own evidence checkpoint
     governed_by:
       - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
@@ -31,9 +35,11 @@ contracts:
       - environment:tests/test_static_scene.py
     findings:
       - F-0004
+      - F-0021
     documented_in:
       - explanation/world/durable-runtime.md
       - explanation/environment/finite-resource.md
+      - explanation/embodiment/physical-state.md
 
   contract.physical-step-correlation:
     title: Correlation of a physical step
@@ -49,6 +55,8 @@ contracts:
         role: builds the correlations of one step and passes them to the owners
       - unit: component.environment-static-scene
         role: adopts a candidate only against the expected correlation
+      - unit: component.embodiment-physical-state
+        role: adopts a solver candidate only against the expected correlation, with its own correlation type
     governed_by:
       - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
       - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
@@ -57,7 +65,155 @@ contracts:
       - environment:tests/test_static_scene.py
     findings:
       - F-0013
+      - F-0020
       - F-0002
     documented_in:
       - explanation/environment/static-scene.md
+      - explanation/embodiment/physical-state.md
       - explanation/world/physical-step.md
+
+  contract.motor-command:
+    title: Motor command from Organism to Embodiment
+    summary: >
+      Organism issues a motor command that addresses actuators by opaque
+      identifier; Embodiment projects it onto effectors by stable identity,
+      with quantity, unit and range declared by the active morphology, and
+      gives no value to an effector the command omits. Embodiment declares the
+      shape of the command it accepts as a protocol and does not import
+      Organism.
+    agreement: structural
+    parties:
+      - unit: mechanism.organism-action-path
+        role: produces the motor command
+      - unit: mechanism.embodiment-actuation-projection
+        role: projects it onto effectors; refuses what the morphology does not declare
+    governed_by:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    evidence:
+      - organism:tests/source_unit/actuation/test_command_binding.py
+      - embodiment:tests/test_actuation_projection.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    findings:
+      - F-0030
+      - F-0032
+      - F-0022
+      - F-0023
+    documented_in:
+      - explanation/organism/action-path.md
+      - explanation/embodiment/actuation-projection.md
+
+  contract.operator-material-transfer:
+    title: Operator material transfer
+    summary: >
+      Under an operator's request Lab asks an Environment resource what it
+      offers, asks an Embodiment body what it accepts, has the resource debit
+      what was accepted, and has World commit the result with a Lab evidence
+      checkpoint as a participant of that step. Lab is the only domain whose
+      source imports other domains, and it imports the types of all three.
+    agreement: shared_type
+    parties:
+      - unit: component.lab-operator-material-transfer
+        role: composes the transfer and records the evidence
+      - unit: component.environment-finite-resource
+        role: offers and debits
+      - unit: component.embodiment-somatic-state
+        role: accepts into the body
+      - unit: component.world-durable-runtime
+        role: commits the cut
+    governed_by:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0101-operator-control.md
+      - docs:technical/adr/ADR-0102-lab.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+    evidence:
+      - lab:tests/integration/test_material_transfer_intervention.py
+      - lab:tests/integration/test_operator_material_transfer.py
+    findings:
+      - F-0060
+      - F-0061
+      - F-0014
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+      - explanation/environment/finite-resource.md
+
+  contract.observation-of-a-committed-cut:
+    title: Observation of a committed cut
+    summary: >
+      After World commits a cut, claims about World, a body and the
+      environment are built in the semantic claim model, each naming its
+      authority. No adapter from any authority to Observation exists in
+      source; the claims are constructed by a World test fixture, and nothing
+      publishes to the observation plane outside its own tests.
+    agreement: fixture_only
+    parties:
+      - unit: mechanism.physical-causal-step
+        role: builds the claims after the manifest is committed
+      - unit: component.observation-semantic-claim-model
+        role: defines the claim and its authority
+      - unit: component.observation-plane
+        role: would hold and deliver the claims; has no publisher
+    governed_by:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+    evidence:
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - observation:tests/test_semantic_model.py
+    findings:
+      - F-0044
+      - F-0041
+    documented_in:
+      - explanation/observation/semantic-claim-model.md
+      - explanation/observation/observation-plane.md
+      - explanation/world/physical-step.md
+
+  contract.inherited-projection-telemetry:
+    title: Telemetry through the inherited projection
+    summary: >
+      Lab passes a telemetry mapping to Observation's inherited projection and
+      receives presentation records. The projection is transitional by
+      decision and carries historical key names.
+    agreement: shared_type
+    parties:
+      - unit: component.lab-operator-material-transfer
+        role: calls the projection after a committed transfer
+      - unit: component.observation-inherited-projection
+        role: maps the telemetry to presentation records
+    governed_by:
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+    evidence:
+      - observation:tests/test_projection.py
+      - lab:tests/integration/test_material_transfer_intervention.py
+    findings:
+      - F-0042
+      - F-0062
+    documented_in:
+      - explanation/observation/inherited-projection.md
+      - explanation/lab/operator-material-transfer.md
+
+  contract.body-interoception:
+    title: Body interoception
+    summary: >
+      Lab's interoception transducer reads Embodiment-owned body state and
+      emits opaque receptor signals. Nothing consumes those signals in any
+      repository, and the transducer keeps a permutation in Lab although the
+      decision on Modality assigns episode transducer state to Embodiment.
+    agreement: shared_type
+    parties:
+      - unit: component.lab-body-interoception-transducer
+        role: reads body state and emits opaque signals
+      - unit: component.embodiment-somatic-state
+        role: owns the body state read
+      - unit: concept.modality-current-state
+        role: the decided home of transduction rules, empty today
+    governed_by:
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+    evidence:
+      - lab:tests/unit/test_interoception.py
+    findings:
+      - F-0056
+      - F-0067
+    documented_in:
+      - explanation/lab/body-interoception-transducer.md
+      - explanation/modality/current-state.md

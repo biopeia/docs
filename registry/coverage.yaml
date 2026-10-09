@@ -682,3 +682,37 @@ units:
       status: RECORDED
       basis:
         organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  concept.biopeia-one-step-across-the-domains:
+    kind: concept
+    title: One step across the domains
+    status: CURRENT
+    owner_domain: world
+    participating_domains:
+      - environment
+      - modality
+      - organism
+      - embodiment
+      - observation
+      - lab
+    canonical_docs:
+      - explanation/biopeia/one-step-across-the-domains.md
+    adrs:
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+    depends_on:
+      - component.world-causal-manifest
+      - component.world-durable-runtime
+      - mechanism.world-recovery
+      - mechanism.physical-causal-step
+      - component.environment-finite-resource
+      - component.environment-static-scene
+      - concept.modality-current-state
+      - component.embodiment-physical-state
+      - mechanism.embodiment-actuation-projection
+      - component.lab-operator-material-transfer
+      - component.observation-semantic-claim-model
+      - component.observation-plane
+      - mechanism.organism-action-path
+      - component.organism-identity-checkpoint

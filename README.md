@@ -48,6 +48,7 @@ never restated as a second source of truth.
 |---|---|
 | `explanation/` | Explanatory documents. Created with the first documented unit |
 | `technical/adr/`, `technical/design/` | Decision records and design documents |
+| `reference/units.md` | Generated from the registry by `tools/render_units.py`: for every unit, what it is responsible for, who owns it, where it is implemented, its state, contracts, governing decisions, tests, review commit and known findings |
 | `registry/schema.yaml` | Closed vocabularies: domains and their component prefixes, statuses, state owners, lifecycle values |
 | `registry/coverage.yaml` | Canonical units: owner, explanation, and the code, tests, design and decisions each is traced to |
 | `registry/designs.yaml` | Design register: document status, implementation status and architecture scope of every design |
@@ -88,6 +89,11 @@ definitions held together by convention, or a meeting that happens only in a
 test fixture). That file describes; it defines no contract and has no
 authority over any.
 
+Explanations that cross domains, under `explanation/biopeia/`, are derived
+from the unit documents and add no fact of their own. Each is registered as
+depending on the units it draws from, so that a change in any of them marks
+it for review.
+
 Documentation work records what it finds and fixes nothing. Each finding is
 classified in `registry/findings.yaml`; a material one is raised as an issue
 in the repository that owns the code and linked from its entry. A finding
@@ -110,6 +116,7 @@ scientific-documentation skill kept in `biopeia/.github-private` under
 # Integrity: needs only this repository. This is what CI runs.
 python -m pytest
 python tools/validate_registry.py
+python tools/render_units.py --check   # the generated reference page is current
 
 # From the integration workspace: also resolve references into the sibling
 # checkouts and report units whose sources changed since their review basis.
