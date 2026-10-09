@@ -260,7 +260,7 @@ findings:
       other Biopeia repository imports or depends on it.
     documented_in:
       - explanation/modality/current-state.md
-    material: true
+    material: false
     status: accepted
     disposition: >
       The repository declares this itself. Its README and package docstring
@@ -314,8 +314,6 @@ findings:
       contract is sensory transduction only, and the causal tick fixture
       records a field named transduced_signal, although no transduction
       contract exists and the value is passed through unchanged.
-      environment MIGRATION.md likewise lists transduction among the stages
-      of that test.
     documented_in:
       - explanation/modality/current-state.md
     material: false
@@ -359,8 +357,8 @@ findings:
     units:
       - concept.modality-current-state
     summary: >
-      The only transducing code in the seven repositories is Lab's
-      OpaqueBodyInteroception, which maps body scalars to anonymous slots and
+      The only code a search for the words transduction and modality found
+      that transduces is Lab's OpaqueBodyInteroception, which maps body scalars to anonymous slots and
       can save and restore its slot permutation. ADR-0099 assigns episode
       transducer state to Embodiment. Not ruled on; within Lab's source the
       class is used only by its unit tests.

@@ -77,8 +77,7 @@ terms:
       The conversion between a physical or environmental phenomenon and an
       opaque signal or effector command. It carries no interpretation: what a
       signal means belongs to the Organism. Modality is decided to define it
-      (ADR-0099); no Biopeia code in the modality repository implements it at
-      the commit reviewed.
+      (ADR-0099).
     owners:
       - concept.modality-current-state
     canonical_refs:
