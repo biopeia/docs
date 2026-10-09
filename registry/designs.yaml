@@ -26,29 +26,32 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-09"
       basis:
-        world: cb4bd6b0506b
+        world: c162b67e698d
         organism: f15c4c572124
         embodiment: 3fe3cda64516
-        environment: f2ef8c277a42
+        environment: f97ec22272b6
         observation: cb07ace20605
       tests:
         - "world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py"
+        - "world:tests/integration/physical_step/test_procedural_sphere_world_step.py"
         - "world:tests/integration/test_first_biopeia_causal_tick.py"
         - "world:tests/integration/test_durable_checkpoint_restore_slice.py"
       observed: >
         The integration job of the world repository's CI passed on its main
-        branch and on the change that produced the revision above. It installs
-        the revisions pinned in world's integration extra, which are those
-        listed here, and runs the integration tests versioned in that
-        repository (9 tests). They include an end-to-end deterministic
+        branch at the revision above. It installs the revisions pinned in
+        world's integration extra, which are those listed here, and runs the
+        integration tests versioned in that repository. A second physical-step
+        fixture exercises a generated scene: its geometry reaches the solver,
+        the Environment checkpoint in the committed cut restores it, and a
+        step follows the restore. They include an end-to-end deterministic
         physical causal step, rejection of a stale-morphology candidate
         without publishing the next World cut, adoption of an articulated
         MuJoCo candidate followed by a World commit, and publication and
         restore of an owner-checkpoint closure.
       limits: >
-        The step is carried out by a test fixture; no component in any
+        The step is carried out by two test fixtures; no component in any
         repository orchestrates it and no solver adapter exists outside the
-        fixture (see explanation/world/physical-step.md). Of the conformance
+        fixtures (see explanation/world/physical-step.md). Of the conformance
         items the design lists, the tests exercise stable effector identity
         under permutation, an omitted channel as no command, repeated
         deterministic results, and rejection of a stale morphology with no

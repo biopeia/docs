@@ -155,12 +155,12 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | world; also involves organism, embodiment, environment, observation |
 | Explained in | [explanation/world/physical-step.md](../explanation/world/physical-step.md) |
-| Implemented in | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:src/world/durable_runtime.py` |
+| Implemented in | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:src/world/durable_runtime.py` |
 | Cross-domain contracts | Correlation of a physical step (fixture_only); Observation of a committed cut (fixture_only) |
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
-| Reviewed at | world@cb4bd6b0506b (RECORDED) |
+| Tests | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py` |
+| Reviewed at | world@c162b67e698d (RECORDED) |
 | Known findings | F-0002 implementation finding ([issue](https://github.com/biopeia/world/issues/29)); F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)) |
 
 ### One step across the domains
@@ -341,7 +341,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/test_identity.py`, `organism:tests/test_checkpoint.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
 | Reviewed at | organism@6543188ff302 (RECORDED) |
-| Known findings | F-0031 contract gap ([issue](https://github.com/biopeia/organism/issues/31)); F-0033 contract gap (accepted); F-0034 implementation finding (open) |
+| Known findings | F-0031 contract gap ([issue](https://github.com/biopeia/organism/issues/31)); F-0033 contract gap ([issue](https://github.com/biopeia/organism/issues/33)); F-0034 implementation finding (open) |
 
 ### Executive outcome ledger
 
@@ -377,7 +377,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_unratified_surface.py`, `world:tests/integration/test_first_biopeia_causal_tick.py` |
 | Reviewed at | modality@9bd1b77c9eab, world@c162b67e698d (RECORDED) |
-| Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap (open); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
+| Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation
 

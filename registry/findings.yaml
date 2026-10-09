@@ -27,7 +27,7 @@ findings:
     units:
       - mechanism.physical-causal-step
     summary: >
-      The physical causal step is orchestrated only by a test fixture. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
+      The physical causal step is orchestrated only by test fixtures, of which there are two. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
     documented_in:
       - explanation/world/physical-step.md
     material: true
@@ -393,7 +393,7 @@ findings:
 
   F-0055:
     class: evidence_gap
-    repository: world
+    repository: modality
     observed_at: c162b67e698de9b47450264402677b0165e6e20e
     units:
       - concept.modality-current-state
@@ -404,8 +404,9 @@ findings:
       cannot fail. Environment code and Modality code take no part.
     documented_in:
       - explanation/modality/current-state.md
-    material: false
-    status: open
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/modality/issues/13"
 
   F-0056:
     class: contract_gap
@@ -968,9 +969,8 @@ findings:
     documented_in:
       - explanation/organism/identity-and-checkpoint.md
     material: true
-    status: accepted
-    disposition: >
-      Declared by the repository itself at the observed commit. Its MIGRATION.md states that the check validates declared references only and does not demonstrate that current private-model artifacts are all represented in the envelope, and that the boundary is a migration candidate, not a claim of TARGET conformance. Recorded as a stated limit, not raised as a defect.
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/33"
 
   F-0034:
     class: implementation_finding

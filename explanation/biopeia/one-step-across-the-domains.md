@@ -30,7 +30,7 @@ because it is the main result.
 | Environment to Organism, through transduction | Nothing: a constant in a test | [Modality](../modality/current-state.md) |
 | Organism produces a motor command | Six separate source pieces; joined only in a test fixture | [action path](../organism/action-path.md) |
 | Motor command to effectors | Source code | [actuation projection](../embodiment/actuation-projection.md) |
-| A solver computes a candidate | A function inside a test fixture | [physical step](../world/physical-step.md) |
+| A solver computes a candidate | Functions inside two test fixtures | [physical step](../world/physical-step.md) |
 | Embodiment adopts the candidate | Source code | [physical state](../embodiment/physical-state.md) |
 | Environment adopts its side | Source code, for an unchanged scene only | [static scene](../environment/static-scene.md) |
 | World commits the cut | Source code | [durable runtime](../world/durable-runtime.md), [manifest](../world/causal-manifest.md) |
@@ -92,8 +92,8 @@ the command it accepts and does not import Organism. See
 A solver computes where the body ends up. By decision it is a numerical
 substrate and not an authority
 ([ADR-0098](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)).
-In code, the only call that advances a physical simulation is in a World
-test fixture. See [the physical causal step](../world/physical-step.md).
+In code, the only calls that advance a physical simulation are in two World
+test fixtures. See [the physical causal step](../world/physical-step.md).
 
 ### Adoption by the owners
 

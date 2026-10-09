@@ -450,6 +450,14 @@ def validate(
             "https://github.com/biopeia/"
         ):
             errors.append(f"{where}: status issue_opened requires the issue URL")
+        if (
+            finding.get("status") == "accepted"
+            and finding.get("material") is True
+            and "Architecture Owner" not in str(finding.get("disposition", ""))
+        ):
+            errors.append(
+                f"{where}: a material finding is accepted only on an Architecture Owner decision"
+            )
         if finding.get("status") in ("accepted", "resolved") and not str(
             finding.get("disposition", "")
         ).strip():

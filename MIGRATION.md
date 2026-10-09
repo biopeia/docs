@@ -180,6 +180,20 @@ A registry of cross-domain contracts and a generated reference page were
 added at the same time, and the first explanation that crosses all the
 domains, derived from the unit documents.
 
+### What the staleness check cannot see
+
+The staleness check compares, for each unit, the paths the unit already
+names. It found nothing when `world` gained a second physical-step fixture
+after the physical step was documented, because a new file is not a changed
+path. The document then said "one fixture" and was wrong. It was noticed by a
+reader, not by the check.
+
+The check therefore answers "did what I cited change", not "did something
+new appear that I should have cited". A unit that makes a claim of absence
+(no other caller, no other fixture, no consumer) is exposed to this, and such
+claims should name the search they rest on and its date, as the corrected
+documents now do.
+
 ### Findings
 
 `registry/findings.yaml` was added so that what documentation discovers

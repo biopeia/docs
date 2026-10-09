@@ -137,8 +137,12 @@ finding_classes:
   - documentation_inconsistency
 
 # open: recorded, no issue. issue_opened: an issue exists in the owning
-# repository. accepted: the owner decided it is not a defect; the decision is
-# recorded. resolved: no longer true of the code; the resolution is recorded.
+# repository. accepted: either the Architecture Owner decided it is not a
+# defect, or the owning repository itself declares the limit, in code or in
+# its own documentation; the disposition says which. A material finding is
+# accepted only on an owner decision: a limit that a repository declares is
+# still raised as an issue when it is material. resolved: no longer true of
+# the code; the resolution is recorded.
 finding_statuses: [open, issue_opened, accepted, resolved]
 
 parameter_sources: [CODE, DESIGN, STUDY, FORMAL]
