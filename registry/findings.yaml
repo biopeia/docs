@@ -185,3 +185,65 @@ findings:
     status: accepted
     disposition: >
       Declared by the module itself: it is not durable recovery and does not by itself satisfy the target post-failure contract. The durable runtime is the component that does.
+
+  F-0013:
+    class: contract_gap
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-static-scene
+      - mechanism.physical-causal-step
+    summary: >
+      The static scene owner cannot verify that World authorised a step's
+      correlation, does not bind successive steps to one World, and does not
+      tie its owner identifier to the scene's environment identifier.
+      Environment and Embodiment each define their own PhysicalStepCorrelation
+      type; their agreement for one step is ensured only by whoever builds them.
+    documented_in:
+      - explanation/environment/static-scene.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/environment/issues/37"
+
+  F-0014:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-finite-resource
+    summary: >
+      The finite resource's per-tick transfer bound applies per call, because
+      the resource has no notion of a tick; offering and accepting are not
+      linked; and the remaining quantity can be assigned directly.
+    documented_in:
+      - explanation/environment/finite-resource.md
+    material: false
+    status: open
+
+  F-0015:
+    class: contract_gap
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-finite-resource
+    summary: >
+      The finite resource's position, radii and quantity carry no unit, while
+      the static scene in the same repository labels its lengths in metres.
+    documented_in:
+      - explanation/environment/finite-resource.md
+    material: false
+    status: open
+
+  F-0016:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-finite-resource
+    summary: >
+      The resource's scalar field does not diminish as the resource is used;
+      it is unchanged until the quantity reaches zero and then vanishes.
+    documented_in:
+      - explanation/environment/finite-resource.md
+    material: false
+    status: open

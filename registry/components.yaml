@@ -142,3 +142,52 @@ components:
       - "one causal record per committed tick"
     consumers:
       - "bounded compositions such as the first causal tick integration test (not registered as units)"
+
+  ENV-RES:
+    coverage_unit: component.environment-finite-resource
+    name: "Finite resource"
+    authority:
+      owns: "the objective quantity remaining of one finite environmental resource, its place, its scalar field and its stable identity"
+      may_decide:
+        - "how much it offers in one call and how much of a reported acceptance it debits"
+        - "whether checkpoint bytes are a valid state of this resource under its schema"
+      must_not:
+        - "determine contact, cause an organism action or assign meaning to the resource"
+        - "regenerate"
+        - "claim physical equivalence to an endogenous mechanism"
+    state:
+      owner: environment
+      family: environmental_state
+    inputs:
+      - "a point, to evaluate the field"
+      - "the amount a consumer reports having accepted"
+    outputs:
+      - "the scalar field at a point"
+      - "the quantity offered and the quantity actually removed"
+      - "a checkpoint with its identity"
+    consumers:
+      - "Lab's operator material transfer and the durable World runtime, through the owner validation methods (not registered as units)"
+
+  ENV-SCN:
+    coverage_unit: component.environment-static-scene
+    name: "Static scene and its owner"
+    authority:
+      owns: "an immutable static physical scene (frame, gravity, ground planes, spheres) and the record of the last physical step Environment accepted for it"
+      may_decide:
+        - "whether a scene is well formed"
+        - "whether a candidate step is the next one and leaves the scene unchanged"
+        - "whether checkpoint bytes are a valid state of this owner under its schema"
+      must_not:
+        - "depend on a solver or let a solver own the scene"
+        - "adopt a changed scene"
+        - "mint the authority of a physical step"
+    state:
+      owner: environment
+      family: environmental_state
+    inputs:
+      - "a candidate scene with a correlation, and the correlation to expect"
+    outputs:
+      - "a canonical projection of the scene"
+      - "a checkpoint holding the scene and the last accepted correlation"
+    consumers:
+      - mechanism.physical-causal-step
