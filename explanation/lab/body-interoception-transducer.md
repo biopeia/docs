@@ -155,7 +155,7 @@ consumer learns. No experiment is described or authorised here.
 | Claim | Support |
 |---|---|
 | The four bounded values and their source order; the permutation; refusal of non-permutations; the state left unchanged; the checkpoint holding only the permutation | Code and tests in `lab:tests/unit/test_interoception.py`; the 18 unit tests of the repository passed when run for this document |
-| Embodiment's body state can be sampled; out-of-range and not-a-number inputs; restoring with other or reordered identifiers; conversion of identifiers and positions | Code, and one ad hoc run of the module at that revision with Embodiment at the revision pinned in `lab:pyproject.toml` |
+| Embodiment's body state can be sampled; out-of-range and not-a-number inputs; restoring with other or reordered identifiers; conversion of identifiers and positions | Code, and ad hoc runs of the module at that revision, once with Embodiment at the revision pinned in `lab:pyproject.toml` (`0562febd8dfffaa826c339600bb548ea172fa256`) and once at the revision named at the top, with identical output |
 | No consumer in Biopeia | A search of the seven domain repositories at their main branches on the day of review |
 | How somatic state should reach an Organism and who should own transducer state | Accepted decisions ADR-0094 and ADR-0099; statements of intent |
 | Why the transducer is in Lab | `lab:MIGRATION.md`; a statement by the repository |

@@ -159,9 +159,9 @@ and protocol appear only when the request carried them.
 
 It is stored by a store that Lab provides
 (`lab:src/lab/interventions/material_transfer.py::MaterialTransferCheckpointStore`).
-Each file is named after a hash of the owner identity, the checkpoint
-identifier and the hash of its content, is written once, and is never
-replaced: an existing file with different content is an error. The same store
+Each file name is made of three parts: a shortened hash of the owner
+identity, the checkpoint identifier, and the hash of the content. A file is
+written once and never replaced: an existing file with different content is an error. The same store
 writes the Environment and Embodiment checkpoint files. The bytes of those
 come from the owners' own encodings; Lab writes them to disk without reading
 their meaning.
@@ -324,7 +324,7 @@ transfer. Lab reads no host time and writes no timestamp into the evidence.
 | The tests pass | Run for this document in a clean environment built from the revisions pinned in `lab:pyproject.toml` (embodiment `0562febd8dfffaa826c339600bb548ea172fa256`, environment `a979688e90b279ccfe003d77eddb787272fd5ebf`, observation `cb07ace206058719a9aa9df65e2eb1f837130ee9`, world `dadf2743ee4ff9f22703d2d6643fca9fd9bfa025`): 10 integration and 18 unit tests passed. Run again with the four other repositories at the revisions named at the top: the 10 integration tests passed |
 | Refusal of a run identity on a non-experimental request; refusal of a World with other owners | Code only; neither was run or is tested |
 | The evidence contract checking two fields | Code, and an ad hoc run |
-| Reuse of an intervention identity; zero transfer; stale objects refused; retry refused after failure; the World record carrying no intervention; the evidence reference lasting one tick; a complete evidence file left by a failed tick; the reserve ratio absent from the events; the content of the cognition event | Code, and ad hoc runs of the module at the pinned revisions |
+| Reuse of an intervention identity; zero transfer; stale objects refused; retry refused after failure; the World record carrying no intervention; the evidence reference lasting one tick; a complete evidence file left by a failed tick; the reserve ratio absent from the events; the content of the cognition event | Code, and ad hoc runs of the module, once with the other repositories at the pinned revisions and once at the revisions named at the top, with identical output |
 | What a transfer may claim, what an intervention should record, who owns what | Accepted decisions ADR-0073, ADR-0100, ADR-0101, ADR-0102; statements of intent |
 | The reading of a leftover evidence file; the bounded single-source, single-body scope | `lab:MIGRATION.md`; a statement by the repository, not a result |
 
@@ -335,8 +335,8 @@ validates only the isolated unit suite; it is not integration evidence."
 The pinned revisions are between one and four commits behind the main
 branches of the other repositories on the day of review. Lab's migration
 notes name a different, older set of revisions from the one in
-`lab:pyproject.toml`, and give the paths of the unit tests without the
-directory they now live in.
+`lab:pyproject.toml`, and in some places give the paths of the unit tests
+without the directory they now live in.
 
 No crash, power-loss or concurrent-process test exists for this component.
 

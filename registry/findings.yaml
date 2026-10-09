@@ -366,7 +366,7 @@ findings:
       - component.lab-operator-material-transfer
       - component.lab-body-interoception-transducer
     summary: >
-      The revisions of the other repositories named in Lab's migration notes differ from those pinned in its pyproject file, and the notes give test paths without the unit directory the tests now live in. The interoception module describes itself as used by a Physics3D apparatus that is not in the repository.
+      The revisions of the other repositories named in Lab's migration notes differ from those pinned in its pyproject file, and the notes in some places give test paths without the unit directory the tests now live in. The interoception module describes itself as used by a Physics3D apparatus that is not in the repository.
     documented_in:
       - explanation/lab/operator-material-transfer.md
       - explanation/lab/body-interoception-transducer.md
