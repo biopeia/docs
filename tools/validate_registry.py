@@ -40,6 +40,7 @@ REGISTRY_KEYS = {
     "glossary": "terms",
     "designs": "designs",
     "findings": "findings",
+    "contracts": "contracts",
 }
 REFERENCE_FIELDS = ("implementation", "tests", "design", "adrs")
 CODE_FIELDS = ("implementation", "tests")
@@ -453,6 +454,41 @@ def validate(
             finding.get("disposition", "")
         ).strip():
             errors.append(f"{where}: status {finding.get('status')} requires a disposition")
+
+    # --- contracts --------------------------------------------------------
+    for cid, contract in reg["contracts"].items():
+        where = f"Contract {cid}"
+        if not re.match(r"^contract\.[a-z0-9-]+$", str(cid)):
+            errors.append(f"{where}: id must look like 'contract.<slug>'")
+        for key in ("title", "summary"):
+            if not str(contract.get(key, "")).strip():
+                errors.append(f"{where}: {key} is missing")
+        if contract.get("agreement") not in schema["contract_agreements"]:
+            errors.append(
+                f"{where}: agreement {contract.get('agreement')!r} not in {schema['contract_agreements']}"
+            )
+        parties = contract.get("parties") or []
+        party_domains = set()
+        for party in parties:
+            unit = units.get(party.get("unit")) if isinstance(party, dict) else None
+            if not isinstance(unit, dict):
+                errors.append(f"{where}: party unit {party!r} missing from coverage.yaml")
+                continue
+            if not str(party.get("role", "")).strip():
+                errors.append(f"{where}: party {party.get('unit')} has no role")
+            party_domains.add(unit.get("owner_domain"))
+        if len(party_domains) < 2:
+            errors.append(f"{where}: a cross-domain contract needs parties of at least two domains")
+        for ref in as_list(contract.get("governed_by")):
+            check_reference(where, "adrs", ref)
+        for ref in as_list(contract.get("evidence")):
+            check_reference(where, "tests", ref)
+        for fid in as_list(contract.get("findings")):
+            if fid not in reg["findings"]:
+                errors.append(f"{where}: finding {fid!r} missing from findings.yaml")
+        if not as_list(contract.get("documented_in")):
+            errors.append(f"{where}: documented_in is required")
+        check_doc_paths(where, "canonical_docs", contract.get("documented_in"))
 
     # --- parameters -------------------------------------------------------
     for pid, param in reg["parameters"].items():

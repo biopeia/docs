@@ -127,6 +127,15 @@ input for that later decision:
 A state family, `environmental_state`, was added: none of the existing
 families described environmental truth.
 
+Two further Environment components followed, procedural genesis and the
+physical projection of resource geometry. Both are pure functions that hold
+no state of their own; they are registered with implementation-local,
+ephemeral state. With four components documented, the state questions that
+recur for Environment are: does the state change; does it adopt candidates;
+is it revisioned; and are its quantities physical or relative. These are
+still not turned into required dimensions here; that is a decision to take
+with the other domains in view.
+
 ### Findings
 
 `registry/findings.yaml` was added so that what documentation discovers

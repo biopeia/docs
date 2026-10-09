@@ -51,6 +51,7 @@ never restated as a second source of truth.
 | `registry/schema.yaml` | Closed vocabularies: domains and their component prefixes, statuses, state owners, lifecycle values |
 | `registry/coverage.yaml` | Canonical units: owner, explanation, and the code, tests, design and decisions each is traced to |
 | `registry/designs.yaml` | Design register: document status, implementation status and architecture scope of every design |
+| `registry/contracts.yaml` | Cross-domain contracts: parties, how the two sides are bound in code, governing decisions, evidence and findings |
 | `registry/findings.yaml` | Findings discovered while documenting, classified, with the issue raised for each material one |
 | `registry/components.yaml` | Authority, state ownership and lifecycle of each component |
 | `registry/parameters.yaml`, `metrics.yaml`, `notation.yaml`, `glossary.yaml` | Reference registries |
@@ -78,6 +79,14 @@ three questions instead: is the state durable, is it part of a causal cut,
 and what can a failed transition leave behind. Other domains have no required
 dimensions yet; none is defined before components of that domain have been
 documented.
+
+Where one domain relies on another, the reliance is recorded in
+`registry/contracts.yaml`: who the parties are, which decisions govern it,
+which tests exercise it, and how the two sides are actually bound in code
+(one shared definition, methods that merely match by name, separate
+definitions held together by convention, or a meeting that happens only in a
+test fixture). That file describes; it defines no contract and has no
+authority over any.
 
 Documentation work records what it finds and fixes nothing. Each finding is
 classified in `registry/findings.yaml`; a material one is raised as an issue

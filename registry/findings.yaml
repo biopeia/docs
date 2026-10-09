@@ -226,13 +226,23 @@ findings:
     observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
     units:
       - component.environment-finite-resource
+      - component.environment-resource-geometry
     summary: >
-      The finite resource's position, radii and quantity carry no unit, while
-      the static scene in the same repository labels its lengths in metres.
+      The finite resource's quantity remaining and transfer bound carry no
+      unit. Its lengths carry none either, but that is declared: they are
+      relative lengths, realised in metres only through an explicit
+      projection with a caller-supplied scale.
     documented_in:
       - explanation/environment/finite-resource.md
+      - explanation/environment/resource-geometry.md
     material: false
-    status: open
+    status: accepted
+    disposition: >
+      Corrected on review of the projection module. As first recorded this
+      finding said the resource carried no units as if that were an omission.
+      For lengths the code declares relative values and provides the
+      projection, so that part is the stated design. What remains open is
+      only that the quantity has no unit, which no decision record requires.
 
   F-0016:
     class: implementation_finding
@@ -245,6 +255,663 @@ findings:
       it is unchanged until the quantity reaches zero and then vanishes.
     documented_in:
       - explanation/environment/finite-resource.md
+    material: false
+    status: open
+
+  F-0017:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-procedural-genesis
+    summary: >
+      Generated spheres may overlap one another and may cross or lie under
+      the ground plane; the placement box is independent of the plane.
+    documented_in:
+      - explanation/environment/procedural-genesis.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it makes no guarantee of non-overlap,
+      terrain quality, ecological meaning or scientific suitability.
+
+  F-0018:
+    class: implementation_finding
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-resource-geometry
+    summary: >
+      No consumer of the resource geometry projection exists in the source or
+      tests of any other repository; where a projected resource sphere enters
+      a physical scene is not established by any code.
+    documented_in:
+      - explanation/environment/resource-geometry.md
+    material: false
+    status: open
+
+  F-0019:
+    class: evidence_gap
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - component.environment-procedural-genesis
+    summary: >
+      A generated scene is checkpointed in full and its provenance kept as an
+      opaque record; nothing checks that the recorded seed and configuration
+      still regenerate the stored scene.
+    documented_in:
+      - explanation/environment/procedural-genesis.md
+    material: false
+    status: open
+
+  F-0050:
+    class: implementation_finding
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      The modality repository holds no capability: the package exports
+      nothing, has no submodule, and its only test asserts that emptiness. No
+      other Biopeia repository imports or depends on it.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: accepted
+    disposition: >
+      The repository declares this itself. Its README and package docstring
+      say that no concrete operator or catalogue is ratified, and its
+      migration record states that the Architecture Owner ratified the removal
+      of the copied operators and catalogue on 2026-10-09 (commit 709996a).
+
+  F-0051:
+    class: documentation_inconsistency
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      ADR-0073 item 9 and the approved physical-step design (section
+      "Modality repository disposition") keep the repository separate because
+      of its reusable transduction contracts. The repository contains none
+      since commit 709996a, and nothing records whether the design's own
+      conditions for reconsidering the repository were re-evaluated.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/modality/issues/11"
+
+  F-0052:
+    class: documentation_inconsistency
+    repository: modality
+    observed_at: 9bd1b77c9eabc271969109cfab52394dc5b52012
+    units:
+      - concept.modality-current-state
+    summary: >
+      AGENTS.md says the repository owns bounded sensory transduction and
+      modality capability contracts in its current extracted slice. That code
+      was removed by commit 709996a, which did not change AGENTS.md; the file
+      contradicts the README, the migration record and the code.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/modality/issues/12"
+
+  F-0053:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      World's physical step fixture comments that Modality's current target
+      contract is sensory transduction only, and the causal tick fixture
+      records a field named transduced_signal, although no transduction
+      contract exists and the value is passed through unchanged.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0054:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - concept.modality-current-state
+    summary: >
+      organism MIGRATION.md describes Modality as a repository whose
+      extracted v1 API is sensory transduction only. That API was removed
+      from modality by commit 709996a.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0055:
+    class: evidence_gap
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      No test carries an environmental phenomenon to an organism. In World's
+      causal tick fixture the environmental signal is a constant, the opaque
+      signal is assigned from it, and the assertion that the two are equal
+      cannot fail. Environment code and Modality code take no part.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0056:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - concept.modality-current-state
+    summary: >
+      The only code a search for the words transduction and modality found
+      that transduces is Lab's OpaqueBodyInteroception, which maps body scalars to anonymous slots and
+      can save and restore its slot permutation. ADR-0099 assigns episode
+      transducer state to Embodiment. Not ruled on; within Lab's source the
+      class is used only by its unit tests.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0057:
+    class: contract_gap
+    repository: world
+    observed_at: c162b67e698de9b47450264402677b0165e6e20e
+    units:
+      - concept.modality-current-state
+    summary: >
+      A World unit test (tests/test_durable_runtime.py) registers a step
+      participant labelled "modality" that writes a checkpoint. The label is
+      an arbitrary string, but the decisions allow no persistent state owned
+      by Modality and World does not restrict owner kinds.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0058:
+    class: documentation_inconsistency
+    repository: environment
+    observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+    units:
+      - concept.modality-current-state
+    summary: >
+      environment MIGRATION.md lists transduction among the stages of World's
+      first integration test. That test passes a constant through unchanged
+      and no transduction code takes part.
+    documented_in:
+      - explanation/modality/current-state.md
+    material: false
+    status: open
+
+  F-0020:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-physical-state
+      - mechanism.physical-causal-step
+    summary: >
+      Candidate adoption compares the candidate with an expected correlation
+      that the caller also supplies, so Embodiment cannot verify that World
+      authorised the step; environment and solver revisions are compared with
+      nothing the state holds; and because adoption returns a new value, one
+      state can adopt several candidates for the same step. Embodiment's side
+      of F-0013.
+    documented_in:
+      - explanation/embodiment/physical-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/25"
+
+  F-0021:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-physical-state
+      - component.embodiment-somatic-state
+    summary: >
+      The physical state offers no owner validation methods; its owner
+      contract and schema name exist only in World's integration fixture. A
+      body has two unrelated checkpoints, physical and somatic, and only the
+      physical one names a World and a causal tick.
+    documented_in:
+      - explanation/embodiment/physical-state.md
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: open
+
+  F-0022:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-actuation-projection
+    summary: >
+      The actuation projection reads its pose and checkpoint arguments for
+      identifiers only and accepts any object that has them; projects commands
+      for a dead body; compares the command's issue tick with nothing; ties
+      its result to no World or physical step; and accepts whitespace-only
+      identifiers that the physical state in the same package refuses.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
+
+  F-0023:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-actuation-projection
+    summary: >
+      ADR-0073 item 1 words the neutral value as optional and lets a
+      descriptor declare saturation. The code requires a numeric neutral value
+      and accepts only the saturation policy reject. Quantity and unit are
+      required but are uninterpreted text.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
+
+  F-0024:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Emptying the energy reserve through the metabolic ledger leaves the
+      body active until a controller is advanced, while the same depletion
+      through the body record is death at once. The tick of death is the
+      body's age on one path and a caller-supplied tick on the other. Body
+      age, ledger tick, controller tick and World causal tick are unrelated.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/26"
+
+  F-0025:
+    class: recovery_durability_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      The somatic checkpoint saves neither the physiology configuration nor
+      the amounts spent in the current tick. A body with non-default
+      thresholds reported a different pressure after restore.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/27"
+
+  F-0026:
+    class: documentation_inconsistency
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Comments in the somatic modules cite an audit file and a homeostatic
+      repair cycle that are not in the repository, name the Symbiont
+      scheduler, and state that direct assignment of integrity routes through
+      the structural write path; no such attribute exists and direct
+      assignment of the aggregate drifts from the per-structure records.
+      Bounds are not enforced on assignment.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: open
+
+  F-0027:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-somatic-state
+    summary: >
+      Temperature, fatigue, growth progress, senescence and per-structure
+      functional capacity are stored and checkpointed but never changed, and
+      twenty-six of twenty-nine physiology configuration values are never
+      read. Nothing advances a body through time. The absence of somatic
+      dynamics is already tracked by the owner.
+    documented_in:
+      - explanation/embodiment/somatic-state.md
+    material: false
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/20"
+
+  F-0060:
+    class: recovery_durability_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The World record of a transfer carries nothing about the intervention, and the manifest references the Lab evidence checkpoint for one tick only. A tick that fails after the callback leaves a complete evidence file in the store. Once the World has committed a later tick, the durable state examined no longer distinguishes an evidence file whose transfer committed from one whose transfer did not. The repository declares that the record carries no payload and how a leftover file must be read; it does not declare the loss of the link.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/31"
+
+  F-0061:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The same intervention identifier is accepted for several committed transfers in one World; nothing checks uniqueness. ADR-0073 says the identifier identifies the intervention.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/32"
+
+  F-0062:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The body's reserve ratio that Lab passes to Observation's projection after a transfer appears in no projected event, because the projection copies only keys it knows. The projection also returns an event of type cognition holding only source, instance and tick, although no organism takes part. The integration test asserts the event types, not their content.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/33"
+
+  F-0063:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The transfer requires the World's registered owners to be exactly one resource and one body, so it is refused in any World that registers an Organism owner; this refusal has no test. Lab offers no recovery step after a failed transfer, a non-experimental request may carry study and protocol identifiers, and the evidence contract checks only the schema version and the intervention identifier.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: false
+    status: open
+
+  F-0064:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-study-utilities
+    summary: >
+      The event stream digest joins fields and events with unescaped separators, so different streams can give equal digests; an integer and the equal float, and a missing and an empty observation, also coincide. No Biopeia code calls it or produces the event shape it hashes, and it is unrelated to the World domain despite its name. The configuration digest has no test.
+    documented_in:
+      - explanation/lab/study-utilities.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/lab/issues/34"
+
+  F-0065:
+    class: evidence_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      The integration tests of the material transfer are not run by Lab's continuous integration, which runs the unit suite only. The revisions pinned for them are one to four commits behind the main branches of the other repositories; the tests passed at both when run for the documentation.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the repository itself: its README states that a green package CI run validates only the isolated unit suite and is not integration evidence, because the default token cannot clone the other private repositories.
+
+  F-0066:
+    class: implementation_finding
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-study-utilities
+    summary: >
+      The scalar summaries pair by position, cut unequal lists short without notice, do not report how many values or pairs they dropped, report a standard deviation of zero for a single value, and raise an unrelated error on a not-a-number value. The paired and disjoint seed checks accept repeated seeds, and seeds are compared by numeric equality.
+    documented_in:
+      - explanation/lab/study-utilities.md
+    material: false
+    status: open
+
+  F-0067:
+    class: contract_gap
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-body-interoception-transducer
+    summary: >
+      The interoception transducer has no consumer in Biopeia. Its checkpoint does not bind the receptor identifiers, so restoring with reordered identifiers silently changes which source each receives. A not-a-number reserve, integrity or temperature is reported as one. Its one piece of state, the permutation, is held by Lab, while ADR-0099 assigns episode transducer state to Embodiment; the code has no notion of episode or calibration.
+    documented_in:
+      - explanation/lab/body-interoception-transducer.md
+    material: false
+    status: open
+
+  F-0068:
+    class: documentation_inconsistency
+    repository: lab
+    observed_at: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+    units:
+      - component.lab-operator-material-transfer
+      - component.lab-body-interoception-transducer
+    summary: >
+      The revisions of the other repositories named in Lab's migration notes differ from those pinned in its pyproject file, and the notes in some places give test paths without the unit directory the tests now live in. The interoception module describes itself as used by a Physics3D apparatus that is not in the repository.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+      - explanation/lab/body-interoception-transducer.md
+    material: false
+    status: open
+
+  F-0040:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      Clearing the plane signals a run boundary only to the streams open at
+      that moment and does not record it in the delivery sequence. A consumer
+      that reconnects afterwards with its last watermark receives no rebase
+      request: nothing if no publication followed, or only the later
+      messages. It keeps the discarded view with no indication. Confirmed by
+      an ad hoc run; no test calls clear.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/13"
+
+  F-0041:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+      - component.observation-semantic-claim-model
+    summary: >
+      Observations are held and delivered by reference and their freezing is
+      shallow: the claim value is the producer's own object, neither copied
+      nor made immutable. A consumer in the same process can change what the
+      plane holds and what other consumers see, and, if a producer publishes
+      live owner state, that state. This is what the code permits; no
+      consumer has been shown to do it. Bears on ADR-0078.
+    documented_in:
+      - explanation/observation/observation-plane.md
+      - explanation/observation/semantic-claim-model.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/14"
+
+  F-0042:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-inherited-projection
+    summary: >
+      The inherited projection is decided to be transitional (design point
+      P8) but carries no such mark in code and is exported from the top of
+      the package beside the plane. Its callers are Lab's material transfer,
+      in source, and one World integration test; both pass a metabolic
+      reserve ratio that the projection discards without a signal, as it
+      does any key it does not know. ObservedFrame has no caller and
+      requires a mind mapping that nothing in Biopeia produces.
+    documented_in:
+      - explanation/observation/inherited-projection.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/15"
+
+  F-0043:
+    class: evidence_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      Several plane behaviours rest on code reading and ad hoc runs only: a
+      successful replay, the rebase reasons future_watermark,
+      replay_unavailable and replay_exceeds_subscriber_bound, sequence gaps
+      on a family-filtered stream, delivery after an overflow, clear and its
+      run_boundary signal, and any use from more than one thread. No test
+      examines whether anything can flow from a consumer back to a producer.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/observation/issues/16"
+
+  F-0044:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+      - component.observation-semantic-claim-model
+    summary: >
+      Nothing publishes to or reads from the observation plane outside its
+      own tests, and no adapter from an authority's boundary exists in any
+      repository. World's integration tests build semantic observations and
+      publish them nowhere.
+    documented_in:
+      - explanation/observation/observation-plane.md
+      - explanation/observation/semantic-claim-model.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the repository itself: its migration record excludes
+      domain-specific readers and says not to add source-domain adapters
+      until their design gates are approved. Recorded so that the plane is
+      not read as a running part of the cross-domain flow.
+
+  F-0045:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      The plane's current view holds the last observation published for a
+      key, not the latest in domain time: publishing causal tick 10 and then
+      tick 3 leaves tick 3 as current. The key leaves out asserter, producer
+      and acquisition, so an observation from a different asserter replaces
+      the earlier one. The view declares no coherence scope.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: false
+    status: open
+
+  F-0046:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-semantic-claim-model
+    summary: >
+      The claim model's rules are checks on labels. The lab_derived kind is
+      accepted under any authority; the asserter is not tied to the
+      authority; primary domain time is checked by its domain field only, so
+      a World causal tick can be given as Embodiment time, as World's own
+      integration test does; only three delivery-sequence kind names are
+      refused; a derived claim needs no lineage; epistemic and condition
+      kinds are free tokens; and there is no field for units, frames or
+      observation identity.
+    documented_in:
+      - explanation/observation/semantic-claim-model.md
+    material: false
+    status: open
+
+  F-0047:
+    class: contract_gap
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      A stream delivers each sequence at most once and replaces lost
+      messages by a rebase request, while the approved semantic model names
+      at-least-once as the default target for reliable streaming.
+    documented_in:
+      - explanation/observation/observation-plane.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: the documentation of open_stream states
+      at-most-once delivery within a healthy subscription, completeness
+      limited to the retained range, and rebase on loss. The model allows a
+      declared lossy contract and makes at-least-once the default only where
+      a family requires reliable streaming; no family exists.
+
+  F-0048:
+    class: implementation_finding
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-inherited-projection
+    summary: >
+      The inherited projection coerces without telling: an integer key
+      truncates 3.9 to 3 and turns a boolean into 1 or 0, not-a-number passes
+      through, some values are passed through by reference, an empty joint
+      list is kept while an empty link list is dropped. Its keys keep
+      historical names, including symbiont_tick, and its frame writes
+      feeds_back false as a constant label that nothing measures.
+    documented_in:
+      - explanation/observation/inherited-projection.md
+    material: false
+    status: open
+
+  F-0049:
+    class: performance_concern
+    repository: observation
+    observed_at: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+    units:
+      - component.observation-plane
+    summary: >
+      A stream that is never closed stays registered for the life of the
+      plane, and every publication visits every registered stream while
+      holding the plane's lock; opening a stream with a watermark scans the
+      whole replay history. Not measured.
+    documented_in:
+      - explanation/observation/observation-plane.md
     material: false
     status: open
 

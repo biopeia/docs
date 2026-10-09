@@ -58,6 +58,7 @@ state_families:
   - causal_history
   - environmental_state
   - infrastructure
+  - evidence_record
 
 # Which block describes a component's state, by the domain that owns it. The
 # dimensions are per nature of component: the lifecycle axes below came from
@@ -113,6 +114,16 @@ design_implementation_statuses:
 
 # UNRESOLVED: not yet assessed against the accepted Biopeia architecture.
 design_architecture_scopes: [CURRENT, TARGET, HISTORICAL, UNRESOLVED]
+
+# Cross-domain contracts (registry/contracts.yaml): where one domain relies on
+# another. `agreement` records how the two sides are actually bound in code,
+# which is what the first documented contracts differed in.
+#   shared_type    both sides import one definition
+#   structural     one side calls methods by name that the other happens to
+#                  provide; neither imports the other
+#   by_convention  each side has its own definition; nothing in code ties them
+#   fixture_only   the two sides meet only in a test fixture
+contract_agreements: [shared_type, structural, by_convention, fixture_only]
 
 # Findings discovered while documenting. They are recorded, classified and,
 # when material, raised as an issue in the owning repository. They are never
