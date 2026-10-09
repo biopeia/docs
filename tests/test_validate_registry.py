@@ -71,6 +71,19 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
                 "depends_on": ["component.genome"],
             },
         },
+        "findings": {
+            "F-0001": {
+                "class": "evidence_gap",
+                "repository": "organism",
+                "observed_at": basis,
+                "units": ["component.genome"],
+                "summary": "No test covers inheritance across two generations.",
+                "documented_in": ["explanation/organism.md"],
+                "material": True,
+                "status": "issue_opened",
+                "issue": "https://github.com/biopeia/organism/issues/1",
+            },
+        },
         "designs": {
             "design.genome.inheritance-v1": {
                 "title": "Inheritance v1",
@@ -355,6 +368,16 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("components", "ORG-GEN", "authority.must_not", []), "authority.must_not is missing"),
     (_set("components", "ORG-GEN", "lifecycle.reembodiment", "forget"), "lifecycle.reembodiment"),
     (_set("components", "ORG-GEN", "consumers", ["component.absent"]), "consumer 'component.absent'"),
+    (_set("findings", "F-0001", "class", "bug"), "class 'bug' not in"),
+    (_set("findings", "F-0001", "status", "wontfix"), "status 'wontfix' not in"),
+    (_set("findings", "F-0001", "repository", "docs"), "repository 'docs' not in"),
+    (_set("findings", "F-0001", "units", ["component.absent"]), "missing from coverage.yaml"),
+    (_set("findings", "F-0001", "units", []), "at least one unit is required"),
+    (_set("findings", "F-0001", "material", "yes"), "material must be true or false"),
+    (_set("findings", "F-0001", "observed_at", "main"), "observed_at must be a commit"),
+    (_set("findings", "F-0001", "documented_in", []), "documented_in is required"),
+    (_set("findings", "F-0001", "issue", None), "requires the issue URL"),
+    (_set("findings", "F-0001", "status", "accepted"), "requires a disposition"),
     (_set("parameters", "genome.min_support", "owner", "component.absent"), "does not resolve"),
     (_set("parameters", "genome.min_support", "source", "GUESS"), "source 'GUESS'"),
     (_set("parameters", "genome.min_support", "unit", None), "missing required field 'unit'"),
@@ -428,6 +451,75 @@ def test_design_may_be_superseded_by_decisions(ws: Workspace) -> None:
         document_status="superseded",
         superseded_by_decisions=["docs:technical/adr/ADR-0001.md"],
     )
+    ws.write()
+    errors, _ = ws.validate()
+    assert errors == []
+
+
+def _add_world_component(ws: Workspace, **component: Any) -> None:
+    ws.data["coverage"]["component.world-thing"] = {
+        "kind": "component",
+        "title": "World thing",
+        "status": "CURRENT",
+        "owner_domain": "world",
+        "component_id": "WLD-THG",
+        "canonical_docs": ["explanation/organism.md"],
+    }
+    ws.data["components"]["WLD-THG"] = {
+        "coverage_unit": "component.world-thing",
+        "name": "World thing",
+        "authority": {"owns": "x", "may_decide": ["y"], "must_not": ["z"]},
+        "state": {"owner": "world", "family": "causal_history"},
+        **component,
+    }
+    ws.write()
+
+
+def test_world_component_is_described_by_causal_state(ws: Workspace) -> None:
+    _add_world_component(
+        ws,
+        causal_state={
+            "durable": True,
+            "in_causal_cut": False,
+            "failed_transition_residue": "none",
+        },
+    )
+    errors, _ = ws.validate()
+    assert errors == []
+
+
+def test_world_component_without_causal_state_is_rejected(ws: Workspace) -> None:
+    _add_world_component(ws)
+    errors, _ = ws.validate()
+    assert any("causal_state.durable must be true or false" in e for e in errors)
+    assert any("failed_transition_residue is missing" in e for e in errors)
+
+
+def test_lifecycle_axes_do_not_apply_to_world_components(ws: Workspace) -> None:
+    _add_world_component(
+        ws,
+        causal_state={"durable": True, "in_causal_cut": True, "failed_transition_residue": "none"},
+        lifecycle={"birth": "empty"},
+    )
+    errors, _ = ws.validate()
+    assert any("lifecycle does not apply to components owned by 'world'" in e for e in errors)
+
+
+def test_domain_without_declared_dimensions_requires_no_state_block(ws: Workspace) -> None:
+    ws.data["coverage"]["component.lab-thing"] = {
+        "kind": "component",
+        "title": "Lab thing",
+        "status": "CURRENT",
+        "owner_domain": "lab",
+        "component_id": "LAB-THG",
+        "canonical_docs": ["explanation/organism.md"],
+    }
+    ws.data["components"]["LAB-THG"] = {
+        "coverage_unit": "component.lab-thing",
+        "name": "Lab thing",
+        "authority": {"owns": "x", "may_decide": ["y"], "must_not": ["z"]},
+        "state": {"owner": "lab", "family": "infrastructure"},
+    }
     ws.write()
     errors, _ = ws.validate()
     assert errors == []
