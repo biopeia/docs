@@ -59,6 +59,23 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
   Observation and Modality are not state owners: their retained state is
   `implementation-local` or belongs to the authority it describes.
 
+## First documented unit
+
+The first unit written with the migrated method is the World causal journal
+(`component.world-causal-journal`, `WLD-JRN`), reconstructed from `world` at
+`dce2c94`. Nothing was taken from the source corpus. Writing it showed two
+places where the migrated vocabularies assumed an organism:
+
+- no state family fitted the committed history of a World, so
+  `causal_history` was added;
+- the `reembodiment` lifecycle axis had no value for a component that
+  re-embodiment does not concern, so `not_applicable` was added.
+
+The five lifecycle axes themselves (birth, checkpoint, restart, re-embodiment,
+reproduction) are still those of the source registry. They were kept, but two
+of the five are not applicable to this component, which suggests they may not
+be the right axes for World, Environment or Observation components.
+
 ## Design register
 
 The source repository kept a design status register

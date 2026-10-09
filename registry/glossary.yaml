@@ -1,4 +1,31 @@
 schema_version: 1
 
 # Conceptual distinctions that recur across the documentation.
-terms: {}
+terms:
+
+  causal-record:
+    term: "Causal record"
+    definition: >
+      An immutable envelope for one World-scoped causal event: its identifier,
+      World, causal tick, opaque type, optional actor, JSON-compatible payload
+      and the identifiers of related records. The journal that holds it does
+      not interpret its type or payload.
+    distinguishes_from:
+      - causal-tick
+    owners:
+      - component.world-causal-journal
+    canonical_refs:
+      - explanation/world/causal-journal.md
+
+  causal-tick:
+    term: "Causal tick"
+    definition: >
+      The count of transitions a World has committed. It is the only clock the
+      causal journal carries. It is not host wall-clock time, and one tick may
+      in principle carry more than one causal record.
+    distinguishes_from:
+      - causal-record
+    owners:
+      - component.world-causal-journal
+    canonical_refs:
+      - explanation/world/causal-journal.md

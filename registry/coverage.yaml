@@ -1,4 +1,24 @@
 schema_version: 1
 
 # Canonical units: what is documented, who owns it, where it is explained and what it is traced to.
-units: {}
+units:
+
+  component.world-causal-journal:
+    kind: component
+    title: World causal journal
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-JRN
+    canonical_docs:
+      - explanation/world/causal-journal.md
+    implementation:
+      - world:src/world/journal.py
+    tests:
+      - world:tests/test_journal.py
+    adrs:
+      - docs:technical/adr/ADR-0107-journal-role.md
+      - docs:technical/adr/ADR-0086-capture-manifest-last-sequence-semantics.md
+    review:
+      status: RECORDED
+      basis:
+        world: dce2c944abaab87e2c75f4fe49d9aa9dadc33a00

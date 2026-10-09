@@ -55,6 +55,7 @@ state_families:
   - adaptive_longitudinal
   - identity_longitudinal
   - embodiment_local
+  - causal_history
   - infrastructure
 
 # What happens to a component's state at each lifecycle boundary.
@@ -62,7 +63,7 @@ lifecycle:
   birth: [empty, initialize]
   checkpoint: [not_applicable, preserve, reset]
   restart: [preserve, reset]
-  reembodiment: [invalidate_authority, preserve, rebind, reset]
+  reembodiment: [invalidate_authority, not_applicable, preserve, rebind, reset]
   reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
 
 # Design register (registry/designs.yaml). Three independent axes.

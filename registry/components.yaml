@@ -1,4 +1,35 @@
 schema_version: 1
 
 # Authority, state ownership and lifecycle behaviour of each component unit.
-components: {}
+components:
+
+  WLD-JRN:
+    coverage_unit: component.world-causal-journal
+    name: "World causal journal"
+    authority:
+      owns: "the in-memory append order, read-only record envelopes and prefix digests of committed World causal records"
+      may_decide:
+        - "whether a record can be encoded and therefore appended"
+        - "whether a staged batch is published as a whole or not at all"
+      must_not:
+        - "interpret record types, payloads or the related-record identifiers it carries"
+        - "claim durable storage, atomic publication or recovery"
+        - "decide whether a causal tick commits"
+    state:
+      owner: world
+      family: causal_history
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: reset
+      reembodiment: not_applicable
+      reproduction: not_applicable
+    inputs:
+      - "causal records built by a World runtime"
+    outputs:
+      - "committed records in commit order"
+      - "prefix digests"
+      - "plain-data snapshots"
+    consumers:
+      - "World runtimes, the journal snapshot store and the World causal manifest (not yet registered as units)"
+
