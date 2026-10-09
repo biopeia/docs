@@ -1,10 +1,9 @@
 # Observation Architecture for Biopeia v1
 
-This document is **under review for approval**. Its state is recorded in
-`registry/designs.yaml`, which is the only authority for it; nothing here
-should be read as approved or implemented. Three points were decided by the
-Architecture Owner on 2026-10-09 and are marked **Decided**. Everything else
-in section 3 is a proposal that awaits approval of the design as a whole.
+The state of this design is recorded in `registry/designs.yaml`, which is the
+only authority for it. Section 7 records the decisions the Architecture Owner
+took on its content. Nothing here says that the `observation` repository
+implements it.
 
 It is written new for Biopeia from three sources: the ratified decision
 records, the approved
@@ -75,8 +74,10 @@ World causal cut only when every claim in it is linked to that cut.
 
 ## 3. What this design proposes
 
-Each point below is new in this document. Those marked **Decided** record an
-Architecture Owner decision of 2026-10-09; the others await a decision.
+Each point below is new in this document. P2, P3 and P8 are marked
+**Decided**: the Architecture Owner decided them first, in answer to three
+questions this document posed. The remaining points were approved with the
+design as a whole; section 7 records both.
 
 ### P1. Five roles, kept distinct
 
@@ -224,8 +225,9 @@ Two observations bear on the proposals above:
 
 ## 7. Decisions recorded
 
-Taken by the Architecture Owner on 2026-10-09 in answer to the three
-questions this document first posed:
+All by the Architecture Owner, on 2026-10-09.
+
+First, in answer to the three questions this document originally posed:
 
 1. The live plane belongs to the Observation capability; Lab is a consumer
    and the evidence custodian. See P2.
@@ -234,4 +236,26 @@ questions this document first posed:
 3. The inherited projection is deferred while it has necessary consumers and
    dropped when a TARGET semantic family covers its function. See P8.
 
-P1, P4, P5, P6 and P7 remain proposals until the design is approved.
+Then the design was approved as it stood, with the remaining points found
+coherent with the ratified decision records and introducing no new transfer
+of authority:
+
+- **P1** approved: authority, producer, observation plane, consumer and
+  evidence custodian are distinct roles, and holding one transfers none of
+  the others.
+- **P4** approved: there is no path from Observation to causal state; any
+  control follows a separate, attributable path.
+- **P5** approved: coherence is declared; delivery sequence never stands in
+  for causal time, and coherence with a World causal cut may be claimed only
+  with full traceability to that cut.
+- **P6** approved: transduction does not make Modality an authority; the
+  authority of a claim remains the owner of the semantics observed.
+- **P7** approved: live replay is not scientific evidence; Observation's
+  operational replay and Lab's durable custody stay separate.
+
+The approval states that it does not mean the `observation` repository
+implements the design; its implementation status stays not evaluated. It also
+classes the module documentation noted in section 5, which says that Lab
+hosts the plane, as a documentary non-conformity of the implementation
+against this design, to be corrected there, and not as an obstacle to the
+approval.
