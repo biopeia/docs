@@ -64,6 +64,12 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
 By owner decision the Biopeia decision records were **copied**, not moved. The
 originals are retained unchanged in the source repository.
 
+By owner decision of 2026-10-09 the source repository is being retired from
+active use and Biopeia is the way forward. From this copy onward **the copies
+in this repository are the canonical text** of these decisions: changes are
+made here, and the originals are the historical record of how the text stood
+at the source commit.
+
 - Source commit: `cfa137e167081acac3590fb52ae069adfda605d4`, the head of the
   open candidate alessbarb/symbiont-lab#465. It was **not** on the source
   `main` branch when copied; `main` was at `80d372a` and contained none of
@@ -85,5 +91,4 @@ the historical system and were not copied.
 ## Open
 
 - Under which acceptance procedure new decision records are admitted in this
-  repository, and how the copies below are kept consistent with their
-  originals while the source candidate is still open.
+  repository.
