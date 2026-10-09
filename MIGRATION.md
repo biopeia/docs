@@ -37,12 +37,32 @@ historical evidence in its own repository.
 the real registry is empty. Passing it shows that the validator detects the
 defects it is tested for. It says nothing about any Biopeia mechanism.
 
+## Resolved after bootstrap
+
+- **Home of decisions and designs.** By owner decision this repository has
+  three parts: explanatory documentation, technical documentation (decision
+  records and designs) and, later, the Biopeia pages. `registry/schema.yaml`
+  records the layout and the validator enforces it. `symbiont-lab` remains an
+  accepted historical source for the `design` and `adrs` fields, because the
+  Biopeia decisions taken so far (ADR-0073, ADR-0074 and the physical-step
+  integration design) are still recorded there. They have not been moved.
+- **`lab` as a state owner.** Kept. The migration records show Lab owning
+  durable apparatus state: `lab:MIGRATION.md` describes a Lab
+  intervention-evidence checkpoint written before World publishes a causal cut
+  and registered as a step participant, and Lab run identity distinct from
+  intervention identity; the owner authorization places scientific evidence
+  custody with the scientific apparatus rather than with Observation. The same
+  records bound it: that checkpoint is "Lab provenance, not authority over
+  Environment or Embodiment state", and Lab does not own ordinary autonomous
+  life. The validator therefore accepts `lab` as a state owner and rejects a
+  component owned by a semantic authority that declares Lab-owned state.
+  Observation and Modality are not state owners: their retained state is
+  `implementation-local` or belongs to the authority it describes.
+
 ## Open
 
-- Where Biopeia architectural decisions and design documents will live. Until
-  that is decided, `symbiont-lab` is accepted as a historical source for the
-  `design` and `adrs` fields only.
-- Whether `lab` remains a valid state owner. It is listed for apparatus state
-  such as study records, never for organism life state.
+- Whether ADR-0073, ADR-0074 and the physical-step integration design move
+  here from `symbiont-lab`, and under which acceptance procedure new decision
+  records are admitted in this repository.
 - Read access from this repository's CI to the other private repositories,
   required before cross-repository checks can run in CI.

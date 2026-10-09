@@ -22,6 +22,13 @@ extra_repositories:
   docs: {historical: false}
   symbiont-lab: {historical: true}
 
+# Where documents referenced from the registry live inside this repository.
+layout:
+  canonical_docs: explanation/
+  canonical_refs: explanation/
+  adrs: technical/adr/
+  design: technical/design/
+
 unit_kinds: [algorithm, component, concept, equation, mechanism, metric]
 
 # Architectural status of a unit. TARGET is accepted architecture that the
