@@ -173,6 +173,9 @@ def validate(
                 "it may only be a design or decision source"
             )
             return None
+        if repo == "docs" and not path.startswith(schema["layout"].get(field, "")):
+            errors.append(f"{where}: {field} must live under {schema['layout'][field]}: {ref}")
+            return None
         root = repo_root(repo)
         if root is None:
             unresolved.append(f"{where}: {field} {ref}")
@@ -184,7 +187,9 @@ def validate(
 
     def check_doc_paths(where: str, field: str, paths: Any) -> None:
         for rel in as_list(paths):
-            if not (docs_root / rel).is_file():
+            if not str(rel).startswith(schema["layout"][field]):
+                errors.append(f"{where}: {field} must live under {schema['layout'][field]}: {rel}")
+            elif not (docs_root / rel).is_file():
                 errors.append(f"{where}: {field} references missing document: {rel}")
 
     # --- coverage ---------------------------------------------------------

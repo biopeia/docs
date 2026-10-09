@@ -54,7 +54,7 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
                 "component_id": "ORG-GEN",
                 "canonical_docs": ["explanation/organism.md"],
                 "implementation": ["organism:src/organism/genome.py"],
-                "adrs": ["symbiont-lab:docs/adr/ADR-0074.md"],
+                "adrs": ["symbiont-lab:docs/adr/ADR-0074.md", "docs:technical/adr/ADR-0001.md"],
                 "depends_on": ["concept.organism"],
                 "review": {
                     "status": "RECORDED",
@@ -148,6 +148,8 @@ class Workspace:
         self.organism = self.repos / "organism"
         (self.docs / "explanation").mkdir(parents=True)
         (self.docs / "explanation" / "organism.md").write_text("# Organism\n")
+        (self.docs / "technical" / "adr").mkdir(parents=True)
+        (self.docs / "technical" / "adr" / "ADR-0001.md").write_text("# ADR-0001\n")
         self.registry.mkdir()
         shutil.copy(ROOT / "registry" / "schema.yaml", self.registry / "schema.yaml")
         (self.organism / "src" / "organism").mkdir(parents=True)
@@ -225,8 +227,20 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
         _set("coverage", "component.genome", "participating_domains", ["organism"]),
         "repeated in participating_domains",
     ),
-    (_set("coverage", "component.genome", "canonical_docs", ["missing.md"]), "missing document"),
+    (_set("coverage", "component.genome", "canonical_docs", ["explanation/missing.md"]), "missing document"),
     (_set("coverage", "component.genome", "canonical_docs", None), "canonical_docs entry is required"),
+    (
+        _set("coverage", "component.genome", "canonical_docs", ["technical/adr/ADR-0001.md"]),
+        "canonical_docs must live under explanation/",
+    ),
+    (
+        _set("coverage", "component.genome", "adrs", ["docs:explanation/organism.md"]),
+        "adrs must live under technical/adr/",
+    ),
+    (
+        _set("coverage", "component.genome", "design", ["docs:technical/design/absent.md"]),
+        "references missing path",
+    ),
     (
         _set("coverage", "component.genome", "implementation", ["src/organism/genome.py"]),
         "is not '<repository>:<path>'",
