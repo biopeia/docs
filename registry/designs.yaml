@@ -52,8 +52,9 @@ designs:
         omitted channel as no command, roster completeness against the
         genesis specification, partial-cut recovery and the single-writer
         assumption are not confirmed here. Lab's operator intervention is not
-        covered by these tests: Lab's own integration suite passes at Lab's
-        pinned revisions and fails against environment f2ef8c277a42. Passing
+        covered by these tests; it is exercised by Lab's own integration
+        suite, which passes at the revisions Lab pins (lab 3b84a25, with
+        environment f2ef8c277a42). Passing
         tests are not a physical calibration or equivalence claim.
     decision:
       reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
