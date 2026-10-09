@@ -23,6 +23,13 @@ TARGET lifecycle ontology keeps `BODY_DEATH`, `ORGANISM_DORMANCY`, `WORLD_PRESEN
 
 Ratification authority: Architecture Owner. EV-0302/0303/0322/0333/0339/0340/0341; ADR-0013/0035; AD-0007. TARGET ontology resolved. CURRENT source routes remain distinct and are not retroactively presumed compliant; no finding is created without demonstrated contract applicability and mismatch. No code or dynamic changes.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0007 is [ADR-0081 — The canonical Organism is longitudinal](ADR-0081-the-canonical-organism-is-longitudinal.md)

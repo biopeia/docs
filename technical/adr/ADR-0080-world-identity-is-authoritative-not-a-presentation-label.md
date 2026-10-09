@@ -22,3 +22,10 @@ World identity is an authoritative `world_id` or explicitly defined canonical eq
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0224/0249; OP-0014 split to OP-0022. CURRENT compliance remains empirical.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

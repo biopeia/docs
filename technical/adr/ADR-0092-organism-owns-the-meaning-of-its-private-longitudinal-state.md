@@ -23,6 +23,13 @@ The Organism owns the semantic meaning and authority of its private longitudinal
 
 Ratification authority: Architecture Owner. EV-0344/0349; AD-0007/0009/0013/0020. AD-0020 resolves only its explicitly advanced somatic-state boundary and does not close remaining Organism-boundary or Pass-15 questions.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0007 is [ADR-0081 — The canonical Organism is longitudinal](ADR-0081-the-canonical-organism-is-longitudinal.md)

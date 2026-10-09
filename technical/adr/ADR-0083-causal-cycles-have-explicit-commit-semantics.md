@@ -22,3 +22,10 @@ Each material causal cycle has explicit working transition → causal resolution
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0037/0202/0203/0249; OP-0009 split to OP-0020. CURRENT guarantee remains empirical.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

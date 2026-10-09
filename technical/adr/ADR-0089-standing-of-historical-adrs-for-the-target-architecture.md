@@ -23,6 +23,13 @@ Historical ADR `Accepted` status does not by itself make an ADR binding for TARG
 
 Ratification authority: Architecture Owner. EV-0344. Preserve ADR source/status; register all 72 separately. ADR-0041 and ADR-0023 are explicitly `CONFLICT_REQUIRING_OWNER` pending exact scope reconciliation. ADR-0060 is component-scoped as described; no Pass-15 authority or implementation shape selected.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## Later note in the decisions register: ADR source-reconciliation addendum (2026-10-08)
 
 The Owner's dispositions recorded at EV-0345 apply to ADR-0023 and ADR-0041 as scoped there; they do not add a new target architecture. ADR-0023 retains the causal coherence/recovery invariant but its whole-world deep rollback of Organism-private state is superseded; Organism defines private recovery semantics. ADR-0041's population cap is an apparatus bound, not TARGET ecological law. See `.audit/registers/adr_conflicts_for_owner.md` for exact pinned-text crosswalks and the six residual constitutional conflicts. No Pass-15-reserved Tanda 2 decision is ratified by these dispositions.

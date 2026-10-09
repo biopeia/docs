@@ -22,3 +22,10 @@ Canonical ecosystem reproduction is endogenous to life, potentially emerging fro
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0027/0230/0249; FND-0011; OP-0007 split to OP-0019. CURRENT implementation remains empirical.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

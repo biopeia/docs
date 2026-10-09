@@ -22,3 +22,10 @@ Canonical Organism is longitudinal; identity survives body, embodiment-session, 
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0030/0031/0025/0054/0055/0077/0226/0229/0249; FND-0009/0010/0012; OP-0005/0006/0008 split to OP-0018/0023. CURRENT applicability/compliance remains empirical.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

@@ -23,6 +23,13 @@ Preserve `CANONICAL_REEMBODIMENT` and `REDUCED_SEED_TRANSPLANT` as distinct long
 
 EV-0030/0031/0025/0054/0055/0077; EV-0249. Original wording retained as historical evidence; no retrospective edit to its meaning.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0007 is [ADR-0081 — The canonical Organism is longitudinal](ADR-0081-the-canonical-organism-is-longitudinal.md)

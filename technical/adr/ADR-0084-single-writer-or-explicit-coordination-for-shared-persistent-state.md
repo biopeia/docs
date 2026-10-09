@@ -22,3 +22,10 @@ Shared authoritative persistent state has either SINGLE WRITER OWNERSHIP or EXPL
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0219/0222/0249/0256; OP-0013 supported-contract question resolved by Owner clarification; current enforcement/applicability remains empirical under OP-0021.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

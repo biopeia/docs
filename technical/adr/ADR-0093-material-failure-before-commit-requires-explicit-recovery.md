@@ -23,6 +23,13 @@ A material failure between causal-transition start and completion of COMMIT, inc
 
 Ratification authority: Architecture Owner. EV-0344; AD-0009/0018 and DYN-OP0020 evidence. This defines TARGET, not CURRENT conformance. No code/fault injection or runtime modification authorized.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0009 is [ADR-0083 — Causal cycles have explicit commit semantics](ADR-0083-causal-cycles-have-explicit-commit-semantics.md)

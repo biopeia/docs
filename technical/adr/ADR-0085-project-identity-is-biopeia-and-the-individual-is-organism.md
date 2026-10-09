@@ -23,6 +23,13 @@ TARGET ecosystem/project identity is **Biopeia**; Canonical GitHub organization:
 
 Ratification authority: Architecture Owner. EV-0271. No current GitHub resource existence or code compliance is implied; migration/documentation implementation is out of scope. UC-0001 removes any backward-compatibility obligation for the former name; AD-0002/OP-0002 separately govern scientific/historical meaning and assets.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0001 is [ADR-0075 — Authority boundaries derive from semantic ownership, not repository topology](ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md)

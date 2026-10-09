@@ -9,8 +9,8 @@ records and were not copied; they describe the historical system.
 | [ADR-0073](ADR-0073-biopeia-migration-causal-and-physical-contracts.md) | Biopeia Migration Causal and Physical Contracts | Accepted | copied from `symbiont-lab` |
 | [ADR-0074](ADR-0074-biopeia-world-environment-authority-split.md) | Biopeia World and Environment Authority Split | Accepted | copied from `symbiont-lab` |
 | [ADR-0075](ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md) | Authority boundaries derive from semantic ownership, not repository topology | ACCEPTED | AD-0001 |
-| [ADR-0076](ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md) | Preserving scientific meaning without backward compatibility | ACCEPTED | AD-0002 |
-| [ADR-0077](ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md) | Canonical re-embodiment and reduced seed transplant are distinct contracts | SUPERSEDED | AD-0003 |
+| [ADR-0076](ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md) | Preserving scientific meaning without backward compatibility | ACCEPTED — general principle only; item-level scope OPEN | AD-0002 |
+| [ADR-0077](ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md) | Canonical re-embodiment and reduced seed transplant are distinct contracts | SUPERSEDED (meaning preserved; broader normative rule ratified by AD-0007) | AD-0003 |
 | [ADR-0078](ADR-0078-observation-is-causally-passive.md) | Observation is causally passive | ACCEPTED | AD-0004 |
 | [ADR-0079](ADR-0079-world-lifecycle-is-independent-from-lab.md) | World lifecycle is independent from Lab | ACCEPTED | AD-0005 |
 | [ADR-0080](ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md) | World identity is authoritative, not a presentation label | ACCEPTED | AD-0006 |
@@ -49,7 +49,7 @@ records and were not copied; they describe the historical system.
 `AD-0036` of the architecture audit, one record each, in source order. Their
 numbers therefore do not follow the order in which decisions were taken:
 `ADR-0073` and `ADR-0074` were decided after `AD-0036` and refine it. The
-Status column is abbreviated; each record carries the full source status.
+Status column gives the full source status.
 
 The review, evidence, finding and open-point records cited by identifier
 (`REV-`, `EV-`, `FND-`, `OP-`, `CTR-`, `DYN-`) remain in the audit dossier and

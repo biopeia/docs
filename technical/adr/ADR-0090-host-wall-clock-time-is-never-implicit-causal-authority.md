@@ -22,3 +22,10 @@ Host wall-clock time is never implicit causal authority. ADR-0042's listed excep
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0344. Verify CURRENT wall-clock paths and each ADR-0042 exception independently; do not infer non-conformance. This does not select time ownership/ordering or runtime topology.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

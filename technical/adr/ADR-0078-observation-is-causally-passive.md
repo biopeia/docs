@@ -22,3 +22,10 @@ Observation is causally passive and may read, project, transport, buffer, aggreg
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0048/0049/0050/0110/0249; FND-0013; OP-0010 split to OP-0016/0017. CURRENT compliance remains empirical.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

@@ -22,3 +22,10 @@
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0278. CURRENT comparison is separate: FND-0021 records the static semantic mismatch in the pinned resident path, without automatically labeling it corruption/off-by-one. No fault injection or durability test performed.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

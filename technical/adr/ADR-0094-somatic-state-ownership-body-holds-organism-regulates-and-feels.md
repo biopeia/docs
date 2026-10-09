@@ -23,6 +23,13 @@
 
 Ratification authority: Architecture Owner. EV-0349/0350; related AD-0007/0013/0014/0016/0018 and source reconciliation of pinned ADR-0013/0033/0035. Defines TARGET, not retroactive CURRENT compliance; no finding is created without demonstrated applicability and mismatch. This is the explicitly advanced Tanda 2 question only; all other Tanda 2 decisions and Pass 15 opening conditions remain unchanged. No code, dynamic experiment or migration authorized.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## Later note in the decisions register: Somatic-state ratification addendum (2026-10-09)
 
 AD-0020 / EV-0349 is the Architecture Owner's deliberately advanced Tanda 2 decision on body-instance somatic state, Organism longitudinal regulation, interoception, embodied cost, body-bound reacquisition, dormancy cost/limit and non-guaranteed re-embodiment. It supersedes the prior statement that energy/integrity ownership was wholly undecided, but only within this exact scope. Pinned ADR-0013 and ADR-0033 are compatible in the bounded ways stated at EV-0349. ADR-0035 does not explicitly place its unified `LivingBody`/`PhysiologyDomain` inside Organism and is not treated as a textual contradiction; actual component placement remains unresolved. Claude H-01/H-02/H-03 are verification leads, not independently verified CURRENT findings. Other Tanda 2 decisions, the PRE-PASS-15 opening conditions, Pass 15, Gates A/B/C and Pass 16B remain unchanged.

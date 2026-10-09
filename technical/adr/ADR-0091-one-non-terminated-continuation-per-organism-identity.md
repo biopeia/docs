@@ -23,6 +23,13 @@ A canonical longitudinal Organism has at most one non-terminated continuation un
 
 Ratification authority: Architecture Owner. EV-0344; AD-0007/0010/0014. Applies to canonical longitudinal Organisms; does not retroactively label CURRENT study restores incorrect. Persistence/designation mechanism and current compliance remain to be assessed in Pass 15.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0007 is [ADR-0081 — The canonical Organism is longitudinal](ADR-0081-the-canonical-organism-is-longitudinal.md)

@@ -23,6 +23,13 @@ For ordinary TARGET reproduction, ORGANISM is the originating/endogenous reprodu
 
 Ratification authority: Architecture Owner. EV-0301; resolves CTR-0004 / OP-0024. CURRENT implementation remains empirical under OP-0019; no code changes or target architecture selection implied.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - AD-0008 is [ADR-0082 — Canonical reproduction is endogenous to life](ADR-0082-canonical-reproduction-is-endogenous-to-life.md)

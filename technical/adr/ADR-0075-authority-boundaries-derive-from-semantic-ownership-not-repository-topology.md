@@ -22,3 +22,10 @@ Derive authority boundaries first from semantic ownership, causality, state, int
 ## Ratification and evidence
 
 Ratification authority: Architecture Owner. EV-0033/0249/0252. The seven authority boundaries and target decomposition remain subject to Pass 15 falsification; no repository extraction is authorized.
+
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.

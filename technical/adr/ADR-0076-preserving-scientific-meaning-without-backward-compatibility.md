@@ -23,6 +23,13 @@ Scientific provenance, historically relevant evidence and artifacts required for
 
 Ratification authority: Architecture Owner. EV-0249/0252; UC-0001. Complete SAP inventory and OP-0002 factual access/location work before proposing disposition of individual assets.
 
+## Register scope
+
+The decisions register opens with a statement that applies to every
+ratification in it, reproduced verbatim.
+
+> Architecture Owner ratifications in this register are normative for TARGET. They do not assert CURRENT compliance. See EV-0249 and EV-0252 for ratification records and constitutional-text reconciliation.
+
 ## References
 
 - UC-0001 is reproduced in [the index of this directory](README.md#uc-0001)
