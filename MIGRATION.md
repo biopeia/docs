@@ -81,18 +81,32 @@ at the source commit.
 | `docs/adr/ADR-0074-biopeia-world-environment-authority-split.md` | `22a5732f5` | `technical/adr/ADR-0074-biopeia-world-environment-authority-split.md` |
 | `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/biopeia-physical-step-integration-v1.md` |
 
-A fourth document was copied from the sealed architecture audit dossier, which
-is kept outside the source repository's history as an archive:
+### Architecture decisions AD-0001 to AD-0036
 
-| Original source | Target path |
-|---|---|
-| `.audit.zip` (SHA-256 `ff258afc…57df2`), member `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md` (SHA-256 `bb70560e…939c9`) | `technical/adr/AD-0021-AD-0036-biopeia-architecture-v1-ratification.md` |
+By owner decision the architecture decisions of the audit were transcribed
+into independent decision records that continue the numbering: `AD-0001` to
+`AD-0036` are `ADR-0075` to `ADR-0110`, one record each, in source order.
 
-It is the Architecture Owner's ratification of AD-0021 to AD-0036, the
-Biopeia Architecture v1 baseline. It is kept as one document, as in the
-source, and its text is unchanged. The earlier decisions and the review,
-evidence, finding and open-point records it cites by identifier stay in the
-dossier and were not copied.
+- Source: the sealed architecture audit dossier, archive `.audit.zip`
+  (SHA-256 `ff258afc…57df2`, recorded in the source repository as
+  `BIOPEIA_ARCHITECTURE_V1_AUDIT_BASELINE`). `AD-0001` to `AD-0020` come from
+  their rows in `.audit/registers/decisions.md`; `AD-0021` to `AD-0036` from
+  their sections in `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md`, with
+  their register rows.
+- Disposition: `SPLIT`. Decision, status and ratification texts are verbatim
+  and were checked mechanically against the source. Added in transcription:
+  the record number, section headings, a provenance note, a References list
+  mapping cited `AD-` identifiers to records here, and, for `AD-0001` to
+  `AD-0020` only, a title, because the source rows have none.
+- The opening and closing statements of the ratification apply to all sixteen
+  of its decisions and are reproduced in each of those records. The addenda of
+  the register are attached to the decision they concern (`AD-0015`,
+  `AD-0020`).
+- `UC-0001`, a user constraint of the same register that `AD-0002` and
+  `AD-0011` rely on, is reproduced in `technical/adr/README.md`. It is not an
+  architecture decision and received no record number.
+- Not copied: the review, evidence, finding and open-point records cited by
+  identifier, and the rest of the dossier.
 
 Each copy carries a provenance note under its title. The text is otherwise
 unchanged, except that relative links to documents that were not copied

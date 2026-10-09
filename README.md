@@ -14,9 +14,12 @@ here and in the other Biopeia repositories.
 This repository holds no domain logic and no semantic authority. Recording a
 decision here does not accept it, and green CI never stands in for acceptance.
 During the migration, acceptance of a decision record is delegated by the
-repository owner to the advisor, the independent reviewer of the migration.
-The acceptance is written in the record's own Status section with its date and
-who accepted it. Outside the migration, the repository owner accepts. Scientific evidence and experiment records are **not** kept here;
+repository owner to the advisor: the reviewer model that the Claude agent
+carrying out the migration consults (Claude Code's advisor). The migration is
+a special case; this delegation ends with it and changes no role definition
+elsewhere. Outside the migration, the repository owner accepts. The acceptance
+is written in the record's own Status section with its date and who accepted
+it. Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
