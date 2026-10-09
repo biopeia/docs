@@ -107,6 +107,12 @@ into independent decision records that continue the numbering: `AD-0001` to
   architecture decision and received no record number.
 - Not copied: the review, evidence, finding and open-point records cited by
   identifier, and the rest of the dossier.
+- Transcription review: on 2026-10-09 the advisor reviewed the transcription
+  and found it acceptable as a faithful transcription, on the basis of the
+  mechanical check that every decision, status and ratification text appears
+  unmodified, and of two records read in full. That review concerns fidelity
+  only. The decisions were ratified by the Architecture Owner, as each record
+  states; the advisor did not accept or re-ratify them.
 
 Each copy carries a provenance note under its title. The text is otherwise
 unchanged, except that relative links to documents that were not copied

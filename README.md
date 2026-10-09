@@ -19,7 +19,9 @@ carrying out the migration consults (Claude Code's advisor). The migration is
 a special case; this delegation ends with it and changes no role definition
 elsewhere. Outside the migration, the repository owner accepts. The acceptance
 is written in the record's own Status section with its date and who accepted
-it. Scientific evidence and experiment records are **not** kept here;
+it. This applies to new decisions. Records copied or transcribed from the
+source keep the ratification they already carry; reviewing that a copy is
+faithful is not an acceptance of the decision. Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
