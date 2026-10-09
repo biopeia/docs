@@ -453,3 +453,66 @@ components:
       - "an observed_frame event"
     consumers:
       - "Lab's operator material transfer, in source, and one integration test of World (not registered as units)"
+
+  ORG-IDC:
+    coverage_unit: component.organism-identity-checkpoint
+    name: "Organism identity and the checkpoint envelope"
+    authority:
+      owns: "the value that identifies one Organism and the envelope that carries its opaque private state with the references needed to restore it"
+      may_decide:
+        - "whether bytes are a well-formed envelope whose private state matches its recorded digest"
+        - "whether every declared dependency is available and matches its digest, given a reader"
+      must_not:
+        - "interpret, assemble or restore the private state it carries"
+        - "generate an identity from host entropy"
+        - "claim to record continuations, branches or which checkpoint of an identity is canonical"
+        - "claim that the declared dependencies are all the private state requires"
+    state:
+      owner: organism
+      family: identity_longitudinal
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "an identity value supplied by the caller"
+      - "opaque private-state bytes and dependency references produced by an Organism-side owner"
+      - "a reader from locator to bytes, for the closure check"
+    outputs:
+      - "a deterministic, versioned byte envelope"
+      - "a decoded checkpoint, or a refusal"
+    consumers:
+      - "the composed cognitive runtime checkpoint in organism:src/organism/cognition/portable_checkpoint.py (not registered as a unit)"
+
+  ORG-EOL:
+    coverage_unit: component.organism-executive-outcome-ledger
+    name: "Executive outcome ledger"
+    authority:
+      owns: "a bounded table of the last classified outcomes recorded for each pair of competence and anticipated effect, and any suppression recorded for the pair"
+      may_decide:
+        - "the factor, between 0.5 and 1.5, that a pair's recorded outcomes yield at lookup"
+        - "whether a pair is reported as suppressed, and when a differing revision state lifts it"
+        - "which pair is dropped when the table is over capacity"
+      must_not:
+        - "observe outcomes itself or classify anything it is not told"
+        - "write causal evidence, controllability, agency or competence evidence"
+        - "act as a reward or select an action"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "classified outcome samples supplied by a caller"
+      - "a description of binding and revision state, for suppression"
+    outputs:
+      - "a modulation: factor, suppressed flag and whether history existed"
+      - "an exported plain-data state and usage counters"
+    consumers:
+      - "the history callback of admission in mechanism.organism-action-path; no code builds that callback at the reviewed revision"

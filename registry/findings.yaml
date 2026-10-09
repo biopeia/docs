@@ -914,3 +914,129 @@ findings:
       - explanation/observation/observation-plane.md
     material: false
     status: open
+
+  F-0030:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-action-path
+    summary: >
+      No Organism code joins the stages from affordance to motor command, and the motor authority the code describes is not enforced: the arbitrator returns a decision and never creates or ends a commitment; a commitment can be built for a proposal and intent that never existed, and two can be active at once; an intent needs no admission and can be constructed already active; a command naming no existing commitment passes the surface check. The stages run in sequence only in World's physical step fixture.
+    documented_in:
+      - explanation/organism/action-path.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/30"
+
+  F-0031:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-identity-checkpoint
+    summary: >
+      Organism identity is a caller-supplied UUID with no record of continuations: two envelopes holding different state under one identity both decode and cannot be ordered, parse checks no authorization although documented as for an authorized continuation, and no branch, retirement or ancestry operation exists although the README lists fresh identities for branches. ADR-0091 requires at most one non-terminated continuation per identity and a new identity for every branch, and reserves the mechanism to a later pass.
+    documented_in:
+      - explanation/organism/identity-and-checkpoint.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/31"
+
+  F-0032:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-action-path
+    summary: >
+      Actuator identifiers are a hash of the channel's ordinal position and a fixed schema string, identical across bodies; a surface built from reordered physical ports under the same contract string is equal to the original. A motor command carries no body, morphology revision, effector or command kind and its activations are unitless numbers in the unit interval; every channel has a neutral value defaulting to zero. ADR-0073 binds commands to stable identity and says list position is never authoritative.
+    documented_in:
+      - explanation/organism/action-path.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/32"
+
+  F-0033:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-identity-checkpoint
+    summary: >
+      The dependency closure check covers the dependencies an envelope declares, not those its private state requires: a checkpoint declaring none passes with a reader that finds nothing. ADR-0103 speaks of the closure required to restore the state.
+    documented_in:
+      - explanation/organism/identity-and-checkpoint.md
+    material: true
+    status: accepted
+    disposition: >
+      Declared by the repository itself at the observed commit. Its MIGRATION.md states that the check validates declared references only and does not demonstrate that current private-model artifacts are all represented in the envelope, and that the boundary is a migration candidate, not a claim of TARGET conformance. Recorded as a stated limit, not raised as a defect.
+
+  F-0034:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-identity-checkpoint
+    summary: >
+      The identity and envelope validate less than their decoding does: create wraps a non-UUID value and the checkpoint constructor accepts strings for identity and state; the private-state digest travels with the state, so replacing both, or the identity, yields an envelope that decodes; the closure check treats only FileNotFoundError and KeyError as missing and lets other read errors escape; a locator is any string and may be listed twice.
+    documented_in:
+      - explanation/organism/identity-and-checkpoint.md
+    material: false
+    status: open
+
+  F-0035:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-action-path
+    summary: >
+      Fields and state on the action path that nothing reads or keeps: admission does not read an affordance's executability confidence and ranks a less predictable affordance above a more predictable one; a commitment's interruptibility is never read; past its maximum duration a commitment is left active while a new proposal is selected; the sequence controller accepts repeated and decreasing ticks and its position has no checkpoint.
+    documented_in:
+      - explanation/organism/action-path.md
+    material: false
+    status: open
+
+  F-0036:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-executive-outcome-ledger
+    summary: >
+      The executive outcome ledger changes on lookup (counters, and permanent lifting of a suppression once a differing revision state is presented); a suppress sample occupies a place in the window of sixteen and counts toward nothing; sample ticks are not ordered; restoring does not preserve a non-default capacity or policy. Nothing in the repository records to the ledger, reads from it, or includes its export in a checkpoint.
+    documented_in:
+      - explanation/organism/executive-outcome-ledger.md
+    material: false
+    status: open
+
+  F-0037:
+    class: evidence_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-action-path
+      - component.organism-executive-outcome-ledger
+    summary: >
+      The intent record and the arbitrator have no test in the Organism repository, the affordance resolver is never constructed, and no run of a composed Organism exists; the behaviour of those stages described in the documentation rests on the code and one ad hoc run.
+    documented_in:
+      - explanation/organism/action-path.md
+      - explanation/organism/executive-outcome-ledger.md
+    material: false
+    status: open
+
+  F-0038:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-action-path
+      - component.organism-executive-outcome-ledger
+    summary: >
+      Docstrings in the reviewed modules refer to code that is not in the repository (an ActionDomain that converts frames into commands; core.domains.intention as the source of outcome reason strings) and keep the historical name Symbiont, including in the schema string that enters every actuator identifier and surface fingerprint.
+    documented_in:
+      - explanation/organism/action-path.md
+      - explanation/organism/executive-outcome-ledger.md
+    material: false
+    status: open
