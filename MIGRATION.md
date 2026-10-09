@@ -89,13 +89,14 @@ Reasons for the changes, from the source at `cfa137e`:
 |---|---|---|---|
 | `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/` | `TARGET` |
 | `docs/design/observability/observation-semantic-model-v1.md` | `9aeb1e9a8` | `technical/design/observability/` | `TARGET` |
-| `docs/design/observability/observation-architecture-target-design-v1.md` | `72da79533` | `technical/design/observability/` | `UNRESOLVED` |
+| `docs/design/observability/observation-architecture-target-design-v1.md` | `72da79533` | `technical/design/observability/` | `HISTORICAL`, superseded |
 
 All three were copied from `cfa137e`. The Observation target design was
 approved on 2026-10-07, before the Biopeia Architecture v1 baseline was
-ratified, and has not been reviewed against it; it is recorded as `UNRESOLVED`
-rather than as Biopeia target. It was copied because the semantic model
-depends on it. The `status` and `implementation_status` keys were removed from
+ratified. It was copied because the semantic model depends on it. On review
+it conflicts with the ratified authorities, and the Architecture Owner classed
+it `HISTORICAL` and superseded on 2026-10-09. It is preserved unchanged as
+evidence; a Biopeia Observation design is to be written new. The `status` and `implementation_status` keys were removed from
 the front matter of the physical-step design.
 
 `docs/design/world/world-responsibility-map-v1.md` was **not** copied. Its own

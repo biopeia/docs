@@ -254,8 +254,15 @@ def validate(
                 check_reference(where, "adrs", decision["reference"])
             if not DATE_RE.match(str(decision.get("date", ""))):
                 errors.append(f"{where}: an approved design requires decision.date as YYYY-MM-DD")
-        if design.get("document_status") == "superseded" and design.get("superseded_by") not in designs:
-            errors.append(f"{where}: a superseded design requires superseded_by naming a design")
+        if design.get("document_status") == "superseded":
+            decisions = as_list(design.get("superseded_by_decisions"))
+            if design.get("superseded_by") not in designs and not decisions:
+                errors.append(
+                    f"{where}: a superseded design requires superseded_by naming a design "
+                    "or superseded_by_decisions"
+                )
+            for ref in decisions:
+                check_reference(where, "adrs", ref)
         source = design.get("source")
         if source is not None:
             if source.get("repository") not in domains and source.get("repository") not in extra:

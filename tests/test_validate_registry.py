@@ -309,6 +309,13 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
         "references missing path",
     ),
     (_set("designs", D, "document_status", "superseded"), "requires superseded_by"),
+    (
+        lambda data: data["designs"][D].update(
+            document_status="superseded",
+            superseded_by_decisions=["docs:technical/adr/ADR-9999.md"],
+        ),
+        "references missing path",
+    ),
     (_set("designs", D, "source.commit", "main"), "source.commit is not a commit SHA"),
     (_set("designs", D, "source.repository", "elsewhere"), "source.repository 'elsewhere'"),
     (
@@ -413,3 +420,13 @@ def test_unknown_basis_commit_is_reported_not_ignored(ws: Workspace) -> None:
 def test_cli_passes_on_repository_registry(capsys: pytest.CaptureFixture[str]) -> None:
     assert vr.main([]) == 0
     assert "Registry integrity: PASS" in capsys.readouterr().out
+
+
+def test_design_may_be_superseded_by_decisions(ws: Workspace) -> None:
+    ws.data["designs"][D].update(
+        document_status="superseded",
+        superseded_by_decisions=["docs:technical/adr/ADR-0001.md"],
+    )
+    ws.write()
+    errors, _ = ws.validate()
+    assert errors == []
