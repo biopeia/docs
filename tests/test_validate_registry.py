@@ -61,6 +61,14 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
                     "basis": {"organism": basis, "symbiont-lab": "80d372a"},
                 },
             },
+            "component.world-registry": {
+                "kind": "component",
+                "title": "World registry",
+                "status": "TARGET",
+                "owner_domain": "world",
+                "component_id": "WLD-REG",
+                "canonical_docs": ["explanation/organism.md"],
+            },
             "mechanism.inheritance": {
                 "kind": "mechanism",
                 "title": "Inheritance",
@@ -69,6 +77,20 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
                 "canonical_docs": ["explanation/organism.md"],
                 "design": ["docs:technical/design/genome/inheritance-v1.md"],
                 "depends_on": ["component.genome"],
+            },
+        },
+        "contracts": {
+            "contract.inheritance-registration": {
+                "title": "Inheritance registration",
+                "summary": "World registers the offspring an organism originates.",
+                "agreement": "structural",
+                "parties": [
+                    {"unit": "component.genome", "role": "originates"},
+                    {"unit": "component.world-registry", "role": "registers"},
+                ],
+                "governed_by": ["docs:technical/adr/ADR-0001.md"],
+                "findings": ["F-0001"],
+                "documented_in": ["explanation/organism.md"],
             },
         },
         "findings": {
@@ -105,6 +127,17 @@ def example_registry(basis: str) -> dict[str, dict[str, Any]]:
             },
         },
         "components": {
+            "WLD-REG": {
+                "coverage_unit": "component.world-registry",
+                "name": "World registry",
+                "authority": {"owns": "x", "may_decide": ["y"], "must_not": ["z"]},
+                "state": {"owner": "world", "family": "causal_history"},
+                "causal_state": {
+                    "durable": True,
+                    "in_causal_cut": True,
+                    "failed_transition_residue": "none",
+                },
+            },
             "ORG-GEN": {
                 "coverage_unit": "component.genome",
                 "name": "Genome",
@@ -277,6 +310,7 @@ def _rename_component(data: dict) -> None:
 
 
 D = "design.genome.inheritance-v1"
+CT = "contract.inheritance-registration"
 
 SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("coverage", "component.genome", "kind", "module"), "kind 'module' not in"),
@@ -368,6 +402,19 @@ SENTINELS: list[tuple[Callable[[dict], None], str]] = [
     (_set("components", "ORG-GEN", "authority.must_not", []), "authority.must_not is missing"),
     (_set("components", "ORG-GEN", "lifecycle.reembodiment", "forget"), "lifecycle.reembodiment"),
     (_set("components", "ORG-GEN", "consumers", ["component.absent"]), "consumer 'component.absent'"),
+    (_set("contracts", CT, "agreement", "handshake"), "agreement 'handshake' not in"),
+    (_set("contracts", CT, "summary", ""), "summary is missing"),
+    (
+        _set("contracts", CT, "parties", [{"unit": "component.genome", "role": "alone"}]),
+        "parties of at least two domains",
+    ),
+    (
+        _set("contracts", CT, "parties", [{"unit": "component.absent", "role": "x"}]),
+        "missing from coverage.yaml",
+    ),
+    (_set("contracts", CT, "findings", ["F-9999"]), "missing from findings.yaml"),
+    (_set("contracts", CT, "documented_in", []), "documented_in is required"),
+    (_set("contracts", CT, "governed_by", ["docs:technical/adr/ADR-9999.md"]), "references missing path"),
     (_set("findings", "F-0001", "class", "bug"), "class 'bug' not in"),
     (_set("findings", "F-0001", "status", "wontfix"), "status 'wontfix' not in"),
     (_set("findings", "F-0001", "repository", "docs"), "repository 'docs' not in"),
