@@ -237,6 +237,12 @@ designs:
       evaluated_on: "2026-10-09"
       basis:
         observation: 397c0b4691b5
+        organism: 6543188
+        embodiment: a5129f0
+        environment: f97ec22
+        world: c162b67
+        modality: 9bd1b77
+        lab: 4d5ff70
       tests:
         - "observation:tests/test_plane.py"
         - "observation:tests/test_semantic_model.py"
@@ -245,9 +251,9 @@ designs:
         Evaluated point by point against the observation repository; its
         three test files pass in an extraction of that revision (44 test
         cases) and code-only statements were confirmed by ad hoc runs. The
-        other repositories were searched at their main branches on the same
-        day: organism 6543188, embodiment a5129f0, environment f97ec22, world
-        c162b67, modality 9bd1b77, lab 4d5ff70.
+        other repositories were searched, not tested, at the revisions in
+        the basis above; only observation was evaluated as an
+        implementation.
         P1 (five roles): realised in part. Authority, asserter, producer and
         measurement source are separate fields of an observation and the
         authority comes only from the claim's family

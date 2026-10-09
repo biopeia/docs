@@ -300,6 +300,7 @@ units:
       status: RECORDED
       basis:
         observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+        world: c162b67e698de9b47450264402677b0165e6e20e
 
   component.observation-plane:
     kind: component
@@ -353,3 +354,5 @@ units:
       status: RECORDED
       basis:
         observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+        world: c162b67e698de9b47450264402677b0165e6e20e
+        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
