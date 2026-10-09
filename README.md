@@ -38,9 +38,9 @@ Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
-> Status: bootstrap. The registry is empty. No Biopeia mechanism is documented
-> here yet, and nothing in this repository claims that any extracted
-> repository conforms to the Biopeia target architecture.
+> Status: bootstrap. The registry now documents initial Biopeia mechanisms.
+> Those scoped records do not establish that any extracted repository
+> conforms to the Biopeia target architecture.
 
 ## Layout
 
