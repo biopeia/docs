@@ -50,6 +50,7 @@ never restated as a second source of truth.
 | `technical/adr/`, `technical/design/` | Decision records and design documents |
 | `registry/schema.yaml` | Closed vocabularies: domains and their component prefixes, statuses, state owners, lifecycle values |
 | `registry/coverage.yaml` | Canonical units: owner, explanation, and the code, tests, design and decisions each is traced to |
+| `registry/designs.yaml` | Design register: document status, implementation status and architecture scope of every design |
 | `registry/components.yaml` | Authority, state ownership and lifecycle of each component |
 | `registry/parameters.yaml`, `metrics.yaml`, `notation.yaml`, `glossary.yaml` | Reference registries |
 | `reference/evidence-status.md` | How to state the strength of a claim, and how that differs from review status |
@@ -61,6 +62,16 @@ under `explanation/`. Decisions and designs kept here are referenced as
 `docs:technical/adr/...` and `docs:technical/design/...`. Sources in other
 repositories are referenced as `<repository>:<path>`, and each unit records in `review.basis` the commit of
 every referenced repository at which its explanation was last checked.
+
+The design register is the only authority for the state of a design. It keeps
+three independent axes: whether the document is approved, whether Biopeia code
+implements it, and whether it describes the current, target or historical
+architecture. An approved design is therefore never, by that fact, an
+implemented one. Design documents do not declare these states themselves, and
+the validator rejects one that does.
+
+`.local/` is ignored by Git. It may hold a local reference copy of the source
+repository's documentation; nothing in it is Biopeia documentation.
 
 Component identifiers carry the prefix of their owning domain: `ORG-`, `EMB-`,
 `ENV-`, `WLD-`, `MOD-`, `OBS-`, `LAB-`.

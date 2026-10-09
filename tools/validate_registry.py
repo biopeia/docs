@@ -38,6 +38,7 @@ REGISTRY_KEYS = {
     "metrics": "metrics",
     "notation": "symbols",
     "glossary": "terms",
+    "designs": "designs",
 }
 REFERENCE_FIELDS = ("implementation", "tests", "design", "adrs")
 CODE_FIELDS = ("implementation", "tests")
@@ -46,6 +47,10 @@ REVIEW_FIELDS = ("implementation", "design", "adrs")
 
 UNIT_ID_RE = re.compile(r"^[a-z]+[a-z0-9_-]*\.[a-z0-9_-]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{7,40}$")
+DESIGN_ID_RE = re.compile(r"^design\.[a-z0-9-]+\.[a-z0-9.-]+$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# The design register is the only authority for these; documents must not carry them.
+FORBIDDEN_FRONT_MATTER_RE = re.compile(r"^(status|implementation_status):", re.M)
 
 
 class UniqueKeySafeLoader(yaml.SafeLoader):
@@ -79,7 +84,7 @@ def load_strict_yaml(path: Path) -> dict[str, Any]:
 
 
 def load_registry(registry_dir: Path) -> dict[str, dict[str, Any]]:
-    """Load schema.yaml and the six registries; each registry maps id -> entry."""
+    """Load schema.yaml and the registries; each registry maps id -> entry."""
     registry = {"schema": load_strict_yaml(registry_dir / "schema.yaml")}
     for name, key in REGISTRY_KEYS.items():
         entries = load_strict_yaml(registry_dir / f"{name}.yaml").get(key)
@@ -192,6 +197,70 @@ def validate(
             elif not (docs_root / rel).is_file():
                 errors.append(f"{where}: {field} references missing document: {rel}")
 
+    # --- designs ----------------------------------------------------------
+    designs = reg["designs"]
+    design_root = schema["layout"]["design"]
+    design_paths: dict[str, str] = {}  # path -> design id
+    for did, design in designs.items():
+        where = f"Design {did}"
+        if not DESIGN_ID_RE.match(str(did)):
+            errors.append(f"{where}: id must look like 'design.<area>.<slug>'")
+        if not isinstance(design, dict):
+            errors.append(f"{where}: definition must be a mapping")
+            continue
+        if not str(design.get("title", "")).strip():
+            errors.append(f"{where}: title is missing or empty")
+        path = str(design.get("path", ""))
+        if not path.startswith(design_root):
+            errors.append(f"{where}: path must live under {design_root}: {path!r}")
+        elif not (docs_root / path).is_file():
+            errors.append(f"{where}: path references missing document: {path}")
+        elif path in design_paths:
+            errors.append(f"{where}: path already registered by {design_paths[path]}")
+        else:
+            design_paths[path] = did
+            text = (docs_root / path).read_text(encoding="utf-8")
+            if text.startswith("---\n") and FORBIDDEN_FRONT_MATTER_RE.search(
+                text[4:].split("\n---", 1)[0]
+            ):
+                errors.append(
+                    f"{where}: document front matter declares a status; "
+                    "registry/designs.yaml is the only authority for it"
+                )
+        if design.get("domain") not in domains:
+            errors.append(f"{where}: domain {design.get('domain')!r} not in {sorted(domains)}")
+        for p in as_list(design.get("participating_domains")):
+            if p not in domains or p == design.get("domain"):
+                errors.append(f"{where}: invalid participating_domain {p!r}")
+        for axis in ("document_status", "implementation_status", "architecture_scope"):
+            allowed = schema[f"design_{axis}es" if axis.endswith("status") else f"design_{axis}s"]
+            if design.get(axis) not in allowed:
+                errors.append(f"{where}: {axis} {design.get(axis)!r} not in {allowed}")
+        if design.get("document_status") == "approved":
+            decision = design.get("decision") or {}
+            if not str(decision.get("reference", "")).strip():
+                errors.append(f"{where}: an approved design requires decision.reference")
+            elif str(decision["reference"]).startswith("docs:"):
+                check_reference(where, "adrs", decision["reference"])
+            if not DATE_RE.match(str(decision.get("date", ""))):
+                errors.append(f"{where}: an approved design requires decision.date as YYYY-MM-DD")
+        if design.get("document_status") == "superseded" and design.get("superseded_by") not in designs:
+            errors.append(f"{where}: a superseded design requires superseded_by naming a design")
+        source = design.get("source")
+        if source is not None:
+            if source.get("repository") not in domains and source.get("repository") not in extra:
+                errors.append(f"{where}: source.repository {source.get('repository')!r} is unknown")
+            if not SHA_RE.match(str(source.get("commit", ""))):
+                errors.append(f"{where}: source.commit is not a commit SHA")
+            if not str(source.get("path", "")).strip():
+                errors.append(f"{where}: source.path is missing")
+
+    if (docs_root / design_root).is_dir():
+        for doc in sorted((docs_root / design_root).rglob("*.md")):
+            rel = doc.relative_to(docs_root).as_posix()
+            if doc.name != "README.md" and rel not in design_paths:
+                errors.append(f"Design document {rel} has no entry in designs.yaml")
+
     # --- coverage ---------------------------------------------------------
     component_ids: dict[str, str] = {}  # component id -> unit id
     for uid, unit in units.items():
@@ -231,6 +300,9 @@ def validate(
             for ref in as_list(unit.get(field)):
                 check_reference(where, field, ref)
                 parsed = parse_reference(ref)
+                if field == "design" and parsed and parsed[0] == "docs":
+                    if parsed[1] not in design_paths:
+                        errors.append(f"{where}: design {ref} is not in designs.yaml")
                 if parsed and parsed[0] != "docs":
                     referenced_repos.add(parsed[0])
 

@@ -3,9 +3,7 @@ id: design.runtime.biopeia-physical-step-integration-v1
 title: "Biopeia Physical-Step and Causal-Commit Integration v1"
 document_type: design
 domain: runtime
-status: approved
 canonical: false
-implementation_status: partial
 owner: project-owner
 decision_reference: ADR-0073
 last_reviewed: 2026-10-09
@@ -14,10 +12,11 @@ language: en
 # Biopeia Physical-Step and Causal-Commit Integration v1
 
 > **Provenance.** Copied from `alessbarb/symbiont-lab`, path `docs/design/runtime/biopeia-physical-step-integration-v1.md`, commit
-> `cfa137e167081acac3590fb52ae069adfda605d4`, blob `a0c7b3e7081255a78b052a5365e4ff0bafb9fb27`. The text is unchanged. The original
-> is retained in the source repository. At the time of copying that commit was
-> an open, unmerged candidate there (alessbarb/symbiont-lab#465), not part of
-> its `main` branch.
+> `cfa137e167081acac3590fb52ae069adfda605d4`, blob `a0c7b3e7081255a78b052a5365e4ff0bafb9fb27`. The text is unchanged except that the `status` and `implementation_status` keys were removed from its front matter, because `registry/designs.yaml` is the only authority for those states. The original is
+> retained in the source repository. At the time of copying that commit was an open,
+> unmerged candidate there (alessbarb/symbiont-lab#465), not part of its `main` branch.
+> Statements about status or implementation inside the text describe the source
+> repository at that commit; the current states are those in `registry/designs.yaml`.
 
 **Status:** Approved by the Architecture Owner on 2026-10-09 (ADR-0073).
 **Implementation:** Partial; repository slices exist, but the complete
