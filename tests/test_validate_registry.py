@@ -200,9 +200,10 @@ def ws(tmp_path: Path) -> Workspace:
 
 
 def test_repository_registry_is_valid() -> None:
-    errors, unresolved = vr.validate(ROOT / "registry", ROOT)
+    # Without sibling checkouts, references into other repositories are
+    # reported as unresolved; only integrity errors fail.
+    errors, _ = vr.validate(ROOT / "registry", ROOT)
     assert errors == []
-    assert unresolved == []
 
 
 def test_example_registry_is_valid(ws: Workspace) -> None:
