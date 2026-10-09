@@ -243,6 +243,8 @@ def validate(
                     f"{where}: implementation_status {design.get('implementation_status')!r} "
                     "requires implementation_evidence with basis and observed"
                 )
+            for ref in as_list(evidence.get("tests")):
+                check_reference(where, "tests", ref)
             for repo, sha in (evidence.get("basis") or {}).items():
                 if repo not in domains or not SHA_RE.match(str(sha)):
                     errors.append(f"{where}: implementation_evidence.basis.{repo} is not a domain commit")

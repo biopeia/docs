@@ -26,26 +26,35 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-09"
       basis:
-        world: dce2c944abaa
-        embodiment: 77b128d4636a
-        environment: cd98a8d
-        lab: 974f978131d4
+        world: fd88fc1b3737
+        organism: f15c4c572124
+        embodiment: 3fe3cda64516
+        environment: f2ef8c277a42
+        modality: 9a0656ab37ed
+        observation: cb07ace20605
+      tests:
+        - "world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py"
+        - "world:tests/integration/test_first_biopeia_causal_tick.py"
+        - "world:tests/integration/test_durable_checkpoint_restore_slice.py"
       observed: >
-        The workspace integration suite passed (10 tests) with the checkouts at
-        the revisions above. It includes an end-to-end deterministic physical
-        causal step, rejection of a stale-morphology candidate without
-        publishing the next World cut, adoption of an articulated MuJoCo
-        candidate followed by a World commit, and publication and restore of
-        an owner-checkpoint closure.
+        The integration tests versioned in the world repository passed (9
+        tests) in a clean environment built from the revisions above, which
+        are the revisions pinned in world's integration extra. They include an
+        end-to-end deterministic physical causal step, rejection of a
+        stale-morphology candidate without publishing the next World cut,
+        adoption of an articulated MuJoCo candidate followed by a World
+        commit, and publication and restore of an owner-checkpoint closure.
       limits: >
-        The integration tests live in the unversioned integration workspace,
-        and the environment checkout was on a feature branch, not its main
-        branch. The items the design lists for conformance were not checked
-        one by one: stable effector identity under permutation, omitted
-        channel as no command, roster completeness against the genesis
-        specification, partial-cut recovery and the single-writer assumption
-        are not confirmed here. Passing tests are not a physical calibration
-        or equivalence claim.
+        Verified locally; the integration job in world's CI is skipped until
+        that repository has the read-only GitHub App credentials, so no CI run
+        backs this yet. The items the design lists for conformance were not
+        checked one by one: stable effector identity under permutation,
+        omitted channel as no command, roster completeness against the
+        genesis specification, partial-cut recovery and the single-writer
+        assumption are not confirmed here. Lab's operator intervention is not
+        covered by these tests: Lab's own integration suite passes at Lab's
+        pinned revisions and fails against environment f2ef8c277a42. Passing
+        tests are not a physical calibration or equivalence claim.
     decision:
       reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
       date: "2026-10-09"
