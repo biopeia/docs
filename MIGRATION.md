@@ -87,8 +87,3 @@ unchanged, except that relative links to documents that were not copied
 responsibility map) now point to the source commit. The other 73 decision
 records and the remaining design documents of the source repository describe
 the historical system and were not copied.
-
-## Open
-
-- Under which acceptance procedure new decision records are admitted in this
-  repository.

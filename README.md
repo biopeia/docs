@@ -12,9 +12,9 @@ A **registry and its tooling** keep the explanation traceable to sources held
 here and in the other Biopeia repositories.
 
 This repository holds no domain logic and no semantic authority. Recording a
-decision here does not accept it: a decision record is authoritative only once
-its authorized owner has accepted it, and green CI never stands in for that
-acceptance. Scientific evidence and experiment records are **not** kept here;
+decision here does not accept it, and green CI never stands in for acceptance.
+For now, a decision record is accepted by the repository owner, and the
+acceptance is written in the record's own Status section with its date. Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
