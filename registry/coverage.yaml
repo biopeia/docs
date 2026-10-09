@@ -277,6 +277,160 @@ units:
       basis:
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
 
+  component.environment-procedural-genesis:
+    kind: component
+    title: Procedural genesis of a scene
+    status: CURRENT
+    owner_domain: environment
+    component_id: ENV-GEN
+    canonical_docs:
+      - explanation/environment/procedural-genesis.md
+    implementation:
+      - environment:src/environment/procedural_genesis.py
+    tests:
+      - environment:tests/test_genesis.py
+    adrs:
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.environment-static-scene
+    review:
+      status: RECORDED
+      basis:
+        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  component.environment-resource-geometry:
+    kind: component
+    title: Physical projection of resource geometry
+    status: CURRENT
+    owner_domain: environment
+    component_id: ENV-GEO
+    canonical_docs:
+      - explanation/environment/resource-geometry.md
+    implementation:
+      - environment:src/environment/physical.py
+    tests:
+      - environment:tests/unit/test_physical_projection.py
+      - environment:tests/test_boundary.py
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    depends_on:
+      - component.environment-finite-resource
+      - component.environment-static-scene
+    review:
+      status: RECORDED
+      basis:
+        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  concept.modality-current-state:
+    kind: concept
+    title: "Modality: decided role and current state of the repository"
+    status: TARGET
+    owner_domain: modality
+    participating_domains:
+      - world
+      - organism
+    canonical_docs:
+      - explanation/modality/current-state.md
+    implementation:
+      - modality:src/modality/__init__.py
+    tests:
+      - modality:tests/test_unratified_surface.py
+      - world:tests/integration/test_first_biopeia_causal_tick.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        modality: 9bd1b77c9eabc271969109cfab52394dc5b52012
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  component.embodiment-physical-state:
+    kind: component
+    title: Body physical state and adoption of a solver candidate
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+    component_id: EMB-PHY
+    canonical_docs:
+      - explanation/embodiment/physical-state.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/physical_transition.py
+      - embodiment:src/embodiment/observation.py
+    tests:
+      - embodiment:tests/test_physical_transition.py
+      - embodiment:tests/test_body_pose_sample.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  mechanism.embodiment-actuation-projection:
+    kind: mechanism
+    title: Actuation projection by stable effector identity
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - organism
+    canonical_docs:
+      - explanation/embodiment/actuation-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/actuation_projection.py
+    tests:
+      - embodiment:tests/test_actuation_projection.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+
+  component.embodiment-somatic-state:
+    kind: component
+    title: Somatic state, metabolic ledger and body checkpoint
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - lab
+      - world
+    component_id: EMB-SOM
+    canonical_docs:
+      - explanation/embodiment/somatic-state.md
+    implementation:
+      - embodiment:src/embodiment/physiology.py
+      - embodiment:src/embodiment/metabolism.py
+      - embodiment:src/embodiment/physiology_config.py
+      - embodiment:src/embodiment/intake.py
+      - embodiment:src/embodiment/checkpoint.py
+    tests:
+      - embodiment:tests/test_somatic_state.py
+      - embodiment:tests/test_intake.py
+      - embodiment:tests/test_checkpoint.py
+    adrs:
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+
   component.lab-operator-material-transfer:
     kind: component
     title: Operator material transfer
