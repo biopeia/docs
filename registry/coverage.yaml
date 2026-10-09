@@ -276,3 +276,80 @@ units:
       status: RECORDED
       basis:
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+
+  component.observation-semantic-claim-model:
+    kind: component
+    title: Semantic claim model
+    status: CURRENT
+    owner_domain: observation
+    component_id: OBS-SEM
+    canonical_docs:
+      - explanation/observation/semantic-claim-model.md
+    implementation:
+      - observation:src/observation/semantic.py
+    tests:
+      - observation:tests/test_semantic_model.py
+    design:
+      - docs:technical/design/observability/observation-semantic-model-v1.md
+      - docs:technical/design/observation/observation-architecture-biopeia-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+    review:
+      status: RECORDED
+      basis:
+        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+
+  component.observation-plane:
+    kind: component
+    title: Observation plane
+    status: CURRENT
+    owner_domain: observation
+    component_id: OBS-PLN
+    canonical_docs:
+      - explanation/observation/observation-plane.md
+    implementation:
+      - observation:src/observation/plane.py
+    tests:
+      - observation:tests/test_plane.py
+    design:
+      - docs:technical/design/observation/observation-architecture-biopeia-v1.md
+      - docs:technical/design/observability/observation-semantic-model-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0101-operator-control.md
+    depends_on:
+      - component.observation-semantic-claim-model
+    review:
+      status: RECORDED
+      basis:
+        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+
+  component.observation-inherited-projection:
+    kind: component
+    title: Inherited projection
+    status: CURRENT
+    owner_domain: observation
+    participating_domains:
+      - lab
+      - world
+    component_id: OBS-PRJ
+    canonical_docs:
+      - explanation/observation/inherited-projection.md
+    implementation:
+      - observation:src/observation/projection.py
+      - observation:src/observation/contracts.py
+    tests:
+      - observation:tests/test_projection.py
+    design:
+      - docs:technical/design/observation/observation-architecture-biopeia-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md
+    review:
+      status: RECORDED
+      basis:
+        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661

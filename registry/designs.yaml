@@ -82,17 +82,74 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-09"
       basis:
-        observation: a768bd94da1e
+        observation: 397c0b4691b5
+      tests:
+        - "observation:tests/test_semantic_model.py"
+        - "observation:tests/test_plane.py"
       observed: >
-        observation:src/observation/semantic.py defines types for authority
-        domain, identity and identity links, subject scope, domain time,
-        acquisition basis, lineage, conditions, semantic claim and semantic
-        observation, with tests in observation:tests/test_semantic_model.py.
+        Evaluated section by section against observation:src/observation/semantic.py
+        and observation:src/observation/plane.py; both test files pass in an
+        extraction of that revision (22 and 16 test cases) and code-only
+        statements were confirmed by ad hoc runs.
+        Section 2 (claim and atomicity): realised in shape. A claim has one
+        family, hence one authority, one subject, one epistemic kind and an
+        opaque value that may be structured; a plane message wraps exactly
+        one observation.
+        Section 3 (subject, scope, identity): realised. Identities are typed
+        and issuer-scoped with optional scope and lifetime; cross-domain
+        association is an explicit link with asserted, conflict and
+        unresolved states; a local key is documented as not a stable
+        identity. Tested.
+        Section 4 (authority, producer, asserter): realised as separate
+        fields, with a measurement source; the enumeration has the four
+        authorities plus Lab, and no Modality; a Lab-authority claim must be
+        of kind lab_derived. Tested, except the absence of Modality.
+        Section 5 (epistemic basis, availability): realised in part.
+        Conditions distinguish availability from completeness and source
+        origin from plane origin, and are read back separately. Tested.
+        Section 6 (domain time): realised in part. Time references are typed
+        per authority; primary time must name the claim's authority and
+        other domains' time is context; booleans, non-finite values and
+        three delivery-sequence kinds are refused. Tested.
+        Section 7 (lineage): realised in shape: parent references and a
+        transformation with identifier, revision and effective
+        configuration; a transformation requires parents.
+        Section 8 (family, revision): realised for identity: family path,
+        contract identifier and revision are independent of any transport,
+        and the plane keeps different contracts and revisions apart. Tested.
+        Section 9 (measurement source): realised as an optional field.
+        Section 10 (replay): the plane replays the same retained
+        observations by delivery sequence and re-executes nothing.
+        Section 11 (delivery): the documentation of open_stream declares
+        ordering scope, duplication, gap signalling, completeness and resume
+        for the in-memory plane; loss is signalled by an explicit rebase
+        request, tested for expired replay, bootstrap overflow and consumer
+        overflow.
+        Section 13 (non-goals): the package defines no record layout, wire
+        format, endpoint, storage or transport.
       limits: >
-        Existence of the types was checked, not their agreement with each
-        section of the model. No semantic-family contract and no concrete
-        record, schema, transport or storage was found or looked for; the
-        model itself does not authorize them.
+        The module's statement that it implements the model is its own
+        description and is not counted as evidence. The checks are on
+        labels (finding F-0046): the epistemic bases and availability states
+        of section 5 are not encoded, both being free tokens apart from
+        lab_derived; lab_derived is accepted under any authority and the
+        asserter is not tied to the authority; primary time is checked by
+        domain only and wall-clock kinds are not refused; a derived claim
+        needs no lineage and parent references are unresolved text.
+        The code is silent on: units, reference frames and part identity
+        (section 8), which can only live in the opaque value; revision
+        compatibility (section 8); observation identity (section 3); what
+        STALE is stale against (section 5); snapshot coherence scope
+        (section 10); and evidence admission (section 12), for which only a
+        separate run-context field exists. No semantic family or contract is
+        defined, and none is authorized by the model. No code attaches a
+        plane-origin condition. Against section 11: delivery is at most
+        once, which the module declares (F-0047), and a run boundary is not
+        signalled to a consumer that reconnects after it (F-0040). Claim
+        values are held by reference and are mutable (F-0041). Nothing
+        publishes to the plane outside its tests (F-0044), so no claim from
+        a real authority has been seen in these types. Passing tests show
+        construction of values, not use.
     decision:
       reference: "Architecture Owner decision recorded in the document's status line"
       date: "2026-10-09"
@@ -174,8 +231,81 @@ designs:
     domain: observation
     participating_domains: [organism, embodiment, environment, world, lab, modality]
     document_status: approved
-    implementation_status: not_evaluated
+    implementation_status: partial
     architecture_scope: TARGET
+    implementation_evidence:
+      evaluated_on: "2026-10-09"
+      basis:
+        observation: 397c0b4691b5
+      tests:
+        - "observation:tests/test_plane.py"
+        - "observation:tests/test_semantic_model.py"
+        - "observation:tests/test_projection.py"
+      observed: >
+        Evaluated point by point against the observation repository; its
+        three test files pass in an extraction of that revision (44 test
+        cases) and code-only statements were confirmed by ad hoc runs. The
+        other repositories were searched at their main branches on the same
+        day: organism 6543188, embodiment a5129f0, environment f97ec22, world
+        c162b67, modality 9bd1b77, lab 4d5ff70.
+        P1 (five roles): realised in part. Authority, asserter, producer and
+        measurement source are separate fields of an observation and the
+        authority comes only from the claim's family
+        (observation:src/observation/semantic.py; tested). The plane is a
+        distinct object that holds claims without becoming their authority.
+        P2 (the plane belongs to Observation): realised. The plane is
+        observation:src/observation/plane.py; no plane was found in lab. The
+        module documentation that said Lab hosts it was corrected in
+        observation 25b6738 and now names the Observation capability.
+        P3 (authorities do not depend on Observation): realised for the
+        dependency direction of source packages. No source package of
+        organism, embodiment, environment, world or modality imports
+        observation, and observation imports only the standard library. This
+        rests on a text search, not a test.
+        P4 (no path to causal state): no such path was found. The package
+        has no call into a producer, holds no reference to one and contains
+        no control operation.
+        P5 (coherence and sequence): realised for the sequence. The delivery
+        sequence is carried on the plane message, outside the observation,
+        and the claim model refuses delivery-sequence kinds as domain time
+        (tested).
+        P6 (transduced claims): realised only negatively: the authority
+        enumeration has no Modality member (ad hoc run, no test).
+        P7 (live replay is not evidence): nothing contradicts it. Replay is a
+        fixed-length in-memory queue, the module states it is not durable,
+        and nothing writes it anywhere.
+        P8 (inherited projection is transitional): the stated condition for
+        deferral holds, in that callers exist (lab source, one world
+        integration test) and no TARGET family exists to replace it; the
+        README and migration record state in prose that it is no
+        compatibility promise.
+      limits: >
+        P1: consumer and evidence custodian have no representation in code,
+        and nothing checks that the party named in a role holds it (F-0046).
+        P3: the adapter layer the design draws does not exist; nothing
+        publishes to the plane outside its tests (F-0044). World's
+        integration tests, through a test-only extra, import
+        observation.semantic and build observations inside the world
+        repository; whether that counts as an authority depending on the
+        package is not decided here. P4: observations are held and delivered
+        by reference with mutable claim values, so a consumer could alter
+        what a producer handed over (F-0041); no test examines flow from a
+        consumer back to a producer (F-0043); with no control path in the
+        package, the separation of observing and controlling is untested
+        rather than shown. P5: the code is silent on coherence. No type
+        declares a coherence scope or links a set of claims to a World
+        causal cut, and the current view is ordered by publication, not by
+        domain time (F-0045). P6: silent on naming the owner of what is
+        transduced; no family exists. P7: silent on the hand-over to an
+        evidence custodian; a run boundary is not signalled to a consumer
+        that reconnects after it (F-0040). P8: not realised in code: the
+        projection and frame carry no transitional mark and are exported
+        from the top of the package (F-0042); whether its callers are
+        necessary consumers is not decided here. No point was found
+        contradicted by the code. The callers in lab and world pin
+        observation cb07ace, where projection.py and contracts.py are
+        identical to the revision evaluated. Passing tests are not evidence
+        of use in a running system.
     decision:
       reference: "Architecture Owner approval of 2026-10-09, recorded in section 7 of the document"
       date: "2026-10-09"
@@ -185,4 +315,10 @@ designs:
       cb07ace. Approved by the Architecture Owner the same day, after three of
       its points were decided in answer to questions it posed. The approval
       keeps the implementation status not evaluated: approving the design
-      does not mean the observation repository implements it. 
+      does not mean the observation repository implements it.
+      Evaluated afterwards, the same day, against observation 397c0b4 and
+      recorded as partial; the evidence block gives the result per point.
+      Section 5 of the document describes cb07ace and is in part out of
+      date: the module documentation it reports as saying that Lab hosts the
+      plane was corrected in observation 25b6738. The document was not
+      edited.

@@ -191,3 +191,77 @@ components:
       - "a checkpoint holding the scene and the last accepted correlation"
     consumers:
       - mechanism.physical-causal-step
+
+  OBS-SEM:
+    coverage_unit: component.observation-semantic-claim-model
+    name: "Semantic claim model"
+    authority:
+      owns: "the shape of a semantic claim and of an observation of it, and the few cross-field rules checked when one is built; no state and no meaning"
+      may_decide:
+        - "whether a value is a well-formed claim, observation, identity, time reference, lineage or condition"
+        - "whether a claim under Lab authority carries the lab_derived kind"
+        - "whether a primary domain-time reference names the claim's authority"
+      must_not:
+        - "be the authority for any claim it describes"
+        - "define a semantic family, a contract, units, a wire format or a transport"
+        - "be imported by the source packages of the authorities"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "values supplied by whoever builds a claim"
+    outputs:
+      - "immutable claim and observation values whose claim payload is the caller's own object"
+    consumers:
+      - component.observation-plane
+      - "the integration tests of the world repository, which build observations and publish them nowhere (not registered as units)"
+
+  OBS-PLN:
+    coverage_unit: component.observation-plane
+    name: "Observation plane"
+    authority:
+      owns: "an in-memory delivery sequence, a bounded replay history, a bounded last-published view per key, and the queues of its open streams"
+      may_decide:
+        - "the delivery sequence of a published observation"
+        - "which retained entries are evicted when a bound is exceeded"
+        - "when a stream is told to rebase"
+      must_not:
+        - "alter, validate or interpret an observation, or decide what it means"
+        - "present the delivery sequence as domain or causal time"
+        - "call back into a producer or carry a command"
+        - "claim durability, resumption across restarts or custody of evidence"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "semantic observations handed to publish"
+      - "a watermark and an optional family from a consumer opening a stream"
+    outputs:
+      - "messages pairing a delivery sequence with the published observation, by reference"
+      - "rebase requests with a reason and the latest sequence"
+      - "the retained current view"
+    consumers:
+      - "none found in any repository at the revisions read; only its own tests"
+
+  OBS-PRJ:
+    coverage_unit: component.observation-inherited-projection
+    name: "Inherited projection"
+    authority:
+      owns: "a fixed list of copied key names, the grouping of them into three records, and a frame record with constant provenance labels; no state"
+      may_decide:
+        - "which keys of a caller's mapping are copied and how their types are coerced"
+        - "that a key it does not know, or cannot convert, is omitted without an error"
+      must_not:
+        - "read a domain, hold state or deliver anything"
+        - "be taken as a compatibility promise, a ratified contract or the meaning of the keys it copies"
+        - "emit either metabolic reserve key"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "one mapping per tick, assembled by the caller from values of several owners"
+    outputs:
+      - "three dictionaries tagged body, cognition and vitals"
+      - "an observed_frame event"
+    consumers:
+      - "Lab's operator material transfer, in source, and one integration test of World (not registered as units)"
