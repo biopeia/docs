@@ -12,9 +12,29 @@ A **registry and its tooling** keep the explanation traceable to sources held
 here and in the other Biopeia repositories.
 
 This repository holds no domain logic and no semantic authority. Recording a
-decision here does not accept it: a decision record is authoritative only once
-its authorized owner has accepted it, and green CI never stands in for that
-acceptance. Scientific evidence and experiment records are **not** kept here;
+decision here does not accept it, and green CI never stands in for acceptance.
+Who accepts a new decision depends on its class:
+
+| Class | Accepted by |
+|---|---|
+| Ordinary, including migration implementation decisions | During the migration, the advisor may accept |
+| Architecture refinement within already ratified invariants | During the migration, the advisor may accept |
+| Scientific | The corresponding scientific authority and review |
+| Frozen | The authority named by its review policy |
+| Constitutional | The Architecture Owner / repository owner |
+
+The advisor is the reviewer model that the Claude agent carrying out the
+migration consults (Claude Code's advisor). Its acceptance role is a temporary
+exception for the migration: it ends with it, never extends to constitutional
+decisions, and changes no role definition elsewhere. Outside the migration the
+repository owner accepts. Acceptance is written in the record's own Status
+section with its date and who accepted it.
+
+Records copied or transcribed from the source keep the ratification they
+already carry; reviewing that a copy is faithful is not an acceptance of the
+decision.
+
+Scientific evidence and experiment records are **not** kept here;
 they stay with the scientific apparatus that produced them and are linked,
 never restated as a second source of truth.
 
@@ -27,7 +47,7 @@ never restated as a second source of truth.
 | Path | Purpose |
 |---|---|
 | `explanation/` | Explanatory documents. Created with the first documented unit |
-| `technical/adr/`, `technical/design/` | Decision records and design documents. Created with the first record |
+| `technical/adr/`, `technical/design/` | Decision records and design documents |
 | `registry/schema.yaml` | Closed vocabularies: domains and their component prefixes, statuses, state owners, lifecycle values |
 | `registry/coverage.yaml` | Canonical units: owner, explanation, and the code, tests, design and decisions each is traced to |
 | `registry/components.yaml` | Authority, state ownership and lifecycle of each component |

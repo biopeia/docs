@@ -59,8 +59,70 @@ defects it is tested for. It says nothing about any Biopeia mechanism.
   Observation and Modality are not state owners: their retained state is
   `implementation-local` or belongs to the authority it describes.
 
-## Open
+## Copied Biopeia decision records
 
-- Whether ADR-0073, ADR-0074 and the physical-step integration design move
-  here from `symbiont-lab`, and under which acceptance procedure new decision
-  records are admitted in this repository.
+By owner decision the Biopeia decision records were **copied**, not moved. The
+originals are retained unchanged in the source repository.
+
+By owner decision of 2026-10-09 the source repository is being retired from
+active use and Biopeia is the way forward. From this copy onward **the copies
+in this repository are the canonical text** of these decisions: changes are
+made here, and the originals are the historical record of how the text stood
+at the source commit.
+
+- Source commit: `cfa137e167081acac3590fb52ae069adfda605d4`, the head of the
+  open candidate alessbarb/symbiont-lab#465. It was **not** on the source
+  `main` branch when copied; `main` was at `80d372a` and contained none of
+  these three documents.
+
+| Original source path | Source blob | Target path |
+|---|---|---|
+| `docs/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` | `07b7b8abd` | `technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md` |
+| `docs/adr/ADR-0074-biopeia-world-environment-authority-split.md` | `22a5732f5` | `technical/adr/ADR-0074-biopeia-world-environment-authority-split.md` |
+| `docs/design/runtime/biopeia-physical-step-integration-v1.md` | `a0c7b3e70` | `technical/design/runtime/biopeia-physical-step-integration-v1.md` |
+
+### Architecture decisions AD-0001 to AD-0036
+
+By owner decision the architecture decisions of the audit were transcribed
+into independent decision records that continue the numbering: `AD-0001` to
+`AD-0036` are `ADR-0075` to `ADR-0110`, one record each, in source order.
+
+- Source: the sealed architecture audit dossier, archive `.audit.zip`
+  (SHA-256 `ff258afc…57df2`, recorded in the source repository as
+  `BIOPEIA_ARCHITECTURE_V1_AUDIT_BASELINE`). `AD-0001` to `AD-0020` come from
+  their rows in `.audit/registers/decisions.md`; `AD-0021` to `AD-0036` from
+  their sections in `.audit/ARCHITECTURE_OWNER_TANDA2_RATIFICATION.md`, with
+  their register rows.
+- Disposition: `SPLIT`, as documentary normalization only, with no semantic
+  change. Decision, status and ratification texts are verbatim and were
+  checked mechanically against the source. Added: the record number, section
+  headings, a Provenance section, a References list mapping cited `AD-`
+  identifiers to records here, and, for `AD-0001` to `AD-0020` only, a title,
+  because the source rows have none. Those titles are editorial and
+  non-normative, and each record says so.
+- Where the source does not record an acceptance date or an authority, the
+  record says `NOT RECORDED IN SOURCE`. Neither was reconstructed. The
+  register rows of `AD-0001` to `AD-0020` carry no date; the row of `AD-0003`
+  names no authority.
+- The opening and closing statements of the ratification apply to all sixteen
+  of its decisions and are reproduced in each of those records. The addenda of
+  the register are attached to the decision they concern (`AD-0015`,
+  `AD-0020`).
+- `UC-0001`, a user constraint of the same register that `AD-0002` and
+  `AD-0011` rely on, is reproduced in `technical/adr/README.md`. It is not an
+  architecture decision and received no record number.
+- Not copied: the review, evidence, finding and open-point records cited by
+  identifier, and the rest of the dossier.
+- Transcription review: on 2026-10-09 the advisor reviewed the transcription
+  and found it acceptable as a faithful transcription, on the basis of the
+  mechanical check that every decision, status and ratification text appears
+  unmodified, and of two records read in full. That review concerns fidelity
+  only. The decisions were ratified by the Architecture Owner, as each record
+  states; the advisor did not accept or re-ratify them.
+
+Each copy carries a provenance note under its title. The text is otherwise
+unchanged, except that relative links to documents that were not copied
+(the constitution, ADR-0060, ADR-0066, ADR-0070, ADR-0072 and the World
+responsibility map) now point to the source commit. The other 73 decision
+records and the remaining design documents of the source repository describe
+the historical system and were not copied.
