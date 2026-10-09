@@ -192,6 +192,194 @@ components:
     consumers:
       - mechanism.physical-causal-step
 
+  ENV-GEN:
+    coverage_unit: component.environment-procedural-genesis
+    name: "Procedural genesis of a scene"
+    authority:
+      owns: "one identified, versioned generator that turns a seed and an explicit configuration into a static scene with recorded provenance"
+      may_decide:
+        - "whether a specification names the supported generator and is well formed"
+        - "where each sphere is placed and its radius, from a digest of the specification"
+      must_not:
+        - "read host time, process state or a global random source"
+        - "guarantee non-overlap, terrain quality, ecological meaning or scientific suitability"
+        - "attach labels or meaning to what it generates"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "a genesis specification: seed, generator identity and revision, configuration"
+    outputs:
+      - "a static scene carrying its genesis provenance"
+    consumers:
+      - component.environment-static-scene
+
+  ENV-GEO:
+    coverage_unit: component.environment-resource-geometry
+    name: "Physical projection of resource geometry"
+    authority:
+      owns: "the realisation of a resource's relative centre and radius as a sphere in metres, in a frame and at a scale the caller declares"
+      may_decide:
+        - "whether the frame, scale and geometry are well formed"
+      must_not:
+        - "infer calibration or supply a default frame or scale"
+        - "transform coordinates to another frame"
+        - "treat the scalar field, the quantity or the transfer bound as collider data"
+        - "change the resource"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "a finite resource, a frame and a scale in metres per resource unit"
+    outputs:
+      - "a sphere in metres that records the scale used"
+    consumers:
+      - "none found in the source of any repository at the revision reviewed"
+
+  EMB-PHY:
+    coverage_unit: component.embodiment-physical-state
+    name: "Body physical state and adoption of a solver candidate"
+    authority:
+      owns: "the free-root pose and velocities of one body in one embodiment episode at one World causal tick, and the correlation of the last physical step accepted for it"
+      may_decide:
+        - "whether a solver candidate matches the expected correlation and this state's World, tick, body, episode, morphology revision and frames"
+        - "whether checkpoint bytes decode to a consistent state under its schema"
+      must_not:
+        - "execute a solver or let a solver change the state"
+        - "commit a World cut or claim a durable checkpoint reference"
+        - "mint the authority of a physical step"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code. The code has no
+    # path for re-embodiment or reproduction: those two values record the
+    # intent of ADR-0094, not observed behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "a solver candidate with its correlation, and the correlation to expect"
+    outputs:
+      - "a new state one causal tick later"
+      - "deterministic checkpoint bytes and their digest"
+    consumers:
+      - mechanism.physical-causal-step
+
+  EMB-SOM:
+    coverage_unit: component.embodiment-somatic-state
+    name: "Somatic state, metabolic ledger and body checkpoint"
+    authority:
+      owns: "one body's energy reserve and maximum, structural integrity and per-structure records, vital state, age, stored temperature, fatigue, growth and senescence values, and the per-kind metabolic accounts"
+      may_decide:
+        - "how much of a charge or an intake the body's energy pool absorbs"
+        - "the pressure for an energy ratio and the vital state for a pressure"
+        - "whether a material transfer is addressed to this body and how much of it is accepted"
+        - "whether checkpoint bytes are a valid state of this body under its schema"
+      must_not:
+        - "leave the dead state"
+        - "create physical energy by refilling accounting channels"
+        - "assign Organism identity or World commit authority to Embodiment"
+        - "obtain or authorise a material transfer"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code; the checkpoint
+    # loses the physiology configuration and the per-tick spent amounts
+    # (F-0025). The code has no path for re-embodiment or reproduction: those
+    # two values record the intent of ADR-0094, not observed behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "charges by kind, intakes, material transfers addressed to the body"
+      - "a caller-supplied tick and resting flag when the controller is advanced"
+    outputs:
+      - "metabolic and physiology snapshots"
+      - "a read-only export of the record for observation"
+      - "a checkpoint of body and ledger under body and episode identifiers"
+    consumers:
+      - "Lab's operator material transfer and World's durable checkpoint integration tests (not registered as units)"
+
+  LAB-OMT:
+    coverage_unit: component.lab-operator-material-transfer
+    name: "Operator material transfer"
+    authority:
+      owns: "the intervention request as declared by the caller, the order in which Environment, Embodiment and World are asked, and the intervention evidence checkpoint with the files of its store"
+      may_decide:
+        - "whether a request is well formed and agrees with the identities the owners carry"
+        - "how much to ask the resource for, within the bound the caller declared"
+        - "whether bytes are a valid evidence checkpoint for an intervention identity"
+      must_not:
+        - "decide how much the resource offers or is debited, or how much the body accepts"
+        - "change the owners' objects in place or adopt a state World has not committed"
+        - "treat the operator identifier as authentication or authorisation"
+        - "claim equivalence to an endogenous physical mechanism, or present a transfer as a scientific result"
+    state:
+      owner: lab
+      family: evidence_record
+    inputs:
+      - "a caller-declared intervention request and a requested quantity"
+      - "Environment's identified resource and Embodiment's checkpoint object, matching the World's committed cut"
+      - "a durable World runtime whose registered owners are exactly those two"
+    outputs:
+      - "one committed World tick with new Environment and Embodiment checkpoints"
+      - "an evidence checkpoint filed under the intervention identity"
+      - "three events from Observation's projection, returned to the caller"
+    consumers:
+      - "none registered; called by its own integration tests only"
+
+  LAB-STU:
+    coverage_unit: component.lab-study-utilities
+    name: "Study utilities"
+    authority:
+      owns: "nothing persistent; pure computations over seed lists, lists of scalar measurements, an event stream of one historical shape and a configuration dictionary"
+      may_decide:
+        - "whether seed lists are unique, disjoint or equal in order"
+        - "which values count as missing in a summary"
+      must_not:
+        - "run experiments, own simulated life or carry scientific artifacts"
+        - "be read as a test of significance or as evidence of an effect"
+        - "be taken for a digest of a Biopeia World"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "lists of seeds, lists of numbers with missing values, events, a dictionary"
+    outputs:
+      - "an error or nothing; means, differences and an aggregate; SHA-256 text"
+    consumers:
+      - "none in the Biopeia repositories"
+
+  LAB-INT:
+    coverage_unit: component.lab-body-interoception-transducer
+    name: "Body interoception transducer"
+    authority:
+      owns: "the permutation that assigns four body-state sources to four caller-named slots"
+      may_decide:
+        - "whether a mapping is a permutation of the four sources"
+        - "how each source is limited to the range from zero to one"
+      must_not:
+        - "assign labels, valence or action meaning to the values"
+        - "change the body state it reads or own any physiology"
+        - "claim scientific validity"
+    state:
+      owner: lab
+      family: infrastructure
+    inputs:
+      - "any object exposing energy reserve, maximum energy, structural integrity, temperature and fatigue"
+      - "four distinct receptor identifiers supplied by the caller"
+    outputs:
+      - "four values between zero and one under the caller's identifiers"
+      - "a checkpoint holding only the permutation"
+    consumers:
+      - "none in the Biopeia repositories"
+
   OBS-SEM:
     coverage_unit: component.observation-semantic-claim-model
     name: "Semantic claim model"
