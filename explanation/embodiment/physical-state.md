@@ -54,7 +54,9 @@ A state cannot be built unless it is consistent with itself. The pose must
 belong to the same body. If a last step is recorded, it must name the same
 World, body, episode and morphology revision, its tick must be exactly one
 less than the state's, and the pose must be labelled as produced by that
-step (`test_owner_state_rejects_last_step_with_mismatched_identity_or_revision`).
+step. The morphology and body cases are covered by
+`test_owner_state_rejects_last_step_with_mismatched_identity_or_revision`;
+the others are read from the code.
 Velocities must be three finite numbers
 (`test_owner_state_rejects_invalid_root_velocity_vectors`). A state with no
 last step is an initial state and may be created at any tick (ad hoc run).
@@ -156,7 +158,8 @@ Two things follow that a reader of World's documents should know:
   repository does (see [somatic state](somatic-state.md)). In World's
   integration fixture, at `world@c162b67e698de9b47450264402677b0165e6e20e`,
   the answer for the physical state is a function written in the test, and
-  the schema name `embodiment-physical-state-v2` appears only there.
+  the schema name `embodiment-physical-state-v2` appears only in World's
+  integration tests.
 - A body therefore has two unrelated checkpoints, this one and the somatic
   one. This one names a World and a causal tick; the somatic one names
   neither.
@@ -199,7 +202,7 @@ it. This is a comparison of content, not a ruling on conformance.
 | Consistency rules of the state, the adoption rules on correlation, immutability, checkpoint determinism and strictness, absence of a durable reference | Code and tests in `embodiment:tests/test_physical_transition.py`, run at that revision (all pass) |
 | Frames must match; non-unit quaternion and non-finite position refused at adoption, not at construction of the candidate | Code, and one ad hoc run of the module at that revision; no test is kept for these |
 | Invented environment and solver revisions adopted; one state adopting two candidates for one step; implausible values adopted; initial state at any tick | Code, and the same ad hoc run |
-| No owner validation methods on this type; schema name defined in World's fixture | Code of this module and of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
+| No owner validation methods on this type; schema name defined in World's integration tests | Code of this module and of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | That owners adopt and solvers do not; what ends with a body | Accepted decisions ADR-0073, ADR-0098, ADR-0094, ADR-0095; statements of intent, not test results |
 
 No run with a real solver, no stored checkpoint and no experiment was

@@ -137,9 +137,10 @@ normal                       ─▶ active
 
 All states but one are reversible. A body went from active to stressed to
 agonizing to dormant and, after receiving energy, back to active (ad hoc
-run). Dead is final: no transition leaves it, energy offered to a dead body
-is not accepted, and attempting to mark it alive raises
-(`test_matching_transfer_to_dead_body_is_not_accepted`).
+run). Dead is final. Energy offered to a dead body is not accepted
+(`test_matching_transfer_to_dead_body_is_not_accepted`); that no transition
+leaves the state and that attempting to mark the body alive raises are read
+from the code and were confirmed by the same run.
 
 `VitalState.DEAD` is the death of a body in this record. The migration
 record states that the extraction "does not reinterpret it as TARGET
@@ -268,7 +269,7 @@ The Organism repository does not import this package.
 | Claim | Support |
 |---|---|
 | Record round trip, charge debiting energy once, depletion marking death, transfers, checkpoint strictness and owner validation | Code and tests in `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py` and `embodiment:tests/test_checkpoint.py`, run at that revision (all pass) |
-| Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
+| Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states; dead is final | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
 | A ledger charge empties the reserve without death; tick of death taken from the caller; configuration and spent amounts lost on restore | Code, and the same ad hoc run |
 | Which values are never changed, which configuration values are never read, who calls what | A search of the source at that revision, and of the other repositories' main branches |
 | What a body owns, what reaches the Organism, what ends with a body | Accepted decisions ADR-0094 and [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md); statements of intent, not test results |
