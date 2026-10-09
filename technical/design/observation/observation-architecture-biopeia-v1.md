@@ -1,8 +1,10 @@
 # Observation Architecture for Biopeia v1
 
-This document is a **proposal**. It decides nothing. Its state is recorded in
+This document is **under review for approval**. Its state is recorded in
 `registry/designs.yaml`, which is the only authority for it; nothing here
-should be read as approved or implemented.
+should be read as approved or implemented. Three points were decided by the
+Architecture Owner on 2026-10-09 and are marked **Decided**. Everything else
+in section 3 is a proposal that awaits approval of the design as a whole.
 
 It is written new for Biopeia from three sources: the ratified decision
 records, the approved
@@ -73,7 +75,8 @@ World causal cut only when every claim in it is linked to that cut.
 
 ## 3. What this design proposes
 
-Each proposal below is new in this document and awaits a decision.
+Each point below is new in this document. Those marked **Decided** record an
+Architecture Owner decision of 2026-10-09; the others await a decision.
 
 ### P1. Five roles, kept distinct
 
@@ -91,28 +94,45 @@ its holder the authority for it.
 
 ### P2. The plane belongs to the Observation capability, not to Lab
 
+**Decided.** The live plane belongs to Observation, not to Lab. Observation
+holds current materialisation, fan-out, operational replay and passive
+transport. Lab consumes that plane and is the custodian of durable scientific
+evidence.
+
 The earlier design gave Lab the operational coordination, materialisation and
-delivery of observations and deferred a standalone package. This design
-proposes the opposite assignment: the live plane is part of the Observation
-capability, and Lab is one of its consumers.
+delivery of observations and deferred a standalone package; this reverses
+that assignment. The decision also preserves that a World may keep running
+without Lab
+([ADR-0079](../../adr/ADR-0079-world-lifecycle-is-independent-from-lab.md)).
+It is consistent with ADR-0100, which gives Lab evidence custody and not the
+runtime projection, and with ADR-0110, which justifies a separate Observation
+repository to avoid coupling World to Lab.
 
-Reasons: ADR-0100 separates runtime projection and transport from evidence
-custody, and gives only the last to Lab; ADR-0110 justifies a separate
-Observation repository precisely to avoid coupling World to Lab; and a World
-that may run without Lab
-([ADR-0079](../../adr/ADR-0079-world-lifecycle-is-independent-from-lab.md))
-would otherwise lose its observability when Lab is absent.
-
-### P3. Each authority exposes one intentional observation boundary
+### P3. Each authority exposes its own boundary, and does not depend on Observation
 
 An authority decides what it exposes and exposes it deliberately. The
 Observation capability reads only through that boundary and never
 reconstructs a claim by inspecting an authority's private objects. For
 Organism this is already required by ADR-0092.
 
-Whether an authority's package depends on the Observation package, or
-Observation adapts values an authority exposes independently, is left open in
-section 6.
+**Decided.** The dependency points outward. The authorities do not depend on
+the `observation` package: they do not import its types and are not coupled
+to its repository. Each authority defines contracts or projections of its
+own, and Observation adapts those public surfaces from outside.
+
+```text
+Organism    ─┐
+Embodiment  ─┤  each exposes its own contracts and projections
+Environment ─┤
+World       ─┘
+        ↓
+Observation adapters
+        ↓
+Observation plane
+```
+
+The reason given with the decision: a passive capability must not become a
+structural dependency of the authorities.
 
 ### P4. No path from observation to causal state
 
@@ -140,6 +160,14 @@ for learned perceptual adaptation, Environment for medium parameters.
 Bounded replay inside the plane serves consumers that reconnect. It is not a
 record of what happened for scientific purposes. Durable evidence is what the
 evidence custodian has recorded, with provenance, under ADR-0100.
+
+### P8. The inherited projection is transitional
+
+**Decided.** The projection carried over from the source repository is not
+kept for compatibility and does not become a stable contract by existing. Its
+disposition is `DEFER` while it has necessary consumers, as a bridge clearly
+marked as transitional, and `DROP` once a TARGET semantic family covers its
+function.
 
 ## 4. Relation to the superseded design
 
@@ -170,7 +198,14 @@ Two observations bear on the proposals above:
 - The module documentation of the semantic model in that repository still
   says that "The Lab hosts this representation for the operational
   Observation Plane", while the plane now lives in the `observation`
-  repository. That sentence reflects the superseded assignment.
+  repository. That sentence reflects the superseded assignment and
+  contradicts P2 as decided.
+- The same documentation says that source domains "do not import this
+  module" and that their observation boundaries expose domain-owned values
+  adapted structurally. That agrees with P3 as decided.
+- The inherited projection is present and, per the repository's README, is
+  "not a compatibility promise or a ratified Biopeia API". P8 fixes its
+  disposition; the code does not yet mark it as transitional.
 - The enumeration of authority domains there includes Lab alongside the four
   authorities. This agrees with the semantic model only if Lab is used
   exclusively for Lab-created meaning, which the code does not by itself
@@ -180,8 +215,6 @@ Two observations bear on the proposals above:
 
 - Records, schemas, wire formats, transports, endpoints and storage.
 - Any semantic family and its contract.
-- Whether authorities depend on the Observation package or are adapted from
-  outside it (P3).
 - How the plane is deployed: in process with World, in a separate process, or
   both.
 - How evidence passes from the plane to the evidence custodian, and what
@@ -189,12 +222,16 @@ Two observations bear on the proposals above:
 - Whether observation of a World continues when no consumer is attached, and
   what is retained in that case.
 
-## 7. Questions for the Architecture Owner
+## 7. Decisions recorded
 
-1. Is P2 accepted: the live plane belongs to the Observation capability and
-   Lab is a consumer and the evidence custodian?
-2. Under P3, which dependency direction is intended between the authorities
-   and the Observation package?
-3. Should the copied projection of the source repository, which carries
-   historical payload keys, remain in the `observation` repository or be
-   dropped once a semantic family replaces it?
+Taken by the Architecture Owner on 2026-10-09 in answer to the three
+questions this document first posed:
+
+1. The live plane belongs to the Observation capability; Lab is a consumer
+   and the evidence custodian. See P2.
+2. The authorities do not depend on the `observation` package; Observation
+   adapts their public surfaces from outside. See P3.
+3. The inherited projection is deferred while it has necessary consumers and
+   dropped when a TARGET semantic family covers its function. See P8.
+
+P1, P4, P5, P6 and P7 remain proposals until the design is approved.

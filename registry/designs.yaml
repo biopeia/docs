@@ -26,36 +26,38 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-09"
       basis:
-        world: fd88fc1b3737
+        world: cb4bd6b0506b
         organism: f15c4c572124
         embodiment: 3fe3cda64516
         environment: f2ef8c277a42
-        modality: 9a0656ab37ed
         observation: cb07ace20605
       tests:
         - "world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py"
         - "world:tests/integration/test_first_biopeia_causal_tick.py"
         - "world:tests/integration/test_durable_checkpoint_restore_slice.py"
       observed: >
-        The integration tests versioned in the world repository passed (9
-        tests) in a clean environment built from the revisions above, which
-        are the revisions pinned in world's integration extra. They include an
-        end-to-end deterministic physical causal step, rejection of a
-        stale-morphology candidate without publishing the next World cut,
-        adoption of an articulated MuJoCo candidate followed by a World
-        commit, and publication and restore of an owner-checkpoint closure.
+        The integration job of the world repository's CI passed on its main
+        branch and on the change that produced the revision above. It installs
+        the revisions pinned in world's integration extra, which are those
+        listed here, and runs the integration tests versioned in that
+        repository (9 tests). They include an end-to-end deterministic
+        physical causal step, rejection of a stale-morphology candidate
+        without publishing the next World cut, adoption of an articulated
+        MuJoCo candidate followed by a World commit, and publication and
+        restore of an owner-checkpoint closure.
       limits: >
-        Verified locally; the integration job in world's CI is skipped until
-        that repository has the read-only GitHub App credentials, so no CI run
-        backs this yet. The items the design lists for conformance were not
-        checked one by one: stable effector identity under permutation,
-        omitted channel as no command, roster completeness against the
-        genesis specification, partial-cut recovery and the single-writer
-        assumption are not confirmed here. Lab's operator intervention is not
-        covered by these tests; it is exercised by Lab's own integration
-        suite, which passes at the revisions Lab pins (lab 3b84a25, with
-        environment f2ef8c277a42). Passing
-        tests are not a physical calibration or equivalence claim.
+        The tests no longer import modality: it removed its unratified
+        transduction operators and the causal-tick test passes the
+        environmental signal through unchanged, so no transduction is
+        exercised. The items the design lists for conformance were not checked
+        one by one: stable effector identity under permutation, omitted
+        channel as no command, roster completeness against the genesis
+        specification, partial-cut recovery and the single-writer assumption
+        are not confirmed here. Lab's operator intervention is not covered by
+        these tests; it is exercised by Lab's own integration suite, which
+        passes at the revisions Lab pins (lab 3b84a25, with environment
+        f2ef8c277a42). Passing tests are not a physical calibration or
+        equivalence claim.
     decision:
       reference: "docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md"
       date: "2026-10-09"
@@ -166,14 +168,18 @@ designs:
     path: technical/design/observation/observation-architecture-biopeia-v1.md
     domain: observation
     participating_domains: [organism, embodiment, environment, world, lab, modality]
-    document_status: proposed
+    document_status: in_review
     implementation_status: not_evaluated
     architecture_scope: TARGET
     editorial_notes: >
       Written new on 2026-10-09 from the ratified decision records, the
       approved Observation Semantic Model v1 and the observation repository at
-      cb07ace. Proposed only: its seven proposals await a decision, and three
-      questions are put to the Architecture Owner. It is intended to replace
+      cb07ace. The Architecture Owner decided three of its points on the same
+      day (the plane belongs to Observation, the authorities do not depend on
+      the observation package, the inherited projection is transitional) and
+      asked that it pass to review for approval once they were incorporated.
+      They are incorporated; its other five points are still proposals, and
+      the design as a whole is not approved. It is intended to replace
       design.observability.observation-architecture-target-design-v1 once
       approved; until then that entry stays superseded by decisions.
 
