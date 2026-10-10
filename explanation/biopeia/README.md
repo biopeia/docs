@@ -34,6 +34,7 @@ No design registered for this domain.
 
 ## Decision records
 
+- [ADR-0073 — Biopeia Migration Causal and Physical Contracts](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md)
 - [ADR-0074 — Biopeia World and Environment Authority Split](../../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md)
 - [ADR-0075 — Authority boundaries derive from semantic ownership, not repository topology](../../technical/adr/ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md)
 - [ADR-0076 — Preserving scientific meaning without backward compatibility](../../technical/adr/ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md)
