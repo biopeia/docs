@@ -1,6 +1,6 @@
 # Execution bindings, availability and the affordance resolver
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -199,12 +199,12 @@ nothing that could.
 
 ## Across a restart
 
-The registry exports its rows, its capacity, the execution counts and its
-pressure counters, with a schema version, and restores them; an earlier schema
-or a missing field is refused
-(`test_binding_restore_rejects_old_schema_and_missing_current_fields`). In the
-ad hoc run the rows and counts came back equal. Transitions not yet collected
-are not exported: five were pending before and none after.
+The registry uses schema version 3. Its checkpoint includes rows, capacity,
+execution counts, pressure counters, revision history, and ordered pending
+lifecycle transitions. Restore refuses an earlier schema or missing required
+fields (`test_binding_restore_rejects_old_schema_and_missing_current_fields`);
+the pending transitions survive checkpoint/restore in order
+(`test_all_pending_lifecycle_transitions_survive_checkpoint_restore`).
 
 No checkpoint in the repository includes the export (search of
 `organism:src/organism/checkpoint.py` and
@@ -217,8 +217,8 @@ export at all. Availability and affordances are computed and never kept.
 | Boundary | What happens | Support |
 |---|---|---|
 | Birth | A new registry is empty | Code |
-| Checkpoint | Rows, counts and capacity can be exported; pending transitions are not | Code, test and ad hoc run |
-| Restart | An export can be restored; no checkpoint carries it | Code and test; search of the repository |
+| Checkpoint | Rows, counts, capacity, revision history and ordered pending transitions can be exported | Code and tests |
+| Restart | Pending transitions survive in the registry export, but no composed Organism checkpoint carries that export | Code and tests; repository search |
 | Re-embodiment | Nothing reacts. A row for another surface is reported not executable; no code marks it stale; new evidence on the new surface replaces it | Code and ad hoc run; no operation performs a re-embodiment |
 | Reproduction | No operation exists | Search of the genetics code, 2026-10-10 |
 
@@ -255,7 +255,7 @@ none of them; the search for clocks is described under
 | The registry's and the function's answers on executability differ for a stale binding with a live reason | Code and the ad hoc run |
 | What the resolver requires and where each number of an affordance comes from | Code and the ad hoc run; the resolver has no test |
 | The resolver ignores binding status and surface and never reads its own fingerprint | Code and the ad hoc run |
-| Pending transitions are lost on restore | The ad hoc run |
+| Pending lifecycle transitions round-trip in order | Code and `test_all_pending_lifecycle_transitions_survive_checkpoint_restore` |
 | The registry is constructed only in its test module; the resolver and the library nowhere; no checkpoint includes the export | Search of the seven repositories at `origin/main`, 2026-10-09 |
 | What applicability and re-embodiment must respect | Accepted decision ADR-0104; a statement of intent |
 
