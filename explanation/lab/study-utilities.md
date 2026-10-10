@@ -1,6 +1,6 @@
 # The study utilities
 
-Reviewed against `lab` at commit `4d5ff706b8329ddf25e1852ad53cbde5285d2851`.
+Reviewed against `lab` at commit `c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or an ad hoc run.
 
@@ -81,7 +81,11 @@ the module:
 ## Digests
 
 `lab:src/lab/studies/common/digests.py` holds two functions that return a
-SHA-256 hash as text.
+SHA-256 hash as text. Both use canonical JSON serialization (UTF-8, sorted keys,
+compact separators `("," , ":")`, ASCII unescaped, non-finite floats rejected
+and numeric types preserved without coercion) prefixed by a domain separator:
+`biopeia.lab.world-digest.v2\0` for the event stream and
+`biopeia.lab.config-digest.v2\0` for configuration dictionaries.
 
 ### The event stream digest
 
@@ -93,12 +97,19 @@ can give a vector of numbers. That shape comes from the historical
 repository. No code in the Biopeia repositories produces such events at the
 revisions examined; the tests build them by hand.
 
-What it does: for each event it writes one line of text from those fields and
-feeds it to the hash. A plain string is accepted as an event. Anything else
-is refused, so that an object's default text form, which may contain a
-memory address, never reaches the hash
-(`test_digest_rejects_objects_with_process_specific_default_repr`). Field types
-are checked strictly: a boolean is not accepted as a step.
+What it does: each event is encoded as a canonical JSON payload and hashed
+with 64-bit big-endian length prefixing (framing). An event object is encoded
+as an eight-element list:
+`["event", step, host_index, truth_label, is_threat, phase, drift_state, observation_data]`.
+An absent phase or drift state is encoded as `{"absent": True}`. If an observation
+is present and exposes a `vector()` callable, its vector elements must be int or
+float and are stored as a list; an explicit `None` observation is encoded as
+`None`, while an absent observation attribute is encoded as `{"absent": True}`.
+A plain string `ev` is encoded as `["str", ev]`. Anything else is refused, so that
+an object's default text form, which may contain a memory address, never reaches
+the hash (`test_digest_rejects_objects_with_process_specific_default_repr`).
+Field types are checked strictly: a boolean is not accepted as a step, non-string
+phase or drift state is rejected, non-finite floats are refused, and keys must be strings.
 
 Tests cover that equal streams give equal digests and that a difference in
 the observation, the phase or the drift state changes the digest
@@ -112,23 +123,16 @@ The function's documentation says it "Never includes anything the agent itself
 decided". That is a property of what a caller puts into the events; the
 function hashes what it is given.
 
-Equal digests do not prove equal streams. The fields are joined with a colon
-and the events with a line break, and neither is escaped. Confirmed by
-running the module:
+In earlier revisions, fields were joined with colons and events with line breaks
+without escaping, which caused separator collisions (finding F-0064). Under the
+v2 canonical JSON framing:
 
-- two events that differ only in where a colon falls between the phase and
-  the drift state give the same digest;
-- one string event containing a line break followed by the string prefix
-  gives the same digest as two string events;
-- an integer and the equal floating-point number in the vector give the same
-  digest;
-- an event with no observation and an event with an empty vector give the
-  same digest.
-
-A test in the repository states the aim that streams "whose actual
-observations differ must never hash identically." For values that contain
-the separators, the encoding does not achieve that. Whether real events can
-contain them depends on a producer that does not exist here.
+- framing and structured lists prevent separator collisions between fields or
+  across event boundaries (`test_digest_frames_strings_and_event_fields_without_separator_collisions`);
+- integer and floating-point representations remain distinct in JSON numbers
+  (`test_digest_preserves_numeric_type_and_observation_availability`);
+- absent observations, empty observation vectors, and unavailable observations
+  (`None`) produce distinct payloads (same test).
 
 The repository's migration notes bound the claim: the helper "does not
 acquire World state ownership or assert causal equivalence beyond the supplied
@@ -136,11 +140,12 @@ event representation."
 
 ### The configuration digest
 
-The hash of a dictionary written as JSON with sorted keys. Read from the code;
-no test in the repository calls it. Confirmed by running the module: key order
-does not matter; `1` and `1.0` give different digests; a not-a-number value is
-accepted and hashed; an integer key and the equal string key give the same
-digest; a value JSON cannot express raises an error.
+The hash of a configuration dictionary, prefixed with `biopeia.lab.config-digest.v2\0`
+and encoded as canonical JSON. The argument must be a Python `dict` with string
+keys (`test_config_digest_preserves_json_number_types_and_rejects_coercions`).
+Key order does not matter; integer and floating-point numbers remain distinct
+(`1` and `1.0` differ in JSON); non-finite numbers (`NaN`, `Infinity`) raise a
+`ValueError`; and non-string dictionary keys raise a `TypeError`.
 
 ## State and time
 
@@ -150,8 +155,8 @@ None. Every function is a pure computation over its arguments.
 
 | Claim | Support |
 |---|---|
-| The three seed checks; the four summaries on the cases exercised; digest stability and sensitivity to observation, phase and drift state; refusal of unsupported events | Code and tests in `lab:tests/unit/test_pairing.py`, `lab:tests/unit/test_statistics.py` and `lab:tests/unit/test_digests.py`; the 18 unit tests of the repository passed when run for this document |
-| Repeated seeds accepted by the paired and disjoint checks; numeric equality of seeds; truncation and uncounted drops; standard deviation of one value; behaviour on not-a-number; digest collisions; behaviour of the configuration digest | Code, and one ad hoc run of the modules at that revision |
+| The three seed checks; the four summaries on the cases exercised; digest stability and sensitivity to observation, phase and drift state; refusal of unsupported events; v2 framing and type preservation; config digest validations | Code and tests in `lab:tests/unit/test_pairing.py`, `lab:tests/unit/test_statistics.py` and `lab:tests/unit/test_digests.py`; the 24 unit tests of the repository passed when run for this document |
+| Repeated seeds accepted by the paired and disjoint checks; numeric equality of seeds; truncation and uncounted drops; standard deviation of one value; behaviour on not-a-number | Code, and ad hoc run of the modules at that revision |
 | No caller and no producer of the event shape in Biopeia | A search of the seven domain repositories at their main branches on the day of review |
 | The reach of the utilities | `lab:README.md` and `lab:MIGRATION.md`; statements by the repository |
 
@@ -163,6 +168,4 @@ does what is written above on the inputs tried.
 - Whether the event stream digest is to be kept, given that the events it
   hashes have no producer in Biopeia, and what would replace it for a study
   over a Biopeia World.
-- Whether separators are to be escaped so that the digest distinguishes every
-  pair of different streams.
 - Whether the summaries should report how many values or pairs they left out.

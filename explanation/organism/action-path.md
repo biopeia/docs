@@ -2,7 +2,7 @@
 
 Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
 The one place where the stages are joined is a test fixture of World, read at
-`world` commit `c162b67e698de9b47450264402677b0165e6e20e`. Everything below
+`world` commit `f496422a5cfb62cd4710ffc61522c9d43b49c6c5`. Everything below
 describes those revisions. Statements are marked by what supports them: the
 code, the tests, an ad hoc run, or an accepted decision.
 

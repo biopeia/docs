@@ -226,7 +226,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        world: f496422a5cfb62cd4710ffc61522c9d43b49c6c5
 
   component.environment-finite-resource:
     kind: component
@@ -491,7 +491,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+        lab: c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4
 
   component.lab-body-interoception-transducer:
     kind: component
@@ -632,7 +632,7 @@ units:
       status: RECORDED
       basis:
         organism: 6543188ff302a5f2dc8002c0086252d6061e5310
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        world: f496422a5cfb62cd4710ffc61522c9d43b49c6c5
 
   component.organism-identity-checkpoint:
     kind: component

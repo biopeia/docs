@@ -48,6 +48,17 @@ tests check that its runtime modules import no other domain
 ## What supports this description
 
 Code and the tests in `environment:tests/unit/test_physical_projection.py`,
-named above. No consumer of this projection was found in the source of the
-other repositories; where a projected resource sphere enters a physical
-scene is not established by any code read here.
+named above. A source search did not find a consumer of this projection in
+the inspected Biopeia snapshots: Environment
+`f97ec22272b6be1e6742770e37cd370e7d96d6bc`, World
+`c162b67e698de9b47450264402677b0165e6e20e`, Embodiment
+`a5129f03aa4b024e33d332f917b9235afe97959c`, Organism
+`6543188ff302a5f2dc8002c0086252d6061e5310`, Observation
+`397c0b4691b5e460e6ebc3914f9820ff434a3661`, Modality
+`9bd1b77c9eabc271969109cfab52394dc5b52012`, and Lab
+`4eee42796ac76af749a6b26f504c5ee88e21faf2`. The search for
+`project_resource_geometry` and `PhysicalSphere` found only the Environment
+definition, package export and tests in those snapshots; it did not find a
+consumer in the other listed repositories. This bounded result does not rule
+out consumers outside those snapshots. Where a projected resource sphere
+enters a physical scene is not established by the inspected code.
