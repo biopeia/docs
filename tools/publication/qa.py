@@ -68,3 +68,23 @@ def check_docx(data: bytes) -> list[str]:
     if re.search(rb"[\x00-\x08\x0b\x0c\x0e-\x1f]", package.read("word/document.xml")):
         problems.append("document contains control characters")
     return problems
+
+
+def check_pagination(
+    toc: list[dict], first: dict[str, int], final: dict[str, int], first_pages: int, final_pages: int
+) -> list[str]:
+    """The page numbers printed in the contents list are the pages of the final PDF."""
+    problems = []
+    if first_pages != final_pages:
+        problems.append(f"page count changed between passes: {first_pages} then {final_pages}")
+    previous = 0
+    for entry in toc:
+        bookmark = entry["bookmark"]
+        if first.get(bookmark) != final.get(bookmark):
+            problems.append(
+                f"{entry['text']!r} is listed on page {first.get(bookmark)} but is on page {final.get(bookmark)}"
+            )
+        if final.get(bookmark, 0) < previous:
+            problems.append(f"{entry['text']!r} comes before the heading that precedes it")
+        previous = final.get(bookmark, previous)
+    return problems

@@ -3,26 +3,91 @@
 
 Writes under build/publication/ (ignored by Git):
 
-  <id>.json       the semantic projection: what is published, before presentation
-  <output>.docx   the editable document, rendered from the projection
+  <id>.json                   the semantic projection: what is published, before presentation
+  <output>.docx               the editable document, contents list with real page numbers
+  <output>.pdf                the publication
+  publication-manifest.json   source revisions, digests, tools and the SHA-256 of each artifact
 
-Run with --check to build twice and fail when the two builds differ.
+The PDF is rendered twice: once to learn the page of every heading, once with
+those pages in the contents list. The build fails if the second rendering
+does not put every heading where the contents list says.
+
+--no-pdf builds without LibreOffice: it writes the projection only and checks
+that the document can be assembled. It writes no DOCX, because a contents
+list without page numbers is not a publishable document.
+
+--check also assembles everything twice and fails when the two differ. The
+PDF itself is not compared: LibreOffice stamps each file with a creation time
+and an identifier.
 """
 
 from __future__ import annotations
 
 import argparse
+import datetime
+import json
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from model import MANIFEST  # noqa: E402
+import mermaid  # noqa: E402
+import pdf  # noqa: E402
 import qa  # noqa: E402
 from docx import build_docx  # noqa: E402
 from markdown import MarkdownError  # noqa: E402
-from mermaid import MermaidError  # noqa: E402
+from model import MANIFEST  # noqa: E402
 from projection import ProjectionError, build_projection, projection_bytes, sha256  # noqa: E402
 from validate_registry import ROOT  # noqa: E402
+
+MANIFEST_NAME = "publication-manifest.json"
+
+
+class QualityError(RuntimeError):
+    pass
+
+
+def require(problems: list[str], what: str) -> None:
+    if problems:
+        raise QualityError(f"{what}:\n" + "\n".join(problems))
+
+
+def build(manifest: Path, repos_root: Path | None, with_pdf: bool, check: bool) -> tuple[dict[str, bytes], dict]:
+    projection = build_projection(manifest_path=manifest, repos_root=repos_root)
+    projection_json = projection_bytes(projection)
+    draft, toc = build_docx(projection)
+    require(qa.check_docx(draft), "the DOCX package is malformed")
+    if check:
+        again = build_projection(manifest_path=manifest, repos_root=repos_root)
+        if projection_bytes(again) != projection_json or build_docx(again)[0] != draft:
+            raise QualityError("two builds from the same sources differ")
+
+    publication = projection["publication"]
+    files = {f"{publication['id']}.json": projection_json}
+    record = {
+        "publication": publication["id"],
+        "revision": projection["sources"]["docs"]["revision"],
+        "sources": projection["sources"],
+        "registry_digest": projection["registry_digest"],
+        "projection_digest": sha256(projection_json),
+        "tools": {"mermaid_cli_pinned": mermaid.PINNED_VERSION},
+    }
+    if with_pdf:
+        first_pages = pdf.page_texts(pdf.convert(draft))
+        first = pdf.locate(toc, first_pages)
+        final, _ = build_docx(projection, pages=first)
+        require(qa.check_docx(final), "the final DOCX package is malformed")
+        rendered = pdf.convert(final)
+        final_pages = pdf.page_texts(rendered)
+        require(
+            qa.check_pagination(toc, first, pdf.locate(toc, final_pages), len(first_pages), len(final_pages)),
+            "the contents list does not match the rendered pages",
+        )
+        files[f"{publication['output']}.docx"] = final
+        files[f"{publication['output']}.pdf"] = rendered
+        record["pages"] = len(final_pages)
+        record["tools"].update(pdf.tool_versions())
+    return files, record
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -30,33 +95,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path, default=MANIFEST)
     parser.add_argument("--output", type=Path, default=ROOT / "build" / "publication")
     parser.add_argument("--repos-root", type=Path, help="directory holding the domain checkouts")
-    parser.add_argument("--check", action="store_true", help="build twice and compare")
+    parser.add_argument("--no-pdf", action="store_true", help="projection only; needs no LibreOffice")
+    parser.add_argument("--check", action="store_true", help="also assemble twice and compare")
     args = parser.parse_args(argv)
 
-    def build() -> dict[str, bytes]:
-        projection = build_projection(manifest_path=args.manifest, repos_root=args.repos_root)
-        docx, _toc = build_docx(projection)
-        problems = qa.check_docx(docx)
-        if problems:
-            raise ProjectionError("the DOCX package is malformed:\n" + "\n".join(problems))
-        return {
-            f"{projection['publication']['id']}.json": projection_bytes(projection),
-            f"{projection['publication']['output']}.docx": docx,
-        }
-
     try:
-        files = build()
-        if args.check and build() != files:
-            print("Publication: FAIL (two builds from the same sources differ)")
-            return 1
-    except (ProjectionError, MarkdownError, MermaidError) as exc:
+        files, record = build(args.manifest, args.repos_root, not args.no_pdf, args.check)
+    except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError) as exc:
         print(f"Publication: FAIL\n{exc}")
         return 1
+
+    # The only clock in the build, and it is in no digest. SOURCE_DATE_EPOCH pins it.
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    now = datetime.datetime.fromtimestamp(int(epoch), datetime.UTC) if epoch else datetime.datetime.now(datetime.UTC)
+    record["generated_at"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    record["artifacts"] = {name: {"sha256": sha256(data), "bytes": len(data)} for name, data in sorted(files.items())}
+    files[MANIFEST_NAME] = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
     args.output.mkdir(parents=True, exist_ok=True)
     for name, data in files.items():
         (args.output / name).write_bytes(data)
-        print(f"{sha256(data)}  {name}")
-    print("Publication: PASS" + (" (deterministic)" if args.check else ""))
+        if name != MANIFEST_NAME:
+            print(f"{sha256(data)}  {name}")
+    print("Publication: PASS" + (f" ({record['pages']} pages)" if "pages" in record else " (projection only)"))
     return 0
 
 
