@@ -281,7 +281,7 @@ dimension registry distinguishes surfaces.
 | Checkpoint | Each part but the forward model can be exported | Code and ad hoc run; tests for footprints only |
 | Restart | Exports restore; no checkpoint carries them | Ad hoc run; search of the repository |
 | Re-embodiment | Nothing reacts. Rows are not keyed by body. Dimensions keep their knowledge and lose availability and binding | Code and ad hoc run; no operation performs a re-embodiment |
-| Reproduction | No operation exists | Search of the genetics code, 2026-10-09 |
+| Reproduction | No operation exists | Search of the genetics code, 2026-10-10 |
 
 [ADR-0092](../../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md)
 and [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md)

@@ -220,7 +220,7 @@ export at all. Availability and affordances are computed and never kept.
 | Checkpoint | Rows, counts and capacity can be exported; pending transitions are not | Code, test and ad hoc run |
 | Restart | An export can be restored; no checkpoint carries it | Code and test; search of the repository |
 | Re-embodiment | Nothing reacts. A row for another surface is reported not executable; no code marks it stale; new evidence on the new surface replaces it | Code and ad hoc run; no operation performs a re-embodiment |
-| Reproduction | No operation exists | Search of the genetics code, 2026-10-09 |
+| Reproduction | No operation exists | Search of the genetics code, 2026-10-10 |
 
 ## Beside the decision on body schema and competence
 

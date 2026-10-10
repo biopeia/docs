@@ -297,7 +297,7 @@ body-schema state". No `acquisition.py` exists under
 | Checkpoint | The whole state can be exported, except the concurrency limit, the gate and the organism identifier | Code, tests and ad hoc run |
 | Restart | An export can be restored for the same body string and channels; no checkpoint carries it | Code and tests; search of the repository |
 | Re-embodiment | No operation exists. Restoring for another body is refused; historical candidates from another body are dropped | Code, test and ad hoc run |
-| Reproduction | No operation exists. The genome carries no motor genes | `test_genome_v2_has_no_motor_genes`; search of the genetics code for the engine, 2026-10-09 |
+| Reproduction | No operation exists. The genome carries no motor genes | `test_genome_v2_has_no_motor_genes`; search of the genetics code for the engine, 2026-10-10 |
 
 ## Time and determinism
 

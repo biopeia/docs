@@ -120,9 +120,10 @@ Three consequences of the arithmetic, confirmed by running the policy:
 - **With a deviation of zero nothing is ever selected.** The deviation
   multiplies every utility. The module says exploration is left to the other
   route, admission.
-- **Candidates that predict the same outcome cannot be told apart.** Three
-  candidates whose predictions named one outcome with one confidence class had
-  equal utility, and none was selected.
+- **Candidates that predict the same outcome cannot be told apart.** Of three
+  candidates whose predictions named one outcome with one confidence class,
+  the two evaluated within a budget of two had equal utility, and none was
+  selected.
 - **The epistemic value almost never matters.** It orders candidates of
   exactly equal utility
   (`test_epistemic_value_breaks_only_exact_pragmatic_ties`,
@@ -208,7 +209,7 @@ finding F-0102).
 | Checkpoint | The ledger can be exported; nothing else is state | Code and tests |
 | Restart | An export can be restored; no checkpoint carries it | Code and tests; search of the repository |
 | Re-embodiment | Nothing reacts. Values are keyed by outcome and context digest, not by body | Code; no operation performs a re-embodiment |
-| Reproduction | No operation exists | Search of the genetics code, 2026-10-09 |
+| Reproduction | No operation exists | Search of the genetics code, 2026-10-10 |
 
 ## Beside the decisions
 
