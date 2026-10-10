@@ -354,3 +354,45 @@ terms:
       - component.organism-execution-binding
     canonical_refs:
       - explanation/organism/execution-binding-and-affordances.md
+
+  genome-hash:
+    term: "Genome hash"
+    definition: >
+      SHA-256 over the whole canonical form of a genome: its identifier, its
+      kernel compatibility statement and its genes. It identifies one
+      materialised genome; two genomes with the same genes and different
+      identifiers have different genome hashes.
+    distinguishes_from:
+      - genotype-hash
+    owners:
+      - component.organism-genome
+    canonical_refs:
+      - explanation/organism/genome-and-inheritance.md
+
+  genotype-hash:
+    term: "Genotype hash"
+    definition: >
+      SHA-256 over the schema version and the gene values of a genome only.
+      It is the same for every genome carrying those genes, whatever its
+      identifier, and does not depend on the schema that bounds the genes.
+    distinguishes_from:
+      - genome-hash
+    owners:
+      - component.organism-genome
+    canonical_refs:
+      - explanation/organism/genome-and-inheritance.md
+
+  provenance-frontier:
+    term: "Provenance frontier"
+    definition: >
+      In the causal provenance log, the table that maps each reference still
+      in use to the event that last produced it and to the causes that event
+      declared. It keeps one level and the last production only, is what the
+      log exports, and shrinks only when a caller retires a reference. The
+      ring of recent events is separate and is not exported.
+    distinguishes_from:
+      - causal-record
+    owners:
+      - component.organism-causal-provenance-log
+    canonical_refs:
+      - explanation/organism/causal-provenance-log.md
