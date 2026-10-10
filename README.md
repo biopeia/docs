@@ -58,6 +58,8 @@ never restated as a second source of truth.
 | `registry/parameters.yaml`, `metrics.yaml`, `notation.yaml`, `glossary.yaml` | Reference registries |
 | `reference/evidence-status.md` | How to state the strength of a claim, and how that differs from review status |
 | `tools/validate_registry.py` | Registry validator and staleness check |
+| `publication/` | How the documentation is assembled into one ordered work: the publication manifest and its rules. See `publication/README.md` |
+| `tools/publication/` | Tooling that builds a publication from the manifest, the corpus and the registry |
 | `MIGRATION.md` | What was taken from the source repository, and what was not |
 
 Explanatory documents are referenced from the registry by path and must live

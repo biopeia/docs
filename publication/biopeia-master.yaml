@@ -1,0 +1,124 @@
+schema_version: 1
+
+# Composition of the main Biopeia publication. This file holds no documentary
+# text: it names sources and the order in which they are presented. The corpus
+# says what is known, the registry says where it comes from and what state it
+# is in, and this file says how one publication is assembled from them.
+publication:
+  id: biopeia-master
+  title: Biopeia
+  subtitle: Architecture, Artificial Life and Autonomous Organisms
+  output: Biopeia-Master
+
+# Each part lists `chapters` (documents of this repository, in reading order)
+# and/or `generated` sections (rendered from the registry by
+# tools/publication/projection.py).
+parts:
+  - id: biopeia
+    title: Biopeia
+    generated: [domains]
+
+  - id: organism
+    title: Organism
+    chapters:
+      - explanation/organism/foundation-conventions.md
+      - explanation/organism/identity-and-checkpoint.md
+      - explanation/organism/genome-and-inheritance.md
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/graph-plasticity.md
+      - explanation/organism/generative-resident.md
+      - explanation/organism/attention-allocation.md
+      - explanation/organism/experience-record-and-ledger.md
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+      - explanation/organism/competence-development.md
+      - explanation/organism/prospective-deliberation.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/action-path.md
+      - explanation/organism/actuator-evidence.md
+      - explanation/organism/executive-outcome-ledger.md
+      - explanation/organism/cognitive-checkpoint.md
+
+  - id: embodiment
+    title: Embodiment
+    chapters:
+      - explanation/embodiment/articulated-body.md
+      - explanation/embodiment/physical-state.md
+      - explanation/embodiment/somatic-state.md
+      - explanation/embodiment/physical-projection.md
+      - explanation/embodiment/actuation-projection.md
+
+  - id: environment
+    title: Environment
+    chapters:
+      - explanation/environment/static-scene.md
+      - explanation/environment/resource-geometry.md
+      - explanation/environment/finite-resource.md
+      - explanation/environment/dynamic-state.md
+      - explanation/environment/procedural-genesis.md
+
+  - id: world
+    title: World
+    chapters:
+      - explanation/world/genesis-and-rosters.md
+      - explanation/world/causal-manifest.md
+      - explanation/world/causal-journal.md
+      - explanation/world/in-memory-runtime.md
+      - explanation/world/durable-runtime.md
+      - explanation/world/journal-snapshot-store.md
+      - explanation/world/physical-step.md
+      - explanation/world/recovery.md
+
+  - id: modality-observation
+    title: Modality and Observation
+    chapters:
+      - explanation/modality/current-state.md
+      - explanation/observation/observation-plane.md
+      - explanation/observation/semantic-claim-model.md
+      - explanation/observation/inherited-projection.md
+
+  - id: lab
+    title: Lab
+    chapters:
+      - explanation/lab/study-utilities.md
+      - explanation/lab/body-interoception-transducer.md
+      - explanation/lab/operator-material-transfer.md
+
+  - id: cross-domain
+    title: Cross-domain architecture
+    chapters:
+      - explanation/biopeia/one-step-across-the-domains.md
+    generated: [contracts]
+
+appendices:
+  - id: components
+    title: Canonical component catalog
+    generated: [components]
+  - id: glossary
+    title: Glossary
+    generated: [glossary]
+  - id: notation
+    title: Notation
+    generated: [notation]
+  - id: parameters
+    title: Parameters
+    generated: [parameters]
+  - id: metrics
+    title: Metrics
+    generated: [metrics]
+  - id: decisions
+    title: Decision record index
+    generated: [decisions]
+  - id: designs
+    title: Design index
+    generated: [designs]
+  - id: evidence
+    title: Evidence semantics
+    chapters:
+      - reference/evidence-status.md
+
+# Documents under explanation/ that this publication deliberately leaves out,
+# each with its reason. A document that is neither a chapter nor listed here
+# fails the build: nothing is dropped silently.
+excluded: []
