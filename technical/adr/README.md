@@ -6,8 +6,8 @@ records and were not copied; they describe the historical system.
 
 | Record | Title | Status | Source |
 |---|---|---|---|
-| [ADR-0073](ADR-0073-biopeia-migration-causal-and-physical-contracts.md) | Biopeia Migration Causal and Physical Contracts | Accepted | copied from `symbiont-lab` |
-| [ADR-0074](ADR-0074-biopeia-world-environment-authority-split.md) | Biopeia World and Environment Authority Split | Accepted | copied from `symbiont-lab` |
+| [ADR-0073](ADR-0073-biopeia-migration-causal-and-physical-contracts.md) | Biopeia Migration Causal and Physical Contracts | Accepted | text copied from an unmerged candidate of `symbiont-lab`; accepted for Biopeia by the Architecture Owner, 2026-10-09 |
+| [ADR-0074](ADR-0074-biopeia-world-environment-authority-split.md) | Biopeia World and Environment Authority Split | Accepted | text copied from an unmerged candidate of `symbiont-lab`; accepted for Biopeia by the Architecture Owner, 2026-10-09 |
 | [ADR-0075](ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md) | Authority boundaries derive from semantic ownership, not repository topology | ACCEPTED | AD-0001 |
 | [ADR-0076](ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md) | Preserving scientific meaning without backward compatibility | ACCEPTED — general principle only; item-level scope OPEN | AD-0002 |
 | [ADR-0077](ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md) | Canonical re-embodiment and reduced seed transplant are distinct contracts | SUPERSEDED (meaning preserved; broader normative rule ratified by AD-0007) | AD-0003 |

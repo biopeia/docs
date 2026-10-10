@@ -6,11 +6,19 @@
 > is retained in the source repository. At the time of copying that commit was
 > an open, unmerged candidate there (alessbarb/symbiont-lab#465), not part of
 > its `main` branch.
+>
+> **Authority.** The source is provenance for the text only. This record is a
+> Biopeia decision because the Architecture Owner accepted it for the Biopeia
+> target architecture on 2026-10-09, and reaffirmed that on 2026-10-10
+> ([docs#64](https://github.com/biopeia/docs/issues/64)). Its standing does
+> not depend on the source candidate ever being merged in the source
+> repository, and that candidate's commit is not, and must not be described
+> as, part of the source repository's `main`.
 
 ## Status
 
 - **Status:** Accepted
-- **Owner acceptance:** 2026-10-09, Architecture Owner
+- **Owner acceptance:** 2026-10-09, Architecture Owner, for the Biopeia target architecture
 - **Scope:** Biopeia Architecture v1 TARGET authority boundaries and migration direction. This is a derived decision; it does not reopen Pass 15 or alter AD-0021…AD-0036 except for the explicitly superseded historical rule identified below. It also clarifies Constitution §1 item 7 for Biopeia TARGET while preserving its historical Symbiont CURRENT boundary.
 - **Supersedes:** Constitution §1 item 3 and ADR-0060 only to the extent stated in this ADR. ADR-0060 remains valid evidence of the historical Symbiont CURRENT architecture.
 
