@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-34 units, 9 cross-domain contracts, 82 findings.
+39 units, 9 cross-domain contracts, 92 findings.
 
 ## World
 
@@ -493,6 +493,94 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `organism:tests/source_unit/agency/test_prospective.py`, `organism:tests/source_unit/agency/test_policy.py`, `organism:tests/source_unit/agency/test_value.py` |
 | Reviewed at | organism@6543188ff302 (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0104 implementation finding (open); F-0105 evidence gap (open) |
+
+### Genome, expression and germline record
+
+`component.organism-genome` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-GNM` |
+| Responsible for | an immutable table of 42 gene values with its two hashes, five effective values regulated inside the ranges the genome sets, and a record of birth expression and epigenetic marks |
+| Must not | mutate, recombine or copy a genome to an offspring; no such operation exists; decide or trigger reproduction; compute the signals it regulates on; generate a genome identifier or draw on any entropy source; hold body properties |
+| Owned by | organism |
+| Explained in | [explanation/organism/genome-and-inheritance.md](../explanation/organism/genome-and-inheritance.md) |
+| Implemented in | `organism:src/organism/genetics/genome.py`, `organism:src/organism/genetics/schema.py`, `organism:src/organism/genetics/expression.py`, `organism:src/organism/genetics/germline.py`, `organism:src/organism/genetics/bindings.py`, `organism:src/organism/genetics/checkpoint.py`, `organism:src/organism/genetics/factory.py`, `organism:src/organism/genetics/defaults/base-genome-v2.json`, `organism:src/organism/cognition/birth.py`, `organism:src/organism/cognition/checkpoint.py` |
+| State | owner organism, family identity_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: conditional |
+| Governed by | [technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md](../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0108-reproduction-and-causal-entropy.md](../technical/adr/ADR-0108-reproduction-and-causal-entropy.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
+| Tests | `organism:tests/source_unit/cognition/test_genome.py`, `organism:tests/source_unit/cognition/test_checkpoint.py`, `organism:tests/source_unit/cognition/test_birth.py`, `organism:tests/source_unit/actuation/test_genome_motor_genes.py` |
+| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Known findings | F-0085 implementation finding ([issue](https://github.com/biopeia/organism/issues/48)); F-0086 implementation finding ([issue](https://github.com/biopeia/organism/issues/49)); F-0087 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/50)); F-0088 implementation finding (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open) |
+
+### Experience record and its ledger
+
+`component.organism-experience-ledger` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-MEX` |
+| Responsible for | the format of one bounded episode record bound to an Organism identifier, and a bounded list of such records in order of arrival |
+| Must not | create a record from an event; a caller supplies every record; resolve an evidence reference or change a status; retrieve by content, consolidate or archive; rewrite a record in place |
+| Owned by | organism |
+| Explained in | [explanation/organism/experience-record-and-ledger.md](../explanation/organism/experience-record-and-ledger.md) |
+| Implemented in | `organism:src/organism/memory/experience.py`, `organism:src/organism/memory/ledger.py` |
+| State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `component.organism-identity-checkpoint` |
+| Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
+| Tests | `organism:tests/memory/test_experience.py`, `organism:tests/memory/test_ledger.py` |
+| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Known findings | F-0089 implementation finding (open); F-0093 contract gap (open) |
+
+### Causal provenance log
+
+`component.organism-causal-provenance-log` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-PRV` |
+| Responsible for | a ring of recent causal events and a frontier mapping each live reference to the event that produced it and to the causes that event declared |
+| Must not | verify that declared causes were causes; bound the frontier itself; entries leave only when a caller retires them; read anything back from a subscriber; hold raw values or semantics of the things referred to |
+| Owned by | organism |
+| Explained in | [explanation/organism/causal-provenance-log.md](../explanation/organism/causal-provenance-log.md) |
+| Implemented in | `organism:src/organism/provenance.py`, `organism:src/organism/actuation/footprint.py` |
+| State | owner organism, family causal_history; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `component.organism-causal-evidence` |
+| Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
+| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Known findings | F-0090 contract gap (open); F-0091 evidence gap (open); F-0094 documentation inconsistency (open) |
+
+### Capacity pressure and pair statistics
+
+`component.organism-capacity-and-pair-statistics` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-PCS` |
+| Responsible for | two small values embedded in other Organism structures: counters of admissions, evictions and re-admissions for a bounded table, and six running sums for a stream of number pairs |
+| Must not | choose what a table evicts; be read by a decision, for the capacity counters, by the declaration of their module; say what the two streams of a pair mean |
+| Owned by | organism |
+| Explained in | [explanation/organism/capacity-pressure-and-pair-statistics.md](../explanation/organism/capacity-pressure-and-pair-statistics.md) |
+| Implemented in | `organism:src/organism/capacity.py`, `organism:src/organism/statistics.py`, `organism:src/organism/actuation/candidate.py` |
+| State | owner organism, family adaptive_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `component.organism-executive-outcome-ledger` |
+| Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
+| Tests | `organism:tests/source_unit/actuation/test_candidate.py` |
+| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Known findings | F-0091 evidence gap (open); F-0092 implementation finding (open); F-0094 documentation inconsistency (open) |
+
+### Foundation conventions, evidence count and limits
+
+`concept.organism-foundation-conventions` · concept · CURRENT
+
+| | |
+|---|---|
+| Owned by | organism |
+| Explained in | [explanation/organism/foundation-conventions.md](../explanation/organism/foundation-conventions.md) |
+| Implemented in | `organism:src/organism/foundation/epistemic.py`, `organism:src/organism/foundation/evidence.py`, `organism:src/organism/foundation/limits.py`, `organism:src/organism/cognition/activation.py` |
+| Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md) |
+| Tests | `organism:tests/foundation/test_evidence_count.py` |
+| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Known findings | F-0091 evidence gap (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open) |
 
 ## Modality
 
