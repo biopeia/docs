@@ -102,7 +102,7 @@ def build_in(root: Path):
 def test_copy_outside_git_builds_with_unresolved_revision(tmp_path):
     built = build_in(copy_sources(tmp_path))
     assert built["sources"]["docs"] == {"revision": None, "state": "unresolved", "committed_on": None}
-    assert built["release"] == {"id": "unversioned", "date": None}
+    assert built["release"] == {"id": "unversioned", "date": None, "numbered": False}
 
 
 def test_release_is_the_day_and_revision_of_the_documentation(projection):
@@ -122,3 +122,23 @@ def test_unplaced_document_fails_closed(tmp_path):
     (root / "explanation" / "world" / "new-thing.md").write_text("# New thing\n", encoding="utf-8")
     with pytest.raises(ProjectionError, match="neither a chapter nor excluded"):
         build_in(root)
+
+
+def test_tagged_commit_is_the_numbered_release_and_needs_its_history_entry(tmp_path):
+    from projection import ProjectionError as Error, load_history, release_of
+
+    docs = {"revision": "a" * 40, "state": "clean", "committed_on": "2026-10-31"}
+    history = [{"id": "2026.10.1", "date": "2026-10-31", "summary": "First."}]
+    assert release_of(docs, history, "docs-v2026.10.1") == {"id": "2026.10.1", "date": "2026-10-31", "numbered": True}
+    assert release_of(docs, history, None)["id"] == "2026.10.31-aaaaaaa"
+    assert release_of({**docs, "state": "modified"}, history, "docs-v2026.10.1")["numbered"] is False
+    with pytest.raises(Error, match="no entry"):
+        release_of(docs, history, "docs-v2026.11.1")
+    (tmp_path / "publication").mkdir()
+    (tmp_path / "publication" / "releases.yaml").write_text("releases:\n  - {id: '1', date: '2026-10-31', summary: x}\n")
+    with pytest.raises(Error, match="malformed"):
+        load_history(tmp_path)
+
+
+def test_no_release_has_been_cut(projection):
+    assert projection["history"] == [] and projection["release"]["numbered"] is False

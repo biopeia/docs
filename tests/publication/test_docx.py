@@ -323,6 +323,14 @@ def test_identifier_at_the_break_limit_is_given_room_whole():
     assert first > 18 * 8 * 20 * 0.6  # eighteen characters of the technical typeface, unbroken
 
 
+def test_revision_history_is_printed_once_a_release_exists():
+    projection = small(chapter("explanation/w/a.md", "A.\n"))
+    assert "No numbered release" in document_xml(build_docx(projection)[0])
+    projection["history"] = [{"id": "2026.10.1", "date": "2026-10-31", "summary": "First numbered release."}]
+    xml = document_xml(build_docx(projection)[0])
+    assert "First numbered release." in xml and "No numbered release" not in xml and "not one of those releases" in xml
+
+
 def test_part_divider_says_its_list_is_the_chapters_of_the_part():
     xml = document_xml(build_docx(small(chapter("explanation/w/a.md", "A.\n"), chapter("explanation/w/b.md", "B.\n")))[0])
     assert "Chapters in this part" in xml

@@ -561,10 +561,19 @@ class Document:
             "and registries of the documentation repository remain the only source, and nothing is stated here "
             "that is not stated there.")))
         self.body.append(paragraph("Heading4", text_run("Revision history")))
-        self.body.append(paragraph("Normal", text_run(
-            "No numbered release of this publication has been cut. A copy is identified by its release "
-            "identifier, which is the day and revision of the documentation it was built from, and by the "
-            "source revisions listed under provenance.")))
+        history = self.projection.get("history") or []
+        if history:
+            self.table({"header": [cell("Release"), cell("Date"), cell("What changed")],
+                        "rows": [[cell(e["id"], code=True), cell(e["date"]), cell(e["summary"])] for e in history]}, "")
+            if not release.get("numbered"):
+                self.body.append(paragraph("Normal", text_run(
+                    "This copy is not one of those releases. It is identified by the day and revision of the "
+                    "documentation it was built from.")))
+        else:
+            self.body.append(paragraph("Normal", text_run(
+                "No numbered release of this publication has been cut. A copy is identified by its release "
+                "identifier, which is the day and revision of the documentation it was built from, and by the "
+                "source revisions listed under provenance.")))
 
         self.body.append(paragraph("FrontHeading", text_run("Provenance and source revisions"), "<w:pageBreakBefore/>"))
         self.body.append(paragraph("Normal", text_run(

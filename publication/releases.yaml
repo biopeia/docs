@@ -1,0 +1,16 @@
+schema_version: 1
+
+# Numbered releases of the publication, oldest first. This is its revision
+# history: the front matter prints it.
+#
+# Cutting a release is the owner's act, in two steps:
+#   1. add an entry here (id, date, what changed) and merge it;
+#   2. tag that commit `docs-v<id>` and push the tag.
+# The Publication workflow then builds the published edition from the tag,
+# names it by the release id, and attaches the files to a GitHub Release.
+# A tag with no entry here fails the build.
+#
+#   - id: "2026.10.1"          year.month.sequence within the month
+#     date: "2026-10-31"
+#     summary: First numbered release.
+releases: []
