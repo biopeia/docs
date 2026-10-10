@@ -8,7 +8,14 @@ publication:
   id: biopeia-master
   title: Biopeia
   subtitle: Architecture, Artificial Life and Autonomous Organisms
+  type: Technical and Scientific Reference
   output: Biopeia-Master
+
+# Front matter that follows the contents list and precedes Part I.
+front:
+  - id: reader-guide
+    title: Reader guide
+    generated: [reader-guide]
 
 # Each part lists `chapters` (documents of this repository, in reading order)
 # and/or `generated` sections (rendered from the registry by

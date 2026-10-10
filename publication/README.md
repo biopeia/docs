@@ -21,6 +21,27 @@ Environment, World, Modality and Observation, Lab. The contracts that bind
 one domain to another come last, followed by the
 appendices. `registry/findings.yaml` is audit material and is not published.
 
+## Three layers
+
+1. **Projection** (`tools/publication/projection.py`): what is published.
+   It knows nothing about appearance.
+2. **Style** (`style.yaml`): typefaces, sizes, colours, the logo and the
+   layout limits. Data only. Changing it changes how a publication looks and
+   nothing about what it says.
+3. **Rendering** (`tools/publication/docx.py`, `pdf.py`): lays the projection
+   out with the style. It decides no typeface, size or colour.
+
+The style follows the Architecture Owner's decision of 2026-10-10
+(biopeia/docs#80): scientific publication with technical specification,
+restrained identity, high density, strong navigation. The document names
+Aptos and Consolas; the PDF is always rendered in their fallbacks, Liberation
+Sans and Liberation Mono, whether or not a machine has the named typefaces,
+so that page breaks are the same everywhere. The build fails if the PDF ends
+up set in any other typeface, if a page is empty, or if too many are sparse.
+
+`assets/biopeia-logo.png` is the mark of the Biopeia organisation on GitHub,
+as it stood on 2026-10-10. The accent colour is its dark blue.
+
 ## Editions
 
 A build is a **working edition** unless it is built with `--release`. A
@@ -48,10 +69,18 @@ python tools/publication/model.py   # check the manifest
 
 ## Known gaps
 
-- **Biopeia has no visual style.** The earlier documentation design system was
-  deprecated and not carried over, and no replacement has been decided. Until
-  one exists, published documents use neutral defaults only and choose no
-  colours, typefaces or cover.
+- **The style is implemented and not yet accepted.** The decision requires a
+  representative sample to be reviewed by the owner before the style is
+  considered complete.
+- **No executive architecture and no revision history.** The decided front
+  matter includes both. The first needs a document that does not exist; the
+  second needs numbered releases, and none has been cut. The publication says
+  so where the history would be.
+- **Wide tables are not turned to landscape.** Columns are sized for their
+  longest unbreakable piece and identifiers break after `/ . _ - :`; nothing
+  is clipped, but a very wide table is not rotated.
+- **Parts have no scope statement and chapters no abstract**: the corpus
+  holds neither.
 - **No document says what Biopeia is.** Nothing in `explanation/` yet states
   its purpose, its principles, or why its domains and authorities are
   separated. The first part shows what the registry holds about the domains

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -75,6 +76,55 @@ def none_registered(what: str) -> list[str]:
 
 
 # --- sections generated from the registry -------------------------------------
+
+
+def gen_reader_guide(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
+    manifest = reg["manifest"]
+    rows = [
+        [section["title"], len(section.get("chapters") or []) + len(section.get("generated") or [])]
+        for section in manifest["parts"]
+    ]
+    prefixes = [[d.capitalize(), f"`{spec['prefix']}-`", spec["nature"]] for d, spec in reg["schema"]["domains"].items()]
+    body = [
+        "This publication presents the Biopeia documentation as one ordered work. It is",
+        "generated: the documents and registries of the documentation repository remain",
+        "the only source, and every chapter names the document it was taken from.",
+        "",
+        "## How it is ordered",
+        "",
+        "The system view comes first, then each domain, then what binds the domains. The",
+        "appendices are for looking things up.",
+        "",
+        *table(["Part", "Chapters"], rows),
+        "## How to read a chapter",
+        "",
+        "- The line under a chapter title gives its source document. A chapter marked as",
+        "  generated is rendered from the registry and has no document of its own.",
+        "- A chapter usually opens by naming the revision of each repository it was",
+        "  reviewed against. What it states holds for that revision.",
+        "- Chapters describe what exists in code, and say so when something is only",
+        "  decided, or only exercised by a test.",
+        "",
+        "## Words that carry a state",
+        "",
+        f"A documented unit carries one architectural status: {', '.join(reg['schema']['unit_statuses'])}.",
+        "TARGET is accepted architecture that the code is not yet claimed to implement.",
+        "How strong the support for a statement is, and how that differs from whether its",
+        "documentation was reviewed, is set out in",
+        "[Evidence status and review status](reference/evidence-status.md).",
+        "",
+        "## Identifiers",
+        "",
+        "A component identifier carries the prefix of the domain that owns it.",
+        "",
+        *table(["Domain", "Prefix", "Nature"], prefixes),
+        "## Editions",
+        "",
+        "A published edition is built only from clean, identified revisions of every",
+        "source repository. Anything else is a working edition, says so on every page,",
+        "and must not be cited as a state of Biopeia.",
+    ]
+    return "Reader guide", "publication/biopeia-master.yaml", body
 
 
 def gen_domains(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
@@ -242,6 +292,7 @@ def gen_designs(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[st
 
 
 GENERATORS = {
+    "reader-guide": gen_reader_guide,
     "domains": gen_domains,
     "contracts": gen_contracts,
     "contract-catalog": gen_contract_catalog,
@@ -260,18 +311,33 @@ GENERATORS = {
 
 def git_revision(repo: Path) -> dict[str, Any]:
     """HEAD of a checkout and whether it has local changes; unresolved when it is not one."""
-    def git(*args: str) -> str | None:
+    def git(*args: str, env: dict[str, str] | None = None) -> str | None:
         try:
-            done = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, check=False)
+            done = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, check=False,
+                                  env={**os.environ, **(env or {})})
         except OSError:
             return None
         return done.stdout.strip() if done.returncode == 0 else None
 
     top = git("rev-parse", "--show-toplevel")
     if top is None or Path(top).resolve() != repo.resolve():
-        return {"revision": None, "state": "unresolved"}
+        return {"revision": None, "state": "unresolved", "committed_on": None}
     dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
-    return {"revision": git("rev-parse", "HEAD"), "state": "modified" if dirty else "clean"}
+    return {
+        "revision": git("rev-parse", "HEAD"),
+        "state": "modified" if dirty else "clean",
+        # The day of the commit in UTC: the same on every machine.
+        "committed_on": git("-c", "log.showSignature=false", "log", "-1", "--date=format-local:%Y-%m-%d",
+                            "--format=%cd", env={"TZ": "UTC"}),
+    }
+
+
+def release_of(docs: dict[str, Any]) -> dict[str, Any]:
+    """Identifier and date of a build: the day and revision of the documentation it was built from."""
+    if not docs["revision"]:
+        return {"id": "unversioned", "date": None}
+    suffix = "+modified" if docs["state"] == "modified" else ""
+    return {"id": f"{docs['committed_on'].replace('-', '.')}-{docs['revision'][:7]}{suffix}", "date": docs["committed_on"]}
 
 
 def sha256(data: bytes) -> str:
@@ -294,7 +360,7 @@ def sources(reg: dict[str, Any], docs_root: Path, repos_root: Path | None) -> di
     """
     out = {"docs": git_revision(docs_root)}
     for domain in reg["schema"]["domains"]:
-        found = git_revision(repos_root / domain) if repos_root else {"revision": None, "state": "unresolved"}
+        found = git_revision(repos_root / domain) if repos_root else git_revision(Path("/nonexistent"))
         bases = {u.get("review", {}).get("basis", {}).get(domain) for u in reg["coverage"].values()}
         out[domain] = {**found, "reviewed_at": sorted(b for b in bases if b)}
     return out
@@ -349,7 +415,7 @@ def build_projection(
         manifest = load_manifest(manifest_path, docs_root)
     except ManifestError as exc:
         raise ProjectionError(f"publication manifest is not publishable:\n{exc}") from exc
-    reg = load_registry(registry_dir)
+    reg = {**load_registry(registry_dir), "manifest": manifest}
 
     out_sections = []
     for section in sections(manifest):
@@ -383,7 +449,8 @@ def build_projection(
         "schema_version": PROJECTION_SCHEMA,
         "publication": manifest["publication"],
         "inventory": inventory,
-        "sources": sources(reg, docs_root, repos_root),
+        "sources": (found := sources(reg, docs_root, repos_root)),
+        "release": release_of(found["docs"]),
         "registry_digest": registry_digest(registry_dir),
         "sections": out_sections,
     }
