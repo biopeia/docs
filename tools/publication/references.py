@@ -150,6 +150,10 @@ class Resolver:
                 else:
                     url += f"#L{line}"
             return url
+        if checked and repo == "docs" and (self.docs_root / path).exists():
+            # Written but not yet committed: it will exist at the revision that publishes it.
+            self.stats["unverified"] += 1
+            return f"{GITHUB}/{repo}/blob/{wanted[0]}/{path.rstrip('/')}"
         if checked:
             raise ReferenceError(f"{repo}:{path} does not exist at {' or '.join(r[:12] for r in wanted)}")
         self.stats["unverified"] += 1

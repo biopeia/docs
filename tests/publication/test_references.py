@@ -107,3 +107,20 @@ def test_chapter_collects_references_from_code_and_prose():
     r = resolver(None)
     found = r.chapter("See `world@" + "c" * 40 + "`, world#29 and `plain code`.", {})
     assert set(found) == {"world@" + "c" * 40, "world#29"}
+
+
+def test_document_not_yet_committed_is_linked_and_counted_unverified(tmp_path):
+    docs = tmp_path / "docs"
+    (docs / "explanation").mkdir(parents=True)
+    (docs / "technical" / "adr").mkdir(parents=True)
+    git(docs, "init", "-q")
+    (docs / "explanation" / "old.md").write_text("# Old\n")
+    git(docs, "add", "-A")
+    git(docs, "commit", "-qm", "one")
+    head = git(docs, "rev-parse", "HEAD")
+    (docs / "explanation" / "new.md").write_text("# New\n")
+    r = Resolver(load_registry(ROOT / "registry"), docs, None, {"docs": {"revision": head}})
+    assert r.blob("docs", "explanation/new.md", {}) == f"{GITHUB}/docs/blob/{head}/explanation/new.md"
+    assert r.stats["unverified"] == 1
+    with pytest.raises(ReferenceError):
+        r.blob("docs", "explanation/absent.md", {})

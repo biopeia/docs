@@ -16,6 +16,11 @@ front:
   - id: reader-guide
     title: Reader guide
     generated: [reader-guide]
+  # What has been decided about the whole, before any part is described.
+  - id: executive-architecture
+    title: Executive architecture
+    chapters:
+      - explanation/biopeia/what-biopeia-is.md
 
 # Each part lists `chapters` (documents of this repository, in reading order)
 # and/or `generated` sections (rendered from the registry by

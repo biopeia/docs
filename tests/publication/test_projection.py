@@ -58,7 +58,8 @@ def test_registry_sections_reflect_the_registry(projection):
         assert f"### `{cid}` — " in by_id["generated-components"]
         assert f"| Unit | `{component['coverage_unit']}` |" in by_id["generated-components"]
     assert projection["inventory"]["Components"] == len(reg["components"])
-    assert projection["inventory"]["Chapters taken from documents"] == 45
+    placed = sum(len(s.get("chapters") or []) for s in sections(load_manifest()))
+    assert projection["inventory"]["Chapters taken from documents"] == placed
     assert "No registered entries at this revision." in by_id["generated-metrics"]
     empty = {c["id"] for c in chapters(projection) if c.get("empty")}
     assert empty == {f"generated-{name}" for name in ("notation", "parameters", "metrics") if not reg[name]}

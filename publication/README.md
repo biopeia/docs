@@ -96,10 +96,10 @@ python tools/publication/model.py   # check the manifest
 - **The style is approved in direction, with refinements open.** The
   generated DOCX has not been opened in Microsoft Word, which the owner
   requires once before the style issue (#80) closes.
-- **No executive architecture and no revision history.** The decided front
-  matter includes both. The first needs a canonical source document and must
-  not be invented to fill the layout; the second needs numbered releases,
-  and none has been cut. Tracked in #91 and #92.
+- **No revision history.** The decided front matter includes one. It needs
+  numbered releases, and none has been cut (#92). The executive architecture
+  is `explanation/biopeia/what-biopeia-is.md`, derived from the accepted
+  decision records.
 - **Pages that are too full are measured, not judged.** The manifest reports
   the fullest page; no limit fails the build.
 - **Wide tables are not turned to landscape** (#93). Columns are sized for their
@@ -107,10 +107,6 @@ python tools/publication/model.py   # check the manifest
   is clipped, but a very wide table is not rotated.
 - **Parts have no scope statement and chapters no abstract**: the corpus
   holds neither.
-- **No document says what Biopeia is.** Nothing in `explanation/` yet states
-  its purpose, its principles, or why its domains and authorities are
-  separated. The first part shows what the registry holds about the domains
-  and how one step crosses them today.
 - **One publication, in the order of the domains.** Two publications from the
   same sources (an architecture overview and a technical reference), system
   diagrams generated from the registry, a maturity table per capability and

@@ -8,16 +8,18 @@ Explanations that cross domains. They are derived from the unit documents and ad
 
 ## Start here
 
-[One step across the domains](one-step-across-the-domains.md)
+[What Biopeia is](what-biopeia-is.md)
 
 ## Reading order
 
-1. [One step across the domains](one-step-across-the-domains.md)
+1. [What Biopeia is](what-biopeia-is.md)
+2. [One step across the domains](one-step-across-the-domains.md)
 
 ## Canonical documents
 
 | Document | Unit | Status | Review |
 |---|---|---|---|
+| [what-biopeia-is.md](what-biopeia-is.md) | `concept.biopeia-what-it-is` | TARGET | RECORDED |
 | [one-step-across-the-domains.md](one-step-across-the-domains.md) | `concept.biopeia-one-step-across-the-domains` | CURRENT | not recorded |
 
 ## Related domains
@@ -30,8 +32,40 @@ No design registered for this domain.
 
 ## Decision records
 
+- [ADR-0074 — Biopeia World and Environment Authority Split](../../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md)
+- [ADR-0075 — Authority boundaries derive from semantic ownership, not repository topology](../../technical/adr/ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md)
+- [ADR-0076 — Preserving scientific meaning without backward compatibility](../../technical/adr/ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md)
+- [ADR-0078 — Observation is causally passive](../../technical/adr/ADR-0078-observation-is-causally-passive.md)
+- [ADR-0079 — World lifecycle is independent from Lab](../../technical/adr/ADR-0079-world-lifecycle-is-independent-from-lab.md)
+- [ADR-0080 — World identity is authoritative, not a presentation label](../../technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md)
+- [ADR-0081 — The canonical Organism is longitudinal](../../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md)
+- [ADR-0082 — Canonical reproduction is endogenous to life](../../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md)
+- [ADR-0083 — Causal cycles have explicit commit semantics](../../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md)
+- [ADR-0084 — Single writer or explicit coordination for shared persistent state](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md)
+- [ADR-0085 — Project identity is Biopeia and the individual is Organism](../../technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md)
+- [ADR-0087 — Organism originates ordinary reproduction](../../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md)
+- [ADR-0088 — Lifecycle event ontology](../../technical/adr/ADR-0088-lifecycle-event-ontology.md)
+- [ADR-0089 — Standing of historical ADRs for the target architecture](../../technical/adr/ADR-0089-standing-of-historical-adrs-for-the-target-architecture.md)
+- [ADR-0090 — Host wall-clock time is never implicit causal authority](../../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md)
+- [ADR-0091 — One non-terminated continuation per Organism identity](../../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md)
+- [ADR-0092 — Organism owns the meaning of its private longitudinal state](../../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md)
+- [ADR-0093 — Material failure before commit requires explicit recovery](../../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md)
+- [ADR-0094 — Somatic state ownership: body holds, Organism regulates and feels](../../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md)
 - [ADR-0095 — Surviving semantic authorities](../../technical/adr/ADR-0095-surviving-semantic-authorities.md)
+- [ADR-0096 — World participation, including singleton](../../technical/adr/ADR-0096-world-participation-including-singleton.md)
+- [ADR-0097 — Hybrid World](../../technical/adr/ADR-0097-hybrid-world.md)
 - [ADR-0098 — Physical substrate and causal integration](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)
+- [ADR-0099 — Modality contract/library](../../technical/adr/ADR-0099-modality-contract-library.md)
+- [ADR-0100 — Observation capability and evidence custody](../../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md)
+- [ADR-0101 — Operator Control](../../technical/adr/ADR-0101-operator-control.md)
+- [ADR-0102 — Lab](../../technical/adr/ADR-0102-lab.md)
+- [ADR-0103 — Portable Organism state](../../technical/adr/ADR-0103-portable-organism-state.md)
+- [ADR-0104 — Body schema and competence](../../technical/adr/ADR-0104-body-schema-and-competence.md)
+- [ADR-0105 — Cognition structure](../../technical/adr/ADR-0105-cognition-structure.md)
+- [ADR-0106 — Hybrid multi-owner persistence](../../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md)
+- [ADR-0107 — Journal role](../../technical/adr/ADR-0107-journal-role.md)
+- [ADR-0108 — Reproduction and causal entropy](../../technical/adr/ADR-0108-reproduction-and-causal-entropy.md)
+- [ADR-0109 — Population capacity](../../technical/adr/ADR-0109-population-capacity.md)
 - [ADR-0110 — Repository consequence and dependency direction](../../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md)
 
 ## Open findings
