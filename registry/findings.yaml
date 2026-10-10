@@ -1408,3 +1408,150 @@ findings:
       - explanation/organism/causal-evidence-and-controllability.md
     material: false
     status: open
+
+  F-0085:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      No code outside the genetics directory reads a gene value or the gene expression state; the expression regulator, the germline record, the identifier factory and the gene binding check have no caller. The binding registry requires every one of the 42 loci to name a runtime consumer and a test, and the check passes on strings alone: none of its 18 test names is defined in the repository and its 22 consumer names identify nothing in the code. No test covers the expression, germline, bindings, schema or checkpoint modules of the directory.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/48"
+
+  F-0086:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      The genetics directory holds no mutation, recombination, offspring construction or reproductive trigger. The inheritance package type is never constructed; the capture of acquired marks and the weakening of marks have no caller; the mutation and recombination fields of the schema, the evolvability genes and the mutation policy have no reader; no locus is named for a maintenance-versus-reproduction allocation. No module of the directory draws on randomness, entropy, a clock or an identifier generator. The repository's migration record declares that the directory does not demonstrate endogenous reproduction or evolution.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/49"
+
+  F-0087:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      Restoring a germline record skips mark entries that are not mappings without error, replaces the derived birth expression with the payload's without comparing them, and accepts acquired marks when capture is off; restoring an expression state accepts birth values that differ from the genome's baselines. Two genome codecs exist and disagree on whether the genotype hash is required, and only the one in the cognition package is tested. No checkpoint in the repository includes a genome, an expression state or a germline record.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/50"
+
+  F-0088:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      In the expression regulator the step is proportional to pressure, so with every signal at zero the structural plasticity and the growth and pruning thresholds stay where the last pressure left them; only the learning rate and the exploration drive have a decay toward their birth values, while a comment attributes a slow return toward the baseline to that decay. Resource pressure alone moves nothing. The module states that evidence through tick t updates the state only for tick t+1, and the regulator takes no tick; its update count and the 64-step persistence of mark capture count calls.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: false
+    status: open
+
+  F-0089:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-experience-ledger
+    summary: >
+      Nothing constructs an experience record or an experience ledger outside tests, and no checkpoint includes the ledger; the cognitive payload writes only records handed to it. Beyond three construction rules no code reads a record's status, source kind or confidence class, and nothing resolves an evidence reference. A model-sourced record marked supported is accepted; the corpus builder that the record's docstring relies on for the anti-self-confirmation invariant is not in the repository. A record identifier can be reused once its record has been dropped, and a correcting record is not linked to the record it corrects.
+    documented_in:
+      - explanation/organism/experience-record-and-ledger.md
+    material: false
+    status: open
+
+  F-0090:
+    class: contract_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-causal-provenance-log
+    summary: >
+      No causal provenance log is constructed in source or tests and none is given to the one class that can emit to it, so no causal event is emitted at this revision; no subscriber is registered and the Organism package imports nothing from Lab or Observation, so the journal the module describes as holding durable history is a docstring only. The frontier has no bound of its own and shrinks only when a caller retires a reference; it keeps one level and the last production of a reference. The ring of events is not exported, and no checkpoint includes the export.
+    documented_in:
+      - explanation/organism/causal-provenance-log.md
+    material: false
+    status: open
+
+  F-0091:
+    class: evidence_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-causal-provenance-log
+      - component.organism-capacity-and-pair-statistics
+      - concept.organism-foundation-conventions
+    summary: >
+      The provenance module, the capacity pressure module and the conventions and limits modules of the foundation directory have no test; the pair accumulator is exercised only through the tests of a candidate actuator. The behaviour documented for them rests on the code and on ad hoc runs.
+    documented_in:
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+      - explanation/organism/foundation-conventions.md
+    material: false
+    status: open
+
+  F-0092:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-capacity-and-pair-statistics
+    summary: >
+      The promotions and demotions counters of capacity pressure are never set by any code and are exported as zero; the snapshot method offered by the effect table has no caller; restoring takes the capacity from the caller and ignores the exported one and the schema version; the reported pressure ratio is not limited to 1. Restoring a pair accumulator accepts combinations of its six numbers that no stream of pairs could produce.
+    documented_in:
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+    material: false
+    status: open
+
+  F-0093:
+    class: contract_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - concept.organism-foundation-conventions
+      - component.organism-experience-ledger
+      - component.organism-genome
+    summary: >
+      The table of Organism limits has no reader, and several of its ceilings are named for body and host state that the accepted architecture does not assign to the Organism. Of the epistemic conventions only the smoothing factor and the established-signal threshold are read; the class counts, maturity thresholds and recency classification are not. The evidence count type is used by no module and arithmetic on it yields a plain integer. Unrelated numbers stand for the same notion: sixteen confidence classes in the conventions against 0 to 7 in the experience record, and 64 epigenetic priors in the limits against eight marks in the germline protocol.
+    documented_in:
+      - explanation/organism/foundation-conventions.md
+      - explanation/organism/experience-record-and-ledger.md
+      - explanation/organism/genome-and-inheritance.md
+    material: false
+    status: open
+
+  F-0094:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+      - component.organism-causal-provenance-log
+      - component.organism-capacity-and-pair-statistics
+      - concept.organism-foundation-conventions
+    summary: >
+      Docstrings and data in the reviewed modules refer to things that are not in the repository and keep the historical name: design documents cited by path or title in the provenance and capacity modules, modules of a symbiont package cited in the foundation directory, a schema described as owned by the Symbiont kernel, a packaged genome identified as genome_symbiont_base_v2, and a provenance docstring stating that every state-changing decision emits a causal event. Same pattern as F-0038.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+      - explanation/organism/foundation-conventions.md
+    material: false
+    status: open

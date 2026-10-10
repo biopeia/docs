@@ -937,3 +937,132 @@ units:
       status: RECORDED
       basis:
         organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-genome:
+    kind: component
+    title: Genome, expression and germline record
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-GNM
+    canonical_docs:
+      - explanation/organism/genome-and-inheritance.md
+    implementation:
+      - organism:src/organism/genetics/genome.py
+      - organism:src/organism/genetics/schema.py
+      - organism:src/organism/genetics/expression.py
+      - organism:src/organism/genetics/germline.py
+      - organism:src/organism/genetics/bindings.py
+      - organism:src/organism/genetics/checkpoint.py
+      - organism:src/organism/genetics/factory.py
+      - organism:src/organism/genetics/defaults/base-genome-v2.json
+      - organism:src/organism/cognition/birth.py
+      - organism:src/organism/cognition/checkpoint.py
+    tests:
+      - organism:tests/source_unit/cognition/test_genome.py
+      - organism:tests/source_unit/cognition/test_checkpoint.py
+      - organism:tests/source_unit/cognition/test_birth.py
+      - organism:tests/source_unit/actuation/test_genome_motor_genes.py
+    adrs:
+      - docs:technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md
+      - docs:technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0108-reproduction-and-causal-entropy.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-experience-ledger:
+    kind: component
+    title: Experience record and its ledger
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-MEX
+    canonical_docs:
+      - explanation/organism/experience-record-and-ledger.md
+    implementation:
+      - organism:src/organism/memory/experience.py
+      - organism:src/organism/memory/ledger.py
+    tests:
+      - organism:tests/memory/test_experience.py
+      - organism:tests/memory/test_ledger.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.organism-identity-checkpoint
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-causal-provenance-log:
+    kind: component
+    title: Causal provenance log
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-PRV
+    canonical_docs:
+      - explanation/organism/causal-provenance-log.md
+    implementation:
+      - organism:src/organism/provenance.py
+      - organism:src/organism/actuation/footprint.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.organism-causal-evidence
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-capacity-and-pair-statistics:
+    kind: component
+    title: Capacity pressure and pair statistics
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-PCS
+    canonical_docs:
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+    implementation:
+      - organism:src/organism/capacity.py
+      - organism:src/organism/statistics.py
+      - organism:src/organism/actuation/candidate.py
+    tests:
+      - organism:tests/source_unit/actuation/test_candidate.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - component.organism-executive-outcome-ledger
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  concept.organism-foundation-conventions:
+    kind: concept
+    title: Foundation conventions, evidence count and limits
+    status: CURRENT
+    owner_domain: organism
+    canonical_docs:
+      - explanation/organism/foundation-conventions.md
+    implementation:
+      - organism:src/organism/foundation/epistemic.py
+      - organism:src/organism/foundation/evidence.py
+      - organism:src/organism/foundation/limits.py
+      - organism:src/organism/cognition/activation.py
+    tests:
+      - organism:tests/foundation/test_evidence_count.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
