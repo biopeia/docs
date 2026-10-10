@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-39 units, 9 cross-domain contracts, 92 findings.
+40 units, 9 cross-domain contracts, 93 findings.
 
 ## World
 
@@ -301,11 +301,11 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | embodiment; also involves organism |
 | Explained in | [explanation/embodiment/actuation-projection.md](../explanation/embodiment/actuation-projection.md) |
-| Implemented in | `embodiment:src/embodiment/physics3d/actuation_projection.py` |
+| Implemented in | `embodiment:src/embodiment/physics3d/actuator_binding.py`, `embodiment:src/embodiment/physics3d/actuation_projection.py` |
 | Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_actuation_projection.py` |
-| Reviewed at | embodiment@a5129f03aa4b (RECORDED) |
+| Reviewed at | embodiment@6f5fd9edb46c (RECORDED) |
 | Known findings | F-0022 implementation finding (open); F-0023 contract gap (open) |
 
 ### Somatic state, metabolic ledger and body checkpoint
@@ -362,6 +362,25 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `embodiment:tests/test_physical_projection.py`, `embodiment:tests/test_body_pose_sample.py`, `embodiment:tests/test_physics3d_observation_contract.py`, `embodiment:tests/test_duration.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py` |
 | Reviewed at | embodiment@a5129f03aa4b, world@c162b67e698d (RECORDED) |
 | Known findings | F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0119 contract gap (open); F-0120 contract gap (open) |
+
+### Actuator binding
+
+`component.embodiment-actuator-binding` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `EMB-BND` |
+| Responsible for | the association between the actuators a command addresses and the effectors of one body, for one embodiment episode and one morphology revision, with each effector's command contract |
+| Must not | act as a solver or World authorization token; saturate or clip a value |
+| Owned by | embodiment; also involves organism |
+| Explained in | [explanation/embodiment/actuation-projection.md](../explanation/embodiment/actuation-projection.md) |
+| Implemented in | `embodiment:src/embodiment/physics3d/actuator_binding.py` |
+| State | owner embodiment, family embodiment_local; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: reset, reproduction: not_inherited |
+| Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
+| Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
+| Tests | `embodiment:tests/test_actuation_projection.py` |
+| Reviewed at | embodiment@6f5fd9edb46c (RECORDED) |
+| Known findings | F-0128 contract gap (open) |
 
 ## Organism
 

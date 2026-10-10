@@ -86,17 +86,22 @@ contracts:
     title: Motor command from Organism to Embodiment
     summary: >
       Organism issues a motor command that addresses actuators by opaque
-      identifier; Embodiment projects it onto effectors by stable identity,
-      with quantity, unit and range declared by the active morphology, and
-      gives no value to an effector the command omits. Embodiment declares the
-      shape of the command it accepts as a protocol and does not import
-      Organism.
+      identifier. Embodiment projects it onto effectors through an actuator
+      binding of its own, made for one body, episode and morphology revision,
+      which records the fingerprint of the surface the command was written
+      for; quantity, unit and range come from the active morphology, and an
+      effector the command omits gets no value. Embodiment declares the shape
+      of the command it accepts as a protocol and does not import Organism;
+      the surface fingerprint in the binding is a string supplied by whoever
+      builds it.
     agreement: structural
     parties:
       - unit: mechanism.organism-action-path
         role: produces the motor command
       - unit: mechanism.embodiment-actuation-projection
         role: projects it onto effectors; refuses what the morphology does not declare
+      - unit: component.embodiment-actuator-binding
+        role: says which actuator drives which effector, for one episode and revision
     governed_by:
       - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
@@ -109,6 +114,7 @@ contracts:
       - F-0032
       - F-0022
       - F-0023
+      - F-0128
     documented_in:
       - explanation/organism/action-path.md
       - explanation/embodiment/actuation-projection.md

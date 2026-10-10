@@ -394,6 +394,7 @@ units:
     canonical_docs:
       - explanation/embodiment/actuation-projection.md
     implementation:
+      - embodiment:src/embodiment/physics3d/actuator_binding.py
       - embodiment:src/embodiment/physics3d/actuation_projection.py
     tests:
       - embodiment:tests/test_actuation_projection.py
@@ -404,7 +405,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
 
   component.embodiment-somatic-state:
     kind: component
@@ -1066,3 +1067,26 @@ units:
       status: RECORDED
       basis:
         organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.embodiment-actuator-binding:
+    kind: component
+    title: Actuator binding
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - organism
+    component_id: EMB-BND
+    canonical_docs:
+      - explanation/embodiment/actuation-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/actuator_binding.py
+    tests:
+      - embodiment:tests/test_actuation_projection.py
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f

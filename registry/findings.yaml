@@ -1555,3 +1555,19 @@ findings:
       - explanation/organism/foundation-conventions.md
     material: false
     status: open
+
+  F-0128:
+    class: contract_gap
+    repository: embodiment
+    observed_at: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+    units:
+      - component.embodiment-actuator-binding
+    summary: >
+      The actuator binding can be saved and restored but provides neither of
+      the two validation methods World asks of an owner in a causal cut, and
+      records the fingerprint of an Organism surface as a string supplied by
+      whoever builds it: nothing in code obtains it from Organism.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
