@@ -126,6 +126,16 @@ def properties(pdf: bytes) -> dict[str, str]:
     return {key.strip(): value.strip() for key, _, value in (line.partition(":") for line in lines) if value.strip()}
 
 
+def sideways_pages(pdf: bytes) -> set[int]:
+    """Pages (from 1) that are wider than tall."""
+    out = set()
+    for line in _poppler("pdfinfo", pdf, "-f", "1", "-l", "100000").decode("utf-8", "replace").splitlines():
+        match = re.match(r"Page\s+(\d+) size:\s+([\d.]+) x ([\d.]+)", line)
+        if match and float(match.group(2)) > float(match.group(3)):
+            out.add(int(match.group(1)))
+    return out
+
+
 def has_outline(pdf: bytes) -> bool:
     return b"/Outlines" in pdf
 

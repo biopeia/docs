@@ -53,6 +53,11 @@ sizes:
 # the last two lines of a chapter and nothing else.
 layout:
   chapter_starts_page: false
+  # A table goes on landscape pages of its own only when it is genuinely wide
+  # and large enough to fill them: at least this many columns and this many
+  # characters. Everything else stays in the flow of the text.
+  landscape_min_columns: 6
+  landscape_min_characters: 1200
 
 # The mark is a file of this repository. A build never fetches it from
 # anywhere, so a past build keeps its identity whatever happens elsewhere.

@@ -125,13 +125,17 @@ def build(
                 "the PDF is not set in the typefaces of the style")
         # The page before each part or appendix opens, and the last one.
         terminal = {first[entry["bookmark"]] - 1 for entry in toc if entry["level"] == 1} | {len(final_pages)}
+        # A sideways table forces a page break before and after it: the page
+        # before a run of sideways pages and the last of the run may be short.
+        sideways = pdf.sideways_pages(rendered)
+        terminal |= {n - 1 for n in sideways if n - 1 not in sideways} | {n for n in sideways if n + 1 not in sideways}
         problems, sparse = qa.check_density(final_pages, style["qa"], terminal)
         require(problems, "the layout has pathological pages")
         files[f"{publication['output']}.docx"] = final
         files[f"{publication['output']}.pdf"] = rendered
         record["pages"] = len(final_pages)
         fullest = max(qa.body_characters(final_pages))
-        record["layout"] = {"sparse_pages": sparse, "fullest_page_characters": fullest, "typefaces": used}
+        record["layout"] = {"sideways_pages": sorted(sideways), "sparse_pages": sparse, "fullest_page_characters": fullest, "typefaces": used}
         record["tools"].update(pdf.tool_versions())
     return files, record
 
