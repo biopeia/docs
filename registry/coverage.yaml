@@ -1090,3 +1090,33 @@ units:
       status: RECORDED
       basis:
         embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+
+  component.organism-actuator-evidence:
+    kind: component
+    title: Actuator evidence model
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-AEV
+    canonical_docs:
+      - explanation/organism/actuator-evidence.md
+    implementation:
+      - organism:src/organism/actuation/proposer.py
+      - organism:src/organism/actuation/candidate.py
+      - organism:src/organism/actuation/checkpoint.py
+      - organism:src/organism/actuation/types.py
+      - organism:src/organism/actuation/state.py
+    tests:
+      - organism:tests/source_unit/actuation/test_proposer.py
+      - organism:tests/source_unit/actuation/test_candidate.py
+      - organism:tests/source_unit/actuation/test_checkpoint_gate.py
+      - organism:tests/source_unit/actuation/test_types.py
+    adrs:
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c

@@ -878,3 +878,38 @@ components:
     consumers:
       - mechanism.embodiment-actuation-projection
       - mechanism.physical-causal-step
+
+  ORG-AEV:
+    coverage_unit: component.organism-actuator-evidence
+    name: "Actuator evidence model"
+    authority:
+      owns: "per actuator, a bounded summary of how its activation has gone together with changes in percepts, and whether it is in the active repertoire"
+      may_decide:
+        - "whether an actuator becomes active, from the number of pairs and the correlation recorded"
+        - "whether a restored state is complete, consistent and could have become active"
+      must_not:
+        - "propose or authorize an action"
+        - "verify how the pairs it is handed were formed"
+        - "judge whether an effect is desirable"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    # birth, checkpoint and restart are read from the code; restart holds only
+    # if the caller supplies the threshold again, and no Organism checkpoint
+    # carries this state. re-embodiment: the code keeps the state for any
+    # surface with the same actuator identifiers and refuses any other, so
+    # preserve is the least wrong value. reproduction has no code path.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "pairs of activation and change in a percept, formed by the caller"
+    outputs:
+      - "effect strength per actuator"
+      - "the active repertoire"
+      - "an exportable state"
+    consumers:
+      - "none outside the package at the revision reviewed"

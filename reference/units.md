@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-40 units, 9 cross-domain contracts, 93 findings.
+41 units, 9 cross-domain contracts, 96 findings.
 
 ## World
 
@@ -600,6 +600,25 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `organism:tests/foundation/test_evidence_count.py` |
 | Reviewed at | organism@fc8a91c61d86 (RECORDED) |
 | Known findings | F-0091 evidence gap (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open) |
+
+### Actuator evidence model
+
+`component.organism-actuator-evidence` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-AEV` |
+| Responsible for | per actuator, a bounded summary of how its activation has gone together with changes in percepts, and whether it is in the active repertoire |
+| Must not | propose or authorize an action; verify how the pairs it is handed were formed; judge whether an effect is desirable |
+| Owned by | organism |
+| Explained in | [explanation/organism/actuator-evidence.md](../explanation/organism/actuator-evidence.md) |
+| Implemented in | `organism:src/organism/actuation/proposer.py`, `organism:src/organism/actuation/candidate.py`, `organism:src/organism/actuation/checkpoint.py`, `organism:src/organism/actuation/types.py`, `organism:src/organism/actuation/state.py` |
+| State | owner organism, family adaptive_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `mechanism.organism-action-path` |
+| Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
+| Tests | `organism:tests/source_unit/actuation/test_proposer.py`, `organism:tests/source_unit/actuation/test_candidate.py`, `organism:tests/source_unit/actuation/test_checkpoint_gate.py`, `organism:tests/source_unit/actuation/test_types.py` |
+| Reviewed at | organism@2f051b029018 (RECORDED) |
+| Known findings | F-0129 contract gap ([issue](https://github.com/biopeia/organism/issues/51)); F-0130 implementation finding (accepted); F-0131 implementation finding (open) |
 
 ## Modality
 
