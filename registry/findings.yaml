@@ -1040,3 +1040,142 @@ findings:
       - explanation/organism/executive-outcome-ledger.md
     material: false
     status: open
+
+  F-0100:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-causal-evidence
+      - component.organism-prospective-deliberation
+    summary: >
+      Nothing turns what the competence development engine learns into the record the rest of the package uses: the engine keeps motor primitives, while bindings, availability and the affordance resolver take a competence record that no code, source or tests, constructs; a primitive carries no effect and no controller. The effect space, the evidence ledger, the three models, the signature and dimension registries and the resolver are constructed nowhere; deliberation and the outcome-value ledger are called only by tests and a deliberation outcome is consumed by nothing.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/prospective-deliberation.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/39"
+
+  F-0101:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+    summary: >
+      Learned motor state cannot follow a change of body. The engine's restore refuses another body string or channel list; the method documented as registering prior-body motor hypotheses silently skips every entry whose body string differs from the engine's own. The binding registry keeps one row per competence, so evidence on a second surface overwrites the first, keeping its evidence references and valid-from tick and recording no transition; no code marks a binding stale. The resolver never reads its own surface fingerprint or a binding's status. The engine's body string, a binding's surface fingerprint and the resolver's embodiment identifier are unrelated caller-supplied strings. ADR-0104 says re-embodiment must not silently erase longitudinal learning.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/40"
+
+  F-0102:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-execution-binding
+      - component.organism-prospective-deliberation
+    summary: >
+      No checkpoint includes any actuation or agency state: each structure has its own export and nothing assembles them. The competence library and the forward effect model have no export. Restoring the engine loses the concurrency limit and a non-default gate and accepts another organism identifier; the binding registry loses transitions not yet collected; the schema version constant of the agency checkpoint module is unused.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/prospective-deliberation.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/41"
+
+  F-0103:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-causal-evidence
+      - component.organism-competence-development
+      - component.organism-execution-binding
+    summary: >
+      The controllability confidence does not read the hits when no alternative window is on record (eight rows without a single hit give 0.25, as do eight hits of eight), and its alternatives include the rows of every other source, so two sources that each always produce an effect get zero when there are no passive windows. The name controllability denotes three unrelated numbers: this difference of rates, a primitive's effect size times consistency compared with an absolute threshold in the units of the body signals, and a caller-supplied field of a binding; the resolver falls back from the first to the third.
+    documented_in:
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/42"
+
+  F-0104:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-prospective-deliberation
+    summary: >
+      In prospective deliberation: a contextual value estimate with a single sample displaces the estimate for the outcome alone, although the class says lookup falls back while a context is evidence-poor, and the policy then discards it for low confidence; candidates predicting the same outcome tie and none is selected; the epistemic value orders only exact ties, which the default margin rejects; the reasons no_active_model and insufficient_margin are also returned for an empty context and for a non-positive utility; budget_exhausted is never returned; the query budget keeps the first candidates in input order; two readiness conditions are fed the same fact.
+    documented_in:
+      - explanation/organism/prospective-deliberation.md
+    material: false
+    status: open
+
+  F-0105:
+    class: evidence_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-causal-evidence
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-prospective-deliberation
+    summary: >
+      No test exists for the evidence ledger, the effect registry beyond its static rounding function, the forward, controllability and agency models, the intervention signature and action dimension registries, the attempt record, the composition engine, the exploration ordering, the competence library, the affordance resolver, the readiness check or the exported competence_candidates function. Their behaviour as documented rests on the code and ad hoc runs. The footprint tests build evidence rows by hand and never pass rows from a ledger. Extends F-0037.
+    documented_in:
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/prospective-deliberation.md
+    material: false
+    status: open
+
+  F-0106:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-causal-evidence
+    summary: >
+      Smaller inconsistencies read from the code and confirmed by running it: the registry's is_executable and derive_availability disagree for a binding stale for a live reason; the engine's snapshot counts candidates against a direction threshold of 0.60 whatever gate is set; a primitive's failure count is always zero although the robust label depends on it; the candidate function returns the first eight established primitives by identifier; without probing the passive baseline received no sample in 600 ticks; two different passive windows with the same ticks, context and prior state share an evidence identifier; the ledger and the binding registry accept ticks out of order.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/causal-evidence-and-controllability.md
+    material: false
+    status: open
+
+  F-0107:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-execution-binding
+    summary: >
+      Docstrings in these modules refer to things absent from the repository: an ActionDomain as owner of commitments and exploration, numbered sections of specifications that are not present, a lab.studies module, host/adaptive.py and ADR-0062. The method register_historical_primitive_candidates is described as registering prior-body hypotheses and accepts only the current body's. The schema strings hashed into intervention signature, channel and action dimension identifiers keep the historical name symbiont. Extends F-0038.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/causal-evidence-and-controllability.md
+    material: false
+    status: open

@@ -517,3 +517,136 @@ components:
       - "an exported plain-data state and usage counters"
     consumers:
       - "the history callback of admission in mechanism.organism-action-path; no code builds that callback at the reviewed revision"
+
+  ORG-ACD:
+    coverage_unit: component.organism-competence-development
+    name: "Competence development engine"
+    authority:
+      owns: "the statistics of four-step activation sequences observed for one body, the motor primitives derived from them, and the position of its deterministic exploration"
+      may_decide:
+        - "which activations it proposes at a tick, by exploration, probing or replay of a primitive a caller activated"
+        - "whether a recurring sequence is a primitive and which maturity label its numbers yield"
+        - "which sequences and primitives are dropped when over capacity"
+      must_not:
+        - "issue a commitment or a motor command"
+        - "interpret the names of body signals or actuator channels"
+        - "start a replay that no caller requested"
+        - "claim to produce the competence records that bindings and affordances require"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "per tick, body signals and the activations delivered, supplied by a caller"
+      - "an organism identifier, a channel list, optional exclusive groups and a body string, at construction"
+    outputs:
+      - "proposed activations for a tick"
+      - "identifiers and maturity of available primitives"
+      - "an exported plain-data state and a snapshot of counts"
+    consumers:
+      - "organism:src/organism/agency/candidates.py, by attribute name only; no code constructs the engine outside its tests at the reviewed revision"
+
+  ORG-ACE:
+    coverage_unit: component.organism-causal-evidence
+    name: "Effects, causal evidence and controllability"
+    authority:
+      owns: "a bounded list of reported transitions and passive windows with the effect observed in each, the registry of effect identifiers, and the estimates computed from their counts"
+      may_decide:
+        - "which effect identifier a reported change in signals receives"
+        - "the controllability and agency numbers of a source for an effect, from counts"
+        - "which rows, effects and estimates are dropped when over capacity"
+        - "which atoms belong to the footprint of a channel set"
+      must_not:
+        - "observe a body or issue a command"
+        - "write a competence, a binding or an affordance"
+        - "claim that a difference of observed rates establishes a cause"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "transitions and passive windows reported by a caller"
+      - "changes in organism-named features, for effect identity"
+      - "issued motor commands, for intervention signatures"
+    outputs:
+      - "effect identifiers and atoms"
+      - "counts of opportunities and hits per source"
+      - "effect predictions, controllability estimates and agency estimates"
+      - "footprints with the estimate behind each member"
+    consumers:
+      - "organism:src/organism/agency/affordances.py reads the effect space and the controllability model; no code constructs either at the reviewed revision"
+
+  ORG-AEB:
+    coverage_unit: component.organism-execution-binding
+    name: "Execution bindings, availability and the affordance resolver"
+    authority:
+      owns: "one row per competence recording the surface it was last confirmed on, the evidence references, a status and its revision"
+      may_decide:
+        - "whether a competence is reported executable for a given surface fingerprint"
+        - "the availability answers and reason derived from a competence, a binding and caller-supplied facts"
+        - "which affordances are derived from a library of competences"
+      must_not:
+        - "change a binding's status without a caller"
+        - "issue a commitment or a motor command"
+        - "determine which surface or embodiment is current"
+        - "claim to prevent an action: nothing on the action path consults it"
+    state:
+      owner: organism
+      family: embodiment_local
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: invalidate_authority
+      reproduction: not_inherited
+    inputs:
+      - "evidence that a competence produced an effect on a surface, reported by a caller"
+      - "status changes decided by a caller"
+      - "the current surface fingerprint, controller availability and suppression, supplied by a caller"
+    outputs:
+      - "bindings and their transitions"
+      - "availability records"
+      - "affordances for the action path"
+    consumers:
+      - "admission in mechanism.organism-action-path takes affordances; no code builds them with the resolver at the reviewed revision"
+
+  ORG-APD:
+    coverage_unit: component.organism-prospective-deliberation
+    name: "Prospective deliberation and the outcome-value ledger"
+    authority:
+      owns: "running statistics of the values recorded for each outcome string, alone and per context digest"
+      may_decide:
+        - "which candidate, if any, has the highest positive utility by a margin, given predictions supplied by a caller"
+        - "the reason reported when nothing is selected"
+        - "which value entries are dropped when over capacity"
+      must_not:
+        - "predict an outcome itself"
+        - "record a value it was not given"
+        - "execute, commit or admit an action"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "candidates, context tokens, a homeostatic deviation and a prediction function, per call"
+      - "values recorded for outcomes by a caller"
+    outputs:
+      - "a deliberation outcome: a selected candidate or a reason"
+      - "an exported ledger"
+    consumers:
+      - "none at the reviewed revision: no code consumes a deliberation outcome"
