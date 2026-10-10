@@ -819,3 +819,121 @@ units:
       status: RECORDED
       basis:
         environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+
+  component.organism-competence-development:
+    kind: component
+    title: Competence development engine
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-ACD
+    canonical_docs:
+      - explanation/organism/competence-development.md
+    implementation:
+      - organism:src/organism/actuation/sensorimotor.py
+      - organism:src/organism/actuation/competence.py
+      - organism:src/organism/actuation/composition.py
+      - organism:src/organism/actuation/exploration.py
+      - organism:src/organism/agency/candidates.py
+    tests:
+      - organism:tests/source_unit/actuation/test_sensorimotor.py
+      - organism:tests/source_unit/actuation/test_causal_probing.py
+      - organism:tests/source_unit/actuation/test_genome_motor_genes.py
+      - organism:tests/source_unit/agency/test_candidates.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-causal-evidence:
+    kind: component
+    title: Effects, causal evidence and controllability
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-ACE
+    canonical_docs:
+      - explanation/organism/causal-evidence-and-controllability.md
+    implementation:
+      - organism:src/organism/actuation/effects.py
+      - organism:src/organism/actuation/evidence.py
+      - organism:src/organism/actuation/model.py
+      - organism:src/organism/actuation/intervention.py
+      - organism:src/organism/actuation/dimension.py
+      - organism:src/organism/actuation/attempt.py
+      - organism:src/organism/actuation/footprint.py
+    tests:
+      - organism:tests/source_unit/actuation/test_effect_atoms.py
+      - organism:tests/source_unit/actuation/test_causal_footprints.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-execution-binding:
+    kind: component
+    title: Execution bindings, availability and the affordance resolver
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-AEB
+    canonical_docs:
+      - explanation/organism/execution-binding-and-affordances.md
+    implementation:
+      - organism:src/organism/actuation/binding.py
+      - organism:src/organism/agency/availability.py
+      - organism:src/organism/agency/affordances.py
+    tests:
+      - organism:tests/source_unit/agency/test_competence_availability.py
+    adrs:
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-executive-outcome-ledger
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-prospective-deliberation:
+    kind: component
+    title: Prospective deliberation and the outcome-value ledger
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-APD
+    canonical_docs:
+      - explanation/organism/prospective-deliberation.md
+    implementation:
+      - organism:src/organism/agency/prospective.py
+      - organism:src/organism/agency/policy.py
+      - organism:src/organism/agency/value.py
+      - organism:src/organism/agency/readiness.py
+      - organism:src/organism/agency/types.py
+      - organism:src/organism/agency/checkpoint.py
+    tests:
+      - organism:tests/source_unit/agency/test_prospective.py
+      - organism:tests/source_unit/agency/test_policy.py
+      - organism:tests/source_unit/agency/test_value.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+    depends_on:
+      - mechanism.organism-action-path
+      - component.organism-competence-development
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310

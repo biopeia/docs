@@ -307,3 +307,50 @@ terms:
       - mechanism.embodiment-physical-projection
     canonical_refs:
       - explanation/embodiment/physical-projection.md
+
+  motor-primitive:
+    term: "Motor primitive"
+    definition: >
+      A record kept by the competence development engine for one body: a
+      four-step sequence of quantised activations with a sample count, the
+      mean and variance of the change in body signals that followed it and two
+      consistency numbers. Its maturity label is computed from those numbers.
+      It names no effect and no controller.
+    distinguishes_from:
+      - competence-record
+    owners:
+      - component.organism-competence-development
+    canonical_refs:
+      - explanation/organism/competence-development.md
+
+  competence-record:
+    term: "Competence record"
+    definition: >
+      The record that execution bindings, availability and the affordance
+      resolver take: a competence identifier, a controller identifier, an
+      optional effect identifier and evidence counts. No code constructs one
+      at the reviewed revision, and none is derived from a motor primitive.
+    distinguishes_from:
+      - motor-primitive
+      - execution-binding
+    owners:
+      - component.organism-execution-binding
+    canonical_refs:
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/competence-development.md
+
+  execution-binding:
+    term: "Execution binding"
+    definition: >
+      A row recording that a competence was last confirmed on one actuator
+      surface, with evidence references and a status of valid, stale or
+      invalidated. It is kept apart from the competence record so that
+      knowing a pattern and being able to use it now are separate answers. It
+      is a record, not an enforcement.
+    distinguishes_from:
+      - competence-record
+      - action-commitment
+    owners:
+      - component.organism-execution-binding
+    canonical_refs:
+      - explanation/organism/execution-binding-and-affordances.md

@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-30 units, 9 cross-domain contracts, 74 findings.
+34 units, 9 cross-domain contracts, 82 findings.
 
 ## World
 
@@ -417,6 +417,82 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `organism:tests/source_unit/agency/test_executive_outcome.py` |
 | Reviewed at | organism@6543188ff302 (RECORDED) |
 | Known findings | F-0036 implementation finding (open); F-0037 evidence gap (open); F-0038 documentation inconsistency (open) |
+
+### Competence development engine
+
+`component.organism-competence-development` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-ACD` |
+| Responsible for | the statistics of four-step activation sequences observed for one body, the motor primitives derived from them, and the position of its deterministic exploration |
+| Must not | issue a commitment or a motor command; interpret the names of body signals or actuator channels; start a replay that no caller requested; claim to produce the competence records that bindings and affordances require |
+| Owned by | organism |
+| Explained in | [explanation/organism/competence-development.md](../explanation/organism/competence-development.md) |
+| Implemented in | `organism:src/organism/actuation/sensorimotor.py`, `organism:src/organism/actuation/competence.py`, `organism:src/organism/actuation/composition.py`, `organism:src/organism/actuation/exploration.py`, `organism:src/organism/agency/candidates.py` |
+| State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: reset, reproduction: not_inherited |
+| Depends on | `mechanism.organism-action-path` |
+| Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
+| Tests | `organism:tests/source_unit/actuation/test_sensorimotor.py`, `organism:tests/source_unit/actuation/test_causal_probing.py`, `organism:tests/source_unit/actuation/test_genome_motor_genes.py`, `organism:tests/source_unit/agency/test_candidates.py` |
+| Reviewed at | organism@6543188ff302 (RECORDED) |
+| Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0101 contract gap ([issue](https://github.com/biopeia/organism/issues/40)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
+
+### Effects, causal evidence and controllability
+
+`component.organism-causal-evidence` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-ACE` |
+| Responsible for | a bounded list of reported transitions and passive windows with the effect observed in each, the registry of effect identifiers, and the estimates computed from their counts |
+| Must not | observe a body or issue a command; write a competence, a binding or an affordance; claim that a difference of observed rates establishes a cause |
+| Owned by | organism |
+| Explained in | [explanation/organism/causal-evidence-and-controllability.md](../explanation/organism/causal-evidence-and-controllability.md) |
+| Implemented in | `organism:src/organism/actuation/effects.py`, `organism:src/organism/actuation/evidence.py`, `organism:src/organism/actuation/model.py`, `organism:src/organism/actuation/intervention.py`, `organism:src/organism/actuation/dimension.py`, `organism:src/organism/actuation/attempt.py`, `organism:src/organism/actuation/footprint.py` |
+| State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `mechanism.organism-action-path` |
+| Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
+| Tests | `organism:tests/source_unit/actuation/test_effect_atoms.py`, `organism:tests/source_unit/actuation/test_causal_footprints.py` |
+| Reviewed at | organism@6543188ff302 (RECORDED) |
+| Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
+
+### Execution bindings, availability and the affordance resolver
+
+`component.organism-execution-binding` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-AEB` |
+| Responsible for | one row per competence recording the surface it was last confirmed on, the evidence references, a status and its revision |
+| Must not | change a binding's status without a caller; issue a commitment or a motor command; determine which surface or embodiment is current; claim to prevent an action: nothing on the action path consults it |
+| Owned by | organism |
+| Explained in | [explanation/organism/execution-binding-and-affordances.md](../explanation/organism/execution-binding-and-affordances.md) |
+| Implemented in | `organism:src/organism/actuation/binding.py`, `organism:src/organism/agency/availability.py`, `organism:src/organism/agency/affordances.py` |
+| State | owner organism, family embodiment_local; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: invalidate_authority, reproduction: not_inherited |
+| Depends on | `mechanism.organism-action-path`, `component.organism-competence-development`, `component.organism-causal-evidence`, `component.organism-executive-outcome-ledger` |
+| Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
+| Tests | `organism:tests/source_unit/agency/test_competence_availability.py` |
+| Reviewed at | organism@6543188ff302 (RECORDED) |
+| Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0101 contract gap ([issue](https://github.com/biopeia/organism/issues/40)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
+
+### Prospective deliberation and the outcome-value ledger
+
+`component.organism-prospective-deliberation` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-APD` |
+| Responsible for | running statistics of the values recorded for each outcome string, alone and per context digest |
+| Must not | predict an outcome itself; record a value it was not given; execute, commit or admit an action |
+| Owned by | organism |
+| Explained in | [explanation/organism/prospective-deliberation.md](../explanation/organism/prospective-deliberation.md) |
+| Implemented in | `organism:src/organism/agency/prospective.py`, `organism:src/organism/agency/policy.py`, `organism:src/organism/agency/value.py`, `organism:src/organism/agency/readiness.py`, `organism:src/organism/agency/types.py`, `organism:src/organism/agency/checkpoint.py` |
+| State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Depends on | `mechanism.organism-action-path`, `component.organism-competence-development` |
+| Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
+| Tests | `organism:tests/source_unit/agency/test_prospective.py`, `organism:tests/source_unit/agency/test_policy.py`, `organism:tests/source_unit/agency/test_value.py` |
+| Reviewed at | organism@6543188ff302 (RECORDED) |
+| Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0104 implementation finding (open); F-0105 evidence gap (open) |
 
 ## Modality
 
