@@ -129,6 +129,22 @@ def test_front_page_names_the_edition():
     assert "Published edition." in published and "Working edition." not in published
 
 
+def test_pages_carry_title_edition_and_page_of_total():
+    data, _ = build_docx(small(chapter("explanation/w/a.md", "A.\n")), edition="published")
+    package = zipfile.ZipFile(io.BytesIO(data))
+    assert "P — S · Published edition" in package.read("word/header1.xml").decode("utf-8")
+    footer = package.read("word/footer1.xml").decode("utf-8")
+    assert " PAGE " in footer and " NUMPAGES " in footer
+    assert qa.check_docx(data) == []
+
+
+def test_chapter_names_its_source_and_front_page_its_inventory():
+    projection = {**small(chapter("explanation/w/a.md", "A.\n")), "inventory": {"Components": 34}}
+    xml = document_xml(build_docx(projection)[0])
+    assert "Source: " in xml and ">explanation/w/a.md<" in xml
+    assert "What this publication holds:" in xml and ">Components<" in xml and ">34<" in xml
+
+
 def test_single_chapter_appendix_has_one_heading():
     _, toc = build_docx(small(chapter("explanation/w/a.md", "A.\n")))
     assert [e["text"] for e in toc] == ["Part I — One", "1. Title", "Appendix A — Catalog"]

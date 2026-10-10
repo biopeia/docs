@@ -75,6 +75,11 @@ def text_run(text: str, bold: bool = False, italic: bool = False, code: bool = F
     return f'<w:r>{f"<w:rPr>{props}</w:rPr>" if props else ""}<w:t xml:space="preserve">{escape(text)}</w:t></w:r>'
 
 
+def cell(text: Any, code: bool = False) -> list[dict[str, Any]]:
+    """One table cell of plain text, as inline runs."""
+    return [{"text": str(text), "bold": False, "italic": False, "code": code, "href": None}]
+
+
 def paragraph(style: str, content: str, properties: str = "") -> str:
     return f'<w:p><w:pPr><w:pStyle w:val="{style}"/>{properties}</w:pPr>{content}</w:p>'
 
@@ -267,11 +272,13 @@ class Document:
         rows = []
         for name, source in sources.items():
             state = {"clean": "", "modified": "with local modifications", "unresolved": "unresolved"}[source["state"]]
-            rows.append([[{"text": name, "bold": False, "italic": False, "code": False, "href": None}],
-                         [{"text": source["revision"] or "—", "bold": False, "italic": False, "code": bool(source["revision"]), "href": None}],
-                         [{"text": state, "bold": False, "italic": False, "code": False, "href": None}]])
-        header = [[{"text": t, "bold": False, "italic": False, "code": False, "href": None}] for t in ("Repository", "Revision", "State")]
-        self.table({"header": header, "rows": rows}, "")
+            rows.append([cell(name), cell(source["revision"] or "—", code=bool(source["revision"])), cell(state)])
+        self.table({"header": [cell(t) for t in ("Repository", "Revision", "State")], "rows": rows}, "")
+        inventory = self.projection.get("inventory") or {}
+        if inventory:
+            self.body.append(paragraph("Normal", text_run("What this publication holds:")))
+            self.table({"header": [cell("Inventory"), cell("Count")],
+                        "rows": [[cell(label), cell(count)] for label, count in inventory.items()]}, "")
 
         self.body.append(paragraph("ContentsHeading", text_run("Contents"), "<w:pageBreakBefore/>"))
         entries = []
@@ -291,17 +298,29 @@ class Document:
             for entry in section["chapters"]:
                 if entry["label"]:
                     self.heading(2, entry["label"], entry["bookmark"], listed=True)
+                if not entry["chapter"]["generated"]:
+                    self.body.append(paragraph("SourceLine", text_run("Source: ")
+                                               + text_run(entry["chapter"]["source"], code=True)))
                 self.chapter_body(entry["chapter"])
 
     # --- parts of the package -------------------------------------------------
 
     def document_xml(self) -> str:
         footer = self.relate(f"{R_NS}/footer", "footer1.xml")
-        section = (f'<w:sectPr><w:footerReference w:type="default" r:id="{footer}"/>'
+        header = self.relate(f"{R_NS}/header", "header1.xml")
+        section = (f'<w:sectPr><w:headerReference w:type="default" r:id="{header}"/>'
+                   f'<w:footerReference w:type="default" r:id="{footer}"/>'
                    f'<w:pgSz w:w="{PAGE_WIDTH}" w:h="{PAGE_HEIGHT}"/>'
                    f'<w:pgMar w:top="{MARGIN}" w:right="{MARGIN}" w:bottom="{MARGIN}" w:left="{MARGIN}" '
                    'w:header="720" w:footer="720" w:gutter="0"/></w:sectPr>')
         return f"{XML_HEADER}<w:document {NAMESPACES}><w:body>{''.join(self.body)}{section}</w:body></w:document>"
+
+    def header_xml(self) -> str:
+        publication = self.projection["publication"]
+        title = " — ".join(t for t in (publication["title"], publication.get("subtitle")) if t)
+        text = f"{title} · {EDITIONS[self.edition][0].rstrip('.')}"
+        return (f'{XML_HEADER}<w:hdr xmlns:w="{W_NS}"><w:p><w:pPr><w:pStyle w:val="Header"/></w:pPr>'
+                f"{text_run(text)}</w:p></w:hdr>")
 
     def relationships_xml(self) -> str:
         items = "".join(
@@ -365,6 +384,8 @@ def styles_xml() -> str:
         para("TableText", "Table Text", 18, after=0),
         para("Code", "Code", 15, after=0, run=mono),
         para("Footer", "footer", 18, after=0, extra='<w:jc w:val="center"/>'),
+        para("Header", "header", 18, after=0, extra='<w:jc w:val="right"/>'),
+        para("SourceLine", "Source Line", 18, after=200),
         f'<w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/><w:rPr>{mono}</w:rPr></w:style>',
         '<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/>'
         '<w:rPr><w:u w:val="single"/></w:rPr></w:style>',
@@ -383,6 +404,7 @@ CONTENT_TYPES = (
     '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
     '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
     '<Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>'
+    '<Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/>'
     '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>'
     "</Types>"
 )
@@ -390,11 +412,16 @@ ROOT_RELATIONSHIPS = (
     f'{XML_HEADER}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
     f'<Relationship Id="rId1" Type="{R_NS}/officeDocument" Target="word/document.xml"/></Relationships>'
 )
+def _field(instruction: str) -> str:
+    return ('<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
+            f'<w:r><w:instrText xml:space="preserve"> {instruction} </w:instrText></w:r>'
+            '<w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>1</w:t></w:r>'
+            '<w:r><w:fldChar w:fldCharType="end"/></w:r>')
+
+
 FOOTER = (
     f'{XML_HEADER}<w:ftr xmlns:w="{W_NS}"><w:p><w:pPr><w:pStyle w:val="Footer"/></w:pPr>'
-    '<w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r>'
-    '<w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>1</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>'
-    "</w:p></w:ftr>"
+    f'{text_run("Page ")}{_field("PAGE")}{text_run(" of ")}{_field("NUMPAGES")}</w:p></w:ftr>'
 )
 
 
@@ -422,6 +449,7 @@ def build_docx(
         "word/styles.xml": styles_xml(),
         "word/numbering.xml": document.numbering_xml(),
         "word/footer1.xml": FOOTER,
+        "word/header1.xml": document.header_xml(),
         **{f"word/media/{name}": data for name, data in sorted(document.media.items())},
     }
     buffer = io.BytesIO()

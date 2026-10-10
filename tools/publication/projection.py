@@ -146,14 +146,28 @@ def gen_components(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list
             unit = units[comp["coverage_unit"]]
             authority, state = comp.get("authority") or {}, comp.get("state") or {}
             body += [f"### {cid} — {comp['name']}", ""]
-            body += [f"Status {unit['status']}. Owns {' '.join(str(authority.get('owns', 'nothing recorded')).split())}.", ""]
-            body += [f"State owner: {state.get('owner', 'not recorded')}; state family: {state.get('family', 'not recorded')}.", ""]
-            body += bullets("May decide", authority.get("may_decide"))
-            body += bullets("Must not", authority.get("must_not"))
-            body += bullets("Inputs", comp.get("inputs"))
-            body += bullets("Outputs", comp.get("outputs"))
-            body += bullets("Consumers", comp.get("consumers"))
-            body += bullets("Explained in", [f"[{p}]({p})" for p in as_list(unit.get("canonical_docs"))])
+
+            def many(values: Any) -> str:
+                return " • ".join(" ".join(str(v).split()) for v in as_list(values)) or "none recorded"
+
+            rows = [
+                ["Unit", f"`{comp['coverage_unit']}`"],
+                ["Status", unit["status"]],
+                ["Owner domain", unit["owner_domain"]],
+                ["State owner", state.get("owner", "not recorded")],
+                ["State family", state.get("family", "not recorded")],
+                ["Owns", authority.get("owns", "nothing recorded")],
+                ["May decide", many(authority.get("may_decide"))],
+                ["Must not", many(authority.get("must_not"))],
+                ["Inputs", many(comp.get("inputs"))],
+                ["Outputs", many(comp.get("outputs"))],
+                ["Consumers", many(comp.get("consumers"))],
+                ["Implementation", many(reference(r) for r in as_list(unit.get("implementation")))],
+                ["Tests", many(reference(r) for r in as_list(unit.get("tests")))],
+                ["Decisions", many(reference(r) for r in as_list(unit.get("adrs")))],
+                ["Explained in", many(f"[{p}]({p})" for p in as_list(unit.get("canonical_docs")))],
+            ]
+            body += table(["Field", "Value"], rows)
     if not reg["components"]:
         body += none_registered("component")
     return "Canonical component catalog", "registry/components.yaml", body
@@ -349,9 +363,26 @@ def build_projection(
         out_sections.append(
             {"id": section["id"], "title": section["title"], "group": section["group"], "chapters": chapters}
         )
+    listed = [c for s in out_sections for c in s["chapters"]]
+    inventory = {
+        "Parts": sum(1 for s in out_sections if s["group"] == "parts"),
+        "Appendices": sum(1 for s in out_sections if s["group"] == "appendices"),
+        "Chapters taken from documents": sum(1 for c in listed if not c["generated"]),
+        "Sections generated from the registry": sum(1 for c in listed if c["generated"]),
+        "Documented units": len(reg["coverage"]),
+        "Components": len(reg["components"]),
+        "Cross-domain contracts": len(reg["contracts"]),
+        "Glossary terms": len(reg["glossary"]),
+        "Designs": len(reg["designs"]),
+        "Decision records": len(list((docs_root / reg["schema"]["layout"]["adrs"]).glob("ADR-*.md"))),
+        "Parameters": len(reg["parameters"]),
+        "Metrics": len(reg["metrics"]),
+        "Notation symbols": len(reg["notation"]),
+    }
     return {
         "schema_version": PROJECTION_SCHEMA,
         "publication": manifest["publication"],
+        "inventory": inventory,
         "sources": sources(reg, docs_root, repos_root),
         "registry_digest": registry_digest(registry_dir),
         "sections": out_sections,

@@ -53,8 +53,11 @@ def test_registry_sections_reflect_the_registry(projection):
     by_id = {c["id"]: c["markdown"] for c in chapters(projection)}
     for contract in reg["contracts"].values():
         assert f"## {contract['title']}" in by_id["generated-contracts"]
-    for cid in reg["components"]:
+    for cid, component in reg["components"].items():
         assert f"### {cid} — " in by_id["generated-components"]
+        assert f"| Unit | `{component['coverage_unit']}` |" in by_id["generated-components"]
+    assert projection["inventory"]["Components"] == len(reg["components"])
+    assert projection["inventory"]["Chapters taken from documents"] == 45
     assert "No metric is registered yet." in by_id["generated-metrics"]
     assert "ADR-0073" in by_id["generated-decisions"]
 
