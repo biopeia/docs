@@ -718,3 +718,75 @@ units:
       - component.observation-plane
       - mechanism.organism-action-path
       - component.organism-identity-checkpoint
+
+  component.embodiment-articulated-body:
+    kind: component
+    title: Articulated body specification, active morphology and joint state
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+    component_id: EMB-ART
+    canonical_docs:
+      - explanation/embodiment/articulated-body.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/articulated_spec.py
+      - embodiment:src/embodiment/physics3d/mechanics.py
+      - embodiment:src/embodiment/physics3d/articulated_state.py
+    tests:
+      - embodiment:tests/test_articulated_spec.py
+      - embodiment:tests/test_physics3d_mechanics.py
+      - embodiment:tests/test_articulated_state.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    depends_on:
+      - component.embodiment-physical-state
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  mechanism.embodiment-physical-projection:
+    kind: mechanism
+    title: Physical projection for a solver, body pose sample, declared conventions and physical duration
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+      - environment
+    canonical_docs:
+      - explanation/embodiment/physical-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/physical_projection.py
+      - embodiment:src/embodiment/observation.py
+      - embodiment:src/embodiment/physics3d/observation_contract.py
+      - embodiment:src/embodiment/duration.py
+    tests:
+      - embodiment:tests/test_physical_projection.py
+      - embodiment:tests/test_body_pose_sample.py
+      - embodiment:tests/test_physics3d_observation_contract.py
+      - embodiment:tests/test_duration.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.embodiment-articulated-body
+      - component.embodiment-physical-state
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e

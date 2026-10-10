@@ -265,3 +265,45 @@ terms:
       - mechanism.organism-action-path
     canonical_refs:
       - explanation/organism/action-path.md
+
+  body-specification:
+    term: "Body specification"
+    definition: >
+      An engine-neutral, immutable record of what an articulated body is made
+      of: segments, hinge joints, topology and some further properties. It has
+      no identity of its own, names no body, episode or revision, and holds no
+      state. A textual description is generated from part of it.
+    distinguishes_from:
+      - active-morphology-descriptor
+    owners:
+      - component.embodiment-articulated-body
+    canonical_refs:
+      - explanation/embodiment/articulated-body.md
+
+  active-morphology-descriptor:
+    term: "Active morphology descriptor"
+    definition: >
+      A value that binds one generated body description, by its SHA-256, and
+      the joint ranges of one body specification to a body, an embodiment
+      episode and a morphology revision. Joint state and its checkpoint are
+      verified against it. It does not authenticate its own origin and it is
+      not the specification.
+    distinguishes_from:
+      - body-specification
+    owners:
+      - component.embodiment-articulated-body
+    canonical_refs:
+      - explanation/embodiment/articulated-body.md
+
+  physical-duration:
+    term: "Physical duration"
+    definition: >
+      A non-negative, finite number of seconds of time elapsed in the physical
+      substrate. It is supplied, not measured. It is not the causal tick, which
+      counts committed transitions, and not host wall-clock time.
+    distinguishes_from:
+      - causal-tick
+    owners:
+      - mechanism.embodiment-physical-projection
+    canonical_refs:
+      - explanation/embodiment/physical-projection.md
