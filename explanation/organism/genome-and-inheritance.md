@@ -1,9 +1,13 @@
 # The genome, its expression and the germline record
 
-Reviewed against `organism` at commit `0c2c543e71d335a45e6e07a791c20de1e58c6404`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches of the
-repository were made on 2026-10-10 at that revision.
+supports them: the code, the tests, an ad hoc run, or neither. Searches were
+repeated on 2026-10-11 over the source of all seven repositories. Since
+`organism` `0c2c543e71d335a45e6e07a791c20de1e58c6404`, where the ad hoc runs
+below were made, the directory has changed only in the functions that read a
+germline record and an expression state back from plain data (diff
+inspected); the runs were not repeated.
 
 ## What it is
 
@@ -33,9 +37,14 @@ A second absence is as important. **Nothing outside this directory reads a
 gene value.** The genome can be loaded, validated, hashed and written to a
 checkpoint payload. The cognition code that grows and prunes structure takes
 its thresholds as arguments of its own, and no code in the repository passes
-a genome value, or a value of the expression state, to it. This document
-therefore describes a self-contained description of a constitution that is
-not yet connected to the thing it would constitute.
+a genome value, or a value of the expression state, to it. That includes the
+one function in source that now applies a weight update: it takes its
+learning rate from its caller and reads neither the genome nor the
+expression state (code of `organism:src/organism/cognition/composition.py`;
+see [the composition](sense-to-checkpoint-transition.md#the-composition);
+recorded in finding F-0142).
+This document therefore describes a self-contained description of a
+constitution that is not yet connected to the thing it would constitute.
 
 ## The genome
 
@@ -340,11 +349,20 @@ Each of the three parts can be written to plain data and read back
 its hashes and restore checks them. Germline restore validates mark entries,
 rejects duplicate loci, refuses acquired marks when capture is disabled, and
 checks that persisted birth expression matches the genome and inherited marks.
+It now also requires the table of capture streaks to be present, where it
+used to read a missing one as empty
+(`test_germline_restore_rejects_omitted_persisted_capture_streaks`).
 Expression restore checks the four adaptive effective parameters against
-inherited ranges, normalizes `exploration_drive`, and requires its birth
-expression to match the genome-derived baseline or the supplied germline
-birth expression. These are codec contracts, not evidence that the records
-are included in the composed portable Organism checkpoint.
+inherited ranges and requires its birth expression to match the
+genome-derived baseline or the supplied germline birth expression. It no
+longer adjusts what it reads: an exploration drive or a regulatory activation
+outside 0 to 1 is refused, where each used to be limited to that range, and
+the regulatory activation must be empty for a state that has never been
+updated and complete for one that has
+(`test_expression_state_restore_rejects_out_of_range_values`,
+`test_expression_state_restore_rejects_invalid_regulatory_activation`,
+`test_expression_restore_rejects_truncated_activation_after_update`,
+`test_expression_restore_rejects_activation_on_never_updated_state`).
 
 The cognition reader
 (`organism:src/organism/cognition/checkpoint.py::restore_genome_checkpoint`)
@@ -360,20 +378,35 @@ of an in-range but inconsistent expression baseline and acceptance of one
 derived from an inherited mark. These tests exercise restoration, not the
 regulator's broader computation or biological efficacy.
 
-As with the [executive outcome ledger](executive-outcome-ledger.md), what
-matters most is what these payloads are not part of. A search of the
-composed cognitive payload and of the checkpoint envelope, described under
-[identity and the checkpoint envelope](identity-and-checkpoint.md), found no
-reference to a genome, an expression state or a germline record. No
-checkpoint in the repository carries them.
+Earlier versions of this section said that no checkpoint in the repository
+carried these payloads. **That is no longer true.** The composed cognitive
+payload described under
+[what a cognitive checkpoint carries](cognitive-checkpoint.md) has three
+fields for a genome, a germline record and an expression state. They form
+one group: all three are supplied or none is, they are checked against one
+another when the payload is built and again when it is written, and reading
+them back requires the caller to state the running software version
+(`test_portable_checkpoint_round_trips_genome_germline_and_expression_as_one_unit`,
+`test_portable_checkpoint_rejects_partial_genetic_state`,
+`test_portable_checkpoint_rejects_inconsistent_genetic_state_at_construction`,
+`test_portable_checkpoint_genetic_restore_requires_explicit_running_version`).
+
+The group is optional, and what fills it is a caller. No function in the
+source of any repository builds a payload with the group filled; tests do
+(search of the seven repositories for the constructor of the payload and for
+`GermlineState` and `GeneExpressionState` outside this directory,
+2026-10-11). The one function in source that carries a payload from one step
+to the next writes the group back as it found it. So a place for genetic
+state in a checkpoint exists and is tested; that any Organism's checkpoint
+holds its genome is not established.
 
 ## At each lifecycle boundary
 
 | Boundary | What happens | Support |
 |---|---|---|
 | Birth | A genome is read from the packaged seed; expression and germline records are derived from it. Nothing in source performs a birth | Code and test for the seed; ad hoc run for the rest |
-| Checkpoint | Each part can be exported; no checkpoint includes any of them | Code and ad hoc run; search of the repository |
-| Restart | Each part can be rebuilt from its export subject to the validation described above | Code and focused codec tests |
+| Checkpoint | Each part can be exported. The composed cognitive payload carries the three together as one optional group, when a caller supplies them; nothing in source does | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py`; search of the seven repositories, 2026-10-11 |
+| Restart | Each part can be rebuilt from its export subject to the validation described above; out-of-range values are refused, not adjusted | Code and focused codec tests |
 | Re-embodiment | Nothing here reacts. One signal is named for embodiment mismatch and one gene is its gain; a caller would have to supply the signal | Code; no operation performs a re-embodiment |
 | Reproduction | A value type is shaped to carry a genome and marks to an offspring. No operation fills it | Code; search of the repository |
 
@@ -412,7 +445,8 @@ lists "permitted inherited/epigenetic state" among what continuity of an
 Organism preserves, and
 [ADR-0103](../../technical/adr/ADR-0103-portable-organism-state.md) asks a
 portable checkpoint to carry what is needed to restore private state. The
-three payloads exist; no checkpoint composes them.
+three payloads exist, and one composition can carry them as an optional
+group. Whether a given checkpoint does is up to its caller.
 
 [ADR-0092](../../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md)
 places this state under the Organism's authority. The directory imports
@@ -425,9 +459,10 @@ establish it.
 |---|---|
 | Shape of the genome, what the reader refuses, the kernel check, key-order independence of the genome hash, absence of body genes, content of the packaged seed | Code and tests in `organism:tests/source_unit/cognition/test_genome.py`, `organism:tests/source_unit/cognition/test_birth.py` and `organism:tests/source_unit/actuation/test_genome_motor_genes.py` |
 | Round trip and refusal of a tampered genome payload | Code and tests in `organism:tests/source_unit/cognition/test_checkpoint.py`, which exercise the reader in the cognition package, not the one in this directory |
-| Expression and germline checkpoint validation, including inconsistent birth-expression rejection and inherited-mark restoration | Code and `organism:tests/source_unit/genetics/test_checkpoint.py`; this is codec evidence, not a test of the regulator's efficacy |
-| The regulator's computation and the table of values; frozen updates; capture after 64 calls and weakening of marks; binding counts; the two hashes under two identifiers; the difference between the two genome readers | Code and ad hoc runs at the reviewed revision. The focused genetics checkpoint tests do not cover those behaviors; no test in the repository covers the regulator's computation, `bindings.py` or `schema.py` behavior described here |
-| No mutation, recombination or reproduction operation; no reader of a gene value or of the expression state outside the directory; no caller of the package type, the capture, the weakening, the binding check or the identifier factory; no reader of the mutation fields of the schema; none of the 18 test names defined; no checkpoint carrying genetic state; no source of randomness or host time | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the names concerned and for imports of random, entropy, clock and identifier modules |
+| Expression and germline checkpoint validation, including inconsistent birth-expression rejection, inherited-mark restoration, the required capture streaks and the refusal of out-of-range values | Code and `organism:tests/source_unit/genetics/test_checkpoint.py`; this is codec evidence, not a test of the regulator's efficacy |
+| The composed cognitive payload carries genetic state as one all-or-none group | Code of `organism:src/organism/cognition/portable_checkpoint.py` and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
+| The regulator's computation and the table of values; frozen updates; capture after 64 calls and weakening of marks; binding counts; the two hashes under two identifiers; the difference between the two genome readers | Code and ad hoc runs at `organism` `0c2c543e71d335a45e6e07a791c20de1e58c6404`; the code they ran is unchanged since. The focused genetics checkpoint tests do not cover those behaviors; no test in the repository covers the regulator's computation, `bindings.py` or `schema.py` behavior described here |
+| No mutation, recombination or reproduction operation; no reader of a gene value or of the expression state outside the directory; no caller of the package type, the capture, the weakening, the binding check or the identifier factory; no reader of the mutation fields of the schema; none of the 18 test names defined; no function in source that fills the genetic group of a checkpoint; no source of randomness or host time | Searches of `src` and `tests`, repeated on 2026-10-11 at the reviewed revision for the readers and callers named here and for what fills a checkpoint; the remaining searches were made on 2026-10-10 at `organism` `0c2c543e71d335a45e6e07a791c20de1e58c6404` and concern code unchanged since |
 | That the directory does not demonstrate endogenous reproduction or evolution | The repository's own migration record |
 | What reproduction, heritable allocation and causal entropy must be | Accepted decisions ADR-0082, ADR-0087, ADR-0094, ADR-0108; statements of intent |
 

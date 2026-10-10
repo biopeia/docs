@@ -1,8 +1,13 @@
 # Organism identity and the checkpoint envelope
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Searches were repeated on 2026-10-11. The two modules this document is
+about, `identity.py` and `checkpoint.py`, and their tests have not changed
+since `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, where the ad hoc
+runs below were made (diff inspected); the runs were not repeated. What has
+changed is what stands around the envelope.
 
 ## What it is
 
@@ -16,6 +21,14 @@ understands, and a list of other things those bytes need in order to be
 restored. The envelope is deliberately ignorant. It does not know what the
 bytes mean, how they were assembled, or how to turn them back into a running
 Organism.
+
+Two further values now wrap the envelope, and they answer questions the
+envelope cannot: how many steps the Organism has taken, whether it is active,
+dormant or terminated, which body context it is in, and which saved state of
+an identity is the current one. They are described in
+[the transition boundary and the continuation registry](transition-and-continuation.md).
+This document stays with the identity and the envelope, and says where the
+new layer changes what could be said about them.
 
 That ignorance is the design intent recorded in
 [ADR-0092](../../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md):
@@ -86,7 +99,11 @@ Decoding is strict in shape and returns an equal checkpoint
 What the envelope does *not* carry is as informative as what it does. There is
 no tick, no World, no body or embodiment, no time, no sequence number and no
 reference to a previous checkpoint. Two envelopes for the same identity cannot
-be ordered, and nothing in an envelope says which of them is later.
+be ordered, and nothing in an envelope says which of them is later. That
+remains true of the envelope. An order now exists one layer out: a
+[transition state](transition-and-continuation.md#the-transition-state)
+carries an envelope together with a step counter, a lifecycle and optional
+references to a body context and a World tick.
 
 ## The dependency closure
 
@@ -109,6 +126,8 @@ method with a reader. One caller in the package does so: restoring the
 composed cognitive payload from an envelope that declares dependencies
 requires a reader and verifies the closure first
 (`test_organism_checkpoint_restore_requires_and_verifies_dependency_closure`).
+The transition state offers the same check under the same name and passes it
+straight to the envelope (`test_dependency_verification_remains_owner_declared`).
 
 This is the behaviour
 [ADR-0103](../../technical/adr/ADR-0103-portable-organism-state.md) asks of a
@@ -121,7 +140,8 @@ section.
 
 ## What the closure and the digests do not establish
 
-Read from the code and confirmed by running the module at that revision.
+Read from the code and confirmed by running the module at `organism`
+`6543188ff302a5f2dc8002c0086252d6061e5310`; the module is unchanged since.
 
 - **Only declared dependencies are checked.** The method knows the list in the
   envelope, not what the private state actually needs. A checkpoint with no
@@ -150,21 +170,34 @@ is decided by whoever fills it, and at this revision one composition exists
 (`organism:src/organism/cognition/portable_checkpoint.py::CognitiveRuntimeCheckpoint`):
 the cognitive graph with its learned weights, the recurrent activation state
 with its tick, experience records, and optionally safety state, sensory
-normalizers and a generative resident's state. It refuses to restore when the
+normalizers, a generative resident's state and a group of genetic state. It refuses to restore when the
 identity inside the payload differs from the identity on the envelope
 (`test_cognitive_checkpoint_rejects_identity_mismatch`).
 
 Its own description ends with "This is not a complete Organism checkpoint."
-That composition was not reviewed for this document beyond its use of the
-envelope. Other Organism state that has its own export and restore functions,
-for example the [executive outcome ledger](executive-outcome-ledger.md), is
-not part of it. No component at this revision assembles a complete Organism.
+That composition is described in
+[what a cognitive checkpoint carries](cognitive-checkpoint.md). Other
+Organism state that has its own export and restore functions, for example
+the [executive outcome ledger](executive-outcome-ledger.md), is not part of
+it. No component at this revision assembles a complete Organism.
 
-The envelope is also not what crosses to World in the only cross-domain
-composition that exists. In World's physical step fixture the Organism's
-checkpoint is a JSON document written by the fixture
-(see [the physical causal step](../world/physical-step.md) and finding
-F-0002).
+One function in source now writes an envelope: the
+[accepted step](sense-to-checkpoint-transition.md#the-accepted-step) restores
+the cognitive payload from the envelope of a transition state, advances it
+and wraps the result in a new envelope under the same identity, declaring the
+same dependencies as the old one. Nothing in the source of any repository
+calls that function (search of the seven repositories, 2026-10-11).
+
+The envelope is also not what crosses to World in World's physical step
+fixture, where the Organism's checkpoint is a JSON document written by the
+fixture (see [the physical causal step](../world/physical-step.md) and
+finding F-0002; that fixture belongs to the World documentation and was not
+re-read for this review). In another World integration test,
+`world:tests/integration/test_durable_checkpoint_restore_slice.py`, the
+bytes handed to World are an encoded envelope holding a cognitive payload. No
+World test hands over a transition state or a continuation (search of
+`world` for `OrganismTransitionState` and `OrganismContinuation`,
+2026-10-11: no mention).
 
 ## Continuations and branches
 
@@ -177,22 +210,43 @@ adds a constraint on that continuity: "A canonical longitudinal Organism has
 at most one non-terminated continuation under one authoritative identity."
 and "every non-canonical fork/copy/branch receives a new identity".
 
-Beside those decisions, the code at this revision:
+Beside those decisions, the identity and the envelope by themselves:
 
-- keeps the identity through encoding and decoding, which is the one
-  continuity operation it implements;
-- has no record of which continuations of an identity exist. Two envelopes
+- keep the identity through encoding and decoding, which is the one
+  continuity operation they implement;
+- have no record of which continuations of an identity exist. Two envelopes
   holding different private state under the same identity were both decoded,
-  and nothing could tell which, if either, is the canonical one;
-- has no operation that makes a branch. The repository's README lists, among
-  the contents of the slice, "immutable Organism identity values, including
-  explicit fresh identities for branches". An identity value can of course be
-  created with a new UUID, but nothing in the package takes a checkpoint and
-  produces a branch with a new identity and recorded ancestry;
-- has no notion of retirement, dormancy, generation or parentage.
+  and nothing in either could tell which, if either, is the canonical one;
+- have no notion of a branch, of retirement, dormancy, generation or
+  parentage.
+
+At the earlier revision that was the whole answer, and this section said
+that nothing in the package recorded continuations, made a branch or knew
+dormancy. **That is no longer true of the package.** A second module now
+provides, and
+[its own document](transition-and-continuation.md) describes:
+
+- a registry that records, per identity, the one continuation state it
+  regards as current, refuses an earlier state once a later one is committed,
+  and grants one lease at a time
+  (`test_registry_rejects_duplicate_live_restore_and_stale_checkpoint`);
+- a function that makes a branch: a continuation under a new identity with
+  recorded ancestry, from private state the caller must supply
+  (`test_branch_requires_new_owner_state_and_records_ancestry`);
+- three lifecycle states, active, dormant and terminated, with a recorded
+  history of changes between them
+  (`test_terminated_organism_cannot_transition_again`).
+
+Three limits belong beside that list. The registry describes itself as "an
+in-memory compare-and-commit guard" that "must not be treated as global
+identity uniqueness". Nothing in the source of any repository constructs a
+registry, makes a branch or changes a lifecycle; tests do. And there is
+still no generation or parentage anywhere: a branch is not an offspring.
+The earlier absence was recorded as finding F-0031; the limits of what now
+exists are recorded as finding F-0141.
 
 ADR-0091 itself leaves the mechanism open: it says the owner and storage of
-the canonical designation are reserved to a later pass. The absence is
+the canonical designation are reserved to a later pass. What exists is
 therefore stated, not judged.
 
 ## At each lifecycle boundary
@@ -206,8 +260,8 @@ different kinds of support and should not be read as equally strong.
 | Birth | The identity is supplied by the caller and wrapped | Code and test |
 | Checkpoint | Identity, private bytes and dependency list are preserved exactly | Code and tests |
 | Restart | Decoding returns an equal value; nothing here restarts anything | Code and tests |
-| Re-embodiment | The envelope has no field that names a body, so there is nothing to change | Absence in the code; that identity survives is ADR-0081, a statement of intent |
-| Reproduction | No operation exists | Nothing in the code; that offspring and branches receive new identities is ADR-0091, a statement of intent |
+| Re-embodiment | The envelope has no field that names a body, so there is nothing to change. The body reference lives in the transition state around it, and replacing it leaves the envelope byte for byte the same | Absence in the code, and `test_reembodiment_preserves_identity_and_longitudinal_state`; that identity survives is ADR-0081, a statement of intent |
+| Reproduction | No operation exists. A branch under a new identity can be recorded one layer out; it is not an offspring | Nothing in the code of these two modules; that offspring and branches receive new identities is ADR-0091, a statement of intent |
 
 ## What supports this description
 
@@ -215,11 +269,11 @@ different kinds of support and should not be read as equally strong.
 |---|---|
 | Identity wraps a supplied value and is recovered from text | Code and `organism:tests/test_identity.py` |
 | Envelope shape, deterministic encoding, strict decoding, digest check, closure check | Code and tests in `organism:tests/test_checkpoint.py` |
-| `create` accepts a non-UUID; the constructor accepts strings; state and digest, or the identity, can be replaced together; other read errors escape; duplicate dependencies and an empty closure pass | Code, and one ad hoc run of the module at that revision; no test is kept for these |
+| `create` accepts a non-UUID; the constructor accepts strings; state and digest, or the identity, can be replaced together; other read errors escape; duplicate dependencies and an empty closure pass | Code, and one ad hoc run of the module at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, the two modules being unchanged since; no test is kept for these |
 | Two different states under one identity both decode | The same ad hoc run |
-| Restoring a composed payload verifies declared dependencies and the identity | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py`; the composed payload itself was not reviewed |
+| Restoring a composed payload verifies declared dependencies and the identity | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py`; the composed payload has its own document |
 | The closure covers declared references only | Code, and the repository's own `organism:MIGRATION.md` |
-| No branch, retirement or continuation record exists | Search of the repository at that revision |
+| The identity and the envelope hold no branch, lifecycle or continuation record; a second module of the package now does, and nothing in source uses it | Code of the two modules; search of the seven repositories on 2026-10-11 for the names of the second module |
 | What identity and a portable checkpoint must mean | Accepted decisions ADR-0081, ADR-0091, ADR-0092, ADR-0103; statements of intent, not test results |
 
 No persisted envelope from a real run was examined, because no component at
@@ -227,9 +281,9 @@ this revision writes one outside the tests.
 
 ## Open questions
 
-- Which component will hold the record of continuations that ADR-0091
-  requires, and whether the envelope needs a field, such as a tick or a
-  predecessor, to make two checkpoints of one identity comparable.
+- Which component will hold, for a running Organism, the registry of
+  continuations that now exists, and where its record will be stored so that
+  it is the single authority ADR-0091 asks for.
 - Whether the private-state digest is meant as protection against anything
   more than accidental damage.
 - Who decides which dependencies a given private state requires, so that

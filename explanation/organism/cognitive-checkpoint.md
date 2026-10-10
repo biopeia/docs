@@ -1,15 +1,19 @@
 # What a cognitive checkpoint carries
 
-Reviewed against `organism` at commit `20634a7d27e8834cd65c96f8bd44087d603aebc8`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism@ba0011797a6a3b4d48c7731651e50560c4043f18` and
+`world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
+Everything below describes those revisions. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Searches were made on 2026-10-11, and the ad hoc runs were made at the
+Organism revision above.
 
 ## What it is
 
 [The checkpoint envelope](identity-and-checkpoint.md) carries bytes it does
 not understand. This document is about the one thing at this revision that
 fills it: a composition of cognitive state into those bytes, and its
-restoration.
+restoration. One layer further out, the envelope can itself be carried in a
+[transition state](transition-and-continuation.md) that counts steps.
 
 The composition is a value holding six cognitive/memory parts and, optionally,
 one genetic-state group made of three parts that a caller hands it. It encodes
@@ -18,13 +22,14 @@ state to save; it saves what it is given. Its own description draws the
 boundary twice: "This payload includes only explicitly supplied state." and
 "This is not a complete Organism checkpoint."
 
-Two properties decide what such a checkpoint is worth, and both are easy to
-miss from the names:
+Two properties decide what such a checkpoint is worth. At the revision
+reviewed before this one, the answer to both was no. One has changed.
 
-- **It is not exact.** A restored graph is a rounded version of the saved one
-  and computes different numbers.
-- **It is not complete.** Several kinds of state that the package's own
-  mechanisms keep have no place in it.
+- **It is now exact for what it carries.** A restored graph has the same
+  weights and traces as the saved one and computes the same numbers. Earlier
+  it was a rounded copy.
+- **It is still not complete.** Several kinds of state that the package's own
+  mechanisms keep have no place in it, though fewer than before.
 
 Both are described below with what was run to confirm them.
 
@@ -35,15 +40,15 @@ Both are described below with what was run to confirm them.
 | Part | Required | What is written |
 |---|---|---|
 | Transition state | yes | Identity, last tick, previous frame's values, exactly |
-| Graph | yes | Nodes exactly; edges with the weight replaced by a class number |
+| Graph | yes | Nodes and edges exactly, including each edge's weight and `eligibility` |
 | Experience records | no, default none | Each record's canonical form |
 | Safety state | no | A failure count and a flag |
-| Sensory normalizers | no | Mean, variance and count, for established normalizers only |
+| Sensory normalizers | no | Mean, variance and count of every normalizer supplied |
 | Generative resident | no | The resident's own export |
 | Genetic-state group | no, all or none | Genome, germline state and expression state |
 
 The document has exactly 12 top-level fields: the nine state parts above, the
-identity, a schema name and schema version 5. The genetic-state group is
+identity, a schema name and schema version 7. The genetic-state group is
 optional, but if any of its three parts is supplied, all three must be
 present. Encoding is deterministic: keys sorted, no optional whitespace.
 
@@ -69,9 +74,25 @@ It refuses any other set of top-level fields, any other schema name or
 version, a missing graph, and an identity that differs between the document
 and the transition state inside it
 (`test_cognitive_checkpoint_rejects_unknown_fields`,
-`test_portable_checkpoint_schema_v4_is_not_accepted_as_a_current_payload`,
+`test_portable_checkpoint_schema_v6_is_not_accepted_as_a_current_payload`,
+`test_portable_checkpoint_rejects_non_integer_schema_version`,
 `test_cognitive_checkpoint_rejects_identity_mismatch`). Earlier versions are
-refused, not migrated.
+refused, not migrated: a payload written at the previously reviewed revision,
+which carried version 5, cannot be read at this one.
+
+The strictness now reaches every nested part. Each decoder requires exactly
+the fields its writer emits and refuses a missing or an unknown one, where
+several used to supply a default for a missing field or ignore an extra one
+(`test_restore_rejects_unknown_checkpoint_fields`,
+`test_safety_state_restore_rejects_unknown_fields`,
+`test_normalizer_restore_rejects_invalid_or_noncanonical_entries`,
+`test_cognitive_checkpoint_requires_experience_records_in_current_schema`,
+`test_resident_checkpoint_requires_all_emitted_fields_and_rejects_unknowns`,
+`test_workspace_restore_rejects_missing_or_unknown_emitted_fields`). The
+repository keeps its own inventory of the required fields in
+`organism:CHECKPOINT_DECODER_MATRIX.md`, which describes itself as "a
+decoder-field inventory, not a claim that this bounded payload is the
+complete Organism continuation checkpoint."
 
 When genetic state is present, restore requires the caller to provide the
 running software version; it validates/restores the genome first, then the
@@ -94,70 +115,71 @@ reader must be supplied and the closure is verified first
 the envelope document describes that check and its limits. Nothing in the
 composition declares a dependency of its own.
 
-## Not exact: the graph comes back rounded
+## Exact: the graph comes back as it was
 
-Edge weights are real numbers in [-2, 2]. A checkpoint stores each as one of
-17 classes: zero, and eight magnitudes on each side (0.03125, 0.0625, 0.125,
-0.25, 0.5, 0.75, 1.25, 2.0). Anything within 0.01 of zero becomes zero; any
-other weight becomes the nearest magnitude. The `eligibility` trace of every
-edge is not written and is restored as zero, which the code marks: "labile:
-never restored from a checkpoint".
+Edge weights are real numbers in [-2, 2]. The checkpoint writes each one as
+the number it is, together with the edge's `eligibility` trace and its five
+other fields. Restoring requires both to be floating-point numbers inside
+their bounds and rebuilds the edge with them
+(`test_weight_and_eligibility_round_trip_exactly`,
+`test_tentative_weight_is_exact_in_codec_v4`,
+`test_restore_rejects_eligibility_outside_learning_bound`). The export
+refuses a live weight that has been pushed outside its range
+(`test_export_rejects_mutated_invalid_edge_state`).
 
-This is deliberate, and the reason given in the code is not compactness. A
-docstring says of exported learned state that it "must guard against
-differencing attacks", and a test pins the
-property: two exports either side of a tiny weight change are identical
-(`test_two_consecutive_checkpoints_cannot_be_differenced_to_recover_exact_weight`).
-Another pins that a small weight does not vanish
-(`test_tentative_weight_does_not_collapse_to_zero_in_codec_v3`), and a third
-that the round trip is approximate
-(`test_weight_survives_quantized_round_trip_approximately`).
+This reverses what the previous review of this document found. The codec was
+then at version 3: it stored a weight as one of 17 classes, wrote no trace
+and restored the trace as zero, and gave as its reason a guard against
+"differencing attacks" on exported learned state. A weight of 0.4 came back
+as 0.5 and one of 0.009 as zero. The codec is now version 4. The classes, the
+rounding functions, the stated reason and the optional table of class
+overrides are gone from the source, and two successive exports either side
+of a small weight change now differ, which a test pins
+(`test_consecutive_checkpoints_preserve_exact_live_weight_changes`). A graph
+payload written by the earlier codec is refused
+(`test_restore_rejects_missing_or_noncurrent_weight_codec_version`).
 
-The consequence was measured by running the module: a graph of one edge was
-advanced, saved, restored, and both the live and the restored copy were
-advanced one more tick on the same input.
+The consequence was measured again by running the module: a graph of one
+edge was advanced, its trace set to 0.37, saved, restored, and both the live
+and the restored copy were advanced one more tick on the same input.
 
-| Weight before | Weight after restore | Next readout, live | Next readout, restored |
+| Weight before | Weight after restore | Trace after restore | Next readout, live and restored |
 |---|---|---|---|
-| 0.4 | 0.5 | 0.1974 | 0.2449 |
-| 1.0 | 0.75 | 0.4621 | 0.3584 |
-| 0.009 | 0.0 | 0.0045 | 0.0000 |
-| 0.05 | 0.0625 | 0.0250 | 0.0312 |
-| -1.7 | -2.0 | -0.6911 | -0.7616 |
+| 0.4 | 0.4 | 0.37 | equal |
+| 1.0 | 1.0 | 0.37 | equal |
+| 0.009 | 0.009 | 0.37 | equal |
+| 0.05 | 0.05 | 0.37 | equal |
+| -1.7 | -1.7 | 0.37 | equal |
 
-Saving a restored checkpoint again gives the same bytes, so the loss happens
-once. The transition state survives exactly; the test in the World repository
-that restores this payload after a committed tick compares the state and does
-not compare the graph. Its one edge has weight 0.75, which is one of the 17
-levels, so that fixture would not show the rounding in any case.
+Saving a restored checkpoint again gives the same bytes. The repository's
+own test goes further than one tick: it runs the same sequence of activation
+and weight updates from a live graph and from its restored copy and compares
+them (`test_exact_graph_restore_preserves_identical_future_learning_transitions`).
+The test in the World repository that restores this payload after a
+committed tick still compares the transition state and does not compare the
+graph.
 
-Two things follow, stated as facts and not as judgments.
-
-A run that is stopped and resumed from a checkpoint does not continue as the
-uninterrupted run would have. The graph it resumes with differs, by up to 25
-per cent in a weight in the cases above, and a weight under 0.01 is gone.
+What this establishes is narrow and should be read that way. A graph and a
+transition state that are stopped and resumed from this payload continue as
+the uninterrupted pair would have. It says nothing about state that is not
+in the payload, which is the next section. The repository draws the same
+line about the change: it "removes the graph codec's quantization/reset loss
+only. It does not establish a complete Organism continuation, caller
+completeness, full dependency closure".
 
 [ADR-0081](../../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md)
 says that canonical re-embodiment "preserves same-Organism continuity and
 does not silently reset cognition", and
 [ADR-0103](../../technical/adr/ADR-0103-portable-organism-state.md) that
-"Private learned state belongs to Organism longitudinal continuity". Beside
-them stands a codec that rounds learned weights by design, for a stated
-reason. Whether rounding is a reset, and whether the reason outweighs exact
-continuation, is for the owners of those decisions. It is recorded as finding
-F-0073.
-
-The export function can take a table of weight classes to write in place of
-rounding the live weights. Its docstring attributes that table to a
-`WeightStabilityTracker` and says a `CognitiveBridge` "always passes a
-complete override map". Neither exists in this repository, and the
-composition calls the export without the table (search of `organism:src` for
-both names, 2026-10-10).
+"Private learned state belongs to Organism longitudinal continuity". The
+earlier review set a rounding codec beside those sentences and recorded the
+tension as finding F-0073. The rounding half of that finding no longer
+describes the code. Its other half, incompleteness, still does.
 
 ## Not complete: what has no place in it
 
 Read from the code; each absence was confirmed by inspecting an encoded
-payload or by a restore.
+payload or by a restore at the reviewed revision.
 
 | State | Where it lives | In the checkpoint |
 |---|---|---|
@@ -166,51 +188,83 @@ payload or by a restore.
 | A tuned parameter's value | `MetaParameter` | No. No export exists |
 | Genome, germline state and expression state | `organism:src/organism/genetics` | Optional all-or-none group. Other genetic/runtime details remain outside this composition |
 | The ceilings the graph was built under | `KernelLimits` | No. Supplied again at restore |
-| Normalizers with fewer than five readings | the normalizer | No, by design (`test_unestablished_normalizer_is_not_exported`); the reason given is that a young mean "can equal raw readings" |
 | Registered models | the resident's registry | No. A registry may be passed at restore |
-| The evidence resolver | the resident | No. The code calls it "deliberately transient (never checkpointed)" |
-| The resident's per-step limits | its budget | No. A restored resident has the default limits; the last workspace keeps its own. A resident built with a limit of 4 states came back with 64 |
-| The count of targets dropped for lack of room | the resident | No. Restored as zero |
-| Each hypothesis's count of reconciliations | the hypothesis | No, in this export. Restored as zero |
+| The evidence resolver | the resident | No. The code calls it "deliberately transient (never checkpointed)". A restored resident has none, and a reconciliation attempted on it changed nothing (ad hoc run) |
+| The count of targets dropped for lack of room | the resident | No. A resident whose count was 7 came back with 0 (ad hoc run) |
 | Experience records not handed over | an experience ledger | Only what the caller passes |
+| The step counter, lifecycle, body reference and World correlation of the Organism | the [transition state](transition-and-continuation.md) | No, and by design: they live one layer out, around the envelope that carries this payload |
+| State of the agency and actuation code | their own tables | No. The composition has no field for any of them; see [the executive outcome ledger](executive-outcome-ledger.md) for one |
+
+Four rows of the earlier version of this table are gone, because the state
+they named is now saved:
+
+- **Normalizers with fewer than five readings** are written like any other
+  (`test_unestablished_normalizer_state_is_preserved_for_continuation`,
+  `test_portable_checkpoint_preserves_unestablished_normalizer_continuation`;
+  a normalizer with one reading was exported in an ad hoc run).
+- **The resident's per-step limits** are written and restored. A resident
+  built with a limit of 4 states came back with 4, where it used to come back
+  with the default of 64; a restore that is also handed a different budget
+  is refused
+  (`test_resident_checkpoint_preserves_effective_budget_and_rejects_conflicting_override`).
+- **Each hypothesis's count of reconciliations** is written and restored
+  (`test_resident_checkpoint_preserves_hypothesis_reconciliation_history_exactly`).
+- **The use tracker's order of insertion**, which decides what it discards
+  when full, is written beside its sorted rows. A full tracker and its
+  restored copy, given the same new token, discarded the same entry, the
+  oldest inserted and not the first in sorted order (ad hoc run;
+  `test_generative_use_checkpoint_preserves_representation_eviction_order`).
+  The earlier review found the two discarding different entries and recorded
+  it in finding F-0076; that part of the finding no longer describes the
+  code.
 
 The repository says the same in general terms about each addition to the
 payload. Of the resident's state: "It does not establish that all Organism
 callers include it, that model-weight/dependency closure is portable, that a
 complete Organism continuation is captured". Of the safety and normalizer
 state, that it "does not prove a complete cognitive or Organism continuation".
-
-One restore changes later behaviour without changing any saved number. The
-use tracker discards its oldest-inserted token when full. Its export writes
-tokens in sorted order, so after a restore the oldest is whichever
-sorts first. A full tracker and its restored copy, given the same new
-token, discarded different entries (ad hoc run). Recorded with the other
-restore differences as finding F-0076.
+And of the set of stricter decoders as a whole: "this is a bounded set of
+component codecs, not a complete Organism-owned continuation or proof that
+every private state component is assembled by callers."
 
 ## Who calls it
 
-Nothing in `organism:src` constructs a `CognitiveRuntimeCheckpoint` (search,
-2026-10-10). It is constructed by this repository's tests and by one
-integration test in the World repository,
+At the earlier revision nothing in `organism:src` constructed a
+`CognitiveRuntimeCheckpoint`. One function now does (search of the seven
+repositories, 2026-10-11). The
+[accepted step](sense-to-checkpoint-transition.md#the-accepted-step) restores
+the composition from the envelope of a transition state, replaces its
+transition state and its graph with the result of one composed pass, and
+writes the composition back into a new envelope. Every other part is written
+back as it was read. That function has no caller in the source of any
+repository; it is run by
+`organism:tests/source_unit/cognition/test_owner_transition.py`.
+
+The composition is otherwise constructed by this repository's tests and by
+one integration test in the World repository,
 `world:tests/integration/test_durable_checkpoint_restore_slice.py`, where a
 fixture wraps it in an envelope, writes the bytes to a file and hands World a
 reference to them. That fixture passes only the two required parts.
 
-So no code at this revision decides which of the optional parts a real
-Organism would include. The composition is a container with a tested shape;
-what goes into it in practice is not yet written.
+So one function in source now carries a payload from one step to the next,
+and it preserves whatever optional parts it finds. No code decides which
+optional parts a real Organism would include in the first place: the first
+payload of a line is still built by whoever calls the constructor, and only
+tests do. The composition is a container with a tested shape; what goes into
+it in practice is not yet written. Recorded as finding F-0140.
 
 ## What supports this description
 
 | Claim | Support |
 |---|---|
-| The six cognitive/memory parts, optional genetic group, 12 fields, identity and genetic consistency checks | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
-| Strict decoding, version refusal, closure check through the envelope | Code and the same tests |
-| The weight codec, the dropped trace, safety and normalizer export | Code and tests in `test_graph_checkpoint.py` |
-| Restored weights and the readouts they give; idempotence of a second save; refusal under smaller ceilings | Code, and one ad hoc run of the module at that revision |
-| What is absent from the payload; budget, counters and eviction order after restore | Code, an inspected payload and the same ad hoc run |
-| The limits the repository states about itself | `organism:MIGRATION.md` |
-| Nothing in the source constructs the composition | Search of `organism:src` on 2026-10-10 |
+| The six cognitive/memory parts, optional genetic group, 12 fields, schema version 7, identity and genetic consistency checks | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py`; the field count and versions also by an inspected payload |
+| Strict decoding at every level, version refusal, closure check through the envelope | Code, the same tests, tests in `test_graph_checkpoint.py`, `test_generative_cognition_persistence.py` and `organism:tests/source_unit/cognition/test_generative_resident.py`, and the repository's `organism:CHECKPOINT_DECODER_MATRIX.md` |
+| Exact weight and trace, refusal of the earlier codec, safety and normalizer export | Code and tests in `test_graph_checkpoint.py` |
+| Restored weights, traces and readouts equal to the live ones; identical bytes on a second save; refusal under smaller ceilings | Code, and one ad hoc run of the module at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18` |
+| What the codec did at the earlier revision | The previous version of this document, reviewed at `organism` `20634a7d27e8834cd65c96f8bd44087d603aebc8`, and the diff of `organism:src/organism/cognition/checkpoint.py` between the two revisions |
+| What is absent from the payload; the dropped-target count and the resolver after restore; the budget, reconciliation count and eviction order now preserved | Code, an inspected payload, the tests named in the text and the same ad hoc run |
+| The limits the repository states about itself | `organism:MIGRATION.md` and `organism:CHECKPOINT_DECODER_MATRIX.md` |
+| One function in source constructs the composition, and nothing in source calls that function | Search of the seven repositories on 2026-10-11 |
 | What continuity and portability must mean | Accepted decisions ADR-0081, ADR-0092, ADR-0103; statements of intent, not test results |
 
 No checkpoint written by a running Organism was examined, because no
@@ -218,11 +272,13 @@ component at this revision writes one outside tests.
 
 ## Open questions
 
-- Whether a resumed Organism is meant to continue exactly, and if not, how
-  much divergence from the uninterrupted run is acceptable.
-- What threat the rounding answers at this revision, given that the envelope
-  carries the payload in the clear to whoever holds it.
 - Which component decides what a complete cognitive payload is, so that
   "supplied" can be compared with "required".
-- Whether structural counts, the genome and the resident's limits belong in
-  this payload or in sibling payloads of the same envelope.
+- Whether structural counts, shadow predictions and the state of the agency
+  and actuation code belong in this payload or in sibling payloads of the
+  same envelope.
+- Whether the envelope that carries an exact copy of learned weights in the
+  clear needs any protection, now that the codec no longer rounds them for a
+  stated reason.
+- How a payload written under an earlier schema version is meant to be
+  continued, given that earlier versions are refused and not migrated.

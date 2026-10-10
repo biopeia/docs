@@ -484,6 +484,43 @@ components:
       - "a decoded checkpoint, or a refusal"
     consumers:
       - "the composed cognitive runtime checkpoint in organism:src/organism/cognition/portable_checkpoint.py (mechanism.organism-cognitive-checkpoint)"
+      - "the transition state in organism:src/organism/transition.py, which carries an envelope with a step counter and a lifecycle (component.organism-transition-and-continuation)"
+
+  ORG-TRC:
+    coverage_unit: component.organism-transition-and-continuation
+    name: "The Organism transition boundary and the continuation registry"
+    authority:
+      owns: "the counter of accepted Organism steps, the lifecycle of an Organism (active, dormant, terminated) with its recorded history, the reference to its current body context, and, within one registry object, the record of which continuation state of an identity is current"
+      may_decide:
+        - "whether a proposed next envelope is accepted as one step: same identity, lifecycle active, body reference unchanged"
+        - "whether a requested lifecycle change is one of the four permitted, and whether a new body reference may be bound with it"
+        - "whether a continuation is byte for byte the recorded current one, and whether a proposed next one is exactly one step or one lifecycle change"
+      must_not:
+        - "read or interpret the private bytes of the envelope it carries"
+        - "decide that an Organism becomes dormant or terminated; it applies a change it is told to make"
+        - "treat a World causal tick as the step counter, or hold body state"
+        - "claim identity uniqueness beyond one registry object in one process, by its own declaration"
+        - "produce the private state of a branch, or treat a branch as an offspring"
+    state:
+      owner: organism
+      family: identity_longitudinal
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: rebind
+      reproduction: not_inherited
+    inputs:
+      - "an envelope, a step counter and a lifecycle supplied by the caller for the first state"
+      - "a proposed next envelope with a body reference and an optional World correlation"
+      - "a requested lifecycle, an identifier for the change and an opaque request reference"
+      - "continuation identifiers and a new identity, supplied by the caller"
+    outputs:
+      - "the next transition state, or a refusal that leaves the current one unchanged"
+      - "deterministic, versioned byte encodings of a transition state, a continuation and the registry's records"
+      - "a lease on the current continuation of an identity"
+    consumers:
+      - "the accepted step of mechanism.organism-sense-to-checkpoint-transition calls the step acceptance; nothing in the source of any repository calls the lifecycle change, the registry or the branch function at the reviewed revision"
 
   ORG-EOL:
     coverage_unit: component.organism-executive-outcome-ledger
@@ -746,7 +783,7 @@ components:
       - "an expression state of five effective values"
       - "plain-data exports of genome, expression state and germline record"
     consumers:
-      - "no code outside organism:src/organism/genetics reads a gene value or the expression state at the reviewed revision; organism:src/organism/cognition/birth.py loads the seed and organism:src/organism/cognition/checkpoint.py holds a second genome codec"
+      - "no code outside organism:src/organism/genetics reads a gene value or the expression state at the reviewed revision; organism:src/organism/cognition/birth.py loads the seed and organism:src/organism/cognition/checkpoint.py holds a second genome codec; the composed cognitive runtime checkpoint can carry genome, germline record and expression state as one optional group, and no source fills it"
 
   ORG-MEX:
     coverage_unit: component.organism-experience-ledger
@@ -811,7 +848,7 @@ components:
       - "each emitted event, passed to subscribers"
       - "a plain-data export of the frontier and the emitted count, without the ring"
     consumers:
-      - "the footprint registry of component.organism-causal-evidence emits to a log when given one; no code constructs a log or registers a subscriber at the reviewed revision"
+      - "the footprint registry of component.organism-causal-evidence emits to a log when given one; no source constructs a log or registers a subscriber at the reviewed revision, and one test file constructs logs to exercise reading them back"
 
   ORG-PCS:
     coverage_unit: component.organism-capacity-and-pair-statistics
@@ -944,7 +981,8 @@ components:
       - "the next transition state"
     consumers:
       - "mechanism.organism-cognitive-checkpoint"
-      - "two World integration test fixtures; no code in organism:src calls the transition at the reviewed revision"
+      - "the composition and the sense-input helper of mechanism.organism-sense-to-checkpoint-transition, in source; their top-level caller has no caller in the source of any repository at the reviewed revision"
+      - "three World integration test fixtures"
 
   ORG-CGN:
     coverage_unit: component.organism-generative-resident

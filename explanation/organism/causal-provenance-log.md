@@ -1,9 +1,10 @@
 # The causal provenance log
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches of the
-repository were made on 2026-10-10 at that revision.
+supports them: the code, the tests, an ad hoc run, or neither. Searches were
+repeated on 2026-10-11 over the source and tests of all seven repositories,
+and the ad hoc run was repeated at that revision.
 
 ## What it is
 
@@ -28,9 +29,14 @@ causes. It cannot check that the declared causes were causes, and it holds
 
 **No log exists in a running path at this revision.** One class in the
 actuation code can emit events to a log if it is given one, and by default it
-is given none. A search found no code, in source or in tests, that
-constructs a log. The module has no test. Everything below about behaviour
-comes from the code and from one ad hoc run.
+is given none. A search found no source, in any of the seven repositories,
+that constructs a log. At the earlier revision no test constructed one
+either and the module had no test. It now has one test file,
+`organism:tests/source_unit/test_checkpoint_fail_closed.py`, which constructs
+logs to exercise how a log and an event are read back from plain data. No
+test hands a log to the class that can emit to it. What is said below about
+emitting, the ring and the frontier still comes from the code and from one
+ad hoc run; what is said about reading back also rests on those tests.
 
 ## An event
 
@@ -40,7 +46,13 @@ rule name and a small table of scalar parameters. Its identifier is derived
 from its content: the first 24 hexadecimal digits of a SHA-256 over all of
 those fields. Two events with the same content therefore have the same
 identifier (ad hoc run), and an event read back from plain data is refused
-if the identifier it carries does not match its content.
+if the identifier it carries does not match its content. Reading an event
+back now requires exactly the nine fields the writer emits, the identifier
+among them, each of its written type; a payload without an identifier, which
+used to be accepted, is refused
+(`test_causal_event_payload_round_trips_complete_serialized_state`,
+`test_causal_event_payload_rejects_missing_or_unknown_serialized_fields`,
+`test_causal_event_payload_rejects_malformed_serialized_field`).
 
 Limits, read from the code and seen in the run:
 
@@ -123,12 +135,28 @@ says, "The frontier only: bounded by live references, never by age", and it
 means that after a restart the content of recent events is gone unless
 something outside the Organism kept it. Subscribers are not restored.
 
-Reading back checks the schema version and nothing else about the entries.
+Reading back used to check the schema version and nothing else. It now
+requires exactly the four fields the writer emits, a positive capacity, a
+non-negative count, and for each frontier entry a well-formed reference, an
+event identifier of the written form, at most 64 causes and no repeated
+reference; reading from nothing is refused
+(`test_provenance_checkpoint_requires_complete_frontier`,
+`test_provenance_checkpoint_rejects_malformed_and_duplicate_frontier_refs`,
+`test_provenance_checkpoint_rejects_malformed_frontier_event_id`). What it
+checks is form. An entry naming a well-formed identifier of an event that
+never existed was accepted, and so was a count of zero beside a non-empty
+frontier (ad hoc run); with the ring not saved there is nothing to check
+either against. Recorded in finding F-0147.
 
-No checkpoint includes the log. A search of the checkpoint envelope and of
-the composed cognitive payload, described under
-[identity and the checkpoint envelope](identity-and-checkpoint.md), found no
-reference to it.
+No checkpoint includes the log. A search of the checkpoint envelope, of
+the composed cognitive payload and of the transition state and continuation
+that now wrap them, described under
+[identity and the checkpoint envelope](identity-and-checkpoint.md) and
+[the transition boundary](transition-and-continuation.md), found no
+reference to it. The repository says of its stricter event reader that it
+"does not make the bounded `ProvenanceLog` event ring durable, create a
+complete Organism checkpoint, or establish full causal-history
+continuation".
 
 ## At each lifecycle boundary
 
@@ -136,7 +164,7 @@ reference to it.
 |---|---|---|
 | Birth | A new log is empty | Code |
 | Checkpoint | The frontier and the count can be exported; the ring is not; no checkpoint includes the export | Code and ad hoc run; search of the repository |
-| Restart | The frontier is rebuilt; recent events and subscribers are not | Code and ad hoc run |
+| Restart | The frontier is rebuilt from a complete, well-formed export and refused otherwise; recent events and subscribers are not restored | Code, tests in `organism:tests/source_unit/test_checkpoint_fail_closed.py` and ad hoc run |
 | Re-embodiment | Nothing here reacts | Code; no operation performs a re-embodiment |
 | Reproduction | No operation exists | Search of the repository |
 
@@ -160,9 +188,10 @@ log is not in use.
 | Claim | Support |
 |---|---|
 | Content of a reference and of an event; derivation of the identifier; the limit on causes; the ring and its default size; what emitting, retiring and exporting do | Code of `organism:src/organism/provenance.py` |
-| Equal content gives equal identifiers; a mismatched identifier is refused; parameters are rounded and non-scalars refused; no limit on produced references; negative ticks accepted; a reference produced twice keeps its last causes; the frontier grows past the ring when nothing is retired; the ring is empty after reading back | Code, and one ad hoc run of the module at that revision. The module has no test |
+| Equal content gives equal identifiers; a mismatched identifier is refused; non-scalar parameters are refused; no limit on produced references; negative ticks accepted; a reference produced twice keeps its last causes; the frontier grows past the ring when nothing is retired; the ring is empty after reading back; an exception raised by a subscriber reaches the emitter | Code, and one ad hoc run of the module at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18`. No test covers emitting, the ring or retiring |
+| What reading a log or an event back requires and refuses | Code and tests in `organism:tests/source_unit/test_checkpoint_fail_closed.py`; the two accepted cases of form without substance by the same ad hoc run |
 | How the registry of footprints uses a log | Code of `organism:src/organism/actuation/footprint.py`, read for those calls only |
-| No log is constructed in source or tests; no subscriber is registered; no other module imports the log; no checkpoint includes it | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the constructor, the subscribe call and imports of the module |
+| No log is constructed in the source of any repository; one test file constructs logs for the reader; no subscriber is registered; no other module imports the log; no checkpoint includes it | Searches of `src` and `tests` in the seven repositories at that revision, made on 2026-10-11, for the constructor, the subscribe call and imports of the module |
 | What a journal outside the Organism is meant to do with events | Docstring of the module; a statement of intent. The design document that docstring cites is not in the repository |
 
 No event emitted by a run of an Organism was examined, because none can exist

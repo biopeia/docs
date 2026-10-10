@@ -1,8 +1,10 @@
 # How the cognitive graph is changed
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Searches were repeated on 2026-10-11 over the source of all seven
+repositories.
 
 ## What it is
 
@@ -12,20 +14,35 @@ of an edge, rules that add and remove edges and nodes, and two small values
 meant to restrain those rules.
 
 The first thing to say about them is where they sit. They are a set of
-separate functions and counters. **No code in the repository calls them
-together, or at all.** The transition that advances a graph does not invoke a
-weight update, and nothing invokes the transition (search of `organism:src`
-on 2026-10-09 for `compute_prediction_errors`, `apply_oja_update`,
-`update_eligibility`, `StructuralPlasticity`, `propose_concept`,
-`apply_mutations`, `evaluate_edge_lifecycle`, `advance_edge_age`,
-`MetaParameter`, `record_failure`, `ShadowPrediction` and
-`advance_cognition`: each is defined and none is called outside its own
-module's definitions). Wherever one of them runs at this revision, a test is
-running it, and where several run in sequence, the sequence is written in the
-test.
+separate functions and counters, and at the earlier revision no code in the
+repository called any of them. That has changed for three of them and for
+nothing else.
 
-So this document does not describe how an Organism learns. It describes
-pieces from which a learning loop could be assembled, what each piece computes
+**The three weight functions now have one caller in source.** A composition
+function calls the graph transition, then `compute_prediction_errors`, then,
+for each edge a caller names, `update_eligibility` and `apply_oja_update`. It
+is described in
+[from an opaque sense signal to an accepted step](sense-to-checkpoint-transition.md#the-composition).
+Its own description limits it: it "does not create graph structure, invent
+learning parameters, publish actions, or claim to be a complete Organism
+transition." The learning rate, the modulation and the gate are arguments.
+The function that calls the composition for a checkpointed Organism has no
+caller in the source of any repository, and nothing in source constructs the
+argument that names an edge to update.
+
+**Everything else here still has no caller.** Search of the source of the
+seven repositories on 2026-10-11 for `StructuralPlasticity`,
+`propose_concept`, `apply_mutations`, `evaluate_edge_lifecycle`,
+`advance_edge_age`, `MetaParameter`, `record_failure` and the three shadow
+prediction classes: each is defined in `organism:src`, none is called or
+constructed outside its own module, and the other six repositories do not
+mention them. (`ShadowPrediction` is re-exported by the package and
+`SafetyState` is constructed by the checkpoint codec.) Wherever one of these
+runs, a test is running it.
+
+So this document still does not describe how an Organism learns. It describes
+pieces from which a learning loop could be assembled, one function that now
+assembles three of them under a caller's parameters, what each piece computes
 when called, and exactly what the tests of each piece show. The repository
 states the same boundary about the code it copied: "No efficacy claim is
 implied." [ADR-0105](../../technical/adr/ADR-0105-cognition-structure.md)
@@ -75,6 +92,13 @@ Three things the signatures leave unconnected, read from the code:
   exist here.
 - The edge's own `plasticity` field is not read.
 
+The composition that now calls the three functions connects none of these.
+It takes `eligible`, `modulation` and the learning rate from its caller, per
+edge, and returns the prediction errors without using them
+(`test_learning_without_action_linked_eligibility_does_not_change_weight`;
+code of `organism:src/organism/cognition/composition.py`). Recorded as
+finding F-0142.
+
 ### What the one end-to-end test shows
 
 One test puts these together:
@@ -88,7 +112,9 @@ them with weight 0.05. For 200 ticks it feeds a signal alternating between
 `eligible=True`. It passes if the mean loss over the last 20 errors is lower
 than over the first 20.
 
-The loop was reproduced and run at this revision. Result:
+The loop was reproduced and run at `organism`
+`6543188ff302a5f2dc8002c0086252d6061e5310`. `learning.py` and the test have
+not changed since (diff inspected); the run was not repeated. Result:
 
 | | Value |
 |---|---|
@@ -142,7 +168,7 @@ becomes "retired".
 
 Each exposes a property `promotable`. Nothing reads it: no function turns a
 supported candidate into an edge or a node (search of `organism:src` for
-`promotable`, 2026-10-09). The word "out-of-sample" in one test name refers to
+`promotable`, 2026-10-11). The word "out-of-sample" in one test name refers to
 nothing in the code; every sample is counted as it arrives. These classes are
 also not part of any saved state.
 
@@ -240,10 +266,10 @@ the Organism's ownership.
 
 | State | Where | Saved by the cognitive checkpoint |
 |---|---|---|
-| Edge weight | on the edge | Yes, rounded to one of 17 levels |
+| Edge weight | on the edge | Yes, exactly |
 | Edge `support`, `age_ticks`, `last_use_tick`, `stable_ticks`, `plasticity` | on the edge | Yes |
-| Edge `eligibility` | on the edge | No; restored as zero |
-| Co-activation and association counts, cooldowns | `StructuralPlasticity` | Has its own export and restore; not part of the composed checkpoint |
+| Edge `eligibility` | on the edge | Yes, exactly (`test_weight_and_eligibility_round_trip_exactly`) |
+| Co-activation and association counts, cooldowns | `StructuralPlasticity` | Has its own export and restore; not part of the composed checkpoint. Its restore now refuses a payload with missing or unknown fields, an entry naming an unknown node, and a repeated pair, where it used to skip them (code of `organism:src/organism/cognition/structure.py`) |
 | Shadow prediction losses and histories | the three classes | No export exists |
 | `MetaParameter` value | the object | No export exists |
 | `SafetyState` | the object | Yes, when the caller supplies it |
@@ -256,11 +282,11 @@ Details are in [the cognitive checkpoint](cognitive-checkpoint.md).
 |---|---|
 | What each weight function computes | Code and tests in `organism:tests/source_unit/cognition/test_learning.py` |
 | The update does not read `eligibility`, the prediction error or `plasticity` | Code |
-| The end-to-end test's weight goes to zero and its loss to the level of no prediction; a constant signal behaves differently | Code, and one ad hoc run reproducing the test's loop at that revision |
+| The end-to-end test's weight goes to zero and its loss to the level of no prediction; a constant signal behaves differently | Code, and one ad hoc run reproducing the test's loop at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`; the module and the test are unchanged since |
 | Shadow candidates and their thresholds | Code and tests in `test_learning.py`, `test_shadow_prediction.py` |
 | Counting, proposing, concept nodes, atomic application, edge labels | Code and tests in `test_structure.py`, `test_reversible_structure_phase1.py`, `test_insufficiency_driven_growth.py` |
-| Restraints | Code and tests in `test_metaplasticity.py`; the tie case also by a run |
-| Nothing calls these functions; nothing reads `promotable`; the safety flag reaches no update | Searches of `organism:src` on 2026-10-09, named in the text |
+| Restraints | Code and tests in `test_metaplasticity.py`; the tie case also by a run at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, the module being unchanged since |
+| One composition calls the three weight functions and nothing in source calls it for a running Organism; nothing calls the structural functions, the shadow classes or `MetaParameter`; nothing reads `promotable`; the safety flag reaches no update | Searches of the source of the seven repositories on 2026-10-11, named in the text; for the safety flag also an ad hoc run at the reviewed revision, in which a frozen safety state in the payload did not stop an instructed update |
 | That no efficacy is claimed | The repository's `organism:MIGRATION.md` and ADR-0105; statements of scope, not results |
 
 No experiment, study output or run of a composed Organism was examined. None
@@ -269,8 +295,9 @@ learns, predicts or forms concepts.
 
 ## Open questions
 
-- Which component is meant to call these functions each tick, and whether it
-  belongs to this repository.
+- Which component is meant to supply the per-edge learning parameters each
+  tick, now that a composition exists to receive them, and which is meant to
+  call the structural functions.
 - Whether the prediction error is meant to enter the update as `modulation`,
   and the trace as `eligible`.
 - What a test that a signal is learned should require beyond a falling loss, for

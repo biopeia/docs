@@ -1,9 +1,10 @@
 # The experience record and its ledger
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches of the
-repository were made on 2026-10-10 at that revision.
+supports them: the code, the tests, an ad hoc run, or neither. Searches were
+repeated on 2026-10-11 over the source and tests of all seven repositories,
+and the ad hoc run was repeated at that revision.
 
 ## What it is
 
@@ -89,8 +90,12 @@ hash, and a change to an outcome token changes it
 (`test_content_hash_excludes_record_identity_but_includes_experience`).
 
 A record written to plain data reads back equal
-(`test_record_round_trips_its_canonical_payload`). The reader ignores keys it
-does not know, and treats a missing list of tokens as empty (ad hoc run).
+(`test_record_round_trips_its_canonical_payload`). The reader now requires
+exactly the ten fields the writer emits. A payload with an unknown key, and
+one without a list of tokens, were both refused in an ad hoc run; at the
+earlier revision the first was ignored and the second read as empty. The
+ledger's test for incomplete state covers the missing list
+(`test_restore_rejects_missing_or_null_required_checkpoint_state`).
 
 ## The ledger
 
@@ -125,14 +130,19 @@ the Organism identifier and refuses a mismatch, a repeated record identifier
 and more records than the capacity
 (`test_ledger_round_trip_preserves_order_and_organism_identity`,
 `test_restore_rejects_foreign_identity_duplicate_records_and_overflow`). The
-capacity is restored (ad hoc run), unlike that of the executive outcome
-ledger. Reading from nothing gives an empty ledger of default capacity.
+capacity is restored (ad hoc run). Reading from nothing is now refused, as is
+a payload missing any of its four fields
+(`test_restore_rejects_missing_or_null_required_checkpoint_state`); at the
+earlier revision it gave an empty ledger of default capacity. An empty ledger
+is obtained by constructing one.
 
 No checkpoint includes the ledger. The composed cognitive payload described
-under [identity and the checkpoint envelope](identity-and-checkpoint.md)
+under [what a cognitive checkpoint carries](cognitive-checkpoint.md)
 accepts a tuple of records handed to it by its caller and writes them; it
 does not refer to a ledger, and a search found no code that takes records out
-of a ledger to pass them. The repository's migration record says of the
+of a ledger to pass them. The one function in source that carries such a
+payload from one step to the next writes back the records it read and adds
+none (see [the accepted step](sense-to-checkpoint-transition.md#the-accepted-step)). The repository's migration record says of the
 ledger that it "is not wired into the top-level Organism runtime or a
 complete checkpoint".
 
@@ -172,8 +182,8 @@ asks, and for the plain reason that nothing here originates a value.
 |---|---|
 | Round trip of a record, content hash without the identifier, refusal of a model record marked observed | Code and tests in `organism:tests/memory/test_experience.py` |
 | The bound and what is returned on overflow, refusal of foreign and repeated records, round trip of the ledger, refusals on reading back | Code and tests in `organism:tests/memory/test_ledger.py` |
-| The other refusals of a record; a model record marked supported is accepted; unknown keys ignored; a dropped identifier can be reused; capacity is restored | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
-| Nothing constructs a record or a ledger outside tests; no code reads a status, a source kind or a confidence class beyond the three rules; nothing resolves an evidence reference; no checkpoint includes the ledger | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the constructors and the field names |
+| The other refusals of a record; a model record marked supported is accepted; an unknown key is refused; a dropped identifier can be reused; capacity is restored; reading from nothing is refused | Code, and one ad hoc run of the modules at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18`; a test is kept only for the last |
+| Nothing constructs a record or a ledger outside tests; no code reads a status, a source kind or a confidence class beyond the three rules; nothing resolves an evidence reference; no checkpoint includes the ledger | Searches of `src` and `tests` at that revision, repeated on 2026-10-11 over the seven repositories for the constructors, and made on 2026-10-10 for the field names in code unchanged since |
 | That this state is the Organism's and longitudinal | Accepted decisions ADR-0092, ADR-0081 and ADR-0103; statements of intent |
 
 No record produced by a run of an Organism was examined, because none can

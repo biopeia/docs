@@ -1,9 +1,13 @@
 # Foundation conventions: thresholds, an evidence count and limits
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches of the
-repository were made on 2026-10-10 at that revision.
+supports them: the code, the tests, an ad hoc run, or neither. The three
+modules of the directory and their test have not changed since `organism`
+`fc8a91c61d865663ba6f9468216171506fd29e7a`, where the ad hoc run was made
+(diff inspected); the run was not repeated. The searches for readers were
+repeated on 2026-10-11 over the source and tests of all seven repositories,
+with the same result.
 
 ## What it is
 
@@ -26,7 +30,7 @@ One immutable value
 
 | Constant | Default | Read by |
 |---|---|---|
-| samples before a signal counts as established | 5 | the sensory normaliser in the cognition code |
+| samples before a signal counts as established | 5 | the sensory normaliser in the cognition code, for a property that no source code reads any longer |
 | smoothing factor of a moving average | 0.06 | the same normaliser |
 | numbers of classes for health, confidence, cost and activity | 16 each | nothing |
 | number of maturity classes, and the support needed to enter each | 8; 0, 1, 2, 4, 8, 16, 32, 64 | nothing |
@@ -52,7 +56,12 @@ confidence class of an
 rule of its own, and does not refer to the sixteen confidence classes here.
 
 The word epistemic in the name describes the intent of the constants. What
-exists is two numbers used to smooth and to gate a running average.
+exists is two numbers: one smooths a running average, and the other defines
+when that average calls itself established. At the earlier revision the
+checkpoint codec read that property to decide whether to save a normaliser.
+It no longer does: every normaliser is saved, and a search of `organism:src`
+on 2026-10-11 for `is_established` found the property and no reader of it.
+So the second number now decides nothing in source.
 
 ## The evidence count
 
@@ -124,8 +133,8 @@ random source is involved.
 |---|---|
 | The constants, their defaults and their self-checks; the recency method; the list of limits | Code of the three modules |
 | What the count accepts and refuses, and how it is written to JSON | Code and tests in `organism:tests/foundation/test_evidence_count.py` |
-| Class boundaries of recency; arithmetic on a count gives a plain integer; one refusal of inconsistent conventions | Code, and one ad hoc run of the modules at that revision. The conventions and the limits have no test |
-| Two constants are read by the sensory normaliser; the rest, the count type and the whole table of limits have no reader | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the class names, the field names and imports of the directory |
+| Class boundaries of recency; arithmetic on a count gives a plain integer; one refusal of inconsistent conventions | Code, and one ad hoc run of the modules at `organism` `fc8a91c61d865663ba6f9468216171506fd29e7a`, the modules being unchanged since. The conventions and the limits have no test |
+| Two constants are read by the sensory normaliser, one of them for a property nothing in source reads; the rest, the count type and the whole table of limits have no reader | Searches of `src` and `tests` in the seven repositories at that revision, made on 2026-10-11, for the class names and imports of the directory; the search for field names was made on 2026-10-10 in code unchanged since |
 | That ownership of this directory is unsettled | The repository's own migration record |
 
 ## Open questions

@@ -671,7 +671,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 20634a7d27e8834cd65c96f8bd44087d603aebc8
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-executive-outcome-ledger:
     kind: component
@@ -1131,7 +1131,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: e008495ea473fb3d2ca7a3b68af81a1dc0fb7f02
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-experience-ledger:
     kind: component
@@ -1157,7 +1157,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-causal-provenance-log:
     kind: component
@@ -1170,6 +1170,8 @@ units:
     implementation:
       - organism:src/organism/provenance.py
       - organism:src/organism/actuation/footprint.py
+    tests:
+      - organism:tests/source_unit/test_checkpoint_fail_closed.py
     adrs:
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
       - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
@@ -1178,7 +1180,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-capacity-and-pair-statistics:
     kind: component
@@ -1194,6 +1196,8 @@ units:
       - organism:src/organism/actuation/candidate.py
     tests:
       - organism:tests/source_unit/actuation/test_candidate.py
+      - organism:tests/source_unit/test_checkpoint_fail_closed.py
+      - organism:tests/source_unit/test_statistics_checkpoint.py
     adrs:
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
     depends_on:
@@ -1201,7 +1205,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   concept.organism-foundation-conventions:
     kind: concept
@@ -1223,7 +1227,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.embodiment-actuator-binding:
     kind: component
@@ -1301,6 +1305,8 @@ units:
       - organism:src/organism/cognition/birth.py
       - organism:src/organism/cognition/defaults/base-graph.json
       - world:tests/integration/test_first_biopeia_causal_tick.py
+      - world:tests/integration/test_durable_checkpoint_restore_slice.py
+      - world:tests/integration/sensing/test_environment_to_organism_scalar_field.py
     tests:
       - organism:tests/source_unit/cognition/test_graph.py
       - organism:tests/source_unit/cognition/test_transition.py
@@ -1318,8 +1324,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   mechanism.organism-graph-plasticity:
     kind: mechanism
@@ -1347,7 +1353,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-generative-resident:
     kind: component
@@ -1410,8 +1416,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   mechanism.organism-cognitive-checkpoint:
     kind: mechanism
@@ -1445,8 +1450,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 20634a7d27e8834cd65c96f8bd44087d603aebc8
-        world: cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.organism-attention-allocation:
     kind: component
@@ -1467,3 +1472,65 @@ units:
       status: RECORDED
       basis:
         organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
+
+  component.organism-transition-and-continuation:
+    kind: component
+    title: The Organism transition boundary and the continuation registry
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-TRC
+    canonical_docs:
+      - explanation/organism/transition-and-continuation.md
+    implementation:
+      - organism:src/organism/transition.py
+      - organism:src/organism/continuation.py
+    tests:
+      - organism:tests/test_transition.py
+      - organism:tests/test_continuation.py
+    adrs:
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0088-lifecycle-event-ontology.md
+      - docs:technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - component.organism-identity-checkpoint
+    review:
+      status: RECORDED
+      basis:
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+
+  mechanism.organism-sense-to-checkpoint-transition:
+    kind: mechanism
+    title: From an opaque sense signal to an accepted step
+    status: CURRENT
+    owner_domain: organism
+    participating_domains:
+      - world
+      - modality
+    canonical_docs:
+      - explanation/organism/sense-to-checkpoint-transition.md
+    implementation:
+      - organism:src/organism/cognition/sense_input.py
+      - organism:src/organism/cognition/composition.py
+      - organism:src/organism/cognition/owner_transition.py
+      - modality:src/modality/scalar_field.py
+      - world:tests/integration/sensing/test_environment_to_organism_scalar_field.py
+    tests:
+      - organism:tests/source_unit/cognition/test_sense_input.py
+      - organism:tests/source_unit/cognition/test_composition.py
+      - organism:tests/source_unit/cognition/test_owner_transition.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+    depends_on:
+      - component.organism-cognitive-graph
+      - mechanism.organism-graph-plasticity
+      - mechanism.organism-cognitive-checkpoint
+      - component.organism-transition-and-continuation
+    review:
+      status: RECORDED
+      basis:
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3

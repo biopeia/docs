@@ -1782,3 +1782,127 @@ findings:
       - explanation/organism/attention-allocation.md
     material: false
     status: open
+
+  F-0140:
+    class: implementation_finding
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - component.organism-transition-and-continuation
+      - mechanism.organism-sense-to-checkpoint-transition
+      - component.organism-cognitive-graph
+      - mechanism.organism-cognitive-checkpoint
+    summary: >
+      The Organism repository now holds a transition boundary with a step counter and a lifecycle, a continuation registry, and one function that goes from checked sense signals through a graph pass and optional weight updates to an accepted, checkpointed step. None of it is driven outside the Organism's own tests: no source in any of the seven repositories calls the accepted step, changes a lifecycle, constructs a registry or makes a branch. World's integration tests still advance a cognitive state directly and wrap it in a bare envelope, so no World test advances organism_step; the one World test that carries an Environment sample to a sense node stops at a frame it does not keep and says so. The two partial paths do not meet.
+    documented_in:
+      - explanation/organism/transition-and-continuation.md
+      - explanation/organism/sense-to-checkpoint-transition.md
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/cognitive-checkpoint.md
+    material: true
+    status: open
+
+  F-0141:
+    class: contract_gap
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - component.organism-transition-and-continuation
+      - component.organism-identity-checkpoint
+    summary: >
+      The canonical continuation registry holds for one object in one process, as its module declares. Its snapshot does not include live leases, so a continuation leased from one registry was leased again from a registry restored from that registry's snapshot. Designating a branch checks the supplied source for consistency only: a registry that had never recorded the source accepted and leased the branch. Genesis is whatever continuation at step 0 is registered first, with no authorization checked. No durable authority store exists in any repository. ADR-0091 requires canonical designation to be explicit and recorded and reserves its owner and storage to a later pass.
+    documented_in:
+      - explanation/organism/transition-and-continuation.md
+      - explanation/organism/identity-and-checkpoint.md
+    material: true
+    status: open
+
+  F-0142:
+    class: implementation_finding
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - mechanism.organism-sense-to-checkpoint-transition
+      - mechanism.organism-graph-plasticity
+      - component.organism-generative-resident
+      - component.organism-genome
+    summary: >
+      The one source path that updates a weight takes every deciding number from its caller. The prediction error it computes is returned and not used; the eligibility trace is updated and not read; the edge's plasticity field, the genome and the expression state are not read; and the safety state saved in the same payload is not consulted, so a payload whose safety state was frozen was advanced with one learning instruction and the weight changed. The sensory normalizer stored in the payload is not applied and the generative resident is restored and written back without being stepped. The modules declare this scope. No source constructs a learning instruction.
+    documented_in:
+      - explanation/organism/sense-to-checkpoint-transition.md
+      - explanation/organism/graph-plasticity.md
+      - explanation/organism/generative-resident.md
+      - explanation/organism/genome-and-inheritance.md
+    material: false
+    status: open
+
+  F-0143:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - mechanism.organism-sense-to-checkpoint-transition
+      - component.organism-transition-and-continuation
+    summary: >
+      An accepted step copies the dependency list of the previous envelope to the next one without asking whether the next payload still needs those dependencies or needs others. The step acceptance and the registry's ordinary commit do not open the envelope: a proposal carrying an unchanged envelope was accepted and counted as a step, and the step acceptance accepted a World correlation with a lower tick than the current one of the same World. Only the one composed caller checks that the World tick advances.
+    documented_in:
+      - explanation/organism/sense-to-checkpoint-transition.md
+      - explanation/organism/transition-and-continuation.md
+    material: false
+    status: open
+
+  F-0144:
+    class: implementation_finding
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - mechanism.organism-sense-to-checkpoint-transition
+      - component.organism-cognitive-graph
+    summary: >
+      The accepted step cannot advance an Organism born from the packaged defaults. The packaged graph has no nodes, and binding requires at least one binding covering exactly the graph's sense nodes; an envelope holding the empty graph was refused. Nothing in source adds a sense node to a graph.
+    documented_in:
+      - explanation/organism/sense-to-checkpoint-transition.md
+      - explanation/organism/cognitive-graph.md
+    material: false
+    status: open
+
+  F-0145:
+    class: contract_gap
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - mechanism.organism-sense-to-checkpoint-transition
+    summary: >
+      The scalar-field contract that the Organism's sense input accepts is identified by four constants written out in the Organism module, equal to four constants on a class of the Modality repository. The Organism package does not import Modality. The two definitions are held together by one World integration test that fills an Organism signal from the Modality class. The reliance is not recorded in the contract registry of the documentation.
+    documented_in:
+      - explanation/organism/sense-to-checkpoint-transition.md
+    material: false
+    status: open
+
+  F-0146:
+    class: evidence_gap
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - component.organism-transition-and-continuation
+    summary: >
+      The lifecycle change is one function call with a target state and an opaque request string; nothing decides dormancy or termination from body viability, recoverability or an authorized rule, which is what ADR-0088 describes for Organism death. The test named for body death or presence loss not terminating the Organism makes a state dormant and checks it is not terminated; no body and no World take part in it. The test named for a World step without an Organism transition not advancing the counter binds a state to a second name and asserts equality; it performs no World step and no call. Re-embodiment replaces a three-string body reference and leaves the envelope untouched, so no private state bound to the previous body is rebound or invalidated.
+    documented_in:
+      - explanation/organism/transition-and-continuation.md
+    material: false
+    status: open
+
+  F-0147:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: ba0011797a6a3b4d48c7731651e50560c4043f18
+    units:
+      - component.organism-causal-provenance-log
+      - component.organism-capacity-and-pair-statistics
+    summary: >
+      The stricter readers of saved state check form and not consistency. A provenance frontier entry naming a well-formed identifier of an event that never existed was accepted, as was an emitted count of zero beside a non-empty frontier; capacity counters with no admissions or evictions and 50 relearned after eviction were accepted; a pair accumulator with a count of zero and non-zero sums, or a cross sum far larger than its squared sums allow, was accepted.
+    documented_in:
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+    material: false
+    status: open
