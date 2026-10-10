@@ -176,6 +176,27 @@ migration closes
 2026-10-10; [world#86](https://github.com/biopeia/world/issues/86) carries
 it).
 
+```mermaid
+%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%
+flowchart TB
+  subgraph before["Before the physical step"]
+    direction LR
+    s1["1 Environment<br/>state"] --> s2["2 Transduction"] --> s3["3 Organism<br/>transition"] --> s4["4 Intent<br/>to act"] --> s5["5 Motor<br/>command"]
+  end
+  subgraph step["The physical step and its commit"]
+    direction LR
+    s6["6 World issues the step,<br/>solver computes"] --> s7["7 Owners validate<br/>and adopt"] --> s8["8 World commits<br/>the cut"]
+  end
+  subgraph after["After commit"]
+    direction LR
+    s9["9 Projections reach<br/>Observation"] --> s10["10 Evidence<br/>record"]
+  end
+  before --> step --> after
+```
+
+The ten steps as decided. The diagram shows the order that is required, not
+anything that runs.
+
 | Step, as decided | What must hold | Today |
 |---|---|---|
 | 1. Environment owns the external state | Environment owns environmental truth and its meaning (ADR-0074) | Exists in source |

@@ -33,7 +33,7 @@ parts:
     chapters:
       - explanation/biopeia/research-hypotheses.md
       - explanation/biopeia/one-step-across-the-domains.md
-    generated: [domains]
+    generated: [authority-map, domains]
 
   - id: organism
     title: Organism

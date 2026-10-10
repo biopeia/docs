@@ -11,13 +11,14 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "publication"))
 
+import mermaid  # noqa: E402
 import pdf  # noqa: E402
 import publish  # noqa: E402
 import qa  # noqa: E402
 
 needs_renderer = pytest.mark.skipif(
-    not pdf.available(),
-    reason="LibreOffice or pdftotext is not installed; publication.yml installs both",
+    not (pdf.available() and mermaid.available()),
+    reason="LibreOffice, poppler or mermaid-cli is not installed; publication.yml installs them",
 )
 
 TOC = [
