@@ -34,14 +34,18 @@ def test_locate_reads_pages_from_destinations_and_fails_when_one_is_missing():
 
 
 def test_density_check_fails_on_an_empty_page_and_reports_sparse_ones():
-    limits = {"blank_page_chars": 60, "sparse_page_chars": 400, "max_sparse_share": 0.5}
+    limits = {"blank_page_chars": 120, "sparse_page_chars": 400, "max_sparse_share": 0.5}
     furniture = "Biopeia\nPart I\n{}\nWorking edition\nPage 1 of 4\n"
     pages = ["cover", furniture.format("x" * 900), furniture.format("y" * 200), furniture.format("one orphaned line of a chapter")]
-    problems, sparse = qa.check_density(pages, limits)
-    assert problems == ["page 4 is empty or nearly so"] and sparse == [3, 4]
-    problems, _ = qa.check_density(pages[:3], {**limits, "max_sparse_share": 0.1})
-    assert problems == ["1 of 3 pages are sparse, more than the 10% allowed"]
     assert qa.body_characters(pages) == [0, 900, 200, 25]
+    # A short last page of a section is how it ends; an orphaned line is a fault even there.
+    problems, sparse = qa.check_density(pages, limits, terminal={3, 4})
+    assert problems == ["page 4 holds only an orphaned line or two"] and sparse == [3, 4]
+    # The same short page in the middle of a section is a fault.
+    problems, _ = qa.check_density(pages[:3], limits, terminal=set())
+    assert problems == ["page 3 is sparse in the middle of a section"]
+    problems, _ = qa.check_density(pages[:3], {**limits, "max_sparse_share": 0.1}, terminal={3})
+    assert problems == ["1 of 3 pages are sparse, more than the 10% allowed"]
 
 
 def test_font_check_reports_a_typeface_the_style_does_not_name():
@@ -110,3 +114,5 @@ def test_full_build_has_real_page_numbers_and_a_truthful_manifest(tmp_path):
     assert "\u200b" not in "".join(pages)
     assert "Page 1 of" not in pages[0] and f"Page 2 of {len(pages)}" in pages[1]
     assert record["release"]["id"] in pages[1]
+    logo = record["style"]["logo"]
+    assert hashlib.sha256((ROOT / logo["path"]).read_bytes()).hexdigest() == logo["sha256"]

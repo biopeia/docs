@@ -32,6 +32,7 @@ from validate_registry import ROOT
 TWIPS_PER_MM = 1440 / 25.4
 EMU_PER_TWIP, EMU_PER_PIXEL = 635, 9525
 PAGE_PLACEHOLDER = "000"
+NO_ENTRIES = "No registered entries at this revision."
 ZERO_WIDTH_SPACE = "​"
 # An identifier may break after one of these, never inside a word.
 BREAK_AFTER_RE = re.compile(r"(::|[/._\-:])(?=[\w<{(])")
@@ -412,8 +413,10 @@ class Document:
                 else:
                     title = f"{chr(64 + appendix)}.{index} {chapter['title']}"
                 # Letters and digits only: the PDF keeps such a name unchanged.
-                bookmark = entry["bookmark"] if merged else f"s{len(out) + 1}c{index}"
-                entry["chapters"].append({"chapter": chapter, "label": None if merged else title, "bookmark": bookmark})
+                # An empty registry is one row of a small table, not a chapter.
+                untitled = merged or chapter.get("empty")
+                bookmark = entry["bookmark"] if untitled else f"s{len(out) + 1}c{index}"
+                entry["chapters"].append({"chapter": chapter, "label": None if untitled else title, "bookmark": bookmark})
                 if not chapter["generated"]:
                     self.chapter_bookmarks[chapter["source"]] = bookmark
             out.append(entry)
@@ -422,17 +425,23 @@ class Document:
     def cover(self) -> None:
         publication, release, style = self.projection["publication"], self.projection["release"], self.style
         logo = style.get("logo") or {}
+
+        def space(name: str) -> int:
+            return round(style["cover"][name] * TWIPS_PER_MM)
+
         if logo.get("path"):
             data = (self.assets_root / logo["path"]).read_bytes()
             width, height = mermaid.png_size(data)
             cx = round(logo["width_mm"] * TWIPS_PER_MM * EMU_PER_TWIP)
-            self.body.append(self.image(data, "logo.png", cx, cx * height // width, '<w:spacing w:before="1200" w:after="900"/>'))
+            self.body.append(self.image(data, "logo.png", cx, cx * height // width,
+                                        f'<w:spacing w:before="{space("top_space_mm")}" w:after="{space("mark_gap_mm")}"/>'))
         self.body.append(paragraph("CoverBrand", text_run(publication["title"])))
         if publication.get("subtitle"):
             self.body.append(paragraph("CoverTitle", text_run(publication["subtitle"])))
         if publication.get("type"):
             self.body.append(paragraph("CoverMeta", text_run(publication["type"])))
-        self.body.append(paragraph("CoverMeta", text_run(EDITIONS[self.edition][0]), '<w:spacing w:before="3600" w:after="40"/>'))
+        self.body.append(paragraph("CoverMeta", text_run(EDITIONS[self.edition][0]),
+                                   f'<w:spacing w:before="{space("metadata_gap_mm")}" w:after="40"/>'))
         self.body.append(paragraph("CoverMeta", text_run(f"Release {release['id']}")))
         if release["date"]:
             self.body.append(paragraph("CoverMeta", text_run(release["date"])))
@@ -499,7 +508,11 @@ class Document:
             for entry in titled:
                 link = f'<w:hyperlink w:anchor="{entry["bookmark"]}">{text_run(entry["label"])}</w:hyperlink>'
                 self.body.append(paragraph("ChapterList", link))
-        for index, entry in enumerate(section["chapters"]):
+        empty = [entry["chapter"] for entry in section["chapters"] if entry["chapter"].get("empty")]
+        if empty:
+            self.table({"header": [cell("Section"), cell("Generated from"), cell("Entries")],
+                        "rows": [[cell(c["title"]), cell(c["source"], code=True), cell(NO_ENTRIES)] for c in empty]}, "")
+        for index, entry in enumerate(e for e in section["chapters"] if not e["chapter"].get("empty")):
             if entry["label"]:
                 # The first chapter starts under the part heading. The others
                 # follow on, or open a page, as the style says.

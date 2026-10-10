@@ -102,7 +102,10 @@ def test_real_publication_builds_a_sound_deterministic_package():
     assert build_docx(projection)[0] == first
     assert qa.check_docx(first) == []
     # Every chapter of a part is listed; elsewhere a lone chapter is its section.
-    chapters = sum(len(s["chapters"]) for s in projection["sections"] if s["group"] == "parts" or len(s["chapters"]) > 1)
+    chapters = sum(
+        sum(1 for c in s["chapters"] if not c.get("empty"))
+        for s in projection["sections"] if s["group"] == "parts" or len(s["chapters"]) > 1
+    )
     assert len(toc) == len(projection["sections"]) + chapters
     assert [e["level"] for e in toc[:3]] == [1, 1, 2]  # reader guide, Part I, its first chapter
     assert len({e["bookmark"] for e in toc}) == len(toc)
@@ -174,6 +177,34 @@ def test_long_identifiers_break_after_separators_only():
     assert xml.count("<w:r><w:t>\u200b</w:t></w:r>") >= 5 and ">short.py<" in xml
     assert breakable("a/b") == "a/b"
     assert breakable("explanation/organism/x.md") == "explanation/\u200borganism/\u200bx.\u200bmd"
+
+
+def test_empty_registries_are_rows_of_one_small_table_not_chapters():
+    projection = small(chapter("explanation/w/a.md", "A.\n"))
+    empties = [
+        {**chapter(f"registry/{name}.yaml", "No registered entries at this revision.\n", title=name.capitalize()),
+         "generated": True, "empty": True}
+        for name in ("notation", "metrics")
+    ]
+    projection["sections"][1] = {"id": "app", "title": "Notation and metrics", "group": "appendices", "chapters": empties}
+    data, toc = build_docx(projection)
+    xml = document_xml(data)
+    assert [e["text"] for e in toc][-1] == "Appendix A — Notation and metrics"  # no entry per empty registry
+    assert xml.count("No registered entries at this revision.") == 2 and ">Entries<" in xml
+    assert "A.1 Notation" not in xml and qa.check_docx(data) == []
+
+
+def test_cover_spacing_comes_from_the_style():
+    projection = small(chapter("explanation/w/a.md", "A.\n"))
+    style = load_style()
+    moved = {**style, "cover": {**style["cover"], "top_space_mm": 10}}
+    assert 'w:before="567"' in document_xml(build_docx(projection, style=moved)[0])
+    assert 'w:before="567"' not in document_xml(build_docx(projection, style=style)[0])
+
+
+def test_logo_is_a_file_of_this_repository():
+    logo = ROOT / load_style()["logo"]["path"]
+    assert logo.is_file() and ROOT in logo.resolve().parents
 
 
 def test_identifier_in_a_heading_keeps_the_technical_typeface():

@@ -54,16 +54,30 @@ sizes:
 layout:
   chapter_starts_page: false
 
+# The mark is a file of this repository. A build never fetches it from
+# anywhere, so a past build keeps its identity whatever happens elsewhere.
 logo:
   path: publication/assets/biopeia-logo.png
-  width_mm: 26
+  width_mm: 30
+
+# The cover is one block: mark, name, title and type, then the edition,
+# release and date close beneath it. `top_space_mm` sets the block a little
+# above the middle of the page.
+cover:
+  top_space_mm: 62
+  mark_gap_mm: 14
+  metadata_gap_mm: 16
 
 # Layout checks on the rendered PDF, counted in characters of body text
-# (running header and footer left out). A page under `blank_page_chars` fails
-# the build. A page under `sparse_page_chars` is reported in the build
-# manifest, and the build fails when more than `max_sparse_share` of the
-# pages are sparse. The fullest page is reported too.
+# (running header and footer left out). The build fails on:
+#   - any page under `blank_page_chars`: an orphaned line or two;
+#   - a page under `sparse_page_chars` that is not the last page of its part
+#     or appendix: whitespace in the middle of running text is a defect,
+#     while a short last page is how a section ends;
+#   - more than `max_sparse_share` of the pages being sparse.
+# Sparse pages and the fullest page are reported in the build manifest.
+# Do not lower these to make a build pass: fix the layout.
 qa:
-  blank_page_chars: 60
+  blank_page_chars: 120
   sparse_page_chars: 400
   max_sparse_share: 0.10

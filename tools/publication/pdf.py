@@ -37,8 +37,11 @@ def tool_versions() -> dict[str, str]:
     return {"libreoffice": first_line(soffice() or "soffice", "--version"), "pdftotext": first_line("pdftotext", "-v")}
 
 
-# Bookmarks become named destinations, which is how the page of a heading is read back.
-EXPORT_FILTER = 'pdf:writer_pdf_Export:{"ExportBookmarksToPDFDestination":{"type":"boolean","value":"true"}}'
+# Bookmarks become named destinations, which is how the page of a heading is
+# read back. Images are kept lossless: JPEG turns the white of the mark and of
+# a diagram into an off-white box on the page.
+EXPORT_FILTER = ('pdf:writer_pdf_Export:{"ExportBookmarksToPDFDestination":{"type":"boolean","value":"true"},'
+                 '"UseLosslessCompression":{"type":"boolean","value":"true"}}')
 
 
 def _substitution_settings(substitutions: dict[str, str]) -> str:

@@ -41,7 +41,7 @@ import qa  # noqa: E402
 from docx import build_docx  # noqa: E402
 from markdown import MarkdownError  # noqa: E402
 from model import MANIFEST  # noqa: E402
-from style import StyleError, font_substitutions, load_style  # noqa: E402
+from style import STYLE, StyleError, font_substitutions, load_style  # noqa: E402
 from projection import ProjectionError, build_projection, projection_bytes, sha256  # noqa: E402
 from validate_registry import ROOT  # noqa: E402
 
@@ -93,6 +93,11 @@ def build(
         "registry_digest": projection["registry_digest"],
         "projection_digest": sha256(projection_json),
         "tools": {"mermaid_cli_pinned": mermaid.PINNED_VERSION},
+        # What gave the build its look: the style file and the mark it names.
+        "style": {
+            "sha256": sha256(STYLE.read_bytes()),
+            "logo": {"path": style["logo"]["path"], "sha256": sha256((ROOT / style["logo"]["path"]).read_bytes())},
+        },
     }
     if with_pdf:
         substitutions = font_substitutions(style)
@@ -109,7 +114,9 @@ def build(
         used = pdf.fonts_used(rendered)
         require(qa.check_fonts(used, [font["fallback"] for font in style["fonts"].values()]),
                 "the PDF is not set in the typefaces of the style")
-        problems, sparse = qa.check_density(final_pages, style["qa"])
+        # The page before each part or appendix opens, and the last one.
+        terminal = {first[entry["bookmark"]] - 1 for entry in toc if entry["level"] == 1} | {len(final_pages)}
+        problems, sparse = qa.check_density(final_pages, style["qa"], terminal)
         require(problems, "the layout has pathological pages")
         files[f"{publication['output']}.docx"] = final
         files[f"{publication['output']}.pdf"] = rendered
