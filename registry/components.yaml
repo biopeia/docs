@@ -41,6 +41,7 @@ components:
         - "whether a manifest is well formed"
         - "whether a proposed cut matches the transition that was opened"
         - "whether ordinary execution is refused because a transition is pending"
+        - "whether the identifier of a recovered transition may be opened again, by comparing the proposal with its recovery receipt"
       must_not:
         - "decode, write or judge the owner state its references point to"
         - "restore owner state during recovery"
@@ -51,7 +52,7 @@ components:
     causal_state:
       durable: true
       in_causal_cut: true
-      failed_transition_residue: "a preparing or recovery-required record naming the failed transition, its proposed rosters and the failure; after recovery, an immutable receipt"
+      failed_transition_residue: "a preparing or recovery-required record naming the failed transition, its proposed rosters and the failure; after recovery, an immutable receipt, kept and read again if the same transition identifier is offered at the same tick"
     inputs:
       - "owner checkpoint references and rosters proposed by the durable World runtime"
       - "a dependency verifier supplied by the caller"
@@ -96,6 +97,7 @@ components:
       may_decide:
         - "whether a transition may open, given the durable manifest and the requested roster changes"
         - "whether the references returned by the owners name the proposed participants and intact, owner-validated checkpoints"
+        - "whether a presence is registered or terminated, given an explicit lifecycle transition from the caller"
         - "whether the cut is published"
       must_not:
         - "hold, read or interpret the state of an Organism, an Embodiment or an Environment"
@@ -113,10 +115,37 @@ components:
       - "a callback that persists owner state and returns checkpoint references"
       - "owner checkpoint contracts, a dependency verifier and a restorer supplied by the caller"
     outputs:
-      - "one causal record per committed tick"
+      - "per committed tick, a tick record and a causal-cut record naming the participants and their checkpoint references; a presence lifecycle record when the presence roster changes"
       - "the committed manifest of each cut, through the manifest store"
     consumers:
       - "compositions that drive a World, such as the integration tests and Lab (not registered as units)"
+
+  WLD-MJX:
+    coverage_unit: component.world-mujoco-step-executor
+    name: "MuJoCo step executor"
+    authority:
+      owns: "nothing persistent; one function that advances a caller-supplied compiled MuJoCo model by one step from explicit position, velocity and control vectors"
+      may_decide:
+        - "whether the context is of the expected type, the model is a compiled MuJoCo model with a positive time step, and the three vectors are finite and of the model's lengths"
+      must_not:
+        - "define a scene, assemble an owner projection, or derive units or identity from positions in a vector"
+        - "change, adopt or persist the state of World, an Embodiment or an Environment"
+        - "authorise a step or be taken as proof that World issued the context it carries"
+        - "be taken for the solver of the physical causal step, which does not call it"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    causal_state:
+      durable: false
+      in_causal_cut: false
+      failed_transition_residue: "none"
+    inputs:
+      - "a physical step context, carried through unchanged"
+      - "a compiled MuJoCo model and position, velocity and control vectors in MuJoCo's own layout"
+    outputs:
+      - "an immutable candidate holding the context and the positions and velocities after one step"
+    consumers:
+      - "none in source; called by its own tests only"
 
   WLD-RTM:
     coverage_unit: component.world-in-memory-runtime
@@ -329,7 +358,7 @@ components:
     outputs:
       - "one committed World tick with new Environment and Embodiment checkpoints"
       - "an evidence checkpoint filed under the intervention identity"
-      - "three events from Observation's projection, returned to the caller"
+      - "two records from Observation's projection, body and vitals, returned to the caller"
     consumers:
       - "none registered; called by its own integration tests only"
 
@@ -448,7 +477,7 @@ components:
     inputs:
       - "one mapping per tick, assembled by the caller from values of several owners"
     outputs:
-      - "three dictionaries tagged body, cognition and vitals"
+      - "two dictionaries tagged body and vitals, and a third tagged cognition when a recognized cognition key is present"
       - "an observed_frame event"
     consumers:
       - "Lab's operator material transfer, in source, and one integration test of World (not registered as units)"

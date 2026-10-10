@@ -179,7 +179,9 @@ findings:
       - explanation/world/causal-manifest.md
       - explanation/world/recovery.md
     material: false
-    status: open
+    status: resolved
+    disposition: >
+      No longer true of the code in its main part since world d38c7cc ("fix(world): make recovery retries identity-stable"): when a transition is opened, the manifest store reads back the receipt filed under the same World, transition identifier and tick, and refuses a different proposal. Receipts still accumulate and nothing lists or removes them; seen at world 95f5064c6b06bd66bb58a72110b066afe4ca70b0.
 
   F-0012:
     class: recovery_durability_gap
@@ -707,9 +709,9 @@ findings:
     documented_in:
       - explanation/lab/operator-material-transfer.md
     material: false
-    status: accepted
+    status: resolved
     disposition: >
-      Declared by the repository itself: its README states that a green package CI run validates only the isolated unit suite and is not integration evidence, because the default token cannot clone the other private repositories.
+      No longer true of the code since lab a4d06a1 ("ci(lab): validate integration and package distribution"): Lab's workflow has a job that installs the pinned revisions and runs tests/integration. The README sentence quoted in the earlier disposition is gone. That the pins trail the heads remains, and is recorded as F-0165.
 
   F-0066:
     class: implementation_finding
@@ -1904,5 +1906,109 @@ findings:
     documented_in:
       - explanation/organism/causal-provenance-log.md
       - explanation/organism/capacity-pressure-and-pair-statistics.md
+    material: false
+    status: open
+
+  F-0160:
+    class: implementation_finding
+    repository: world
+    observed_at: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+    units:
+      - component.world-mujoco-step-executor
+      - mechanism.physical-causal-step
+    summary: >
+      World's source now holds a function that runs one MuJoCo step, and nothing uses it to carry out a physical step: it is called only by its own tests, in no source module of any of the seven repositories, and by none of the three fixtures that drive the coordinator (search at heads, 2026-10-11). It does not fit the coordinator as a solver port without further code: it takes a compiled model and raw position, velocity and control vectors where the coordinator passes owner projections, and returns a type that is not the coordinator's candidate and is not split by owner. It sets no force applied to a body or joint, which is how both MuJoCo fixtures drive the body, and starts every call from a fresh data object, so an actuator's activation state is neither accepted nor returned (ad hoc run). It checks the type of the context and compares none of its revisions with the model. Narrows F-0002: the solver call is no longer only in fixtures; the missing adapters are. The repository says the executor alone must not close its issue 29.
+    documented_in:
+      - explanation/world/mujoco-step-executor.md
+      - explanation/world/physical-step.md
+    material: true
+    status: open
+
+  F-0161:
+    class: implementation_finding
+    repository: world
+    observed_at: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+    units:
+      - component.world-durable-runtime
+      - component.world-journal-snapshot-store
+      - mechanism.world-causal-transition
+    summary: >
+      Since the journal schema event-journal-v2 every tick appends a causal-cut record holding each owner checkpoint reference with its locator, a filesystem path as given by the owner. The journal's prefix digest and the size of every snapshot therefore depend on where the checkpoints are stored: the same World driven with the same inputs under two directories gave equal owner checkpoint hashes and different prefix digests (ad hoc run). Two of World's integration fixtures say so and compare cuts without the digest. A committed cut's digest is thus not comparable between runs or hosts, and the journal carries host paths.
+    documented_in:
+      - explanation/world/durable-runtime.md
+      - explanation/world/journal-snapshot-store.md
+    material: true
+    status: open
+
+  F-0162:
+    class: recovery_durability_gap
+    repository: world
+    observed_at: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+    units:
+      - component.world-journal-snapshot-store
+      - component.world-durable-runtime
+      - mechanism.world-recovery
+    summary: >
+      The journal schema name changed from event-journal-v1 to event-journal-v2 and the store verifies a reference only under the current name, while a cut is valid only if the journal holds a causal-cut record for every tick from zero. A World persisted by an earlier revision therefore cannot be restored or recovered by this one, and the repository provides no conversion. Read from the code; no test covers it. No persisted World from a real run is known to this documentation.
+    documented_in:
+      - explanation/world/journal-snapshot-store.md
+      - explanation/world/durable-runtime.md
+    material: false
+    status: open
+
+  F-0163:
+    class: contract_gap
+    repository: environment
+    observed_at: e91bb67f81f3bc15715489cf1262328934454f1b
+    units:
+      - component.world-durable-runtime
+      - component.lab-operator-material-transfer
+    summary: >
+      World asks an owner contract two questions with the same three arguments (bytes, identity, schema) and expects true. Since environment 7166f57 the restoration check of Environment's owners (identified resource, scalar field, static scene, dynamic state) is an instance method taking a restoration reference and returning nothing. Called by World it raises, and World takes any error as a refusal. A commit still succeeds, because it asks only the first question; restore and recovery fail with "owner restoration validation failed" whenever an Environment class is the contract. Lab's integration tests supply exactly that, the class of the identified resource (unit component.environment-finite-resource, not listed above because its documentation is reviewed separately): with all repositories at their heads two of them fail this way, and the same restore succeeds through a contract answering in the three-argument form (ad hoc runs, 2026-10-11). World's own fixtures wrap Environment in a fixture class and are unaffected. Lab's migration notes record the mismatch and say its pins cannot move until it is resolved.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: true
+    status: open
+
+  F-0164:
+    class: evidence_gap
+    repository: world
+    observed_at: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+    units:
+      - mechanism.physical-causal-step
+    summary: >
+      World's integration fixtures are evidence for the revisions pinned in its pyproject, which trail the heads (Organism by 23 commits, Embodiment 4, Environment 3, Modality 1, Observation 2 on 2026-10-11). Run once with all repositories at their heads, 25 of 31 cases passed and the six tests of the generated-scene fixture failed while building the scene: Environment's procedural genesis configuration now requires a sliding friction coefficient the fixture does not pass (added in environment 5b06621, after the pin).
+    documented_in:
+      - explanation/world/physical-step.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the repository itself: its README states that the pins are the exact revisions the tests were verified against and that a newer revision of another repository is not covered until the pin is moved and the tests rerun.
+
+  F-0165:
+    class: evidence_gap
+    repository: lab
+    observed_at: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
+    units:
+      - component.lab-operator-material-transfer
+    summary: >
+      Lab's integration tests run in its continuous integration at pinned revisions that trail the heads: Embodiment by 8 commits, Environment by 12, Observation by 2 and World by 28 on 2026-10-11. The pinned World predates the per-tick causal-cut record, so no Lab test exercises it. With all repositories at their heads, 14 of 17 integration cases passed (ad hoc run): two fail on the Environment restoration check (F-0163) and one because it asserts that the transfer's record is the first in World's journal, where World now writes a record at genesis.
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+    material: false
+    status: open
+
+  F-0166:
+    class: evidence_gap
+    repository: world
+    observed_at: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+    units:
+      - component.world-durable-runtime
+      - mechanism.world-recovery
+    summary: >
+      When a cut is validated, World requires one well-formed causal-cut record per tick and agreement of the latest with the manifest, and fails closed otherwise. No test offers a journal that lacks such a record or holds a malformed one; the tests show the record is written. That a runtime latches when the durable manifest was changed by another runtime also has no test; it was seen in an ad hoc run.
+    documented_in:
+      - explanation/world/durable-runtime.md
+      - explanation/world/recovery.md
     material: false
     status: open

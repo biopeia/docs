@@ -19,7 +19,8 @@ Explanatory documents of the World domain (semantic-authority).
 5. [The durable World runtime](durable-runtime.md)
 6. [The journal snapshot store](journal-snapshot-store.md)
 7. [The physical causal step, as it exists today](physical-step.md)
-8. [World recovery](recovery.md)
+8. [The MuJoCo step executor](mujoco-step-executor.md)
+9. [World recovery](recovery.md)
 
 ## Canonical documents
 
@@ -35,6 +36,7 @@ Explanatory documents of the World domain (semantic-authority).
 | [genesis-and-rosters.md](genesis-and-rosters.md) | `mechanism.world-genesis-and-rosters` | CURRENT | RECORDED |
 | [recovery.md](recovery.md) | `mechanism.world-recovery` | CURRENT | RECORDED |
 | [physical-step.md](physical-step.md) | `mechanism.physical-causal-step` | EXPERIMENTAL | RECORDED |
+| [mujoco-step-executor.md](mujoco-step-executor.md) | `component.world-mujoco-step-executor` | EXPERIMENTAL | RECORDED |
 
 ## Related domains
 
@@ -67,12 +69,12 @@ Explanatory documents of the World domain (semantic-authority).
 
 ## Open findings
 
-12 findings on these units are open, 8 of them with an issue in the owning repository:
+16 findings on these units are open, 8 of them with an issue in the owning repository:
 
-- contract gap: 4
-- evidence gap: 1
-- implementation finding: 5
+- contract gap: 5
+- evidence gap: 2
+- implementation finding: 6
 - performance concern: 1
-- recovery durability gap: 1
+- recovery durability gap: 2
 
 They are recorded in [registry/findings.yaml](../../registry/findings.yaml) and listed per unit in [reference/units.md](../../reference/units.md).

@@ -1,8 +1,9 @@
 # The World causal manifest
 
-Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
+Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, or neither.
+supports them: the code, the tests, an ad hoc run made at that revision on
+2026-10-11, or neither.
 
 ## What it is
 
@@ -66,6 +67,10 @@ the code; the tests named cover some of them.
   (`test_manifest_requires_inclusive_durable_journal_boundary`). This is the
   meaning fixed by
   [ADR-0086](../../technical/adr/ADR-0086-capture-manifest-last-sequence-semantics.md).
+  The empty case can still be constructed, but the durable runtime no longer
+  produces it: it writes a record into the journal at genesis, so every
+  manifest it publishes has a position and a digest (see
+  [the durable runtime document](durable-runtime.md)).
 - No two references name the same owner and identity
   (`test_manifest_rejects_duplicate_owner_identity_reference`), and no
   presence appears twice
@@ -144,10 +149,30 @@ Completing a recovery writes back the manifest of the cut that was committed
 before the failed transition, with the same tick and the same references, and
 clears the pending details.
 
-Before doing so it writes a receipt: a small immutable file naming the World,
-the transition, the tick restored, and the hashes of the pending manifest and
-of the manifest being restored. The receipt is written first so that, if the
-process stops between the two writes, a retry can find it and finish.
+Before doing so it writes a receipt: a small immutable file under the schema
+name `world-recovery-receipt-v2`, naming the World, the transition, the tick
+that was pending, the tick restored, a hash of the proposed transition and a
+hash of the manifest being restored. The hash of the proposed transition is
+taken over the pending manifest without its status and without the failure
+text, so the same proposal hashes the same however it failed. The file is
+named after a hash of the World, the transition identifier and the pending
+tick together. The receipt is written first so that, if the process stops
+between the two writes, a retry can find it and finish.
+
+The receipt is read back in one more place. When a transition is opened, the
+store looks for a receipt under the same World, identifier and tick. If one
+exists and the proposal now offered hashes differently, the transition is
+refused and the manifest stays committed; an unreadable receipt, or one whose
+identity fields do not match, is refused as well. So the identifier of a
+transition that was recovered cannot be reused, at that tick, for a different
+proposal (`test_recovered_transition_identity_cannot_be_reused_for_different_proposal`).
+Two recovered transitions keep two receipts
+(`test_recovery_receipts_keep_distinct_transition_identities`), and the same
+identifier at a later tick gets its own
+(`test_same_transition_id_on_later_tick_gets_a_distinct_recovery_receipt`).
+These three tests are in `world:tests/test_durable_runtime.py`. That the same
+identifier with the same proposal is accepted again is read from the code; no
+test was found for it.
 
 Recovery in this component restores the *record*, not the state. The code's
 own description says the runtime calls it only after every owner has restored
@@ -182,9 +207,13 @@ Changes take an advisory lock on a companion file. Reading takes no lock.
 - **It is not a security boundary.** The code says so of its own mutation
   methods: they are internal to the durable runtime and do not stop trusted
   code in the same process, or anything with access to the files.
-- **Power-loss behavior remains unverified.** The targeted process-termination
-  tests establish only their specific process boundary; they do not establish
-  what survives power loss or interruption during individual writes.
+- **Power-loss behavior remains unverified.** The process-termination tests
+  establish only the boundaries they stop at. One of them stops a writer
+  while the manifest's temporary file is partly written and finds the
+  previous cut intact
+  (`test_process_termination_during_partial_manifest_write_keeps_previous_cut`
+  in `world:tests/test_durable_runtime.py`). None establishes what survives
+  power loss.
 
 ## Time and identity
 
@@ -199,9 +228,10 @@ line with
 | Claim | Support |
 |---|---|
 | Journal boundary, uniqueness of references and presences, single open transition, refusal of ordinary execution while pending, commit conditions on owner state, roster and verifier, durable failure detail, no-overwrite initialisation | Code and tests in `world:tests/test_manifest.py` |
-| Manifest v4 persists committed/pending presence-owner links; pending state retains the previous cut; recovery writes a receipt before republishing; a thread-level test excludes concurrent transition preparation | Code and tests in `world:tests/test_manifest.py`, including `test_only_one_cross_process_transition_can_prepare_at_a_time`, at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
+| Manifest v4 persists committed/pending presence-owner links; pending state retains the previous cut; recovery writes a receipt before republishing; a thread-level test excludes concurrent transition preparation | Code and tests in `world:tests/test_manifest.py`, including `test_only_one_cross_process_transition_can_prepare_at_a_time`, at World `95f5064c6b06bd66bb58a72110b066afe4ca70b0` |
+| Content and naming of the receipt; refusal to reuse a recovered transition identifier for another proposal | Code and the three tests named above, at World `95f5064c6b06bd66bb58a72110b066afe4ca70b0`; the receipt's fields were also read from a file written in an ad hoc run at that revision |
 | A refused verifier leaves the manifest preparing until the next activity check | Code and `test_unverified_checkpoint_dependency_leaves_durable_recovery_required` |
-| Retrying recovery publication after receipt creation reuses and syncs the existing receipt directory | `test_retry_after_recovery_publication_interruption_fsyncs_existing_receipt_directory` in `world:tests/test_durable_runtime.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
+| Retrying recovery publication after receipt creation reuses and syncs the existing receipt directory | `test_retry_after_recovery_publication_interruption_fsyncs_existing_receipt_directory` in `world:tests/test_durable_runtime.py` at World `95f5064c6b06bd66bb58a72110b066afe4ca70b0` |
 | What the manifest is for, and what recovery must mean | Accepted decisions ADR-0106, ADR-0093, ADR-0084; statements of intent, not test results |
 
 The durable runtime and its tests were reviewed at the pinned revision. No
@@ -226,6 +256,7 @@ this component.
   caller.
 - What should happen to a transition left preparing by a refused verifier if
   the caller does not record the failure.
-- Receipts are immutable and reused for retrying an interrupted recovery
-  publication. The implementation does not establish a separate consumer
-  beyond that recovery path.
+- Receipts are immutable. They are read back when a recovery publication is
+  retried and when a transition identifier is offered again at the same
+  tick. Nothing lists them or removes them, and whether they are meant as a
+  record for anyone else is not stated.

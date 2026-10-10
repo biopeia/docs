@@ -1,15 +1,19 @@
 # The operator material transfer
 
-Reviewed against `lab` at commit `6aa3e530ff087594c1ac1332670df2caa5151b29`.
+Reviewed against `lab` at commit `29e25d85e796d96a3f2e830fd870a2f74e8e2266`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
-A decision states intent; it is not a result.
+supports them: the code, the tests, an ad hoc run made on 2026-10-11, or an
+accepted decision. A decision states intent; it is not a result.
 
-The code this component calls in other repositories was read at
-`embodiment` `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`,
-`environment` `0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41`,
-`observation` `be82907d1d677b2362e369d15eb1e8e964d893aa` and
-`world` `a8d07fd791da76365aa74080eef1e82b11a599fd`.
+The code this component calls in other repositories was read at their heads
+on that day:
+`embodiment` `597cc4a09f4a5c94095b17ad0f2ba510df6d02c3`,
+`environment` `e91bb67f81f3bc15715489cf1262328934454f1b`,
+`observation` `6aac3c76684834722440f53c9d8604ac4c16b138` and
+`world` `95f5064c6b06bd66bb58a72110b066afe4ca70b0`. The ad hoc runs used
+those heads. Lab's own tests run against older revisions, pinned in
+`lab:pyproject.toml`; where the two differ in outcome, this document says
+so.
 
 ## What it is
 
@@ -145,10 +149,11 @@ a tick ([the finite resource](../environment/finite-resource.md)); here the
 two coincide because Lab asks once.
 
 **After the commit**, Lab passes a small description of the tick to
-Observation's projection and returns the committed World record, the evidence
-reference, the projected events and the two changed copies. The caller must
-adopt the copies: a second call with the original objects is refused because
-they no longer match the committed cut. Confirmed by running the module.
+Observation's projection and returns the committed World record, the action
+identity, the evidence reference, the projected events and the two changed
+copies. The caller must adopt the copies: a second call with the original
+objects is refused because they no longer match the committed cut, and the
+World stays committed and usable. Confirmed by an ad hoc run.
 
 ## The evidence checkpoint
 
@@ -187,6 +192,13 @@ The current implementation establishes the following bounded behavior.
   journal retains the owner causal record beyond its tick, and tests cover
   retrieval after later ticks and restart. This does not make World the
   scientific custodian of the evidence.
+- **At World's head the journal also keeps the evidence checkpoint reference
+  of every tick.** World now writes a causal-cut record per tick that lists
+  each participant's checkpoint reference, the step participant included
+  (see [the durable World runtime](../world/durable-runtime.md)). In an ad
+  hoc run, after a second transfer the journal still held the reference to
+  the first transfer's evidence. The World revision Lab pins predates that
+  record, so no Lab test exercises it.
 - A failure after a callback writes evidence may leave an unreferenced file;
   its existence alone does not establish a committed intervention. The
   committed World owner record and Lab evidence reference are the tested path.
@@ -200,8 +212,9 @@ evidence immutability or scientific admissibility of physical interpretation.
 A failure inside the tick, after the transition has opened, leaves the World
 needing explicit recovery and the tick not advanced; the original objects are
 unchanged (`test_owner_checkpoint_failure_leaves_no_committed_next_cut`). The
-runtime then refuses further ticks, including a retry of the transfer.
-Confirmed by running the module.
+runtime then refuses further ticks, including a retry of the transfer, and
+the files written for the failed tick, the evidence file among them, stay on
+disk. Confirmed by an ad hoc run.
 
 Lab provides no recovery step of its own. Recovery is World's, through the
 restorer the caller supplies, as described in
@@ -209,16 +222,19 @@ restorer the caller supplies, as described in
 
 ## What reaches Observation
 
-After commit Lab supplies a minimal projection input including source, body
-identity, tick and current body state. The current Lab integration does not
-supply a metabolic reserve ratio. The passive projection output is limited by
-fields recognized by Observation and supplied by Lab; it carries no run ID.
+After commit Lab supplies a projection input of six keys: a source label, the
+body's identity as the instance, the causal tick twice, as tick and as
+sequence, a fixed label for the kind of body, and the quantity remaining in
+the resource. It supplies nothing of the body's state and no metabolic
+reserve ratio. The passive projection output is limited by fields recognized
+by Observation and supplied by Lab; it carries no run ID.
 
-The source and tests at these revisions show that the remaining quantity
-appears in the vitals event. Lab does not pass the previously computed reserve
-ratio to Observation in this integration. With the current input, projection
-returns body and vitals events; no cognition event is emitted because no
-recognized cognition data is present. No Organism takes part in the transfer.
+With that input the projection returns two records. In an ad hoc run the
+body record held the source, the instance, the sequence, the tick and the
+label; the vitals record held the source, the instance, the sequence, the
+tick and the remaining quantity. No cognition event is emitted because no
+recognized cognition data is present. No Organism takes part in the
+transfer.
 
 The projection describes itself as working "without fabricating absent
 observations". The events are returned to the caller; this component does not
@@ -312,33 +328,66 @@ transfer. Lab reads no host time and writes no timestamp into the evidence.
 | Claim | Support |
 |---|---|
 | Validation of the request; refusal on identity mismatch and on drifted owner state; the committed cut and its four participants; content of the evidence; short acceptance; failure leaving recovery required; inputs not mutated | Code and tests in `lab:tests/integration/test_material_transfer_intervention.py` and `lab:tests/integration/test_operator_material_transfer.py` |
-| The tests pass | Run for this document in a clean environment built from the revisions pinned in `lab:pyproject.toml` (embodiment `0562febd8dfffaa826c339600bb548ea172fa256`, environment `a979688e90b279ccfe003d77eddb787272fd5ebf`, observation `cb07ace206058719a9aa9df65e2eb1f837130ee9`, world `dadf2743ee4ff9f22703d2d6643fca9fd9bfa025`): 10 integration and 18 unit tests passed. Run again with the four other repositories at the revisions named at the top: the 10 integration tests passed |
+| The tests pass at the pinned revisions | Lab's continuous integration, which now installs the revisions pinned in `lab:pyproject.toml` (embodiment `028e2f912eccbe554a9d7f8543fe9dfe2bb94218`, environment `a979688e90b279ccfe003d77eddb787272fd5ebf`, observation `be82907d1d677b2362e369d15eb1e8e964d893aa`, world `4d264b24d0501a51d8b56b9cbe762aff3402da7b`) and runs `tests/integration`. `lab:MIGRATION.md` records 17 passed at those pins. Not run again for this document |
+| What the tests do at the heads | An ad hoc run with the four other repositories at the heads named at the top: of 17 integration cases 14 passed and 3 failed; the 32 unit tests passed. The failures are described below |
 | Refusal of a run identity on a non-experimental request; refusal of a World with other owners | Code only; neither was run or is tested |
-| The evidence contract checking two fields | Code, and an ad hoc run |
-| Reuse of an intervention identity; zero transfer; stale objects refused; retry refused after failure; the World record carrying no intervention; the evidence reference lasting one tick; a complete evidence file left by a failed tick; the reserve ratio absent from the events; the content of the cognition event | Code, and ad hoc runs of the module, once with the other repositories at the pinned revisions and once at the revisions named at the top, with identical output |
+| What the evidence contract checks | Code |
+| A second action under one intervention identity; zero transfer; stale objects refused; retry refused after failure; files left by a failed tick; the two projected records and their content; the evidence reference kept in World's journal | Code, and ad hoc runs of the module with the other repositories at the heads named at the top |
 | What a transfer may claim, what an intervention should record, who owns what | Accepted decisions ADR-0073, ADR-0100, ADR-0101, ADR-0102; statements of intent |
 | The reading of a leftover evidence file; the bounded single-source, single-body scope | `lab:MIGRATION.md`; a statement by the repository, not a result |
 
-The integration tests are not run by Lab's continuous integration, which
-runs the unit suite only. The repository says so: "A green package CI run
-validates only the isolated unit suite; it is not integration evidence."
+The integration tests are now run by Lab's continuous integration. Its
+workflow has a job that installs the pinned revisions and runs
+`tests/integration`; at the revision first documented it ran the unit suite
+only. The repository states what that establishes: "These CI jobs validate
+packaging and the tested software contracts; they do not establish scientific
+validity, efficacy, or equivalence."
 
-The pinned revisions are between one and four commits behind the main
-branches of the other repositories on the day of review. Lab's migration
-notes name a different, older set of revisions from the one in
-`lab:pyproject.toml`, and in some places give the paths of the unit tests
-without the directory they now live in.
+The pinned revisions are behind the heads of the other repositories on the
+day of review: Embodiment by 8 commits, Environment by 12, Observation by 2
+and World by 28. Lab's migration notes now name the same revisions as
+`lab:pyproject.toml`; in some places they still give the paths of the unit
+tests without the directory they now live in.
+
+### At the heads of the other repositories
+
+The three integration cases that failed in the ad hoc run fail for two
+reasons, and neither is in Lab's source.
+
+- **Environment's resource no longer answers World's second question in the
+  form World asks it.** The tests hand World the class of Environment's
+  identified resource as that owner's checkpoint contract. World asks a
+  contract two things with the same three arguments: is this checkpoint
+  valid, and is this restoration verified. At Environment's head the second
+  method of that class takes a restoration reference instead and belongs to
+  an instance. World treats the resulting error as a refusal, so restoring a
+  World after a transfer, or recovering one after a failed transfer, fails
+  with "owner restoration validation failed"
+  (`test_one_intervention_can_commit_distinct_actions_and_preserve_evidence_after_restart`,
+  `test_candidate_journal_and_evidence_are_not_committed_if_manifest_publication_fails`).
+  With a contract that answers in the three-argument form, the same restore
+  succeeded (ad hoc run). A transfer itself still commits, because a commit
+  asks only the first question. The repository records the mismatch in
+  `lab:MIGRATION.md` and says the pins cannot move until it is resolved.
+- **One test assumes the transfer's record is the first in the journal.** At
+  World's head the first record is the causal-cut record of tick zero
+  (`test_intervention_commits_durable_owner_cut_and_lab_evidence`). The
+  transfer commits; the assertion about the position does not hold.
+
+Both are recorded as findings. They concern how the repositories fit at
+their heads, not the behaviour of the transfer at the revisions Lab tests.
 
 No crash, power-loss or concurrent-process test exists for this component.
 
 ## Open questions
 
 - Where the history of interventions is meant to live once the World has
-  moved past the tick that referred to the evidence.
+  moved past the tick that referred to the evidence. World's journal now
+  keeps the reference of every tick; whether that is the intended place is
+  not stated.
 - Whether an intervention identifier is meant to be unique, and who would
   check it.
 - Whether the transfer is meant to work in a World that holds an organism.
-- Whether the body's reserve ratio is meant to reach Observation, and whether
-  an event of type cognition should be produced for an act no organism took
-  part in.
+- What Observation is meant to receive about a transfer. Today it is given
+  the tick and the resource's remaining quantity, and nothing of the body.
 - How the two uses of the word privileged in ADR-0073 and ADR-0101 relate.
