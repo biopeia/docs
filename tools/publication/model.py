@@ -19,6 +19,7 @@ MANIFEST = ROOT / "publication" / "biopeia-master.yaml"
 
 # Sections rendered from the registry; projection.py holds one renderer each.
 GENERATED_SECTIONS = (
+    "reader-guide",
     "domains",
     "contracts",
     "contract-catalog",
@@ -39,10 +40,10 @@ class ManifestError(ValueError):
 
 
 def sections(manifest: dict[str, Any]) -> list[dict[str, Any]]:
-    """Parts then appendices, each marked with its group."""
+    """Front matter, parts, then appendices, each marked with its group."""
     return [
         {**section, "group": group}
-        for group in ("parts", "appendices")
+        for group in ("front", "parts", "appendices")
         for section in manifest.get(group) or []
     ]
 

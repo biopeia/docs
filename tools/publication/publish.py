@@ -41,6 +41,7 @@ import qa  # noqa: E402
 from docx import build_docx  # noqa: E402
 from markdown import MarkdownError  # noqa: E402
 from model import MANIFEST  # noqa: E402
+from style import StyleError, font_substitutions, load_style  # noqa: E402
 from projection import ProjectionError, build_projection, projection_bytes, sha256  # noqa: E402
 from validate_registry import ROOT  # noqa: E402
 
@@ -73,11 +74,12 @@ def build(
         require(unclean_sources(projection["sources"]), "a published edition needs every source at a clean revision")
     edition = "published" if release else "working"
     projection_json = projection_bytes(projection)
-    draft, toc = build_docx(projection, edition=edition)
+    style = load_style()
+    draft, toc = build_docx(projection, edition=edition, style=style)
     require(qa.check_docx(draft), "the DOCX package is malformed")
     if check:
         again = build_projection(manifest_path=manifest, repos_root=repos_root)
-        if projection_bytes(again) != projection_json or build_docx(again, edition=edition)[0] != draft:
+        if projection_bytes(again) != projection_json or build_docx(again, edition=edition, style=style)[0] != draft:
             raise QualityError("two builds from the same sources differ")
 
     publication = projection["publication"]
@@ -85,6 +87,7 @@ def build(
     record = {
         "publication": publication["id"],
         "edition": edition,
+        "release": projection["release"],
         "revision": projection["sources"]["docs"]["revision"],
         "sources": projection["sources"],
         "registry_digest": projection["registry_digest"],
@@ -92,19 +95,26 @@ def build(
         "tools": {"mermaid_cli_pinned": mermaid.PINNED_VERSION},
     }
     if with_pdf:
-        first_pages = pdf.page_texts(pdf.convert(draft))
-        first = pdf.locate(toc, first_pages)
-        final, _ = build_docx(projection, pages=first, edition=edition)
+        substitutions = font_substitutions(style)
+        first_pdf = pdf.convert(draft, substitutions)
+        first = pdf.locate(toc, pdf.destinations(first_pdf))
+        final, _ = build_docx(projection, pages=first, edition=edition, style=style)
         require(qa.check_docx(final), "the final DOCX package is malformed")
-        rendered = pdf.convert(final)
-        final_pages = pdf.page_texts(rendered)
+        rendered = pdf.convert(final, substitutions)
+        first_pages, final_pages = pdf.page_texts(first_pdf), pdf.page_texts(rendered)
         require(
-            qa.check_pagination(toc, first, pdf.locate(toc, final_pages), len(first_pages), len(final_pages)),
+            qa.check_pagination(toc, first, pdf.locate(toc, pdf.destinations(rendered)), len(first_pages), len(final_pages)),
             "the contents list does not match the rendered pages",
         )
+        used = pdf.fonts_used(rendered)
+        require(qa.check_fonts(used, [font["fallback"] for font in style["fonts"].values()]),
+                "the PDF is not set in the typefaces of the style")
+        problems, sparse = qa.check_density(final_pages, style["qa"])
+        require(problems, "the layout has pathological pages")
         files[f"{publication['output']}.docx"] = final
         files[f"{publication['output']}.pdf"] = rendered
         record["pages"] = len(final_pages)
+        record["layout"] = {"sparse_pages": sparse, "typefaces": used}
         record["tools"].update(pdf.tool_versions())
     return files, record
 
@@ -121,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         files, record = build(args.manifest, args.repos_root, not args.no_pdf, args.check, args.release)
-    except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError) as exc:
+    except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError, StyleError) as exc:
         print(f"Publication: FAIL\n{exc}")
         return 1
 

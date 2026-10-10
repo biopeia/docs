@@ -38,7 +38,8 @@ def test_projection_follows_the_manifest_order(projection):
 
 
 def test_publication_opens_with_the_system_view(projection):
-    first = projection["sections"][0]["chapters"]
+    assert projection["sections"][0]["id"] == "reader-guide"
+    first = next(s for s in projection["sections"] if s["group"] == "parts")["chapters"]
     assert [c["id"] for c in first] == ["generated-domains", "explanation-biopeia-one-step-across-the-domains"]
 
 
@@ -86,7 +87,14 @@ def build_in(root: Path):
 
 
 def test_copy_outside_git_builds_with_unresolved_revision(tmp_path):
-    assert build_in(copy_sources(tmp_path))["sources"]["docs"] == {"revision": None, "state": "unresolved"}
+    built = build_in(copy_sources(tmp_path))
+    assert built["sources"]["docs"] == {"revision": None, "state": "unresolved", "committed_on": None}
+    assert built["release"] == {"id": "unversioned", "date": None}
+
+
+def test_release_is_the_day_and_revision_of_the_documentation(projection):
+    docs = projection["sources"]["docs"]
+    assert projection["release"]["id"].startswith(f"{docs['committed_on'].replace('-', '.')}-{docs['revision'][:7]}")
 
 
 def test_broken_registry_fails_closed(tmp_path):

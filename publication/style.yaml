@@ -1,0 +1,63 @@
+schema_version: 1
+
+# Editorial style of the Biopeia publications. Rendering reads this file; the
+# semantic projection never does. Changing a value here changes how a
+# publication looks and nothing about what it says.
+#
+# Direction (Architecture Owner, 2026-10-10, biopeia/docs#80): scientific
+# publication with technical specification, restrained institutional
+# identity, high density, strong navigational hierarchy.
+
+page:
+  width_mm: 210
+  height_mm: 297
+  margin_mm: {top: 24, bottom: 22, left: 24, right: 22}
+
+# `name` is written in the DOCX. `fallback` is what the PDF is always rendered
+# with, so that page breaks do not depend on which typefaces a machine has.
+fonts:
+  text: {name: Aptos, fallback: Liberation Sans}
+  code: {name: Consolas, fallback: Liberation Mono}
+  # Characters the two fallbacks have no glyph for are set in this typeface, so
+  # that no machine picks a substitute of its own. `ranges` are Unicode blocks
+  # (hex). A character outside them that the fallbacks lack fails the build.
+  symbols: {name: DejaVu Sans, fallback: DejaVu Sans, ranges: ["2070-209F", "25A0-25FF"]}
+
+# Hex RGB. One accent, taken from the dark blue of the Biopeia mark. Nothing
+# is told by colour alone; everything reads in greyscale.
+colours:
+  text: "1B1F24"
+  secondary: "5B6570"
+  rule: "C5CAD1"
+  shade: "F2F3F5"
+  accent: "0B4F8A"
+
+# Points.
+sizes:
+  cover_brand: 44
+  cover_title: 17
+  part: 26
+  chapter: 19
+  section: 13.5
+  subsection: 11
+  body: 10
+  list: 10
+  table: 8.5
+  code: 8.5
+  caption: 8.5
+  meta: 8
+  kicker: 9
+
+logo:
+  path: publication/assets/biopeia-logo.png
+  width_mm: 26
+
+# Layout checks on the rendered PDF, counted in characters of body text
+# (running header and footer left out). A page under `blank_page_chars` fails
+# the build. A page under `sparse_page_chars` is reported in the build
+# manifest, and the build fails when more than `max_sparse_share` of the
+# pages are sparse.
+qa:
+  blank_page_chars: 15
+  sparse_page_chars: 400
+  max_sparse_share: 0.10

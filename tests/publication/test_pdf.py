@@ -22,33 +22,37 @@ needs_renderer = pytest.mark.skipif(
 
 TOC = [
     {"bookmark": "s1", "level": 1, "text": "Part I — World"},
-    {"bookmark": "c1", "level": 2, "text": "1. The causal journal"},
-    {"bookmark": "c2", "level": 2, "text": "2. Recovery, and what a failed transition leaves behind"},
+    {"bookmark": "s1c1", "level": 2, "text": "1. The causal journal"},
+    {"bookmark": "s1c2", "level": 2, "text": "2. Recovery"},
 ]
 
 
-def test_locate_skips_the_contents_list_and_prose_mentions():
-    pages = [
-        "Title page",
-        "Contents\nPart I — World ..... 000\n1. The causal journal ..... 000\n"
-        "2. Recovery, and what a failed transition\nleaves behind ..... 000",
-        "Part I — World",
-        "1. The causal journal\nSee Recovery, and what a failed transition leaves behind.",
-        "more of the journal, where the ﬁrst record is",
-        "2. Recovery, and what a failed\ntransition leaves behind\nText.",
-    ]
-    assert pdf.locate(TOC, pages) == {"s1": 3, "c1": 4, "c2": 6}
+def test_locate_reads_pages_from_destinations_and_fails_when_one_is_missing():
+    assert pdf.locate(TOC, {"s1": 3, "s1c1": 3, "s1c2": 6, "other": 9}) == {"s1": 3, "s1c1": 3, "s1c2": 6}
+    with pytest.raises(pdf.PdfError, match="2. Recovery"):
+        pdf.locate(TOC, {"s1": 3, "s1c1": 3})
 
 
-def test_locate_fails_when_a_heading_is_absent():
-    with pytest.raises(pdf.PdfError, match="the body"):
-        pdf.locate(TOC[:1], ["Contents Part I — World 000"])
+def test_density_check_fails_on_an_empty_page_and_reports_sparse_ones():
+    limits = {"blank_page_chars": 15, "sparse_page_chars": 400, "max_sparse_share": 0.5}
+    furniture = "Biopeia\nPart I\n{}\nWorking edition\nPage 1 of 4\n"
+    pages = ["cover", furniture.format("x" * 900), furniture.format("one last line of a chapter"), furniture.format("")]
+    problems, sparse = qa.check_density(pages, limits)
+    assert problems == ["page 4 is empty or nearly so"] and sparse == [3, 4]
+    problems, _ = qa.check_density(pages[:3], {**limits, "max_sparse_share": 0.1})
+    assert problems == ["1 of 3 pages are sparse, more than the 10% allowed"]
+
+
+def test_font_check_reports_a_typeface_the_style_does_not_name():
+    allowed = ["Liberation Sans", "Liberation Mono", "DejaVu Sans"]
+    assert qa.check_fonts(["LiberationSans-Bold", "LiberationMono", "DejaVuSans"], allowed) == []
+    assert qa.check_fonts(["NotoColorEmoji"], allowed) == ["PDF uses a typeface the style does not name: NotoColorEmoji"]
 
 
 def test_pagination_check_reports_moved_headings():
-    first = {"s1": 3, "c1": 4, "c2": 6}
+    first = {"s1": 3, "s1c1": 4, "s1c2": 6}
     assert qa.check_pagination(TOC, first, dict(first), 6, 6) == []
-    problems = qa.check_pagination(TOC, first, {"s1": 3, "c1": 4, "c2": 7}, 6, 7)
+    problems = qa.check_pagination(TOC, first, {"s1": 3, "s1c1": 4, "s1c2": 7}, 6, 7)
     assert any("page count changed" in p for p in problems)
     assert any("listed on page 6 but is on page 7" in p for p in problems)
 
@@ -89,11 +93,19 @@ def test_full_build_has_real_page_numbers_and_a_truthful_manifest(tmp_path):
     assert record["projection_digest"] == record["artifacts"]["biopeia-master.json"]["sha256"]
     assert set(record["sources"]) == {"docs", "organism", "embodiment", "environment", "world", "modality", "observation", "lab"}
 
-    pages = pdf.page_texts((tmp_path / "Biopeia-Master.pdf").read_bytes())
+    rendered = (tmp_path / "Biopeia-Master.pdf").read_bytes()
+    pages = pdf.page_texts(rendered)
     assert len(pages) == record["pages"] > 50
-    contents = " ".join(" ".join(pages[1:4]).split())
+    start = next(i for i, page in enumerate(pages) if page.lstrip().startswith("Biopeia") and "\nContents\n" in page)
+    contents = " ".join(" ".join(pages[start : start + 3]).split())
     assert "000" not in contents
     # The page printed beside a chapter in the contents list is the page it starts on.
     title = re.search(r"\d+\. World recovery", contents).group(0)
     printed = int(contents.split(title, 1)[1].lstrip(". ").split()[0])
     assert title in " ".join(pages[printed - 1].split())
+    # Rendered only in the fallback typefaces, whatever this machine has installed.
+    assert record["layout"]["typefaces"] == pdf.fonts_used(rendered)
+    assert all(f.startswith(("LiberationSans", "LiberationMono", "DejaVuSans")) for f in record["layout"]["typefaces"])
+    assert "\u200b" not in "".join(pages)
+    assert "Page 1 of" not in pages[0] and f"Page 2 of {len(pages)}" in pages[1]
+    assert record["release"]["id"] in pages[1]

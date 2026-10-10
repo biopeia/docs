@@ -88,3 +88,32 @@ def check_pagination(
             problems.append(f"{entry['text']!r} comes before the heading that precedes it")
         previous = final.get(bookmark, previous)
     return problems
+
+
+def check_density(pages: list[str], limits: dict) -> tuple[list[str], list[int]]:
+    """Problems that fail the build, and the pages that are merely sparse.
+
+    A page is measured by the characters of its body: its first line (the
+    running header) and its last two (the footer) are left out. The cover is
+    exempt. A page with nothing on it is a layout fault; many sparse pages
+    mean the layout wastes paper.
+    """
+    counts = []
+    for page in pages:
+        lines = [line for line in page.splitlines() if line.strip()]
+        counts.append(len("".join("".join(lines[2:-2]).split())))
+    blank = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["blank_page_chars"]]
+    sparse = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["sparse_page_chars"]]
+    problems = [f"page {n} is empty or nearly so" for n in blank]
+    if pages and len(sparse) / len(pages) > limits["max_sparse_share"]:
+        problems.append(
+            f"{len(sparse)} of {len(pages)} pages are sparse, more than the {limits['max_sparse_share']:.0%} allowed"
+        )
+    return problems, sparse
+
+
+def check_fonts(used: list[str], expected: list[str]) -> list[str]:
+    """The PDF is set only in the typefaces the style names as fallbacks."""
+    allowed = {name.replace(" ", "") for name in expected}
+    strays = [font for font in used if not any(font.startswith(name) for name in allowed)]
+    return [f"PDF uses a typeface the style does not name: {font}" for font in strays]
