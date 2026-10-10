@@ -52,8 +52,9 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python tools/publication/publish.py --check
 
-      # On main the manifest also records the revision of every domain
-      # repository the publication was built beside.
+      # On main the build is the published edition: it fails unless this
+      # repository and every domain repository are at a clean revision, and
+      # the manifest records each one.
       - uses: actions/create-github-app-token@v2
         if: github.event_name != 'pull_request'
         id: app
@@ -74,7 +75,7 @@ jobs:
       - name: Build
         if: github.event_name != 'pull_request'
         run: |
-          python tools/publication/publish.py --check --repos-root "$RUNNER_TEMP/repos"
+          python tools/publication/publish.py --check --release --repos-root "$RUNNER_TEMP/repos"
           {
             echo '```json'
             cat build/publication/publication-manifest.json

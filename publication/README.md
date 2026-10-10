@@ -15,10 +15,21 @@ which are rendered from the registry. A published document therefore never
 decides what the canonical documentation is: it presents sources that stay
 canonical where they are.
 
-The order goes from the system down into its domains and back up: Biopeia as
-a whole, Organism, Embodiment, Environment, World, Modality and Observation,
-Lab, and last the architecture that crosses domains, followed by the
+The order starts with the system view (the domains, and how one step crosses
+them today), then goes down into the domains: Organism, Embodiment,
+Environment, World, Modality and Observation, Lab. The contracts that bind
+one domain to another come last, followed by the
 appendices. `registry/findings.yaml` is audit material and is not published.
+
+## Editions
+
+A build is a **working edition** unless it is built with `--release`. A
+working edition is built from whatever state the sources are in and says on
+its front page that it must not be cited. A **published edition** requires
+this repository and every domain repository to be resolved to a clean
+revision, and the build fails otherwise. The build manifest records which
+one a file is. The `Publication` workflow builds the published edition on
+`main`.
 
 ## Rules
 
@@ -41,10 +52,15 @@ python tools/publication/model.py   # check the manifest
   deprecated and not carried over, and no replacement has been decided. Until
   one exists, published documents use neutral defaults only and choose no
   colours, typefaces or cover.
-- **The first part has no explanatory document.** Nothing in `explanation/`
-  yet says what Biopeia is, its principles, or how its domains and
-  authorities are separated. The part currently shows only what the registry
-  holds about the domains.
+- **No document says what Biopeia is.** Nothing in `explanation/` yet states
+  its purpose, its principles, or why its domains and authorities are
+  separated. The first part shows what the registry holds about the domains
+  and how one step crosses them today.
+- **One publication, in the order of the domains.** Two publications from the
+  same sources (an architecture overview and a technical reference), system
+  diagrams generated from the registry, a maturity table per capability and
+  the editorial design are recorded as work for after the migration
+  (issues #78, #79, #80).
 - **Notation, parameters and metrics are empty registries.** Their appendices
   say so instead of being omitted.
 

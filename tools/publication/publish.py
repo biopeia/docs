@@ -16,6 +16,10 @@ does not put every heading where the contents list says.
 that the document can be assembled. It writes no DOCX, because a contents
 list without page numbers is not a publishable document.
 
+--release builds the published edition: every source repository must be
+resolved (--repos-root) to a clean revision, or the build fails. Without it
+the document is a working edition and says so on its front page.
+
 --check also assembles everything twice and fails when the two differ. The
 PDF itself is not compared: LibreOffice stamps each file with a creation time
 and an identifier.
@@ -52,20 +56,35 @@ def require(problems: list[str], what: str) -> None:
         raise QualityError(f"{what}:\n" + "\n".join(problems))
 
 
-def build(manifest: Path, repos_root: Path | None, with_pdf: bool, check: bool) -> tuple[dict[str, bytes], dict]:
+def unclean_sources(sources: dict) -> list[str]:
+    """Why these sources cannot back a published edition."""
+    return [
+        f"{name}: {'not resolved to a revision' if source['state'] == 'unresolved' else 'has local modifications'}"
+        for name, source in sources.items()
+        if source["state"] != "clean"
+    ]
+
+
+def build(
+    manifest: Path, repos_root: Path | None, with_pdf: bool, check: bool, release: bool = False
+) -> tuple[dict[str, bytes], dict]:
     projection = build_projection(manifest_path=manifest, repos_root=repos_root)
+    if release:
+        require(unclean_sources(projection["sources"]), "a published edition needs every source at a clean revision")
+    edition = "published" if release else "working"
     projection_json = projection_bytes(projection)
-    draft, toc = build_docx(projection)
+    draft, toc = build_docx(projection, edition=edition)
     require(qa.check_docx(draft), "the DOCX package is malformed")
     if check:
         again = build_projection(manifest_path=manifest, repos_root=repos_root)
-        if projection_bytes(again) != projection_json or build_docx(again)[0] != draft:
+        if projection_bytes(again) != projection_json or build_docx(again, edition=edition)[0] != draft:
             raise QualityError("two builds from the same sources differ")
 
     publication = projection["publication"]
     files = {f"{publication['id']}.json": projection_json}
     record = {
         "publication": publication["id"],
+        "edition": edition,
         "revision": projection["sources"]["docs"]["revision"],
         "sources": projection["sources"],
         "registry_digest": projection["registry_digest"],
@@ -75,7 +94,7 @@ def build(manifest: Path, repos_root: Path | None, with_pdf: bool, check: bool) 
     if with_pdf:
         first_pages = pdf.page_texts(pdf.convert(draft))
         first = pdf.locate(toc, first_pages)
-        final, _ = build_docx(projection, pages=first)
+        final, _ = build_docx(projection, pages=first, edition=edition)
         require(qa.check_docx(final), "the final DOCX package is malformed")
         rendered = pdf.convert(final)
         final_pages = pdf.page_texts(rendered)
@@ -97,10 +116,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repos-root", type=Path, help="directory holding the domain checkouts")
     parser.add_argument("--no-pdf", action="store_true", help="projection only; needs no LibreOffice")
     parser.add_argument("--check", action="store_true", help="also assemble twice and compare")
+    parser.add_argument("--release", action="store_true", help="published edition: all sources clean, or fail")
     args = parser.parse_args(argv)
 
     try:
-        files, record = build(args.manifest, args.repos_root, not args.no_pdf, args.check)
+        files, record = build(args.manifest, args.repos_root, not args.no_pdf, args.check, args.release)
     except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError) as exc:
         print(f"Publication: FAIL\n{exc}")
         return 1
@@ -117,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
         (args.output / name).write_bytes(data)
         if name != MANIFEST_NAME:
             print(f"{sha256(data)}  {name}")
-    print("Publication: PASS" + (f" ({record['pages']} pages)" if "pages" in record else " (projection only)"))
+    print(f"Publication: PASS, {record['edition']} edition" + (f" ({record['pages']} pages)" if "pages" in record else " (projection only)"))
     return 0
 
 

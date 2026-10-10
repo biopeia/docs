@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -58,6 +59,17 @@ def test_projection_only_build_writes_no_document(tmp_path, monkeypatch):
     assert sorted(p.name for p in tmp_path.iterdir()) == ["biopeia-master.json", "publication-manifest.json"]
     record = json.loads((tmp_path / "publication-manifest.json").read_text())
     assert record["generated_at"] == "1970-01-01T00:00:00Z" and "pages" not in record
+    assert record["edition"] == "working"
+
+
+def test_published_edition_refuses_unresolved_or_modified_sources(tmp_path, capsys):
+    # No --repos-root: the domain repositories are not resolved.
+    assert publish.main(["--no-pdf", "--release", "--output", str(tmp_path)]) == 1
+    out = capsys.readouterr().out
+    assert "a published edition needs every source at a clean revision" in out
+    assert "world: not resolved to a revision" in out and not list(tmp_path.iterdir())
+    sources = {"docs": {"state": "clean"}, "world": {"state": "modified"}}
+    assert publish.unclean_sources(sources) == ["world: has local modifications"]
 
 
 def test_build_without_libreoffice_fails_closed(tmp_path, monkeypatch, capsys):
@@ -82,6 +94,6 @@ def test_full_build_has_real_page_numbers_and_a_truthful_manifest(tmp_path):
     contents = " ".join(" ".join(pages[1:4]).split())
     assert "000" not in contents
     # The page printed beside a chapter in the contents list is the page it starts on.
-    title = "37. World recovery"
+    title = re.search(r"\d+\. World recovery", contents).group(0)
     printed = int(contents.split(title, 1)[1].lstrip(". ").split()[0])
     assert title in " ".join(pages[printed - 1].split())

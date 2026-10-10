@@ -37,6 +37,11 @@ def test_projection_follows_the_manifest_order(projection):
     assert [s["id"] for s in projection["sections"]] == [s["id"] for s in sections(load_manifest())]
 
 
+def test_publication_opens_with_the_system_view(projection):
+    first = projection["sections"][0]["chapters"]
+    assert [c["id"] for c in first] == ["generated-domains", "explanation-biopeia-one-step-across-the-domains"]
+
+
 def test_chapter_title_is_lifted_out_of_the_body(projection):
     chapter = next(c for c in chapters(projection) if c["source"] == "explanation/world/recovery.md")
     assert chapter["title"] and not chapter["markdown"].startswith("# ")

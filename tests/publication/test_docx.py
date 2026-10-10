@@ -122,6 +122,13 @@ def test_contents_shows_placeholders_then_real_pages():
     assert f">{PAGE_PLACEHOLDER}<" not in document_xml(final) and ">42<" in document_xml(final)
 
 
+def test_front_page_names_the_edition():
+    projection = small(chapter("explanation/w/a.md", "A.\n"))
+    assert "Working edition." in document_xml(build_docx(projection)[0])
+    published = document_xml(build_docx(projection, edition="published")[0])
+    assert "Published edition." in published and "Working edition." not in published
+
+
 def test_single_chapter_appendix_has_one_heading():
     _, toc = build_docx(small(chapter("explanation/w/a.md", "A.\n")))
     assert [e["text"] for e in toc] == ["Part I — One", "1. Title", "Appendix A — Catalog"]

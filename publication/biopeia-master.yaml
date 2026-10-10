@@ -14,9 +14,13 @@ publication:
 # and/or `generated` sections (rendered from the registry by
 # tools/publication/projection.py).
 parts:
+  # The system view comes first: which domains exist, and how one step
+  # crosses them today, including what is joined only in tests.
   - id: biopeia
     title: Biopeia
     generated: [domains]
+    chapters:
+      - explanation/biopeia/one-step-across-the-domains.md
 
   - id: organism
     title: Organism
@@ -87,8 +91,6 @@ parts:
 
   - id: cross-domain
     title: Cross-domain architecture
-    chapters:
-      - explanation/biopeia/one-step-across-the-domains.md
     generated: [contracts]
 
 appendices:
