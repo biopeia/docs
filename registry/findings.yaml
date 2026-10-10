@@ -1626,3 +1626,129 @@ findings:
       - explanation/organism/actuator-evidence.md
     material: false
     status: open
+
+  F-0070:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-cognitive-graph
+      - mechanism.organism-graph-plasticity
+      - component.organism-generative-resident
+    summary: >
+      No code in the Organism source calls the cognitive transition, any plasticity function, the generative resident or the birth loader; the packaged base graph is empty and nothing adds a first sense node. Graphs that compute, and loops that update a weight, exist only inside tests. The object the resident reads prediction errors and activations from has no provider, and the resident's outputs are not connected to admission.
+    documented_in:
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/graph-plasticity.md
+      - explanation/organism/generative-resident.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/43"
+
+  F-0071:
+    class: evidence_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-graph-plasticity
+    summary: >
+      The only test that runs activation, prediction error and a weight update together, named for a predictor learning a periodic signal, passes because the weight decays from 0.05 to 0.0001 and the loss falls to that of predicting zero (0.32). The prediction error and the eligibility trace do not enter the update, and the edge's plasticity field is read by no update. No test shows a predictor beating a zero-output or persistence baseline.
+    documented_in:
+      - explanation/organism/graph-plasticity.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/44"
+
+  F-0072:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-cognitive-graph
+      - mechanism.organism-graph-plasticity
+    summary: >
+      A graph documented as immutable keeps the mutable edge objects it was given and shares them with every graph derived from it: changing a weight through a derived graph changes it in the original, and a weight set outside the permitted range after construction is used without validation. The original graph returned on a refused structural change is therefore not an independent fallback.
+    documented_in:
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/graph-plasticity.md
+    material: false
+    status: open
+
+  F-0073:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - mechanism.organism-cognitive-checkpoint
+      - component.organism-cognitive-graph
+      - component.organism-generative-resident
+    summary: >
+      A cognitive checkpoint is neither exact nor complete. Edge weights are rounded to 17 levels and eligibility restored as zero, so a restored graph gives different readouts than the live one (weight 0.4 returns as 0.5). No field exists for structural plasticity counts, shadow predictions, tuned parameters, the genome, the kernel limits, the resident's budget, its overflow count or hypothesis reconciliation counts; models and the evidence resolver are external by design.
+    documented_in:
+      - explanation/organism/cognitive-checkpoint.md
+      - explanation/organism/graph-plasticity.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/45"
+
+  F-0074:
+    class: performance_concern
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-generative-resident
+      - mechanism.organism-cognitive-checkpoint
+    summary: >
+      The generative scheduler keeps one usage entry per tick and mode forever and the calibration table appends one number per comparison; neither is pruned and both are written into every checkpoint. In a run of 2000 steps the exported resident state grew from 8 kB at 10 steps to 164 kB, with 2000 entries in each store.
+    documented_in:
+      - explanation/organism/generative-resident.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/46"
+
+  F-0075:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-generative-resident
+    summary: >
+      The three guards the generative package presents are on no path: the epistemic firewall's methods and the agenda's external-target rejection have no caller, the factual contamination counter is never incremented, and the agenda accepts any well-formed target. Separation from action is structural (the package can reach no actuator or factual store); separation from evidence rests on a resolver outside the repository, and a permissive resolver admitted a generated state identifier as an evidence reference.
+    documented_in:
+      - explanation/organism/generative-resident.md
+    material: false
+    status: open
+
+  F-0076:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-generative-resident
+      - mechanism.organism-cognitive-checkpoint
+    summary: >
+      Restoring generative state changes later behaviour without changing a saved number: the use tracker evicts by insertion order, which becomes sorted order after restore; a restored resident takes the default budget whatever it was built with. The resident's step also accepts a tick lower than a previous one, unlike the graph transition.
+    documented_in:
+      - explanation/organism/generative-resident.md
+      - explanation/organism/cognitive-checkpoint.md
+    material: false
+    status: open
+
+  F-0077:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-cognitive-graph
+      - mechanism.organism-graph-plasticity
+      - component.organism-generative-resident
+      - mechanism.organism-cognitive-checkpoint
+    summary: >
+      Docstrings in the cognition package cite code and documents absent from the repository (CognitiveBridge, WeightStabilityTracker, AdaptiveSenseModel, SelfModel, StructuralContention, a master doc by section number, CLAUDE.md); the node identifier error message omits the colon its pattern allows; the historical name Symbiont is part of the saved format as started_symbiont_tick and last_symbiont_tick; and two test names say learns or learned where the test uses a decaying weight or a lambda.
+    documented_in:
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/graph-plasticity.md
+      - explanation/organism/generative-resident.md
+      - explanation/organism/cognitive-checkpoint.md
+    material: false
+    status: open
