@@ -155,7 +155,8 @@ def test_cover_has_identity_and_no_revision_hash():
     xml = document_xml(build_docx(projection)[0])
     cover = xml[: xml.index("Publication identity")]
     assert "logo.png" in cover and ">P<" in cover and ">S<" in cover and "Release 2026.01.02-abcdef0" in cover
-    assert "f" * 40 not in cover and "f" * 40 in xml
+    assert "fffffff" not in cover and ">fffffff<" in xml  # short, in the provenance table, linking to the commit
+    assert "f" * 40 not in re.sub(r"<w:hyperlink.*?>", "", xml)
 
 
 def test_style_is_data_and_changes_only_the_look():
@@ -234,6 +235,16 @@ def test_references_become_links_to_github():
     assert links["explanation/w/a.md"] == one["source_url"]
     assert "not.a.reference" not in links and 'w:val="CodeLink"' in xml
     assert qa.check_docx(data) == []
+
+
+def test_revision_is_shown_short_and_still_links_to_the_commit():
+    sha = "6543188ff302a5f2dc8002c0086252d6061e5310"
+    one = chapter("explanation/w/a.md", f"Reviewed against `organism` at commit `{sha}`.\n")
+    one["references"] = {sha: {"url": f"https://github.com/biopeia/organism/commit/{sha}", "label": "2026.10.09-6543188"}}
+    data, _ = build_docx(small(one))
+    xml = document_xml(data)
+    assert sha not in xml
+    assert linked(xml, data)["2026.10.09-6543188"].endswith(f"/organism/commit/{sha}")
 
 
 def test_component_identifier_links_to_its_sheet_and_anchor_links_to_its_section():

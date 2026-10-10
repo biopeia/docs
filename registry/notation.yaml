@@ -1,4 +1,51 @@
 schema_version: 1
 
 # Formal notation. A global symbol cannot have two canonical meanings.
-symbols: {}
+#
+# A first, bounded set: quantities that a unit document states as a formula or
+# a computed number and whose names invite a stronger reading than the
+# computation supports. `forbidden_meanings` records the readings the owning
+# document rules out.
+symbols:
+
+  utility:
+    meaning: >
+      In prospective deliberation, the product of a candidate outcome's mean
+      recorded value, the confidence of that value, the confidence class of
+      the prediction over seven, and a homeostatic deviation. The candidate
+      with the highest positive utility, ahead of the next by a margin, is
+      returned.
+    scope: local
+    owner: component.organism-prospective-deliberation
+    forbidden_meanings:
+      - a reward supplied from outside the Organism
+      - a measure of what the Organism wants or prefers in any wider sense
+      - a quantity that changes behaviour; at the reviewed revision the result is used by nothing
+    canonical_refs:
+      - explanation/organism/prospective-deliberation.md
+
+  controllability:
+    meaning: >
+      A difference between two observed rates, how often a change followed a
+      kind of command and how often it happened otherwise, scaled by how many
+      rows of evidence there are.
+    scope: local
+    owner: component.organism-causal-evidence
+    forbidden_meanings:
+      - a causal effect; nothing intervenes, randomises or tests
+      - a property the Organism knows it has
+      - one number; the package uses the word for three different ones
+    canonical_refs:
+      - explanation/organism/causal-evidence-and-controllability.md
+
+  agency:
+    meaning: >
+      In the agency model, a weighted sum of three numbers computed from
+      counted evidence about commands and the changes that followed them.
+    scope: local
+    owner: component.organism-causal-evidence
+    forbidden_meanings:
+      - evidence that the Organism acts on its own account
+      - a quantity established by any experiment
+    canonical_refs:
+      - explanation/organism/causal-evidence-and-controllability.md

@@ -220,6 +220,10 @@ class Document:
             return self.component_bookmarks.get(found["component"]), None
         return None, found.get("url")
 
+    def shown_as(self, token: str) -> str:
+        """A revision is shown by its day and short hash; everything else as written."""
+        return (self.references.get(token) or {}).get("label", token)
+
     def runs(self, inlines: list[dict[str, Any]], base: str, bold: bool = False, code_size: float | None = None,
              link_references: bool = True) -> str:
         out = []
@@ -234,6 +238,7 @@ class Document:
             for text, href in pieces:
                 if href and href.startswith("\0"):
                     anchor, url = self.reference_target(href[1:])
+                    text = self.shown_as(href[1:])
                 elif href:
                     anchor, url = self.link_target(href, base)
                 else:
@@ -543,7 +548,10 @@ class Document:
         rows = []
         for repo, source in sources.items():
             state = {"clean": "clean", "modified": "local modifications", "unresolved": "unresolved"}[source["state"]]
-            revision = cell(source["revision"] or "—", code=bool(source["revision"]))
+            # Shown as the release identifier is: day of the commit and short hash.
+            label = (f"{source['committed_on'].replace('-', '.')}-{source['revision'][:7]}"
+                     if source.get("committed_on") else (source["revision"] or "—")[:7])
+            revision = cell(label, code=bool(source["revision"]))
             if source["revision"] and self.links.get("github"):
                 revision[0]["href"] = f"{self.links['github']}/{repo}/commit/{source['revision']}"
             rows.append([cell(repo), revision, cell(state)])
