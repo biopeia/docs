@@ -557,3 +557,26 @@ components:
     consumers:
       - mechanism.embodiment-physical-projection
       - mechanism.physical-causal-step
+
+  ENV-DYN:
+    coverage_unit: component.environment-dynamic-state
+    name: "Dynamic object state and its owner"
+    authority:
+      owns: "the position of one identified object in the environment, and the record of the last physical step Environment accepted for it"
+      may_decide:
+        - "whether a candidate is for this World, environment, revision, object and frame, and is the next step"
+        - "whether checkpoint bytes are a valid state of this owner under its schema"
+      must_not:
+        - "define environmental laws or judge whether a proposed position is physically admissible"
+        - "solve physics or claim a candidate was calibrated"
+        - "mint the authority of a physical step"
+    state:
+      owner: environment
+      family: environmental_state
+    inputs:
+      - "a candidate object state with a correlation, and the correlation to expect"
+    outputs:
+      - "the object's current state"
+      - "a checkpoint holding the binding, the object state and the last accepted correlation"
+    consumers:
+      - "none found in the source or tests of any other repository at the revision reviewed"

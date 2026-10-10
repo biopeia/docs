@@ -49,15 +49,20 @@ contracts:
     summary: >
       Every owner taking part in a physical step accepts a result only if it
       carries the correlation the owner was told to expect: World, source
-      tick, step, and the owner's own identity and revision. Each domain
-      defines its own correlation type and nothing in code ties them or shows
-      that World authorised them.
+      tick, step, and the owner's own identity and revision. World's
+      coordinator issues one context for the step, with explicit source and
+      target ticks; each domain still defines its own correlation type, and
+      the adapters that derive an owner's correlation from World's context
+      exist only in test fixtures. An owner cannot verify that World
+      authorised what it is handed.
     agreement: fixture_only
     parties:
       - unit: mechanism.physical-causal-step
         role: builds the correlations of one step and passes them to the owners
       - unit: component.environment-static-scene
-        role: adopts a candidate only against the expected correlation
+        role: adopts a candidate only against the expected correlation, for the World it is bound to
+      - unit: component.environment-dynamic-state
+        role: adopts a changed object state against the expected correlation, for the World it is bound to
       - unit: component.embodiment-physical-state
         role: adopts a solver candidate only against the expected correlation, with its own correlation type
       - unit: component.embodiment-articulated-body

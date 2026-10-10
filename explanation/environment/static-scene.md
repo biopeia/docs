@@ -1,8 +1,8 @@
 # The static scene and its owner
 
-Reviewed against `environment` at commit
-`f97ec22272b6be1e6742770e37cd370e7d96d6bc`. Everything below describes that
-revision. Statements are marked by what supports them: the code, the tests,
+Reviewed against `environment` at commit `0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41` (main on
+2026-10-10); first written against `f97ec22`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 
 ## What it is
@@ -75,7 +75,7 @@ every level, the previous schema version is refused with no compatibility path,
 and a restored owner refuses to adopt again a step it had already accepted
 (`test_checkpoint_persists_accepted_step_and_rejects_replay_after_restore`,
 `test_checkpoint_rejects_unknown_fields_at_each_scene_level`,
-`test_checkpoint_v3_persists_spheres_and_rejects_v2_without_compatibility`).
+`test_checkpoint_v4_persists_spheres_and_rejects_v3_without_compatibility`).
 
 Like the [finite resource](finite-resource.md), the owner answers World's
 two validation questions without importing World.
@@ -90,18 +90,24 @@ numbers describe the same step and differ by one. The scene's revision is a
 separate marker and is a string chosen by whoever builds the scene; nothing
 in this module advances it.
 
-## What is not checked
+## What is checked about the World, and what is not
 
-Read from the code and confirmed by running the module at that revision.
+First written against `environment@f97ec22`, when the owner was not tied to
+any World. Since `environment@0a9f4fb` it is: an owner is created for one
+World, refuses an expected correlation that names another
+(`test_checkpoint_rejects_last_correlation_from_another_world` covers the
+restored case), and writes the World into its checkpoint, whose schema
+changed for that reason. A run of the module at that revision confirmed that
+a step carrying another World identifier is refused; at the earlier revision
+it had been adopted.
 
-- **That World authorised the correlation.** The class is documented as a
-  "World-authorized correlation value; Environment does not mint authority",
-  and the owner compares the candidate with an expected correlation. Both are
-  handed to it by its caller. Environment cannot tell whether World
-  authorised either.
-- **That successive steps belong to the same World.** The owner checks the
-  environment, the revision and the tick. A step carrying a different World
-  identifier was adopted as the next tick.
+What remains outside the owner's reach, read from the code and confirmed by
+the same run:
+
+- **That World authorised the correlation.** The class now says so itself:
+  the correlation "is not proof of World authorization" and is derived by an
+  integration adapter from World's context. The owner compares the candidate
+  with an expected correlation, and both are handed to it by its caller.
 - **That the owner's identifier is the environment's.** An owner created with
   an unrelated identifier holds, and validates a checkpoint for, a scene of
   another environment identifier.
@@ -118,7 +124,7 @@ whoever builds them, which today is a test fixture; see
 | Claim | Support |
 |---|---|
 | Scene validation, projection, adoption rules, checkpoint strictness, replay refused after restore | Code and tests in `environment:tests/test_static_scene.py` |
-| A step from another World is adopted; owner and environment identifiers are not tied | Code, and one ad hoc run of the module at that revision |
+| A step from another World is refused; owner and environment identifiers are not tied | Code, tests, and one ad hoc run of the module at that revision |
 | The offset of one between the owner's tick and World's | Code of this module and of World's physical step fixture |
 | That a solver does not own the scene | Accepted decision ADR-0098; a statement of intent |
 
