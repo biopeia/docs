@@ -208,9 +208,11 @@ class Document:
         return (f'<w:bookmarkStart w:id="{self.bookmarks}" w:name="{bookmark}"/>{content}'
                 f'<w:bookmarkEnd w:id="{self.bookmarks}"/>')
 
-    def heading(self, level: int, text: str, bookmark: str | None = None, listed_as: str | None = None,
-                properties: str = "") -> None:
-        content = text_run(text)
+    def heading(self, level: int, text: str | list[dict[str, Any]], bookmark: str | None = None,
+                listed_as: str | None = None, properties: str = "") -> None:
+        # A heading taken from a document keeps its identifiers in the technical typeface.
+        content = text_run(text) if isinstance(text, str) else self.runs(
+            text, "", code_size=self.style["sizes"][("part", "chapter", "section", "subsection")[min(level, 4) - 1]] - 1)
         if bookmark:
             content = self.bookmarked(content, bookmark)
             if listed_as:
@@ -330,7 +332,7 @@ class Document:
         for block in blocks:
             if block["type"] == "heading":
                 # '##' in a document is one level below its chapter heading.
-                self.heading(block["level"] + 1, plain(block["inlines"]))
+                self.heading(block["level"] + 1, block["inlines"])
             elif block["type"] == "paragraph":
                 self.body.append(paragraph("Normal", self.runs(block["inlines"], base)))
             elif block["type"] == "list":
@@ -499,9 +501,11 @@ class Document:
                 self.body.append(paragraph("ChapterList", link))
         for index, entry in enumerate(section["chapters"]):
             if entry["label"]:
-                # The first chapter starts under the part heading; the others on a new page.
+                # The first chapter starts under the part heading. The others
+                # follow on, or open a page, as the style says.
                 self.heading(2, entry["label"], entry["bookmark"], listed_as=entry["label"],
-                             properties='<w:spacing w:before="480"/>' if index == 0 else "<w:pageBreakBefore/>")
+                             properties="<w:pageBreakBefore/>" if index and self.style["layout"]["chapter_starts_page"]
+                             else '<w:spacing w:before="640"/>')
             chapter = entry["chapter"]
             source = (text_run("Generated from ") if chapter["generated"] else text_run("Source: ")) + text_run(
                 breakable(chapter["source"]), code=True, size=self.style["sizes"]["meta"])

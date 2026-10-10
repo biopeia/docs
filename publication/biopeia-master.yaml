@@ -110,15 +110,9 @@ appendices:
   - id: glossary
     title: Glossary
     generated: [glossary]
-  - id: notation
-    title: Notation
-    generated: [notation]
-  - id: parameters
-    title: Parameters
-    generated: [parameters]
-  - id: metrics
-    title: Metrics
-    generated: [metrics]
+  - id: notation-parameters-metrics
+    title: Notation, parameters and metrics
+    generated: [notation, parameters, metrics]
   - id: decisions
     title: Decision record index
     generated: [decisions]

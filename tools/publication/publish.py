@@ -114,7 +114,8 @@ def build(
         files[f"{publication['output']}.docx"] = final
         files[f"{publication['output']}.pdf"] = rendered
         record["pages"] = len(final_pages)
-        record["layout"] = {"sparse_pages": sparse, "typefaces": used}
+        fullest = max(qa.body_characters(final_pages))
+        record["layout"] = {"sparse_pages": sparse, "fullest_page_characters": fullest, "typefaces": used}
         record["tools"].update(pdf.tool_versions())
     return files, record
 

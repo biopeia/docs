@@ -90,18 +90,24 @@ def check_pagination(
     return problems
 
 
+def body_characters(pages: list[str]) -> list[int]:
+    """Characters of body text on each page: its two header and two footer lines left out."""
+    counts = []
+    for page in pages:
+        lines = [line for line in page.splitlines() if line.strip()]
+        counts.append(len("".join("".join(lines[2:-2]).split())))
+    return counts
+
+
 def check_density(pages: list[str], limits: dict) -> tuple[list[str], list[int]]:
     """Problems that fail the build, and the pages that are merely sparse.
 
     A page is measured by the characters of its body: its first line (the
     running header) and its last two (the footer) are left out. The cover is
-    exempt. A page with nothing on it is a layout fault; many sparse pages
+    exempt. A page that holds less than a line is a layout fault; many sparse pages
     mean the layout wastes paper.
     """
-    counts = []
-    for page in pages:
-        lines = [line for line in page.splitlines() if line.strip()]
-        counts.append(len("".join("".join(lines[2:-2]).split())))
+    counts = body_characters(pages)
     blank = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["blank_page_chars"]]
     sparse = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["sparse_page_chars"]]
     problems = [f"page {n} is empty or nearly so" for n in blank]

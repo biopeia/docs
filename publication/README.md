@@ -76,6 +76,11 @@ python tools/publication/model.py   # check the manifest
   matter includes both. The first needs a document that does not exist; the
   second needs numbered releases, and none has been cut. The publication says
   so where the history would be.
+- **The logo is the organisation's avatar, and that is the mark the
+  historical Symbiont documents carried.** Whether it is the Biopeia mark is
+  the owner's call; the file is one line in `style.yaml`.
+- **Pages that are too full are measured, not judged.** The manifest reports
+  the fullest page; no limit fails the build.
 - **Wide tables are not turned to landscape.** Columns are sized for their
   longest unbreakable piece and identifiers break after `/ . _ - :`; nothing
   is clipped, but a very wide table is not rotated.
