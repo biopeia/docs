@@ -1,0 +1,88 @@
+name: Publication
+
+# Builds the documentation as one ordered work. Kept apart from CI: the
+# registry checks there need only Python, this needs LibreOffice and a
+# pinned mermaid-cli.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  # Keep in step with PINNED_VERSION in tools/publication/mermaid.py.
+  MERMAID_CLI_VERSION: "11.4.2"
+
+jobs:
+  publication:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install LibreOffice, poppler and the typefaces the document names
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libreoffice-writer poppler-utils fonts-liberation
+      - run: npm install --global "@mermaid-js/mermaid-cli@${MERMAID_CLI_VERSION}"
+      - run: python -m pip install --upgrade pip "pyyaml>=6" "pytest>=8"
+
+      - name: Manifest and navigation indexes
+        run: |
+          python tools/publication/model.py
+          python tools/render_indexes.py --check
+      # Here every publication test must really run: a skip is a failure.
+      - name: Publication tests, none skipped
+        run: |
+          set -o pipefail
+          python -m pytest tests/publication -rs | tee "$RUNNER_TEMP/pytest.txt"
+          ! grep -q "SKIPPED" "$RUNNER_TEMP/pytest.txt"
+
+      # A pull request proves the publication can be built and is
+      # reproducible; it publishes nothing and needs no credentials.
+      - name: Build (pull request)
+        if: github.event_name == 'pull_request'
+        run: python tools/publication/publish.py --check
+
+      # On main the manifest also records the revision of every domain
+      # repository the publication was built beside.
+      - uses: actions/create-github-app-token@v2
+        if: github.event_name != 'pull_request'
+        id: app
+        with:
+          app-id: ${{ vars.CI_READ_APP_ID }}
+          private-key: ${{ secrets.CI_READ_APP_PRIVATE_KEY }}
+          owner: biopeia
+          repositories: organism,embodiment,environment,world,modality,observation,lab
+      - name: Check out the domain repositories
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          gh auth setup-git
+          for repo in organism embodiment environment world modality observation lab; do
+            git clone --quiet --depth 1 "https://github.com/biopeia/$repo" "$RUNNER_TEMP/repos/$repo"
+          done
+      - name: Build
+        if: github.event_name != 'pull_request'
+        run: |
+          python tools/publication/publish.py --check --repos-root "$RUNNER_TEMP/repos"
+          {
+            echo '```json'
+            cat build/publication/publication-manifest.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: biopeia-master-${{ github.sha }}
+          path: build/publication/
+          if-no-files-found: error
