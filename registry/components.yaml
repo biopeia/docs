@@ -287,10 +287,8 @@ components:
     state:
       owner: embodiment
       family: embodiment_local
-    # birth, checkpoint and restart are read from the code; the checkpoint
-    # loses the physiology configuration and the per-tick spent amounts
-    # (F-0025). The code has no path for re-embodiment or reproduction: those
-    # two values record the intent of ADR-0094, not observed behaviour.
+    # birth, checkpoint and restart are read from the code. The code has no
+    # path for re-embodiment or reproduction: those two values record the intent of ADR-0094, not observed behaviour.
     lifecycle:
       birth: initialize
       checkpoint: preserve

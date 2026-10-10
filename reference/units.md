@@ -325,7 +325,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Operator material transfer (shared_type); Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py`, `embodiment:tests/test_checkpoint.py` |
-| Reviewed at | lab@6aa3e530ff08, embodiment@97cb09a82b0b, environment@0a9f4fbb1922, observation@be82907d1d67, world@a8d07fd791da (RECORDED) |
+| Reviewed at | lab@6aa3e530ff08, embodiment@6114f3d9bcc0, environment@0a9f4fbb1922, observation@be82907d1d67, world@a8d07fd791da (RECORDED) |
 | Known findings | F-0021 contract gap (open); F-0024 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/26)); F-0025 recovery durability gap ([issue](https://github.com/biopeia/embodiment/issues/27)); F-0026 documentation inconsistency (open); F-0027 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/20)) |
 
 ### Articulated body specification, active morphology and joint state
@@ -688,7 +688,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-identity-checkpoint`, `component.organism-cognitive-graph`, `component.organism-generative-resident` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/source_unit/cognition/test_portable_checkpoint.py`, `organism:tests/source_unit/cognition/test_graph_checkpoint.py`, `organism:tests/source_unit/cognition/test_generative_cognition_persistence.py`, `organism:tests/source_unit/cognition/test_generative_agenda_persistence.py`, `organism:tests/source_unit/cognition/test_generative_scheduler_persistence.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis_persistence.py` |
-| Reviewed at | organism@3cc0f319f4ac, world@a8d07fd791da (RECORDED) |
+| Reviewed at | organism@3cc0f319f4ac, world@cb6bfb7c9bcc (RECORDED) |
 | Known findings | F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0076 implementation finding (open); F-0077 documentation inconsistency (open) |
 
 ### Attention budget allocation
@@ -805,7 +805,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-finite-resource`, `component.world-durable-runtime` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0101-operator-control.md](../technical/adr/ADR-0101-operator-control.md), [technical/adr/ADR-0102-lab.md](../technical/adr/ADR-0102-lab.md) |
 | Tests | `lab:tests/integration/test_material_transfer_intervention.py`, `lab:tests/integration/test_operator_material_transfer.py` |
-| Reviewed at | lab@6aa3e530ff08, embodiment@97cb09a82b0b, environment@0a9f4fbb1922, observation@be82907d1d67, world@a8d07fd791da (RECORDED) |
+| Reviewed at | lab@d74d7bb67f70, embodiment@97cb09a82b0b, environment@0a9f4fbb1922, observation@be82907d1d67, world@a8d07fd791da (RECORDED) |
 | Known findings | F-0060 recovery durability gap ([issue](https://github.com/biopeia/lab/issues/31)); F-0061 contract gap ([issue](https://github.com/biopeia/lab/issues/32)); F-0062 implementation finding ([issue](https://github.com/biopeia/lab/issues/33)); F-0063 contract gap (open); F-0065 evidence gap (accepted); F-0068 documentation inconsistency (open) |
 
 ### Study utilities
