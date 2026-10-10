@@ -1,7 +1,10 @@
 # From a motor command to effector channels
 
-Reviewed against `embodiment` at commit `a5129f03aa4b024e33d332f917b9235afe97959c`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `embodiment` at commit `6f5fd9edb46c3a4557733df08149453f16bddb9f`;
+first written against `a5129f0`. Between the two, Embodiment replaced the
+structurally described actuator surface with a binding type of its own, and
+this document was rewritten for it. Everything below describes the later
+revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -36,67 +39,93 @@ The function takes five things and the kind of command being projected.
   the actuator surface it was written for, the tick it was issued at, the
   embodiment episode it targets, and its channels, each a pair of actuator
   identifier and value.
-- An **actuator surface**: a fingerprint, the morphology revision it was
-  built for, and one entry per actuator saying which effector it drives,
-  with what kind of command, quantity, unit, range, neutral value and
-  saturation policy, and whether it is available.
+- An **actuator binding**, described in the next section.
 - The **active morphology**: body, embodiment episode, morphology revision,
   and the effectors with their own declaration of quantity, unit, range,
   neutral value and saturation policy.
 - A **body pose** and an **embodiment checkpoint**.
 
 Embodiment does not import the Organism's command type or any morphology
-class. The first three inputs are described structurally: any object with
-the named attributes will do. The module gives the reason: "Organism owns
-its command types
-and Embodiment owns the active morphology".
+class. The command and the morphology are described structurally: any object
+with the named attributes will do. The module gives the reason: "Organism
+owns its command types and Embodiment owns the active morphology". The
+binding is different: it must be Embodiment's own type, and an object that
+merely has the right attributes is refused (ad hoc run).
+
+## The actuator binding
+
+Between the actuators an Organism addresses and the effectors a body has,
+something must say which is which. That is the binding
+(`embodiment:src/embodiment/physics3d/actuator_binding.py::EmbodimentActuatorBinding`),
+and it belongs to Embodiment: the module calls it "Embodiment-owned,
+revision-bound".
+
+A binding is made for one exact body, one embodiment episode and one
+morphology revision, and records the fingerprint of the actuator surface the
+commands will be written for. It holds one entry per actuator: the effector
+it drives, the kind of command, the quantity, unit, range and neutral value,
+the saturation policy, and whether the actuator is available. Actuator and
+effector identifiers are each unique within a binding, and the only
+saturation policy accepted is the literal `reject`
+(`test_binding_rejects_duplicate_channel_identity_and_invalid_contract`).
+
+It is immutable and has an identity: a SHA-256 over its whole content,
+including its own identifier, independent of the order of its entries. The
+module is careful about what that identity is not: it "is not a solver or
+World authorization token".
+
+It can be saved and restored. The checkpoint is canonical JSON with the
+fingerprint inside; restoring accepts exactly that shape, recomputes the
+fingerprint, and refuses unknown fields or content that no longer matches it
+(`test_binding_checkpoint_restores_identical_identity_and_projection`,
+`test_restore_rejects_unknown_fields_or_tampered_content`).
+
+The binding does not provide the two validation methods World asks of an
+owner in a causal cut, so it cannot by itself be a participant of one
+(inspection of the class).
 
 ## How a command is accepted
 
 Everything is checked before anything is produced. Any failure raises and
 there is no partial result.
 
-**Provenance.** The command's surface fingerprint must be the surface's. The
-pose and the checkpoint must be for the morphology's body, the checkpoint
-for its episode, the command for that same episode, and the surface for the
-morphology's revision
-(`test_rejects_provenance_revision_or_unknown_channel`,
-`test_rejects_checkpoint_or_pose_that_does_not_match_active_morphology`,
-`test_rejects_checkpoint_episode_mismatch`).
+**Provenance.** The command's surface fingerprint must be the one the binding
+records. The binding must be for the morphology's body, episode and
+revision. The pose and the checkpoint must be for the morphology's body, the
+checkpoint for its episode, and the command for that same episode
+(`test_rejects_command_binding_or_episode_mismatch`,
+`test_rejects_binding_body_episode_or_morphology_mismatch`,
+`test_rejects_checkpoint_or_pose_that_does_not_match_active_morphology`).
 
-**The surface against the morphology.** Effector identifiers are unique in
-the morphology; actuator and effector identifiers are unique in the surface.
-Every surface entry names an effector of the morphology and repeats its
-quantity, unit, range, neutral value and saturation policy exactly, and
-every effector of the morphology is covered by the surface. A surface for an
-older revision, one that disagrees on a range, one that maps two actuators
-to one effector, or one that leaves an effector out is refused
-(`test_rejects_surface_revision_or_effector_contract_mismatch`,
-`test_rejects_duplicate_surface_effector_and_missing_surface_coverage`).
-Every surface entry must carry the kind of command being projected
-(`test_rejects_wrong_command_kind_and_non_finite_values`).
+**The binding against the morphology.** Every binding entry names an effector
+of the morphology and repeats its quantity, unit, range, neutral value and
+saturation policy exactly, and every effector of the morphology is covered by
+the binding (`test_rejects_missing_binding_coverage_and_out_of_range_values`).
+Every binding entry must carry the kind of command being projected; a
+projection asked for another kind was refused (ad hoc run).
 
-**The command against the surface.** An actuator may appear once
-(`test_rejects_duplicate_command_channels`). It must exist in the surface
-and be available. Its value must be a finite number, not a boolean, and lie
-within the effector's range, bounds included
-(`test_rejects_unavailable_channel_command_and_out_of_range_value_without_saturation`).
+**The command against the binding.** An actuator may appear once. It must
+exist in the binding and be available. Its value must be a finite number and
+lie within the effector's range
+(`test_rejects_unavailable_unknown_or_duplicate_command_channel`,
+`test_rejects_missing_binding_coverage_and_out_of_range_values`).
 
 ## What comes out
 
 A candidate
 (`embodiment:src/embodiment/physics3d/actuation_projection.py::PhysicalActuationCandidate`)
 carrying the body, episode, morphology revision, kind of command, the
-command's provenance, and one channel per commanded effector. Each channel
+command's provenance, the identifier and fingerprint of the binding used, and
+one channel per commanded effector. Each channel
 repeats the body, episode, revision, effector and kind, and carries the
 value with its quantity, unit, range and neutral value, taken from the
 morphology.
 
 Three properties matter.
 
-**Identity, not order.** A value reaches the effector that the surface
-associates with its actuator. Reversing the order of the surface entries
-gives the same result
+**Identity, not order.** A value reaches the effector that the binding
+associates with its actuator. Reversing the order of the binding's entries
+gives the same result, and the same binding fingerprint
 (`test_maps_by_stable_effector_id_and_omission_means_no_command`). The
 output channels are sorted by effector identifier, whatever the order of the
 command (ad hoc run).
@@ -107,16 +136,17 @@ command with no channels at all produces a candidate with no channels
 (`test_omitted_command_is_not_replaced_by_zero_or_neutral`). The neutral
 value travels with each channel that is present as a declaration; the
 projection never uses it as a value. An unavailable actuator must still be
-declared by the surface, and a command that leaves it out is accepted (ad
+declared by the binding, and a command that leaves it out is accepted (ad
 hoc run).
 
 **Nothing is clipped.** A value outside the range is refused. The only
-saturation policy the code accepts, on either the morphology or the surface,
+saturation policy the code accepts, on either the morphology or the binding,
 is the literal `reject`; any other is refused as unsupported (ad hoc run).
 
 ## What it does not check
 
-Read from the code and confirmed by running the module at that revision.
+Read from the code and confirmed by running the module again at the revision
+reviewed.
 
 - **The pose and checkpoint are identity checks only.** The pose is read for
   its body identifier; the checkpoint for its body and episode identifiers.
@@ -164,7 +194,7 @@ caller than that fixture.
 
 | Claim | Support |
 |---|---|
-| Provenance checks, surface and morphology agreement, coverage, uniqueness, availability, range, mapping by identifier, omission | Code and tests in `embodiment:tests/test_actuation_projection.py`, run at that revision (all pass) |
+| Provenance checks, binding and morphology agreement, coverage, uniqueness, availability, range, mapping by identifier, omission, binding checkpoint | Code and tests in `embodiment:tests/test_actuation_projection.py`, run at that revision (all pass) |
 | Output sorted by effector; bounds inclusive; only `reject` accepted; numeric neutral required; unavailable actuator may be left uncommanded | Code, and one ad hoc run of the module at that revision |
 | Dead body projected; issue tick unchecked; a stand-in object accepted as checkpoint; whitespace-only identifier accepted | Code, and the same ad hoc run; no test is kept for these |
 | What a command must be bound to and what omission means | Accepted decision ADR-0073; a statement of intent |

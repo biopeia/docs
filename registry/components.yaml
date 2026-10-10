@@ -846,3 +846,35 @@ components:
     consumers:
       - "organism:src/organism/actuation/candidate.py takes effect strength from pair accumulators"
       - "five bounded structures embed capacity counters and export them; no code reads a counter at the reviewed revision"
+
+  EMB-BND:
+    coverage_unit: component.embodiment-actuator-binding
+    name: "Actuator binding"
+    authority:
+      owns: "the association between the actuators a command addresses and the effectors of one body, for one embodiment episode and one morphology revision, with each effector's command contract"
+      may_decide:
+        - "whether a binding is well formed and whether restored content matches its fingerprint"
+      must_not:
+        - "act as a solver or World authorization token"
+        - "saturate or clip a value"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code. re-embodiment and
+    # reproduction have no code path: a binding names one episode and one
+    # revision, so the values record that a new episode needs a new binding
+    # and that nothing is inherited, as intent and not as behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "body, episode and morphology revision; the fingerprint of the Organism's actuator surface; one entry per actuator"
+    outputs:
+      - "an immutable binding with a fingerprint"
+      - "a checkpoint that restores only if its content still matches the fingerprint"
+    consumers:
+      - mechanism.embodiment-actuation-projection
+      - mechanism.physical-causal-step
