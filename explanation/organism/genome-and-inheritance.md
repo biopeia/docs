@@ -134,8 +134,9 @@ one returns it as it is, after the kernel check
 `test_base_genome_is_semantics_free_and_within_kernel_limits`); the other
 returns it under an identifier supplied by the caller
 (`organism:src/organism/genetics/factory.py::create_standard_genome`). The
-identifier is given, never generated. Neither function is called from source
-code in the repository; only tests call the first, and nothing calls the
+identifier is given, never generated. The first is called by one
+other function of the same module, which pairs it with an empty graph; that
+function and the first are otherwise called only by tests. Nothing calls the
 second.
 
 So at this revision every genome that can be obtained without writing one by
