@@ -26,13 +26,14 @@ front:
 # and/or `generated` sections (rendered from the registry by
 # tools/publication/projection.py).
 parts:
-  # The system view comes first: which domains exist, and how one step
-  # crosses them today, including what is joined only in tests.
+  # What the project sets out to find out, then how one step crosses the
+  # domains today, including what is joined only in tests, then the domains.
   - id: biopeia
     title: Biopeia
-    generated: [domains]
     chapters:
+      - explanation/biopeia/research-hypotheses.md
       - explanation/biopeia/one-step-across-the-domains.md
+    generated: [domains]
 
   - id: organism
     title: Organism

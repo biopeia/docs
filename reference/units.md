@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-47 units, 10 cross-domain contracts, 105 findings.
+48 units, 10 cross-domain contracts, 105 findings.
 
 ## World
 
@@ -854,3 +854,14 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `lab:tests/unit/test_interoception.py` |
 | Reviewed at | lab@4d5ff706b832 (RECORDED) |
 | Known findings | F-0067 contract gap (open); F-0068 documentation inconsistency (open) |
+
+### Candidate research hypotheses
+
+`concept.biopeia-research-hypotheses` · concept · UNRESOLVED
+
+| | |
+|---|---|
+| Owned by | lab; also involves organism, embodiment, environment, world, modality, observation |
+| Explained in | [explanation/biopeia/research-hypotheses.md](../explanation/biopeia/research-hypotheses.md) |
+| Depends on | `component.embodiment-somatic-state`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-causal-evidence`, `mechanism.organism-cognitive-checkpoint`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation`, `concept.biopeia-what-it-is`, `concept.biopeia-one-step-across-the-domains` |
+| Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md](../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
