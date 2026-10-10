@@ -48,10 +48,11 @@ Explanatory documents of the Lab domain (apparatus).
 
 ## Open findings
 
-7 findings on these units are open, 3 of them with an issue in the owning repository:
+9 findings on these units are open, 3 of them with an issue in the owning repository:
 
-- contract gap: 3
+- contract gap: 4
 - documentation inconsistency: 1
+- evidence gap: 1
 - implementation finding: 2
 - recovery durability gap: 1
 

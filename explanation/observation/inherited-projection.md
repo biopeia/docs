@@ -1,9 +1,10 @@
 # The inherited projection
 
-Reviewed against `observation` at commit `be82907d1d677b2362e369d15eb1e8e964d893aa`.
+Reviewed against `observation` at commit `6aac3c76684834722440f53c9d8604ac4c16b138`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run of the module, or an
-accepted decision. A decision is intent, not a result.
+supports them: the code, the tests, an ad hoc run of the module made at that
+revision on 2026-10-11, or an accepted decision. A decision is intent, not a
+result.
 
 ## What it is
 
@@ -46,8 +47,8 @@ present and convertible:
 - **body**: `tick`, `body_kind`, a base position and orientation, a resource
   position, a list of joints (name and position), a list of links (name,
   position and orientation) and four contact counts;
-- **cognition, when emitted**: `tick`, a second tick under the inherited name
-  `symbiont_tick`, and about thirty counters and scalars with names such as
+- **cognition, when emitted**: `tick`, and about thirty counters and scalars
+  with names such as
   `schema_confidence`, `predictor_count` and `motor_primitives`, plus a few
   values passed through as they are, such as `prediction_error`;
 - **vitals**: `tick`, `alive`, ages, distances and progress relative to a
@@ -56,10 +57,19 @@ present and convertible:
 
 Nothing in this repository computes or interprets any of them. A name such
 as `schema_confidence` is a key that is copied when a caller supplies it. It
-is not evidence that any Organism holds a quantity of that meaning. The name
-`symbiont_tick` predates
+is not evidence that any Organism holds a quantity of that meaning.
+
+One inherited key has been removed. Up to `observation`
+`be82907d1d677b2362e369d15eb1e8e964d893aa` the cognition and vitals records
+also copied a second tick under the name `symbiont_tick`, a name that
+predates
 [ADR-0085](../../technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md),
-under which the individual is called Organism.
+under which the individual is called Organism. The function no longer reads
+that key. Supplying it has no effect, and it is not taken as another name
+for `tick`, including when both are given with different values
+(`test_projection_does_not_emit_or_alias_symbiont_tick`). The repository adds
+that the remaining `tick` "does not by itself assert World causal time,
+Organism progression, or any other domain-time semantics".
 
 ## The rule it follows: absent stays absent
 
@@ -148,28 +158,36 @@ No use of `ObservedFrame` was found in any other repository.
 
 ## Who calls the projection today
 
-Two callers were found, both read at their own main branches, and both
-pinning `observation@cb07ace206058719a9aa9df65e2eb1f837130ee9`. The
-projection and the frame are unchanged between that revision and the one
-reviewed here.
+Two callers were found by a search of the seven repositories at their heads
+on 2026-10-11. Both pin
+`observation@be82907d1d677b2362e369d15eb1e8e964d893aa`, two commits behind
+the revision reviewed here. Between the two, the one change to the
+projection is that `symbiont_tick` is no longer copied; the frame is
+unchanged. Neither caller supplies that key, so each gets back the same
+records at its pin and at the head.
 
 - **Lab**, in source code: the operator material transfer
   (`lab:src/lab/interventions/material_transfer.py`, at
-  `lab@4d5ff706b8329ddf25e1852ad53cbde5285d2851`) calls the function after
-  the World cut has been committed and returns the three records as the
-  `observations` of its result. Lab's integration test checks the three tags
-  and that no record carries a run identifier.
+  `lab@29e25d85e796d96a3f2e830fd870a2f74e8e2266`) calls the function after
+  the World cut has been committed and returns the records as the
+  `observations` of its result. It passes a source label, an instance, a
+  sequence, a tick, a body-kind label and `resource_remaining`. It gets two
+  records back, body and vitals, and no cognition record (ad hoc run at the
+  heads). Lab's integration test checks those two tags, that none is
+  cognition, and that no record carries a run identifier.
 - **World**, in an integration test only
   (`world:tests/integration/test_first_biopeia_causal_tick.py`, at
-  `world@c162b67e698de9b47450264402677b0165e6e20e`), likewise after the
-  commit.
+  `world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`), likewise after the
+  commit. It passes a source label, an instance, a run identifier, a
+  sequence, a tick, a body-kind label, `body_age_ticks` and one cognition
+  counter, `cognitive_readouts`, and so gets three records.
 
-Both callers pass `metabolic_reserve_ratio`. At the revision they pin, and
-at this one, that key is not emitted, so the value they compute does not
-appear in what they get back. The World test also passes `world_record_id`,
-which the function does not know. In both callers the mapping is assembled
-by hand from values of several owners: a body's reserve, a resource's
-remaining quantity, a causal tick.
+Neither caller passes `metabolic_reserve_ratio` any longer, and the World
+test no longer passes `world_record_id`; at the revisions first documented
+both did, and the projection discarded them. Every key the two callers pass
+today is one the function knows. In both callers the mapping is assembled by
+hand from values of several owners: a resource's remaining quantity, a
+body's age, a causal tick.
 
 ## Set beside the claim model
 
@@ -208,9 +226,9 @@ not something this documentation decides.
 
 | Claim | Support |
 |---|---|
-| Body/vitals emission, conditional cognition emission, absence preservation, input non-mutation, non-mapping refusal, reserve-key omission and frame provenance | Code and tests in `observation:tests/test_projection.py` at the reviewed revision |
+| Body/vitals emission, conditional cognition emission, absence preservation, input non-mutation, non-mapping refusal, reserve-key omission, `symbiont_tick` neither emitted nor aliased, and frame provenance | Code and tests in `observation:tests/test_projection.py` at the reviewed revision; the file's 11 cases passed in an ad hoc run |
 | Unknown keys dropped silently; numeric coercion; treatment of malformed lists; shallow nested copies in `ObservedFrame.as_event`; empty run identifier accepted | Code, and ad hoc runs of the module at the reviewed revision |
-| The two callers and what they pass; no use of the frame | Text search and reading of `lab` and `world` at the commits named above; they exercise `observation@cb07ace`, where these two modules are identical |
+| The two callers and what they pass; no use of the frame | Text search of the seven repositories at their heads on 2026-10-11, and reading of `lab` and `world` at the commits named above; both pin `observation@be82907`, which differs from the reviewed revision in these two modules only by the removed `symbiont_tick` copy |
 | Origin of the code and the reasons for what was left out | The repository's `MIGRATION.md`, a record of provenance and intent |
 | That the projection is transitional | The approved design, point P8: a decision, not a property of the code |
 

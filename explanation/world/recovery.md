@@ -1,8 +1,9 @@
 # World recovery
 
-Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
+Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, or neither.
+supports them: the code, the tests, an ad hoc run made at that revision on
+2026-10-11, or neither.
 
 ## What this is about
 
@@ -30,10 +31,18 @@ a restart alone is not recovery.
    the manifest still preparing treats the transition as interrupted and
    marks it. This is what turns a process that died mid-tick into a World
    that requires recovery when it is next started. Covered at the level of
-   the store by `test_durable_pending_transition_blocks_ordinary_execution`.
+   the store by `test_durable_pending_transition_blocks_ordinary_execution`,
+   and with a writer process that is actually stopped by
+   `test_process_termination_after_preparing_reopens_prior_cut_as_recovery_required`
+   and the other termination tests listed in
+   [the durable runtime document](durable-runtime.md).
 3. **The manifest changed behind the runtime's back.** At the start of each
    tick the runtime compares the durable manifest with its own copy and
-   latches if they differ. Read from the code; no test was found for it.
+   latches if they differ. Read from the code; no test was found for it. In
+   an ad hoc run, a second runtime restored from the same files committed a
+   tick; the first runtime's next tick was refused with "durable manifest
+   changed outside this runtime", and the durable manifest stayed committed
+   at the second runtime's tick.
 
 In the first two cases the need is durable: it is written in the manifest and
 survives the process. In the third it is a latch in one runtime's memory.
@@ -55,9 +64,12 @@ It goes back; it never goes forward. The failed transition is not retried or
 completed. In order:
 
 1. Confirm the World is in fact waiting for recovery, and that the caller is
-   asking about the right World and a presence that belongs to it.
+   asking about the right World and a presence that belongs to it, or about
+   no presence when the World has none.
 2. Read the journal snapshot of the previous cut and check that it agrees
-   with the manifest.
+   with the manifest. Since the journal keeps a causal-cut record per tick,
+   this includes that there is one for every tick and that the latest names
+   the manifest's commit, participants and owner references.
 3. Verify the previous cut's references: the files are there, their hashes
    match, and each owner's contract accepts its checkpoint.
 4. Call the **restorer**, supplied by the caller, with the owners'
@@ -74,6 +86,12 @@ successful recovery is covered by
 `test_explicit_recovery_restores_prior_cut_through_owner_and_records_receipt`,
 and a retry after an interruption between the receipt and the manifest by
 `test_retry_after_recovery_publication_interruption_fsyncs_existing_receipt_directory`.
+Owner causal records committed before the failed tick are still in the
+journal after the recovery
+(`test_owner_causal_record_survives_recovery_after_later_failed_tick`), and a
+failed termination of a presence is recovered to the cut in which the
+presence is still active
+(`test_rejected_or_failed_presence_lifecycle_does_not_publish_next_tick`).
 
 ## Starting again from a committed cut
 
@@ -91,10 +109,13 @@ remain, none of it referenced by any committed cut:
 
 - owner checkpoints written by the callback for the tick that failed;
 - the journal snapshot written for that tick, if the failure came later;
-- the receipt of the recovery, which is kept deliberately.
+- the receipt of the recovery, which is kept deliberately and is read again
+  if the same transition identifier is offered at the same tick (see
+  [the causal manifest document](causal-manifest.md)).
 
 The first was observed in an ad hoc run recorded in
-[the durable runtime document](durable-runtime.md). Nothing in `world`
+[the durable runtime document](durable-runtime.md): the checkpoint written
+for the failed tick was still on disk after the recovery. Nothing in `world`
 removes such files.
 
 The committed and pending presence-to-owner associations are part of the
@@ -107,10 +128,13 @@ external authorities.
 - **That the owners are back where they were.** World checks that the
   previous checkpoints are intact and that each owner's contract answers yes.
   It cannot see the owners' live state.
-- **General crash consistency.** The process-termination test covers a specific
-  stop after PREPARING and verifies that restart reopens the prior cut as
-  `RECOVERY_REQUIRED`. It does not prove power-loss durability, exhaustively
-  test crash points, or establish a general multi-process recovery protocol.
+- **General crash consistency.** The process-termination tests stop a writer
+  after PREPARING and at several points of the manifest, journal and owner
+  checkpoint writes, and verify that the prior cut is still the committed
+  one and needs explicit recovery. They do not prove power-loss durability,
+  exhaustively test crash points, or establish a general multi-process
+  recovery protocol. No test runs a recovery in one process while another
+  holds the World.
 - **Safety of a partial restoration.** The code requires the restorer to be
   "safe to retry"; that is an obligation on the caller, not something
   checked.
@@ -123,14 +147,15 @@ external authorities.
 
 ADR-0093 reserves whether the failure of one participant requires the whole
 World, or only that participant, to enter recovery. In this implementation
-the question does not arise in that form: a World runtime acts as one
-presence, and any failure in a tick puts the whole World in recovery.
+the question does not arise in that form: a World runtime acts as at most
+one presence, and any failure in a tick after it opened puts the whole World
+in recovery.
 
 ## What supports this description
 
 | Claim | Support |
 |---|---|
-| Failure and interruption lead to a durable recovery-required state; ticks and restore are refused; explicit recovery restores the previous cut and writes a receipt; a failed restoration keeps the state | Code and tests in `world:tests/test_durable_runtime.py` and `world:tests/test_manifest.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
-| A manifest changed outside the runtime latches it at the next tick | Code only |
-| Residue left by a failed tick | Code, and one ad hoc run |
+| Failure and interruption lead to a durable recovery-required state; ticks and restore are refused; explicit recovery restores the previous cut and writes a receipt; a failed restoration keeps the state | Code and tests in `world:tests/test_durable_runtime.py` and `world:tests/test_manifest.py` at World `95f5064c6b06bd66bb58a72110b066afe4ca70b0` |
+| A manifest changed outside the runtime latches it at the next tick | Code, and one ad hoc run at that revision; no test |
+| Residue left by a failed tick, before and after recovery | Code, and one ad hoc run at that revision |
 | What recovery must mean | Accepted decision ADR-0093; a statement of intent |

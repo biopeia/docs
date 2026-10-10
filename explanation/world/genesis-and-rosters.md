@@ -1,6 +1,6 @@
 # World genesis, rosters and participant closure
 
-Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
+Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -32,7 +32,10 @@ A third list is not a roster: **step participants**, owners whose state takes
 part in one tick only and are not registered afterwards.
 
 All three are stored in the manifest of each cut, so they are durable and
-part of what a cut means.
+part of what a cut means. The manifest holds the current cut only. The
+participants of every earlier cut, registered owners and step participants
+together, are kept in the journal, in one causal-cut record per tick (see
+[the durable runtime document](durable-runtime.md)).
 
 ## How a World starts
 
@@ -61,10 +64,25 @@ participants. There is no other way: no call adds a member outside a tick,
 and the manifest store accepts no roster that differs from the one prepared
 when the transition opened.
 
+A change to the presence roster needs more than the request. The caller must
+also hand the tick a presence lifecycle transition
+(`world:src/world/durable_runtime.py::PresenceLifecycleTransition`): its type,
+`REGISTER` or `TERMINATE`; the one presence concerned; and a non-empty,
+JSON-serialisable account of what triggered it, which World stores and does
+not interpret. One tick changes exactly that presence and no other. The
+affected presence's owner must take part in that tick, as a registered owner
+or as a step participant, and contribute a checkpoint reference. When the
+tick commits, the journal gains a `world.presence.lifecycle.committed`
+record, attributed to World, holding the transition, the presence and its
+owner, the source and target ticks, the trigger, the participants, that
+owner's checkpoint reference and the resulting presences and links.
+
 A tick rejects, before writing anything: duplicates in a request; registering
 an owner already registered; unregistering one that is not; a step
-participant that is also a registered owner; a tick that would leave no owner
-at all; and unregistering the very presence the runtime is acting as. A newly
+participant that is also a registered owner; a tick with no participating
+owner at all; a change to the presence roster without a lifecycle
+transition, or with one that names another presence; and a lifecycle
+transition identifier that the journal already holds as committed. A newly
 registered owner and every step participant must come with its checkpoint
 contract. When an owner is unregistered its contract is dropped, and a step
 participant's contract is not kept after the tick.
@@ -74,6 +92,28 @@ Covered by
 `test_new_owner_cannot_register_without_owner_checkpoint_contract`,
 `test_lifecycle_registration_and_step_participants_are_explicit_and_exact`
 and `test_presence_roster_is_published_only_through_world_lifecycle_tick`.
+The lifecycle rules are covered by
+`test_rejected_or_failed_presence_lifecycle_does_not_publish_next_tick`,
+`test_last_presence_can_terminate_world_remains_active_and_later_registers`
+and `test_presence_lifecycle_detaches_and_deep_freezes_trigger_provenance`.
+
+### A World that loses its last presence
+
+The runtime may terminate the presence it is itself acting as. At the
+revision first documented this was refused; it is now the way a presence
+leaves. When the last presence is terminated, and its owner unregistered in
+the same tick while taking part as a step participant, the World commits a
+cut with no presence, no link and no registered owner. It remains a committed
+World. The runtime then acts as no presence, and the World can be restored
+without naming one.
+
+In that state an ordinary tick is refused: there is no participating owner,
+and a World without a presence accepts only a lifecycle transition. A
+`REGISTER` transition, with its owner and link, brings a presence back, and
+the runtime acts as it from then on. A genesis specification, by contrast,
+still requires at least one presence: a World can become empty and cannot be
+created empty. All of this is covered by the second test named above, except
+the last statement, which is read from the code of `WorldGenesisSpec`.
 
 A failed registration does not half-apply. The previous cut stays, with the
 proposed roster recorded as pending for the recovery to see
@@ -131,6 +171,6 @@ participants are still explicitly supplied for the transition.
 
 | Claim | Support |
 |---|---|
-| Genesis requires unique registered-owner links for active presences; lifecycle updates and recovery preserve committed/pending rosters; exact match of references and roster | Code and tests in `world:tests/test_durable_runtime.py` |
+| Genesis requires unique registered-owner links for active presences; lifecycle updates and recovery preserve committed/pending rosters; exact match of references and roster; presence changes only through a lifecycle transition; a World left with no presence, and re-entry | Code and tests in `world:tests/test_durable_runtime.py` at World `95f5064c6b06bd66bb58a72110b066afe4ca70b0` |
 | Manifest v4 persists and validates committed/pending presence-owner links and owner-reference roster closure | Code and tests in `world:src/world/manifest.py` and `world:tests/test_manifest.py` |
 | The limits under "What closure does not mean" | Code and its documentation |

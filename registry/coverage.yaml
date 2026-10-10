@@ -45,7 +45,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.world-journal-snapshot-store:
     kind: component
@@ -67,7 +67,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.world-durable-runtime:
     kind: component
@@ -97,7 +97,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.world-in-memory-runtime:
     kind: component
@@ -147,7 +147,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   mechanism.world-genesis-and-rosters:
     kind: mechanism
@@ -171,7 +171,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   mechanism.world-recovery:
     kind: mechanism
@@ -194,7 +194,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   mechanism.physical-causal-step:
     kind: mechanism
@@ -205,6 +205,7 @@ units:
       - organism
       - embodiment
       - environment
+      - modality
       - observation
     canonical_docs:
       - explanation/world/physical-step.md
@@ -212,11 +213,13 @@ units:
       - world:src/world/physical_step.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
       - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
+      - world:tests/integration/sensing/test_environment_to_organism_scalar_field.py
       - world:src/world/durable_runtime.py
     tests:
       - world:tests/unit/test_physical_step.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
       - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
+      - world:tests/integration/sensing/test_environment_to_organism_scalar_field.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -228,11 +231,35 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
-        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
-        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
-        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
+        environment: e91bb67f81f3bc15715489cf1262328934454f1b
+        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
+        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+
+  component.world-mujoco-step-executor:
+    kind: component
+    title: MuJoCo step executor
+    status: EXPERIMENTAL
+    owner_domain: world
+    component_id: WLD-MJX
+    canonical_docs:
+      - explanation/world/mujoco-step-executor.md
+    implementation:
+      - world:src/world/adapters/mujoco.py
+    tests:
+      - world:tests/integration/test_mujoco_adapter.py
+      - world:tests/test_mujoco_adapter_import.py
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    depends_on:
+      - mechanism.physical-causal-step
+    review:
+      status: RECORDED
+      basis:
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.environment-finite-resource:
     kind: component
@@ -477,11 +504,11 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: d74d7bb67f70f8ae206ee5661b07d3326a459296
-        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
-        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
-        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
+        environment: e91bb67f81f3bc15715489cf1262328934454f1b
+        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.lab-study-utilities:
     kind: component
@@ -602,9 +629,9 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
-        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
+        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
 
   mechanism.organism-action-path:
     kind: mechanism

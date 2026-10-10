@@ -13,21 +13,27 @@ contracts:
       During a causal cut and after a restoration, World asks each owner
       whether given checkpoint bytes are valid for a given identity and
       schema. World defines the two questions as a protocol; each owner
-      answers them without importing World.
+      answers them without importing World. Since environment 7166f57 the
+      Environment owners no longer answer the second question in that form:
+      their restoration check is an instance method taking a restoration
+      reference, and World, calling it with its own three arguments, takes
+      the error as a refusal (F-0163). The first question is still answered
+      by name, so a commit succeeds and a restore or recovery through an
+      Environment class does not.
     agreement: structural
     parties:
       - unit: component.world-durable-runtime
         role: defines the two questions and calls them on the exact bytes it has hashed
       - unit: component.environment-finite-resource
-        role: answers them for an identified resource
+        role: answers the first for an identified resource; at environment e91bb67 its restoration check has another signature than the one World calls
       - unit: component.environment-static-scene
-        role: answers them for a static scene owner
+        role: answers the first for a static scene owner; at environment e91bb67 its restoration check has another signature than the one World calls
       - unit: component.embodiment-physical-state
         role: takes part in a causal cut but provides neither method; a caller must wrap it
       - unit: component.embodiment-articulated-body
         role: takes part in a causal cut but provides neither method; a fixture wraps it under a schema name that exists only there
       - unit: component.lab-operator-material-transfer
-        role: supplies the contracts of the owners it composes and of its own evidence checkpoint
+        role: supplies the contract of its own evidence checkpoint; the owners' contracts come from whoever created the World, in its tests the owners' own classes
     governed_by:
       - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
@@ -39,6 +45,7 @@ contracts:
       - F-0004
       - F-0021
       - F-0116
+      - F-0163
     documented_in:
       - explanation/world/durable-runtime.md
       - explanation/environment/finite-resource.md
@@ -51,20 +58,26 @@ contracts:
       carries the correlation the owner was told to expect: World, source
       tick, step, and the owner's own identity and revision. World's
       coordinator issues one context for the step, with explicit source and
-      target ticks; each domain still defines its own correlation type, and
-      the adapters that derive an owner's correlation from World's context
-      exist only in test fixtures. An owner cannot verify that World
-      authorised what it is handed.
+      target ticks; each domain still defines its own correlation type. The
+      two owners are now bound differently. Embodiment derives its expected
+      correlation from World's context in source, reading the context by
+      attribute names through a protocol of its own and importing nothing of
+      World: a structural binding. Environment is still handed an expected
+      correlation built by the caller, and that caller exists only in test
+      fixtures. The contract keeps the weaker label for that reason, and
+      because every call that hands World's context to an owner is made by a
+      fixture. An owner cannot verify that World authorised what it is
+      handed.
     agreement: fixture_only
     parties:
       - unit: mechanism.physical-causal-step
-        role: builds the correlations of one step and passes them to the owners
+        role: issues the context of one step; fixtures pass it to Embodiment and build Environment's expected correlation from it
       - unit: component.environment-static-scene
         role: adopts a candidate only against the expected correlation, for the World it is bound to
       - unit: component.environment-dynamic-state
         role: adopts a changed object state against the expected correlation, for the World it is bound to
       - unit: component.embodiment-physical-state
-        role: adopts a solver candidate only against the expected correlation, with its own correlation type
+        role: adopts a solver candidate only against the correlation it derives from World's context, with its own correlation type
       - unit: component.embodiment-articulated-body
         role: adopts through its root state, under the same correlation
     governed_by:
@@ -149,6 +162,8 @@ contracts:
       - F-0060
       - F-0061
       - F-0014
+      - F-0163
+      - F-0165
     documented_in:
       - explanation/lab/operator-material-transfer.md
       - explanation/environment/finite-resource.md
@@ -238,10 +253,12 @@ contracts:
     title: Body physical input to a solver
     summary: >
       Embodiment projects a body's state as the input a solver needs. No
-      solver adapter consumes that projection in source: World's fixtures
-      parse the body description and write the solver model by hand, and the
-      projection carries no joint state, so the articulated fixture sets the
-      joint from the restored owner state directly.
+      code in source consumes that projection: World's fixtures parse the
+      body description and write the solver model by hand. The MuJoCo step
+      executor now in World's source takes a compiled model and raw vectors,
+      not the projection. The projection carries joint positions and
+      velocities, and the articulated fixture sets the solver's joint from
+      them.
     agreement: fixture_only
     parties:
       - unit: mechanism.embodiment-physical-projection
@@ -257,6 +274,7 @@ contracts:
     findings:
       - F-0115
       - F-0002
+      - F-0160
     documented_in:
       - explanation/embodiment/physical-projection.md
       - explanation/world/physical-step.md
