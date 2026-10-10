@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-49 units, 10 cross-domain contracts, 105 findings.
+51 units, 10 cross-domain contracts, 113 findings.
 
 ## World
 
@@ -427,8 +427,8 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner organism, family identity_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/test_identity.py`, `organism:tests/test_checkpoint.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
-| Reviewed at | organism@20634a7d27e8 (RECORDED) |
-| Known findings | F-0031 contract gap ([issue](https://github.com/biopeia/organism/issues/31)); F-0033 contract gap ([issue](https://github.com/biopeia/organism/issues/33)); F-0034 implementation finding (open) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0031 contract gap ([issue](https://github.com/biopeia/organism/issues/31)); F-0033 contract gap ([issue](https://github.com/biopeia/organism/issues/33)); F-0034 implementation finding (open); F-0141 contract gap (open) |
 
 ### Executive outcome ledger
 
@@ -551,8 +551,8 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner organism, family identity_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: conditional |
 | Governed by | [technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md](../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0108-reproduction-and-causal-entropy.md](../technical/adr/ADR-0108-reproduction-and-causal-entropy.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/source_unit/cognition/test_genome.py`, `organism:tests/source_unit/cognition/test_checkpoint.py`, `organism:tests/source_unit/cognition/test_birth.py`, `organism:tests/source_unit/actuation/test_genome_motor_genes.py`, `organism:tests/source_unit/genetics/test_checkpoint.py` |
-| Reviewed at | organism@e008495ea473 (RECORDED) |
-| Known findings | F-0085 implementation finding ([issue](https://github.com/biopeia/organism/issues/48)); F-0086 implementation finding ([issue](https://github.com/biopeia/organism/issues/49)); F-0087 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/50)); F-0088 implementation finding (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0085 implementation finding ([issue](https://github.com/biopeia/organism/issues/48)); F-0086 implementation finding ([issue](https://github.com/biopeia/organism/issues/49)); F-0087 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/50)); F-0088 implementation finding (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open); F-0142 implementation finding (open) |
 
 ### Experience record and its ledger
 
@@ -570,7 +570,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-identity-checkpoint` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
 | Tests | `organism:tests/memory/test_experience.py`, `organism:tests/memory/test_ledger.py` |
-| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0089 implementation finding (open); F-0093 contract gap (open) |
 
 ### Causal provenance log
@@ -588,8 +588,9 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner organism, family causal_history; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Depends on | `component.organism-causal-evidence` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
-| Known findings | F-0090 contract gap (open); F-0091 evidence gap (open); F-0094 documentation inconsistency (open) |
+| Tests | `organism:tests/source_unit/test_checkpoint_fail_closed.py` |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0090 contract gap (open); F-0091 evidence gap (open); F-0094 documentation inconsistency (open); F-0147 recovery durability gap (open) |
 
 ### Capacity pressure and pair statistics
 
@@ -606,9 +607,9 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner organism, family adaptive_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Depends on | `component.organism-executive-outcome-ledger` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
-| Tests | `organism:tests/source_unit/actuation/test_candidate.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
-| Known findings | F-0091 evidence gap (open); F-0092 implementation finding (open); F-0094 documentation inconsistency (open) |
+| Tests | `organism:tests/source_unit/actuation/test_candidate.py`, `organism:tests/source_unit/test_checkpoint_fail_closed.py`, `organism:tests/source_unit/test_statistics_checkpoint.py` |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0091 evidence gap (open); F-0092 implementation finding (open); F-0094 documentation inconsistency (open); F-0147 recovery durability gap (open) |
 
 ### Foundation conventions, evidence count and limits
 
@@ -621,7 +622,7 @@ restates it so that the answers about one unit can be read in one place.
 | Implemented in | `organism:src/organism/foundation/epistemic.py`, `organism:src/organism/foundation/evidence.py`, `organism:src/organism/foundation/limits.py`, `organism:src/organism/cognition/activation.py` |
 | Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md) |
 | Tests | `organism:tests/foundation/test_evidence_count.py` |
-| Reviewed at | organism@fc8a91c61d86 (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0091 evidence gap (open); F-0093 contract gap (open); F-0094 documentation inconsistency (open) |
 
 ### Actuator evidence model
@@ -654,14 +655,14 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | change a weight or the structure of the graph during a pass; select or execute a body action; readouts are numbers offered to other code; read host time or draw randomness; claim that a node kind named concept, predictor or gate is computed differently from any other non-sense node |
 | Owned by | organism; also involves world |
 | Explained in | [explanation/organism/cognitive-graph.md](../explanation/organism/cognitive-graph.md) |
-| Implemented in | `organism:src/organism/cognition/__init__.py`, `organism:src/organism/cognition/types.py`, `organism:src/organism/cognition/limits.py`, `organism:src/organism/cognition/graph.py`, `organism:src/organism/cognition/transition.py`, `organism:src/organism/cognition/activation.py`, `organism:src/organism/cognition/birth.py`, `organism:src/organism/cognition/defaults/base-graph.json`, `world:tests/integration/test_first_biopeia_causal_tick.py` |
+| Implemented in | `organism:src/organism/cognition/__init__.py`, `organism:src/organism/cognition/types.py`, `organism:src/organism/cognition/limits.py`, `organism:src/organism/cognition/graph.py`, `organism:src/organism/cognition/transition.py`, `organism:src/organism/cognition/activation.py`, `organism:src/organism/cognition/birth.py`, `organism:src/organism/cognition/defaults/base-graph.json`, `world:tests/integration/test_first_biopeia_causal_tick.py`, `world:tests/integration/test_durable_checkpoint_restore_slice.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
 | State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Cross-domain contracts | Organism cognitive state in a World causal cut (fixture_only) |
 | Depends on | `component.organism-identity-checkpoint` |
 | Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md) |
 | Tests | `organism:tests/source_unit/cognition/test_graph.py`, `organism:tests/source_unit/cognition/test_transition.py`, `organism:tests/source_unit/cognition/test_activation.py`, `organism:tests/source_unit/cognition/test_birth.py`, `organism:tests/source_unit/cognition/test_limits.py`, `organism:tests/source_unit/cognition/test_types.py` |
-| Reviewed at | organism@0c2c543e71d3, world@a8d07fd791da (RECORDED) |
-| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0072 implementation finding (open); F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0077 documentation inconsistency (open) |
+| Reviewed at | organism@ba0011797a6a, world@95f5064c6b06 (RECORDED) |
+| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0072 implementation finding (open); F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0077 documentation inconsistency (open); F-0140 implementation finding (open); F-0144 implementation finding (open) |
 
 ### How the cognitive graph is changed
 
@@ -675,8 +676,8 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-cognitive-graph` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/cognition/test_learning.py`, `organism:tests/source_unit/cognition/test_shadow_prediction.py`, `organism:tests/source_unit/cognition/test_structure.py`, `organism:tests/source_unit/cognition/test_reversible_structure_phase1.py`, `organism:tests/source_unit/cognition/test_insufficiency_driven_growth.py`, `organism:tests/source_unit/cognition/test_metaplasticity.py` |
-| Reviewed at | organism@6543188ff302 (RECORDED) |
-| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0071 evidence gap ([issue](https://github.com/biopeia/organism/issues/44)); F-0072 implementation finding (open); F-0077 documentation inconsistency (open) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0071 evidence gap ([issue](https://github.com/biopeia/organism/issues/44)); F-0072 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open) |
 
 ### The generative resident and the model boundary
 
@@ -694,8 +695,8 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
 | Tests | `organism:tests/source_unit/cognition/test_generative_resident.py`, `organism:tests/source_unit/cognition/test_generative_foundation.py`, `organism:tests/source_unit/cognition/test_generative_model.py`, `organism:tests/source_unit/cognition/test_generative_adapters.py`, `organism:tests/source_unit/cognition/test_generative_agenda.py`, `organism:tests/source_unit/cognition/test_generative_agenda_capacity.py`, `organism:tests/source_unit/cognition/test_generative_scheduler.py`, `organism:tests/source_unit/cognition/test_generative_execution.py`, `organism:tests/source_unit/cognition/test_generative_rollout.py`, `organism:tests/source_unit/cognition/test_generative_branch.py`, `organism:tests/source_unit/cognition/test_generative_counterfactual.py`, `organism:tests/source_unit/cognition/test_generative_replay.py`, `organism:tests/source_unit/cognition/test_generative_recombination.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis.py`, `organism:tests/source_unit/cognition/test_generative_calibration.py`, `organism:tests/source_unit/cognition/test_generative_consolidation.py`, `organism:tests/source_unit/cognition/test_generative_epistemic_value.py` |
-| Reviewed at | organism@3cc0f319f4ac, world@a8d07fd791da (RECORDED) |
-| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0075 implementation finding (open); F-0076 implementation finding (open); F-0077 documentation inconsistency (open) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0075 implementation finding (open); F-0076 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open) |
 
 ### What a cognitive checkpoint carries
 
@@ -710,8 +711,8 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-identity-checkpoint`, `component.organism-cognitive-graph`, `component.organism-generative-resident` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/source_unit/cognition/test_portable_checkpoint.py`, `organism:tests/source_unit/cognition/test_graph_checkpoint.py`, `organism:tests/source_unit/cognition/test_generative_cognition_persistence.py`, `organism:tests/source_unit/cognition/test_generative_agenda_persistence.py`, `organism:tests/source_unit/cognition/test_generative_scheduler_persistence.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis_persistence.py` |
-| Reviewed at | organism@20634a7d27e8, world@cb6bfb7c9bcc (RECORDED) |
-| Known findings | F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0076 implementation finding (open); F-0077 documentation inconsistency (open) |
+| Reviewed at | organism@ba0011797a6a, world@95f5064c6b06 (RECORDED) |
+| Known findings | F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0076 implementation finding (open); F-0077 documentation inconsistency (open); F-0140 implementation finding (open) |
 
 ### Attention budget allocation
 
@@ -730,6 +731,40 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `organism:tests/source_unit/cognition/test_attention.py` |
 | Reviewed at | organism@2f051b029018 (RECORDED) |
 | Known findings | F-0132 implementation finding (open) |
+
+### The Organism transition boundary and the continuation registry
+
+`component.organism-transition-and-continuation` · component · CURRENT
+
+| | |
+|---|---|
+| Identifier | `ORG-TRC` |
+| Responsible for | the counter of accepted Organism steps, the lifecycle of an Organism (active, dormant, terminated) with its recorded history, the reference to its current body context, and, within one registry object, the record of which continuation state of an identity is current |
+| Must not | read or interpret the private bytes of the envelope it carries; decide that an Organism becomes dormant or terminated; it applies a change it is told to make; treat a World causal tick as the step counter, or hold body state; claim identity uniqueness beyond one registry object in one process, by its own declaration; produce the private state of a branch, or treat a branch as an offspring |
+| Owned by | organism |
+| Explained in | [explanation/organism/transition-and-continuation.md](../explanation/organism/transition-and-continuation.md) |
+| Implemented in | `organism:src/organism/transition.py`, `organism:src/organism/continuation.py` |
+| State | owner organism, family identity_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: rebind, reproduction: not_inherited |
+| Depends on | `component.organism-identity-checkpoint` |
+| Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0088-lifecycle-event-ontology.md](../technical/adr/ADR-0088-lifecycle-event-ontology.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
+| Tests | `organism:tests/test_transition.py`, `organism:tests/test_continuation.py` |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Known findings | F-0140 implementation finding (open); F-0141 contract gap (open); F-0143 recovery durability gap (open); F-0146 evidence gap (open) |
+
+### From an opaque sense signal to an accepted step
+
+`mechanism.organism-sense-to-checkpoint-transition` · mechanism · CURRENT
+
+| | |
+|---|---|
+| Owned by | organism; also involves world, modality |
+| Explained in | [explanation/organism/sense-to-checkpoint-transition.md](../explanation/organism/sense-to-checkpoint-transition.md) |
+| Implemented in | `organism:src/organism/cognition/sense_input.py`, `organism:src/organism/cognition/composition.py`, `organism:src/organism/cognition/owner_transition.py`, `modality:src/modality/scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
+| Depends on | `component.organism-cognitive-graph`, `mechanism.organism-graph-plasticity`, `mechanism.organism-cognitive-checkpoint`, `component.organism-transition-and-continuation` |
+| Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
+| Tests | `organism:tests/source_unit/cognition/test_sense_input.py`, `organism:tests/source_unit/cognition/test_composition.py`, `organism:tests/source_unit/cognition/test_owner_transition.py` |
+| Reviewed at | organism@ba0011797a6a, world@95f5064c6b06, modality@79b779152d4b (RECORDED) |
+| Known findings | F-0140 implementation finding (open); F-0142 implementation finding (open); F-0143 recovery durability gap (open); F-0144 implementation finding (open); F-0145 contract gap (open) |
 
 ## Modality
 

@@ -1,9 +1,10 @@
 # Capacity pressure and pair statistics
 
-Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches of the
-repository were made on 2026-10-10 at that revision.
+supports them: the code, the tests, an ad hoc run, or neither. Searches were
+repeated on 2026-10-11 over the source and tests of all seven repositories,
+and the ad hoc run was repeated at that revision.
 
 ## What they are
 
@@ -68,13 +69,22 @@ sets them. They are exported as zero.
 ### Across a restart
 
 The value exports its counters and its fingerprints with a schema version.
-Reading back takes the capacity from the caller, not from the exported data:
-a value exported with capacity 4 and read back with 99 had capacity 99 (ad
-hoc run). Reading from data that is absent or not a mapping gives fresh
-counters without complaint; the code comments that such data is "Absent in
-checkpoints older than Wave 0: counting starts fresh." Negative counts are
-raised to zero. The schema version in the data is not checked by this value;
-one of its five owners checks it before calling.
+Reading back has become strict, and four statements made here at the earlier
+revision no longer hold. The caller still states the capacity, but it must
+now equal the exported one: a value exported with capacity 4 and read back
+with 99 was refused, where it used to come back with capacity 99. Data that
+is absent, or that lacks or adds a field, is refused, where it used to give
+fresh counters; the docstring now says "fresh state uses the constructor". A
+negative count is refused, where it used to be raised to zero. And the value
+checks the schema version itself
+(`test_capacity_pressure_checkpoint_requires_complete_matching_state`; each
+case also by an ad hoc run). The fingerprints must be at most 256 distinct
+strings of 16 hexadecimal digits.
+
+The counters are not checked against one another. A payload with no
+admissions, no evictions and 50 relearned after eviction was accepted (ad
+hoc run). Recorded, with the accumulator's impossible combinations below,
+in finding F-0147.
 
 So a table's measurements survive a restart exactly when the table that owns
 them is exported and restored. For the
@@ -115,16 +125,23 @@ to 128 contexts and refuses a new one rather than evicting prior context
 evidence. Promotion reads only the current context's effect strength and
 sample count; the pooled longitudinal aggregate cannot promote applicability
 for a new physical context. The candidate's tests exercise the accumulator
-through both layers; no test addresses the accumulator directly.
+through both layers. Four tests in
+`organism:tests/source_unit/test_statistics_checkpoint.py` now address the
+accumulator directly, all of them about reading it back; none addresses the
+update or the correlation.
 
 Other modules in the repository import a module named `statistics`. That is
 the standard library's, not this one.
 
 ### Across a restart
 
-The six numbers are exported and read back exactly (ad hoc run). Reading
-back refuses a missing field, a negative or non-integer count, a non-finite
-number and a negative sum of squares. It does not check that the six numbers
+The six numbers are exported and read back exactly
+(`test_pair_accumulator_checkpoint_round_trip`). Reading back refuses a
+missing field, and now also an unknown one and data that is not a mapping
+(`test_pair_accumulator_checkpoint_rejects_missing_field`,
+`test_pair_accumulator_checkpoint_rejects_unknown_field`,
+`test_pair_accumulator_checkpoint_rejects_non_mapping_payload`), a negative
+or non-integer count, a non-finite number and a negative sum of squares. It does not check that the six numbers
 are possible together: a count of zero with non-zero sums was accepted, and
 so was a cross sum far larger than the squared sums allow, for which the
 correlation answered 1.0 because of the limit (ad hoc run).
@@ -144,7 +161,7 @@ states what the values themselves do.
 |---|---|---|
 | Birth | Counters at zero; an accumulator with no pairs | Code |
 | Checkpoint | Each exports all its numbers when its owner asks | Code and ad hoc run |
-| Restart | Each is rebuilt from its export; capacity comes from the caller; impossible combinations of accumulator numbers are accepted | Code and ad hoc run |
+| Restart | Each is rebuilt from a complete export and refused otherwise; the capacity stated by the caller must equal the exported one; impossible combinations of accumulator numbers, and of capacity counters, are accepted | Code, tests and ad hoc run |
 | Re-embodiment | Nothing in either value reacts; what an owner does is the owner's matter | Code |
 | Reproduction | No operation exists | Search of the repository |
 
@@ -164,10 +181,10 @@ recorded in the code.
 
 | Claim | Support |
 |---|---|
-| What the two values keep and compute; the bound on fingerprints; what reading back refuses | Code of `organism:src/organism/capacity.py` and `organism:src/organism/statistics.py` |
-| The counts after drops and re-admissions; the unlimited ratio; capacity taken from the caller; the accumulator's answers and its three silences; exact round trip; impossible combinations accepted | Code, and one ad hoc run of the modules at that revision; no test addresses either module directly |
+| What the two values keep and compute; the bound on fingerprints; what reading back refuses | Code of `organism:src/organism/capacity.py` and `organism:src/organism/statistics.py`; for reading back, tests in `organism:tests/source_unit/test_checkpoint_fail_closed.py` and `organism:tests/source_unit/test_statistics_checkpoint.py` |
+| The counts after drops and re-admissions; the unlimited ratio; a mismatched capacity, absent data and a negative count refused; the accumulator's answers and its three silences; impossible combinations accepted | Code, and one ad hoc run of the modules at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18`; no test addresses the counting, the snapshot, the update or the correlation |
 | Use of the accumulator by a candidate actuator | Code of `organism:src/organism/actuation/candidate.py` and its tests, read for that use only |
-| Which structures hold a capacity value; no code reads a counter to decide; the snapshot method of the effect table has no caller; promotions and demotions are never set; one importer of the accumulator | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the class names, the counter names and imports of the two modules |
+| Which structures hold a capacity value; no code reads a counter to decide; the snapshot method of the effect table has no caller; promotions and demotions are never set; one importer of the accumulator | Searches of `src` and `tests` at that revision, repeated on 2026-10-11, for the class names, the counter names and imports of the two modules |
 | That no decision reads the capacity counters | The module's own declaration, and the search above |
 
 No exported counters or accumulators from a run of an Organism were

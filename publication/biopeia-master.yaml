@@ -41,6 +41,7 @@ parts:
       - explanation/organism/life-of-an-organism.md
       - explanation/organism/foundation-conventions.md
       - explanation/organism/identity-and-checkpoint.md
+      - explanation/organism/transition-and-continuation.md
       - explanation/organism/genome-and-inheritance.md
       - explanation/organism/cognitive-graph.md
       - explanation/organism/graph-plasticity.md
@@ -57,6 +58,7 @@ parts:
       - explanation/organism/actuator-evidence.md
       - explanation/organism/executive-outcome-ledger.md
       - explanation/organism/cognitive-checkpoint.md
+      - explanation/organism/sense-to-checkpoint-transition.md
 
   - id: embodiment
     title: Embodiment

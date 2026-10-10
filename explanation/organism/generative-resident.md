@@ -1,8 +1,14 @@
 # The generative resident and what a "private model" is in code
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Searches were repeated on 2026-10-11 over the source of all seven
+repositories. Since the previous review, at `organism`
+`3cc0f319f4ac00a631685aae0999134b6d64007f`, the package has changed only in
+how its state is saved and restored (diff inspected); the step, the
+routines, the adapters and the guards are as they were. Ad hoc runs are
+marked with the revision at which they were made.
 
 ## What it is
 
@@ -157,7 +163,7 @@ nodes `p` and `s` was put to a competence adapter, which answered about a
 that a model is being asked a question of the kind it answers.
 
 What the repository does not contain, checked by listing `organism:src` on
-2026-10-09: any module that defines model weights, a tokenizer, a training
+2026-10-11: any module that defines model weights, a tokenizer, a training
 procedure or an inference gateway. The migration notes list the historical
 modules for those and mark them as split to other owners or deferred. Model
 objects are also not part of saved state; see
@@ -205,7 +211,7 @@ a World. Its outputs are snapshots and the values of three read-only methods.
 This is a property of what the code can reach.
 
 **Declarative.** Three things present themselves as guards and are not on any
-path (search of `organism:src` for each name, 2026-10-09):
+path (search of `organism:src` for each name, 2026-10-11):
 
 - `EpistemicFirewall` has three methods, each of which raises an error for
   any argument (`test_firewall_rejects_all_factual_and_executive_sinks`).
@@ -214,7 +220,8 @@ path (search of `organism:src` for each name, 2026-10-09):
 - `GenerativeAgenda.reject_external_target` increments a counter and raises
   (`test_external_target_is_release_blocking_contamination`). Nothing calls
   it. The method that actually adds a target accepts any well-formed one; in a
-  run, a target named `lab.task.1` with a reference `lab-label` was added.
+  run, repeated at the reviewed revision, a target named `lab.task.1` with a
+  reference `lab-label` was added.
   The agenda cannot tell where a string came from.
 - `factual_contamination_count` is saved, restored and reported. No statement
   increments it.
@@ -222,7 +229,7 @@ path (search of `organism:src` for each name, 2026-10-09):
 **By convention.** The resolver decides what counts as evidence. With a
 resolver that accepts everything, the identifier of a generated state was
 passed as the evidence reference and the hypothesis was marked contradicted
-on its strength (ad hoc run). The guarantee that generated output is not
+on its strength (ad hoc run, repeated at the reviewed revision). The guarantee that generated output is not
 evidence therefore rests on the resolver, which is outside this repository.
 
 Recorded as finding F-0075.
@@ -247,7 +254,19 @@ The admission stage of the [action path](action-path.md) has parameters
 shaped for the first two: a collection of "generative" affordances and a
 function from identifier to epistemic value. Neither side imports the other,
 and no code connects them (search of `organism:src` for `anticipated_effects`
-and `epistemic_value_for`, 2026-10-09: each appears only at its definition).
+and `epistemic_value_for`, 2026-10-11: each appears only at its definition).
+
+Nor does anything in source run the resident. No source in any of the seven
+repositories constructs one or calls its step (search for
+`ResidentGenerativeCognition`, `note_factual_outcome` and
+`set_factual_evidence_resolver`, 2026-10-11). The one function in source that
+advances a checkpointed Organism,
+[the accepted step](sense-to-checkpoint-transition.md#the-accepted-step),
+restores a resident if the payload holds one and writes it back unchanged;
+its module says it "does not compose agency, generative cognition, motor
+intent, or a complete Organism dependency closure". In an ad hoc run at the
+reviewed revision a resident carried through two accepted steps was byte for
+byte the same before and after. Recorded in finding F-0142.
 
 ## Bounded, and where it is not
 
@@ -258,42 +277,53 @@ When hypotheses are full, a finished one is discarded to make room, and if all
 are active no new one is created.
 
 Two stores have no cap, confirmed by a run of 2000 steps, each followed by a
-reconciliation:
+reconciliation. The run was made again at the reviewed revision, because the
+saved format has changed and the byte counts of the earlier run no longer
+apply: one registered model, one candidate identifier offered in online mode
+at every tick, a resolver that accepts everything.
 
 | Steps | Scheduler entries | Calibration errors | Saved state, bytes |
 |---|---|---|---|
-| 10 | 10 | 10 | 8 343 |
-| 100 | 100 | 100 | 55 135 |
-| 1000 | 1000 | 1000 | 113 239 |
-| 2000 | 2000 | 2000 | 164 455 |
+| 10 | 10 | 10 | 8 486 |
+| 100 | 100 | 100 | 56 987 |
+| 1000 | 1000 | 1000 | 109 563 |
+| 2000 | 2000 | 2000 | 153 720 |
 
 The scheduler keeps one entry per tick and mode it has ever allowed and never
 removes one, although only the current tick's entry can affect a decision. The
 calibration table appends one number per comparison. Both are written into
-every saved state. Recorded as finding F-0074.
+every saved state. Recorded as finding F-0074. Restoring now checks these
+stores more closely than it did, refusing a repeated scheduler entry, a use
+count above its quota and a repeated calibration bucket
+(`test_calibration_checkpoint_rejects_duplicate_bucket_identity`; the
+scheduler checks from the code); it does not bound them.
 
 ## Time
 
 The step takes its tick from the caller and reads no clock. It does not
 require the tick to increase: after a step at tick 10, a step at tick 2 was
-accepted and produced an episode named for tick 2 (ad hoc run). That differs
+accepted and produced an episode named for tick 2 (ad hoc run, repeated at
+the reviewed revision). That differs
 from the graph's transition, which refuses a tick that does not advance. The
 resident keeps its own counter, `generative_tick`, which counts depth steps
 and is unrelated to the caller's tick.
 
 The caller's tick is stored under the field names `started_symbiont_tick` and
 `last_symbiont_tick`, a name from the code's origin that is now part of the
-saved format.
+saved format. The repository's inventory of the saved format lists both as
+"a named unresolved TARGET time-semantics disposition" and says they are "not
+mapped here to `organism_step`, World time, or wall-clock time"
+(`organism:CHECKPOINT_DECODER_MATRIX.md`).
 
 ## At each lifecycle boundary
 
 | Boundary | What happens | Support |
 |---|---|---|
 | Birth | All tables empty; no model registered; no resolver | Code |
-| Checkpoint | Agenda, scheduler, last workspace, hypotheses, calibration, use tracker and three counters are exported; models, the resolver, the budget and one counter are not | Code, tests and a run; see [the cognitive checkpoint](cognitive-checkpoint.md) |
-| Restart | Restoring returns a resident with no models unless a registry is passed, and no resolver, so reconciliation is inert until one is installed | Code, `test_portable_checkpoint_restore_uses_explicit_external_model_registry`, and a run |
+| Checkpoint | The budget, agenda, scheduler, last workspace, hypotheses with their reconciliation counts, calibration, use tracker with its order of insertion, and three counters are exported; models, the resolver and one counter are not | Code, tests and a run at the reviewed revision; see [the cognitive checkpoint](cognitive-checkpoint.md) |
+| Restart | Restoring returns a resident with the budget it was saved with, no models unless a registry is passed, and no resolver, so reconciliation is inert until one is installed. A payload with a missing or unknown field, or one written under an earlier schema, is refused | Code, `test_portable_checkpoint_restore_uses_explicit_external_model_registry`, `test_resident_checkpoint_preserves_effective_budget_and_rejects_conflicting_override`, `test_resident_checkpoint_rejects_pre_hypothesis_continuation_schema`, and a run at the reviewed revision |
 | Re-embodiment | No operation. The nearest is that a step may be given the identifiers that still exist, and targets for others are retired | Code and `test_prospective_targets_of_vanished_sources_are_retired` |
-| Reproduction | No operation exists | Absence in the code (search of `organism:src/organism/cognition/generative` for `inherit`, `offspring` and `parent_id`, 2026-10-09) |
+| Reproduction | No operation exists | Absence in the code (search of `organism:src/organism/cognition/generative` for `inherit`, `offspring` and `parent_id`, 2026-10-11) |
 
 ## What supports this description
 
@@ -303,9 +333,11 @@ saved format.
 | The model interface, registry and adapters | Code and tests in `test_generative_model.py`, `test_generative_adapters.py` |
 | No model, weights or training exist in the repository | Listing of `organism:src`, and `organism:MIGRATION.md` |
 | Status changes by token overlap behind a resolver | Code and tests in `test_generative_resident.py`, `test_generative_hypothesis.py` |
-| The guards have no caller; the contamination counter never changes; any well-formed target is accepted; a permissive resolver admits a generated identifier | Searches named in the text, and one ad hoc run at that revision |
-| Outputs offered to agency are not connected | Search named in the text |
-| Growth of the scheduler and calibration stores; a decreasing tick is accepted; an adapter answers a prediction-error target as a competence | The same ad hoc run |
+| The guards have no caller; the contamination counter never changes; any well-formed target is accepted; a permissive resolver admits a generated identifier | Searches named in the text, and ad hoc runs repeated at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18` |
+| Outputs offered to agency are not connected; nothing in source constructs or steps a resident; the accepted step carries one unchanged | Searches named in the text, and one ad hoc run at the reviewed revision |
+| Growth of the scheduler and calibration stores; a decreasing tick is accepted | Ad hoc runs at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18` |
+| An adapter answers a prediction-error target as a competence | One ad hoc run at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`; `adapters.py` and the step are unchanged since, and the run was not repeated |
+| What is saved and restored: budget, reconciliation counts, order of insertion; what is not: models, resolver, the dropped-target count | Code, tests in `organism:tests/source_unit/cognition/test_generative_resident.py` and `test_generative_consolidation.py`, and one ad hoc run at the reviewed revision |
 | That the Organism owns this state and that no efficacy is claimed | ADR-0092, ADR-0105 and `organism:MIGRATION.md`; statements of intent and scope |
 
 No run with a real model was examined; none can be made from this repository.

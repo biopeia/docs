@@ -15,22 +15,24 @@ Explanatory documents of the Organism domain (semantic-authority).
 1. [The life of an Organism, as the code has it](life-of-an-organism.md)
 2. [Foundation conventions: thresholds, an evidence count and limits](foundation-conventions.md)
 3. [Organism identity and the checkpoint envelope](identity-and-checkpoint.md)
-4. [The genome, its expression and the germline record](genome-and-inheritance.md)
-5. [The cognitive graph and its explicit-tick transition](cognitive-graph.md)
-6. [How the cognitive graph is changed](graph-plasticity.md)
-7. [The generative resident and what a "private model" is in code](generative-resident.md)
-8. [Allocating a bounded budget of attention](attention-allocation.md)
-9. [The experience record and its ledger](experience-record-and-ledger.md)
-10. [Effects, causal evidence and controllability](causal-evidence-and-controllability.md)
-11. [The causal provenance log](causal-provenance-log.md)
-12. [Capacity pressure and pair statistics](capacity-pressure-and-pair-statistics.md)
-13. [How a repeated motor pattern becomes a competence](competence-development.md)
-14. [Prospective deliberation and the outcome-value ledger](prospective-deliberation.md)
-15. [Execution bindings, availability and the affordance resolver](execution-binding-and-affordances.md)
-16. [From an affordance to a motor command](action-path.md)
-17. [Evidence that an actuator does something](actuator-evidence.md)
-18. [The executive outcome ledger](executive-outcome-ledger.md)
-19. [What a cognitive checkpoint carries](cognitive-checkpoint.md)
+4. [The Organism transition boundary and the continuation registry](transition-and-continuation.md)
+5. [The genome, its expression and the germline record](genome-and-inheritance.md)
+6. [The cognitive graph and its explicit-tick transition](cognitive-graph.md)
+7. [How the cognitive graph is changed](graph-plasticity.md)
+8. [The generative resident and what a "private model" is in code](generative-resident.md)
+9. [Allocating a bounded budget of attention](attention-allocation.md)
+10. [The experience record and its ledger](experience-record-and-ledger.md)
+11. [Effects, causal evidence and controllability](causal-evidence-and-controllability.md)
+12. [The causal provenance log](causal-provenance-log.md)
+13. [Capacity pressure and pair statistics](capacity-pressure-and-pair-statistics.md)
+14. [How a repeated motor pattern becomes a competence](competence-development.md)
+15. [Prospective deliberation and the outcome-value ledger](prospective-deliberation.md)
+16. [Execution bindings, availability and the affordance resolver](execution-binding-and-affordances.md)
+17. [From an affordance to a motor command](action-path.md)
+18. [Evidence that an actuator does something](actuator-evidence.md)
+19. [The executive outcome ledger](executive-outcome-ledger.md)
+20. [What a cognitive checkpoint carries](cognitive-checkpoint.md)
+21. [From an opaque sense signal to an accepted step](sense-to-checkpoint-transition.md)
 
 ## Canonical documents
 
@@ -55,6 +57,8 @@ Explanatory documents of the Organism domain (semantic-authority).
 | [generative-resident.md](generative-resident.md) | `component.organism-generative-resident` | CURRENT | RECORDED |
 | [cognitive-checkpoint.md](cognitive-checkpoint.md) | `mechanism.organism-cognitive-checkpoint` | CURRENT | RECORDED |
 | [attention-allocation.md](attention-allocation.md) | `component.organism-attention-allocation` | CURRENT | RECORDED |
+| [transition-and-continuation.md](transition-and-continuation.md) | `component.organism-transition-and-continuation` | CURRENT | RECORDED |
+| [sense-to-checkpoint-transition.md](sense-to-checkpoint-transition.md) | `mechanism.organism-sense-to-checkpoint-transition` | CURRENT | RECORDED |
 
 ## Related domains
 
@@ -84,13 +88,13 @@ Explanatory documents of the Organism domain (semantic-authority).
 
 ## Open findings
 
-37 findings on these units are open, 15 of them with an issue in the owning repository:
+45 findings on these units are open, 15 of them with an issue in the owning repository:
 
-- contract gap: 8
+- contract gap: 10
 - documentation inconsistency: 4
-- evidence gap: 4
-- implementation finding: 17
+- evidence gap: 5
+- implementation finding: 20
 - performance concern: 1
-- recovery durability gap: 3
+- recovery durability gap: 5
 
 They are recorded in [registry/findings.yaml](../../registry/findings.yaml) and listed per unit in [reference/units.md](../../reference/units.md).
