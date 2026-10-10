@@ -1571,3 +1571,58 @@ findings:
       - explanation/embodiment/actuation-projection.md
     material: false
     status: open
+
+  F-0129:
+    class: contract_gap
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The evidence accumulated about each actuator, including the active
+      repertoire, is matched to a surface by actuator identifier alone:
+      restoring it onto another surface with the same effector names, built
+      with different contract material and under another organism identifier,
+      keeps it. The organism identifier is stored and read by nothing.
+      ADR-0094 says body-bound motor competence is not transferred and must be
+      reacquired.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/51"
+
+  F-0130:
+    class: implementation_finding
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The record cannot verify how the pairs of activation and change it is
+      handed were formed, and the promotion threshold is not part of the
+      exported state.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the code itself: the method states that it does not and
+      cannot verify the pairing contract, and the restore function states
+      that the threshold is configuration supplied by the caller.
+
+  F-0131:
+    class: implementation_finding
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The actuator evidence model has no caller outside its own package and
+      tests, no Organism checkpoint carries its state, the reporting snapshot
+      in the same package is constructed nowhere, and the Lab module its
+      documentation says the probing apparatus moved to does not exist.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
+    material: false
+    status: open
