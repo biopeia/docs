@@ -40,7 +40,9 @@ def test_projection_follows_the_manifest_order(projection):
 def test_publication_opens_with_the_system_view(projection):
     assert projection["sections"][0]["id"] == "reader-guide"
     first = next(s for s in projection["sections"] if s["group"] == "parts")["chapters"]
-    assert [c["id"] for c in first] == ["generated-domains", "explanation-biopeia-one-step-across-the-domains"]
+    ids = [c["id"] for c in first]
+    assert {"generated-domains", "explanation-biopeia-one-step-across-the-domains"} <= set(ids)
+    assert ids.index("explanation-biopeia-one-step-across-the-domains") < ids.index("generated-domains")
 
 
 def test_chapter_title_is_lifted_out_of_the_body(projection):

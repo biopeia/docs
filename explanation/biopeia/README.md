@@ -13,13 +13,15 @@ Explanations that cross domains. They are derived from the unit documents and ad
 ## Reading order
 
 1. [What Biopeia is](what-biopeia-is.md)
-2. [One step across the domains](one-step-across-the-domains.md)
+2. [What Biopeia sets out to find out: candidate hypotheses](research-hypotheses.md)
+3. [One step across the domains](one-step-across-the-domains.md)
 
 ## Canonical documents
 
 | Document | Unit | Status | Review |
 |---|---|---|---|
 | [what-biopeia-is.md](what-biopeia-is.md) | `concept.biopeia-what-it-is` | TARGET | RECORDED |
+| [research-hypotheses.md](research-hypotheses.md) | `concept.biopeia-research-hypotheses` | UNRESOLVED | REVIEW_PENDING |
 | [one-step-across-the-domains.md](one-step-across-the-domains.md) | `concept.biopeia-one-step-across-the-domains` | CURRENT | not recorded |
 
 ## Related domains
