@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-46 units, 9 cross-domain contracts, 105 findings.
+46 units, 10 cross-domain contracts, 105 findings.
 
 ## World
 
@@ -77,7 +77,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/world/durable-runtime.md](../explanation/world/durable-runtime.md) |
 | Implemented in | `world:src/world/durable_runtime.py` |
 | State | owner world, family ephemeral; durable: no; in a causal cut: no; a failed transition can leave: an in-memory latch that refuses further ticks; owner checkpoints written by the callback, referenced by no committed cut |
-| Cross-domain contracts | Owner checkpoint validation (structural); Operator material transfer (shared_type) |
+| Cross-domain contracts | Owner checkpoint validation (structural); Operator material transfer (shared_type); Organism cognitive state in a World causal cut (fixture_only) |
 | Depends on | `component.world-causal-journal`, `component.world-causal-manifest`, `component.world-journal-snapshot-store` |
 | Governed by | [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md), [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md](../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md), [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/integration/test_durable_checkpoint_restore_slice.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
@@ -97,6 +97,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/world/in-memory-runtime.md](../explanation/world/in-memory-runtime.md) |
 | Implemented in | `world:src/world/runtime.py` |
 | State | owner world, family ephemeral; durable: no; in a causal cut: no; a failed transition can leave: an in-memory latch that refuses further ticks; whatever the opaque transition changed before failing is not rolled back |
+| Cross-domain contracts | Organism cognitive state in a World causal cut (fixture_only) |
 | Depends on | `component.world-causal-journal` |
 | Governed by | [technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md](../technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md), [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0096-world-participation-including-singleton.md](../technical/adr/ADR-0096-world-participation-including-singleton.md) |
 | Tests | `world:tests/test_runtime.py`, `world:tests/integration/test_first_biopeia_causal_tick.py` |
@@ -633,6 +634,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/organism/cognitive-graph.md](../explanation/organism/cognitive-graph.md) |
 | Implemented in | `organism:src/organism/cognition/__init__.py`, `organism:src/organism/cognition/types.py`, `organism:src/organism/cognition/limits.py`, `organism:src/organism/cognition/graph.py`, `organism:src/organism/cognition/transition.py`, `organism:src/organism/cognition/activation.py`, `organism:src/organism/cognition/birth.py`, `organism:src/organism/cognition/defaults/base-graph.json`, `world:tests/integration/test_first_biopeia_causal_tick.py` |
 | State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
+| Cross-domain contracts | Organism cognitive state in a World causal cut (fixture_only) |
 | Depends on | `component.organism-identity-checkpoint` |
 | Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md) |
 | Tests | `organism:tests/source_unit/cognition/test_graph.py`, `organism:tests/source_unit/cognition/test_transition.py`, `organism:tests/source_unit/cognition/test_activation.py`, `organism:tests/source_unit/cognition/test_birth.py`, `organism:tests/source_unit/cognition/test_limits.py`, `organism:tests/source_unit/cognition/test_types.py` |
@@ -682,6 +684,7 @@ restates it so that the answers about one unit can be read in one place.
 | Owned by | organism; also involves world |
 | Explained in | [explanation/organism/cognitive-checkpoint.md](../explanation/organism/cognitive-checkpoint.md) |
 | Implemented in | `organism:src/organism/cognition/portable_checkpoint.py`, `organism:src/organism/cognition/checkpoint.py`, `organism:src/organism/cognition/generative/persistence.py`, `world:tests/integration/test_durable_checkpoint_restore_slice.py` |
+| Cross-domain contracts | Organism cognitive state in a World causal cut (fixture_only) |
 | Depends on | `component.organism-identity-checkpoint`, `component.organism-cognitive-graph`, `component.organism-generative-resident` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/source_unit/cognition/test_portable_checkpoint.py`, `organism:tests/source_unit/cognition/test_graph_checkpoint.py`, `organism:tests/source_unit/cognition/test_generative_cognition_persistence.py`, `organism:tests/source_unit/cognition/test_generative_agenda_persistence.py`, `organism:tests/source_unit/cognition/test_generative_scheduler_persistence.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis_persistence.py` |
