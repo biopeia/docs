@@ -84,7 +84,7 @@ findings:
       - component.world-durable-runtime
       - component.world-causal-journal
     summary: >
-      Every tick copies and re-encodes the whole journal and writes the full prefix to a new immutable snapshot; no snapshot is removed. Not measured.
+      Every tick copies and re-encodes the whole journal and writes the full prefix to a new immutable snapshot; no snapshot is removed. A later bounded synthetic direct-store characterization at world cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8 confirms quadratic retained-byte growth for fixed-size records. Intended-workload cost remains unknown; see the linked issue comment for measurements and limitations.
     documented_in:
       - explanation/world/journal-snapshot-store.md
       - explanation/world/causal-journal.md
