@@ -718,3 +718,169 @@ units:
       - component.observation-plane
       - mechanism.organism-action-path
       - component.organism-identity-checkpoint
+
+  component.organism-cognitive-graph:
+    kind: component
+    title: The cognitive graph and its explicit-tick transition
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-CGR
+    participating_domains:
+      - world
+    canonical_docs:
+      - explanation/organism/cognitive-graph.md
+    implementation:
+      - organism:src/organism/cognition/__init__.py
+      - organism:src/organism/cognition/types.py
+      - organism:src/organism/cognition/limits.py
+      - organism:src/organism/cognition/graph.py
+      - organism:src/organism/cognition/transition.py
+      - organism:src/organism/cognition/activation.py
+      - organism:src/organism/cognition/birth.py
+      - organism:src/organism/cognition/defaults/base-graph.json
+      - world:tests/integration/test_first_biopeia_causal_tick.py
+    tests:
+      - organism:tests/source_unit/cognition/test_graph.py
+      - organism:tests/source_unit/cognition/test_transition.py
+      - organism:tests/source_unit/cognition/test_activation.py
+      - organism:tests/source_unit/cognition/test_birth.py
+      - organism:tests/source_unit/cognition/test_limits.py
+      - organism:tests/source_unit/cognition/test_types.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+    depends_on:
+      - component.organism-identity-checkpoint
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+
+  mechanism.organism-graph-plasticity:
+    kind: mechanism
+    title: How the cognitive graph is changed
+    status: CURRENT
+    owner_domain: organism
+    canonical_docs:
+      - explanation/organism/graph-plasticity.md
+    implementation:
+      - organism:src/organism/cognition/learning.py
+      - organism:src/organism/cognition/structure.py
+      - organism:src/organism/cognition/metaplasticity.py
+    tests:
+      - organism:tests/source_unit/cognition/test_learning.py
+      - organism:tests/source_unit/cognition/test_shadow_prediction.py
+      - organism:tests/source_unit/cognition/test_structure.py
+      - organism:tests/source_unit/cognition/test_reversible_structure_phase1.py
+      - organism:tests/source_unit/cognition/test_insufficiency_driven_growth.py
+      - organism:tests/source_unit/cognition/test_metaplasticity.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+    depends_on:
+      - component.organism-cognitive-graph
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-generative-resident:
+    kind: component
+    title: The generative resident and the model boundary
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-CGN
+    canonical_docs:
+      - explanation/organism/generative-resident.md
+    implementation:
+      - organism:src/organism/cognition/generative/__init__.py
+      - organism:src/organism/cognition/generative/resident.py
+      - organism:src/organism/cognition/generative/types.py
+      - organism:src/organism/cognition/generative/model.py
+      - organism:src/organism/cognition/generative/registry.py
+      - organism:src/organism/cognition/generative/adapters.py
+      - organism:src/organism/cognition/generative/agenda.py
+      - organism:src/organism/cognition/generative/scheduler.py
+      - organism:src/organism/cognition/generative/execution.py
+      - organism:src/organism/cognition/generative/workspace.py
+      - organism:src/organism/cognition/generative/budget.py
+      - organism:src/organism/cognition/generative/episode.py
+      - organism:src/organism/cognition/generative/rollout.py
+      - organism:src/organism/cognition/generative/branch.py
+      - organism:src/organism/cognition/generative/counterfactual.py
+      - organism:src/organism/cognition/generative/equivalence.py
+      - organism:src/organism/cognition/generative/replay.py
+      - organism:src/organism/cognition/generative/recombination.py
+      - organism:src/organism/cognition/generative/hypothesis.py
+      - organism:src/organism/cognition/generative/reconciliation.py
+      - organism:src/organism/cognition/generative/calibration.py
+      - organism:src/organism/cognition/generative/consolidation.py
+      - organism:src/organism/cognition/generative/epistemic.py
+      - organism:src/organism/cognition/generative/epistemic_value.py
+    tests:
+      - organism:tests/source_unit/cognition/test_generative_resident.py
+      - organism:tests/source_unit/cognition/test_generative_foundation.py
+      - organism:tests/source_unit/cognition/test_generative_model.py
+      - organism:tests/source_unit/cognition/test_generative_adapters.py
+      - organism:tests/source_unit/cognition/test_generative_agenda.py
+      - organism:tests/source_unit/cognition/test_generative_agenda_capacity.py
+      - organism:tests/source_unit/cognition/test_generative_scheduler.py
+      - organism:tests/source_unit/cognition/test_generative_execution.py
+      - organism:tests/source_unit/cognition/test_generative_rollout.py
+      - organism:tests/source_unit/cognition/test_generative_branch.py
+      - organism:tests/source_unit/cognition/test_generative_counterfactual.py
+      - organism:tests/source_unit/cognition/test_generative_replay.py
+      - organism:tests/source_unit/cognition/test_generative_recombination.py
+      - organism:tests/source_unit/cognition/test_generative_hypothesis.py
+      - organism:tests/source_unit/cognition/test_generative_calibration.py
+      - organism:tests/source_unit/cognition/test_generative_consolidation.py
+      - organism:tests/source_unit/cognition/test_generative_epistemic_value.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  mechanism.organism-cognitive-checkpoint:
+    kind: mechanism
+    title: What a cognitive checkpoint carries
+    status: CURRENT
+    owner_domain: organism
+    participating_domains:
+      - world
+    canonical_docs:
+      - explanation/organism/cognitive-checkpoint.md
+    implementation:
+      - organism:src/organism/cognition/portable_checkpoint.py
+      - organism:src/organism/cognition/checkpoint.py
+      - organism:src/organism/cognition/generative/persistence.py
+      - world:tests/integration/test_durable_checkpoint_restore_slice.py
+    tests:
+      - organism:tests/source_unit/cognition/test_portable_checkpoint.py
+      - organism:tests/source_unit/cognition/test_graph_checkpoint.py
+      - organism:tests/source_unit/cognition/test_generative_cognition_persistence.py
+      - organism:tests/source_unit/cognition/test_generative_agenda_persistence.py
+      - organism:tests/source_unit/cognition/test_generative_scheduler_persistence.py
+      - organism:tests/source_unit/cognition/test_generative_hypothesis_persistence.py
+    adrs:
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+    depends_on:
+      - component.organism-identity-checkpoint
+      - component.organism-cognitive-graph
+      - component.organism-generative-resident
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9

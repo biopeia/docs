@@ -517,3 +517,75 @@ components:
       - "an exported plain-data state and usage counters"
     consumers:
       - "the history callback of admission in mechanism.organism-action-path; no code builds that callback at the reviewed revision"
+
+  ORG-CGR:
+    coverage_unit: component.organism-cognitive-graph
+    name: "The cognitive graph and its explicit-tick transition"
+    authority:
+      owns: "a validated, bounded table of nodes and weighted edges, and the per-Organism record of the last tick advanced and the previous frame of values"
+      may_decide:
+        - "whether a table of nodes and edges is a well-formed graph under supplied ceilings"
+        - "the value of every node for one pass, given numbers for sense nodes and the previous frame"
+        - "whether a supplied tick advances and whether supplied signals name sense nodes"
+      must_not:
+        - "change a weight or the structure of the graph during a pass"
+        - "select or execute a body action; readouts are numbers offered to other code"
+        - "read host time or draw randomness"
+        - "claim that a node kind named concept, predictor or gate is computed differently from any other non-sense node"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "a mapping from sense node identifier to a finite number, supplied by the caller as opaque signals"
+      - "an explicit, strictly increasing causal tick"
+      - "the previous transition state"
+    outputs:
+      - "a frame: the value of every node and, separately, of nodes of kind readout"
+      - "the next transition state"
+    consumers:
+      - "mechanism.organism-cognitive-checkpoint"
+      - "two World integration test fixtures; no code in organism:src calls the transition at the reviewed revision"
+
+  ORG-CGN:
+    coverage_unit: component.organism-generative-resident
+    name: "The generative resident and the model boundary"
+    authority:
+      owns: "bounded tables of unresolved targets, generated states and transitions, hypothesis records with a status, calibration counts and generative-use counts, all labelled as not being observations"
+      may_decide:
+        - "which eligible target is processed in a step, and whether the step is allowed under mode quotas and limits"
+        - "which registered model objects are asked, and how their proposals are filed as states and hypothesis records"
+        - "whether a hypothesis record becomes supported or contradicted, given outcome tokens and evidence references that a caller-installed resolver accepts"
+      must_not:
+        - "execute an action or write a factual record; it holds no reference through which it could"
+        - "decide what counts as evidence; that is the resolver's answer"
+        - "hold, train or save a model; models are objects supplied by the caller"
+        - "claim that a registered model was learned or that a supported record is true"
+    state:
+      owner: organism
+      family: adaptive_longitudinal
+    lifecycle:
+      birth: empty
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: preserve
+      reproduction: not_inherited
+    inputs:
+      - "an explicit tick and a mode"
+      - "optionally an object exposing prediction errors and activations, read by attribute name"
+      - "candidate identifiers and intent outcomes as opaque strings"
+      - "model objects satisfying the generative model protocol, and an evidence resolver"
+      - "outcome tokens and evidence references for reconciliation"
+    outputs:
+      - "a snapshot of counts and identifiers for the last step"
+      - "anticipated effect tokens with the hypothesis records that hold them"
+      - "three comparison numbers per candidate, and generative-use counts per token"
+      - "an exported plain-data state"
+    consumers:
+      - "mechanism.organism-cognitive-checkpoint"
+      - "the generative and epistemic-value parameters of admission in mechanism.organism-action-path; no code connects them at the reviewed revision"

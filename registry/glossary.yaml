@@ -265,3 +265,34 @@ terms:
       - mechanism.organism-action-path
     canonical_refs:
       - explanation/organism/action-path.md
+
+  generative-model:
+    term: "Generative model (Organism)"
+    definition: >
+      Any object with an identifier and two methods, one saying whether it
+      accepts a query and one returning proposals for it. The Organism
+      repository defines this interface and adapters around caller-supplied
+      functions; it contains no model, weights or training. What the code
+      calls a private model is such an object supplied from outside.
+    distinguishes_from:
+      - generative-hypothesis
+    owners:
+      - component.organism-generative-resident
+    canonical_refs:
+      - explanation/organism/generative-resident.md
+
+  generative-hypothesis:
+    term: "Generative hypothesis"
+    definition: >
+      A record kept by the generative resident: source identifiers, a number
+      called uncertainty, outcome tokens copied from a model's proposal, and
+      one of five statuses. It becomes supported or contradicted by overlap
+      between those tokens and tokens a caller later supplies, behind an
+      evidence resolver. It is not an observation and not a belief held on
+      evidence the Organism can inspect.
+    distinguishes_from:
+      - generative-model
+    owners:
+      - component.organism-generative-resident
+    canonical_refs:
+      - explanation/organism/generative-resident.md
