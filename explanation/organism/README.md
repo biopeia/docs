@@ -8,28 +8,29 @@ Explanatory documents of the Organism domain (semantic-authority).
 
 ## Start here
 
-[Foundation conventions: thresholds, an evidence count and limits](foundation-conventions.md)
+[The life of an Organism, as the code has it](life-of-an-organism.md)
 
 ## Reading order
 
-1. [Foundation conventions: thresholds, an evidence count and limits](foundation-conventions.md)
-2. [Organism identity and the checkpoint envelope](identity-and-checkpoint.md)
-3. [The genome, its expression and the germline record](genome-and-inheritance.md)
-4. [The cognitive graph and its explicit-tick transition](cognitive-graph.md)
-5. [How the cognitive graph is changed](graph-plasticity.md)
-6. [The generative resident and what a "private model" is in code](generative-resident.md)
-7. [Allocating a bounded budget of attention](attention-allocation.md)
-8. [The experience record and its ledger](experience-record-and-ledger.md)
-9. [Effects, causal evidence and controllability](causal-evidence-and-controllability.md)
-10. [The causal provenance log](causal-provenance-log.md)
-11. [Capacity pressure and pair statistics](capacity-pressure-and-pair-statistics.md)
-12. [How a repeated motor pattern becomes a competence](competence-development.md)
-13. [Prospective deliberation and the outcome-value ledger](prospective-deliberation.md)
-14. [Execution bindings, availability and the affordance resolver](execution-binding-and-affordances.md)
-15. [From an affordance to a motor command](action-path.md)
-16. [Evidence that an actuator does something](actuator-evidence.md)
-17. [The executive outcome ledger](executive-outcome-ledger.md)
-18. [What a cognitive checkpoint carries](cognitive-checkpoint.md)
+1. [The life of an Organism, as the code has it](life-of-an-organism.md)
+2. [Foundation conventions: thresholds, an evidence count and limits](foundation-conventions.md)
+3. [Organism identity and the checkpoint envelope](identity-and-checkpoint.md)
+4. [The genome, its expression and the germline record](genome-and-inheritance.md)
+5. [The cognitive graph and its explicit-tick transition](cognitive-graph.md)
+6. [How the cognitive graph is changed](graph-plasticity.md)
+7. [The generative resident and what a "private model" is in code](generative-resident.md)
+8. [Allocating a bounded budget of attention](attention-allocation.md)
+9. [The experience record and its ledger](experience-record-and-ledger.md)
+10. [Effects, causal evidence and controllability](causal-evidence-and-controllability.md)
+11. [The causal provenance log](causal-provenance-log.md)
+12. [Capacity pressure and pair statistics](capacity-pressure-and-pair-statistics.md)
+13. [How a repeated motor pattern becomes a competence](competence-development.md)
+14. [Prospective deliberation and the outcome-value ledger](prospective-deliberation.md)
+15. [Execution bindings, availability and the affordance resolver](execution-binding-and-affordances.md)
+16. [From an affordance to a motor command](action-path.md)
+17. [Evidence that an actuator does something](actuator-evidence.md)
+18. [The executive outcome ledger](executive-outcome-ledger.md)
+19. [What a cognitive checkpoint carries](cognitive-checkpoint.md)
 
 ## Canonical documents
 
@@ -38,6 +39,7 @@ Explanatory documents of the Organism domain (semantic-authority).
 | [action-path.md](action-path.md) | `mechanism.organism-action-path` | CURRENT | RECORDED |
 | [identity-and-checkpoint.md](identity-and-checkpoint.md) | `component.organism-identity-checkpoint` | CURRENT | RECORDED |
 | [executive-outcome-ledger.md](executive-outcome-ledger.md) | `component.organism-executive-outcome-ledger` | CURRENT | RECORDED |
+| [life-of-an-organism.md](life-of-an-organism.md) | `concept.organism-life-across-mechanisms` | CURRENT | RECORDED |
 | [competence-development.md](competence-development.md) | `component.organism-competence-development` | CURRENT | RECORDED |
 | [causal-evidence-and-controllability.md](causal-evidence-and-controllability.md) | `component.organism-causal-evidence` | CURRENT | RECORDED |
 | [execution-binding-and-affordances.md](execution-binding-and-affordances.md) | `component.organism-execution-binding` | CURRENT | RECORDED |
@@ -69,6 +71,7 @@ Explanatory documents of the Organism domain (semantic-authority).
 - [ADR-0081 — The canonical Organism is longitudinal](../../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md)
 - [ADR-0082 — Canonical reproduction is endogenous to life](../../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md)
 - [ADR-0087 — Organism originates ordinary reproduction](../../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md)
+- [ADR-0088 — Lifecycle event ontology](../../technical/adr/ADR-0088-lifecycle-event-ontology.md)
 - [ADR-0090 — Host wall-clock time is never implicit causal authority](../../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md)
 - [ADR-0091 — One non-terminated continuation per Organism identity](../../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md)
 - [ADR-0092 — Organism owns the meaning of its private longitudinal state](../../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md)

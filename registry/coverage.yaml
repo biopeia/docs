@@ -792,6 +792,45 @@ units:
     review:
       status: REVIEW_PENDING
 
+  concept.organism-life-across-mechanisms:
+    kind: concept
+    title: The life of an Organism, as the code has it
+    status: CURRENT
+    owner_domain: organism
+    participating_domains:
+      - modality
+    canonical_docs:
+      - explanation/organism/life-of-an-organism.md
+    adrs:
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md
+      - docs:technical/adr/ADR-0088-lifecycle-event-ontology.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - concept.biopeia-research-hypotheses
+      - concept.biopeia-what-it-is
+      - concept.modality-current-state
+      - mechanism.organism-action-path
+      - component.organism-actuator-evidence
+      - component.organism-attention-allocation
+      - component.organism-capacity-and-pair-statistics
+      - component.organism-causal-evidence
+      - component.organism-causal-provenance-log
+      - mechanism.organism-cognitive-checkpoint
+      - component.organism-cognitive-graph
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-executive-outcome-ledger
+      - component.organism-experience-ledger
+      - concept.organism-foundation-conventions
+      - component.organism-generative-resident
+      - component.organism-genome
+      - mechanism.organism-graph-plasticity
+      - component.organism-identity-checkpoint
+      - component.organism-prospective-deliberation
+    review:
+      status: RECORDED
+
   concept.biopeia-one-step-across-the-domains:
     kind: concept
     title: One step across the domains

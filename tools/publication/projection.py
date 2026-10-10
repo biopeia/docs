@@ -218,6 +218,10 @@ def gen_components(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list
                 ["Owns", authority.get("owns", "nothing recorded")],
                 ["May decide", many(authority.get("may_decide"))],
                 ["Must not", many(authority.get("must_not"))],
+                *([["At each lifecycle boundary", many(f"{k}: {v}" for k, v in comp["lifecycle"].items())]]
+                  if comp.get("lifecycle") else []),
+                *([["In a causal cut", many(f"{k.replace('_', ' ')}: {v}" for k, v in comp["causal_state"].items())]]
+                  if comp.get("causal_state") else []),
                 ["Inputs", many(comp.get("inputs"))],
                 ["Outputs", many(comp.get("outputs"))],
                 ["Consumers", many(comp.get("consumers"))],
