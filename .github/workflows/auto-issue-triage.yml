@@ -1,7 +1,6 @@
 name: Auto issue triage
 
 on:
-  workflow_dispatch:
   issues:
     types: [opened]
 
