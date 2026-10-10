@@ -671,7 +671,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 20634a7d27e8834cd65c96f8bd44087d603aebc8
 
   component.organism-executive-outcome-ledger:
     kind: component
@@ -1298,7 +1298,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: 20634a7d27e8834cd65c96f8bd44087d603aebc8
         world: cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8
 
   component.organism-attention-allocation:

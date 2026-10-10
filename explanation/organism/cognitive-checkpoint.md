@@ -1,6 +1,6 @@
 # What a cognitive checkpoint carries
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `20634a7d27e8834cd65c96f8bd44087d603aebc8`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -11,11 +11,12 @@ not understand. This document is about the one thing at this revision that
 fills it: a composition of cognitive state into those bytes, and its
 restoration.
 
-The composition is a value holding up to six things that a caller hands it.
-It encodes them as one JSON document and can rebuild them from it. It does not
-find the state to save; it saves what it is given. Its own description draws
-the boundary twice: "This payload includes only explicitly supplied cognitive
-state." and "This is not a complete Organism checkpoint."
+The composition is a value holding six cognitive/memory parts and, optionally,
+one genetic-state group made of three parts that a caller hands it. It encodes
+them as one JSON document and can rebuild them from it. It does not find the
+state to save; it saves what it is given. Its own description draws the
+boundary twice: "This payload includes only explicitly supplied state." and
+"This is not a complete Organism checkpoint."
 
 Two properties decide what such a checkpoint is worth, and both are easy to
 miss from the names:
@@ -27,7 +28,7 @@ miss from the names:
 
 Both are described below with what was run to confirm them.
 
-## The six parts
+## The payload parts
 
 `organism:src/organism/cognition/portable_checkpoint.py::CognitiveRuntimeCheckpoint`:
 
@@ -39,10 +40,12 @@ Both are described below with what was run to confirm them.
 | Safety state | no | A failure count and a flag |
 | Sensory normalizers | no | Mean, variance and count, for established normalizers only |
 | Generative resident | no | The resident's own export |
+| Genetic-state group | no, all or none | Genome, germline state and expression state |
 
-The document has exactly nine top-level fields: those six, the identity, a
-schema name and a schema version, which is 4. Encoding is deterministic: keys
-sorted, no optional whitespace.
+The document has exactly 12 top-level fields: the nine state parts above, the
+identity, a schema name and schema version 5. The genetic-state group is
+optional, but if any of its three parts is supplied, all three must be
+present. Encoding is deterministic: keys sorted, no optional whitespace.
 
 Constructing the value already checks that the parts belong together: every
 experience record and the resident must carry the same identity as the
@@ -50,21 +53,32 @@ transition state, and record identifiers must be unique
 (`test_cognitive_checkpoint_rejects_experience_from_another_identity`,
 `test_cognitive_checkpoint_rejects_duplicate_experience_record_identity`,
 `test_portable_checkpoint_rejects_generative_state_for_another_organism`).
+Construction also checks genetic consistency against the genome; serialization
+repeats that check because nested genetic values are mutable despite the frozen
+outer dataclass (`test_portable_checkpoint_rejects_inconsistent_genetic_state_at_construction`,
+`test_portable_checkpoint_rejects_genetic_state_mutated_after_construction`).
 
 The graph itself carries no identity. Nothing checks that a graph belongs to
 the Organism it is saved with.
 
 ## Restoring
 
-Decoding is strict about shape and returns the six parts
+Decoding is strict about shape and returns the supplied state parts
 (`test_cognitive_graph_and_recurrent_state_round_trip_through_organism_envelope`).
 It refuses any other set of top-level fields, any other schema name or
 version, a missing graph, and an identity that differs between the document
 and the transition state inside it
 (`test_cognitive_checkpoint_rejects_unknown_fields`,
-`test_portable_checkpoint_schema_v3_is_not_accepted_as_a_current_payload`,
+`test_portable_checkpoint_schema_v4_is_not_accepted_as_a_current_payload`,
 `test_cognitive_checkpoint_rejects_identity_mismatch`). Earlier versions are
 refused, not migrated.
+
+When genetic state is present, restore requires the caller to provide the
+running software version; it validates/restores the genome first, then the
+germline and expression against that genome
+(`test_portable_checkpoint_genetic_restore_requires_explicit_running_version`,
+`test_portable_checkpoint_round_trips_genome_germline_and_expression_as_one_unit`).
+This is an explicit restore input, not data inferred from the checkpoint.
 
 The restored graph is rebuilt through the ordinary constructor, so every
 construction rule is applied again to what was read
@@ -138,7 +152,7 @@ rounding the live weights. Its docstring attributes that table to a
 `WeightStabilityTracker` and says a `CognitiveBridge` "always passes a
 complete override map". Neither exists in this repository, and the
 composition calls the export without the table (search of `organism:src` for
-both names, 2026-10-09).
+both names, 2026-10-10).
 
 ## Not complete: what has no place in it
 
@@ -150,7 +164,7 @@ payload or by a restore.
 | Co-activation counts, association counts, cooldowns | `StructuralPlasticity` in [graph plasticity](graph-plasticity.md) | No. The class has its own export and restore; the composition has no field for them |
 | Shadow prediction losses and histories | the three shadow classes | No. No export exists |
 | A tuned parameter's value | `MetaParameter` | No. No export exists |
-| The genome | `organism:src/organism/genetics` | No. A genome export and restore sit in the same module as the graph codec and are tested there; the composition does not use them |
+| Genome, germline state and expression state | `organism:src/organism/genetics` | Optional all-or-none group. Other genetic/runtime details remain outside this composition |
 | The ceilings the graph was built under | `KernelLimits` | No. Supplied again at restore |
 | Normalizers with fewer than five readings | the normalizer | No, by design (`test_unestablished_normalizer_is_not_exported`); the reason given is that a young mean "can equal raw readings" |
 | Registered models | the resident's registry | No. A registry may be passed at restore |
@@ -176,7 +190,7 @@ restore differences as finding F-0076.
 ## Who calls it
 
 Nothing in `organism:src` constructs a `CognitiveRuntimeCheckpoint` (search,
-2026-10-09). It is constructed by this repository's tests and by one
+2026-10-10). It is constructed by this repository's tests and by one
 integration test in the World repository,
 `world:tests/integration/test_durable_checkpoint_restore_slice.py`, where a
 fixture wraps it in an envelope, writes the bytes to a file and hands World a
@@ -190,13 +204,13 @@ what goes into it in practice is not yet written.
 
 | Claim | Support |
 |---|---|
-| The six parts, the nine fields, identity checks at construction | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
+| The six cognitive/memory parts, optional genetic group, 12 fields, identity and genetic consistency checks | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
 | Strict decoding, version refusal, closure check through the envelope | Code and the same tests |
 | The weight codec, the dropped trace, safety and normalizer export | Code and tests in `test_graph_checkpoint.py` |
 | Restored weights and the readouts they give; idempotence of a second save; refusal under smaller ceilings | Code, and one ad hoc run of the module at that revision |
 | What is absent from the payload; budget, counters and eviction order after restore | Code, an inspected payload and the same ad hoc run |
 | The limits the repository states about itself | `organism:MIGRATION.md` |
-| Nothing in the source constructs the composition | Search of `organism:src` on 2026-10-09 |
+| Nothing in the source constructs the composition | Search of `organism:src` on 2026-10-10 |
 | What continuity and portability must mean | Accepted decisions ADR-0081, ADR-0092, ADR-0103; statements of intent, not test results |
 
 No checkpoint written by a running Organism was examined, because no
