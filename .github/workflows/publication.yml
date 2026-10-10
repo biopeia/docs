@@ -70,7 +70,9 @@ jobs:
         run: |
           gh auth setup-git
           for repo in organism embodiment environment world modality observation lab; do
-            git clone --quiet --depth 1 "https://github.com/biopeia/$repo" "$RUNNER_TEMP/repos/$repo"
+            # Whole history: links to code are checked at the revision each chapter
+            # was reviewed against, which is rarely the latest.
+            git clone --quiet "https://github.com/biopeia/$repo" "$RUNNER_TEMP/repos/$repo"
           done
       - name: Build
         if: github.event_name != 'pull_request'

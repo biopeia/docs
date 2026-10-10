@@ -26,6 +26,7 @@ from xml.sax.saxutils import escape, quoteattr
 
 import markdown
 import mermaid
+from references import slug
 from style import load_style, symbol_pattern
 from validate_registry import ROOT
 
@@ -35,6 +36,8 @@ PAGE_PLACEHOLDER = "000"
 NO_ENTRIES = "No registered entries at this revision."
 ZERO_WIDTH_SPACE = "​"
 # An identifier may break after one of these, never inside a word.
+# A reference written as code (a path, a symbol, a hash, a test) rather than as a word of prose.
+CODE_TOKEN_RE = re.compile(r"[:/@.]|^test_|^[0-9a-f]{7,40}$")
 BREAK_AFTER_RE = re.compile(r"(::|[/._\-:])(?=[\w<{(])")
 LONG_TOKEN = 18
 
@@ -116,7 +119,7 @@ def text_run(text: str, bold: bool = False, italic: bool = False, code: bool = F
                  + ("<w:i/>" if italic else "") + (f'<w:sz w:val="{round(size * 2)}"/>' if size else ""))
         return f'<w:r>{f"<w:rPr>{props}</w:rPr>" if props else ""}<w:t xml:space="preserve">{escape(piece)}</w:t></w:r>'
 
-    style = "CodeChar" if code else "Hyperlink" if link else ""
+    style = ("CodeLink" if link else "CodeChar") if code else "Hyperlink" if link else ""
     out = []
     # The code typeface has no zero-width space and neither fallback has every
     # symbol; each such character goes in a run of a typeface that has it.
@@ -164,12 +167,28 @@ class Document:
         # Links between published chapters become links inside the document.
         self.chapter_bookmarks: dict[str, str] = {}
         self.empty_footer = ""
+        self.parsed: dict[str, list[dict[str, Any]]] = {}
+        self.headings = 0
+        # References of the chapter being rendered, and where links may lead.
+        self.references: dict[str, dict[str, str]] = {}
+        self.links = projection.get("links") or {}
+        self.source = ""
+        # (document, heading anchor) -> bookmark, and component -> bookmark of its sheet.
+        self.heading_bookmarks: dict[tuple[str, str], str] = {}
+        self.component_bookmarks: dict[str, str] = {}
+        self.plain_reference = re.compile(
+            "(" + "|".join(sorted((re.escape(k) for c in self.chapters() for k, v in c.get("references", {}).items()
+                                   if not CODE_TOKEN_RE.search(k)), key=len, reverse=True)) + r")(?![\w-])"
+        ) if any(c.get("references") for c in self.chapters()) else None
 
         page, margin = style["page"], style["page"]["margin_mm"]
         self.page_width, self.page_height = round(page["width_mm"] * TWIPS_PER_MM), round(page["height_mm"] * TWIPS_PER_MM)
         self.margins = {side: round(margin[side] * TWIPS_PER_MM) for side in ("top", "bottom", "left", "right")}
         self.text_width = self.page_width - self.margins["left"] - self.margins["right"]
         self.text_height = self.page_height - self.margins["top"] - self.margins["bottom"]
+
+    def chapters(self) -> list[dict[str, Any]]:
+        return [chapter for section in self.projection["sections"] for chapter in section["chapters"]]
 
     def relate(self, kind: str, target: str, external: bool = False) -> str:
         for rid, known_kind, known_target, _ in self.relationships:
@@ -181,25 +200,53 @@ class Document:
 
     # --- inline ---------------------------------------------------------------
 
-    def runs(self, inlines: list[dict[str, Any]], base: str, bold: bool = False, code_size: float | None = None) -> str:
+    def link_target(self, href: str, base: str) -> tuple[str | None, str | None]:
+        """Where a Markdown link leads: (bookmark, None) inside the document, (None, url) outside."""
+        if href.startswith(("http://", "https://", "mailto:")):
+            return None, href
+        path, _, anchor = href.partition("#")
+        target = posixpath.normpath(posixpath.join(base, path)) if path else self.source
+        if anchor and (target, anchor) in self.heading_bookmarks:
+            return self.heading_bookmarks[(target, anchor)], None
+        if target in self.chapter_bookmarks:
+            return self.chapter_bookmarks[target], None
+        # A document of this repository that the publication does not include.
+        tree = self.links.get("docs_tree")
+        return (None, tree + target + (f"#{anchor}" if anchor else "")) if tree and path else (None, None)
+
+    def reference_target(self, token: str) -> tuple[str | None, str | None]:
+        found = self.references.get(token) or {}
+        if "component" in found:
+            return self.component_bookmarks.get(found["component"]), None
+        return None, found.get("url")
+
+    def runs(self, inlines: list[dict[str, Any]], base: str, bold: bool = False, code_size: float | None = None,
+             link_references: bool = True) -> str:
         out = []
         for run in inlines:
-            href = run["href"]
-            anchor = None
-            if href and not href.startswith(("http://", "https://", "mailto:")):
-                target = posixpath.normpath(posixpath.join(base, href.split("#", 1)[0]))
-                anchor = self.chapter_bookmarks.get(target)
-            linked = bool(anchor) or bool(href and href.startswith(("http://", "https://", "mailto:")))
-            text = breakable(run["text"]) if run["code"] else run["text"]
-            xml = text_run(text, bold or run["bold"], run["italic"], run["code"], link=linked and not run["code"],
-                           size=code_size if run["code"] else None)
-            if anchor:
-                xml = f'<w:hyperlink w:anchor="{anchor}">{xml}</w:hyperlink>'
-            elif linked:
-                rid = self.relate(f"{R_NS}/hyperlink", href, external=True)
-                xml = f'<w:hyperlink r:id="{rid}">{xml}</w:hyperlink>'
-            # A link to a document that is not part of the publication stays as its text.
-            out.append(xml)
+            pieces = [(run["text"], run["href"])]
+            if not run["href"] and link_references:
+                if run["code"]:
+                    pieces = [(run["text"], f"\0{run['text']}")]
+                elif self.plain_reference is not None:
+                    pieces = [(piece, f"\0{piece}" if index % 2 else None)
+                              for index, piece in enumerate(self.plain_reference.split(run["text"])) if piece]
+            for text, href in pieces:
+                if href and href.startswith("\0"):
+                    anchor, url = self.reference_target(href[1:])
+                elif href:
+                    anchor, url = self.link_target(href, base)
+                else:
+                    anchor, url = None, None
+                shown = breakable(text) if run["code"] else text
+                xml = text_run(shown, bold or run["bold"], run["italic"], run["code"], link=bool(anchor or url),
+                               size=code_size if run["code"] else None)
+                if anchor:
+                    xml = f'<w:hyperlink w:anchor="{anchor}">{xml}</w:hyperlink>'
+                elif url:
+                    xml = f'<w:hyperlink r:id="{self.relate(f"{R_NS}/hyperlink", url, external=True)}">{xml}</w:hyperlink>'
+                # A reference or link that leads nowhere known stays as its text.
+                out.append(xml)
         return "".join(out)
 
     # --- blocks ---------------------------------------------------------------
@@ -213,7 +260,7 @@ class Document:
                 listed_as: str | None = None, properties: str = "") -> None:
         # A heading taken from a document keeps its identifiers in the technical typeface.
         content = text_run(text) if isinstance(text, str) else self.runs(
-            text, "", code_size=self.style["sizes"][("part", "chapter", "section", "subsection")[min(level, 4) - 1]] - 1)
+            text, "", link_references=False, code_size=self.style["sizes"][("part", "chapter", "section", "subsection")[min(level, 4) - 1]] - 1)
         if bookmark:
             content = self.bookmarked(content, bookmark)
             if listed_as:
@@ -325,15 +372,12 @@ class Document:
                                     '<w:jc w:val="center"/>'))
 
     def chapter_body(self, chapter: dict[str, Any]) -> None:
-        try:
-            blocks = markdown.parse(chapter["markdown"])
-        except markdown.MarkdownError as exc:
-            raise markdown.MarkdownError(f"{chapter['source']}: {exc}") from exc
         base = chapter["base"]
-        for block in blocks:
+        self.references, self.source = chapter.get("references") or {}, chapter["source"]
+        for block in self.blocks(chapter):
             if block["type"] == "heading":
                 # '##' in a document is one level below its chapter heading.
-                self.heading(block["level"] + 1, block["inlines"])
+                self.heading(block["level"] + 1, block["inlines"], bookmark=block.get("bookmark"))
             elif block["type"] == "paragraph":
                 self.body.append(paragraph("Normal", self.runs(block["inlines"], base)))
             elif block["type"] == "list":
@@ -342,6 +386,28 @@ class Document:
                 self.table(block, base)
             else:
                 self.code(block)
+
+    def blocks(self, chapter: dict[str, Any]) -> list[dict[str, Any]]:
+        """Parsed body of a chapter, each heading given the bookmark links to it will use."""
+        if chapter["id"] not in self.parsed:
+            try:
+                blocks = markdown.parse(chapter["markdown"])
+            except markdown.MarkdownError as exc:
+                raise markdown.MarkdownError(f"{chapter['source']}: {exc}") from exc
+            components = set(self.links.get("components") or [])
+            for block in blocks:
+                if block["type"] != "heading":
+                    continue
+                self.headings += 1
+                block["bookmark"] = f"h{self.headings}"
+                first = block["inlines"][0]["text"] if block["inlines"] else ""
+                if chapter["generated"] and first in components:
+                    self.component_bookmarks[first] = block["bookmark"]
+                else:
+                    # Two headings of one document with the same text: links reach the first.
+                    self.heading_bookmarks.setdefault((chapter["source"], slug(plain(block["inlines"]))), block["bookmark"])
+            self.parsed[chapter["id"]] = blocks
+        return self.parsed[chapter["id"]]
 
     # --- sections of the document --------------------------------------------
 
@@ -419,6 +485,8 @@ class Document:
                 entry["chapters"].append({"chapter": chapter, "label": None if untitled else title, "bookmark": bookmark})
                 if not chapter["generated"]:
                     self.chapter_bookmarks[chapter["source"]] = bookmark
+                # Headings are numbered before anything is rendered: a link may point forward.
+                self.blocks(chapter)
             out.append(entry)
         return out
 
@@ -475,7 +543,10 @@ class Document:
         rows = []
         for repo, source in sources.items():
             state = {"clean": "clean", "modified": "local modifications", "unresolved": "unresolved"}[source["state"]]
-            rows.append([cell(repo), cell(source["revision"] or "—", code=bool(source["revision"])), cell(state)])
+            revision = cell(source["revision"] or "—", code=bool(source["revision"]))
+            if source["revision"] and self.links.get("github"):
+                revision[0]["href"] = f"{self.links['github']}/{repo}/commit/{source['revision']}"
+            rows.append([cell(repo), revision, cell(state)])
         self.table({"header": [cell(t) for t in ("Repository", "Revision", "State")], "rows": rows}, "")
         self.table({"header": [cell("Digest"), cell("SHA-256")],
                     "rows": [[cell("Registry"), cell(self.projection["registry_digest"], code=True)]]}, "")
@@ -520,8 +591,12 @@ class Document:
                              properties="<w:pageBreakBefore/>" if index and self.style["layout"]["chapter_starts_page"]
                              else '<w:spacing w:before="640"/>')
             chapter = entry["chapter"]
-            source = (text_run("Generated from ") if chapter["generated"] else text_run("Source: ")) + text_run(
-                breakable(chapter["source"]), code=True, size=self.style["sizes"]["meta"])
+            shown = text_run(breakable(chapter["source"]), code=True, size=self.style["sizes"]["meta"],
+                             link=bool(chapter.get("source_url")))
+            if chapter.get("source_url"):
+                rid = self.relate(f"{R_NS}/hyperlink", chapter["source_url"], external=True)
+                shown = f'<w:hyperlink r:id="{rid}">{shown}</w:hyperlink>'
+            source = (text_run("Generated from ") if chapter["generated"] else text_run("Source: ")) + shown
             self.body.append(paragraph("Meta", source))
             self.chapter_body(chapter)
 
@@ -591,7 +666,8 @@ class Document:
             + "".join(
                 f'<Override PartName="{part}" ContentType="application/vnd.openxmlformats-officedocument.'
                 f'wordprocessingml.{kind}+xml"/>' for part, kind in overrides.items())
-            + "</Types>"
+            + '<Override PartName="/docProps/core.xml" '
+            'ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>'
         )
 
 
@@ -664,6 +740,9 @@ def styles_xml(style: dict[str, Any], text_width: int) -> str:
         f'<w:sz w:val="{round((sizes["body"] - 1) * 2)}"/></w:rPr></w:style>',
         '<w:style w:type="character" w:styleId="SymbolChar"><w:name w:val="Symbol Char"/><w:rPr>'
         + fonts((style["fonts"].get("symbols") or style["fonts"]["text"])["name"]) + "</w:rPr></w:style>",
+        f'<w:style w:type="character" w:styleId="CodeLink"><w:name w:val="Code Link"/><w:rPr>{fonts(code_font)}'
+        f'<w:color w:val="{colours["accent"]}"/><w:sz w:val="{round((sizes["body"] - 1) * 2)}"/>'
+        '<w:u w:val="single"/></w:rPr></w:style>',
         '<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/>'
         f'<w:rPr><w:color w:val="{colours["accent"]}"/><w:u w:val="single"/></w:rPr></w:style>',
         '<w:style w:type="table" w:styleId="RuledTable"><w:name w:val="Ruled Table"/><w:tblPr><w:tblBorders>',
@@ -677,8 +756,30 @@ def styles_xml(style: dict[str, Any], text_width: int) -> str:
 
 ROOT_RELATIONSHIPS = (
     f'{XML_HEADER}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-    f'<Relationship Id="rId1" Type="{R_NS}/officeDocument" Target="word/document.xml"/></Relationships>'
+    f'<Relationship Id="rId1" Type="{R_NS}/officeDocument" Target="word/document.xml"/>'
+    '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/'
+    'core-properties" Target="docProps/core.xml"/></Relationships>'
 )
+
+
+def core_properties_xml(projection: dict[str, Any], edition: str) -> str:
+    """Title, subject and date of the document; a PDF made from it carries them too."""
+    publication, release = projection["publication"], projection["release"]
+    title = " — ".join(t for t in (publication["title"], publication.get("subtitle")) if t)
+    subject = " · ".join(t for t in (publication.get("type"), EDITIONS[edition][0], f"Release {release['id']}") if t)
+    # The date of the documentation the build was made from, never the clock.
+    dates = "".join(
+        f'<dcterms:{name} xsi:type="dcterms:W3CDTF">{release["date"]}T00:00:00Z</dcterms:{name}>'
+        for name in ("created", "modified")
+    ) if release.get("date") else ""
+    return (
+        f'{XML_HEADER}<cp:coreProperties '
+        'xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
+        'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" '
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+        f"<dc:title>{escape(title)}</dc:title><dc:subject>{escape(subject)}</dc:subject>"
+        f"<dc:creator>{escape(publication['title'])}</dc:creator>{dates}</cp:coreProperties>"
+    )
 
 
 def build_docx(
@@ -706,6 +807,7 @@ def build_docx(
     parts = {
         "[Content_Types].xml": document.content_types_xml(),
         "_rels/.rels": ROOT_RELATIONSHIPS,
+        "docProps/core.xml": core_properties_xml(projection, edition),
         "word/document.xml": body,
         "word/_rels/document.xml.rels": document.relationships_xml(),
         "word/styles.xml": styles_xml(style, document.text_width),
