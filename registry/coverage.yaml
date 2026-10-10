@@ -696,6 +696,61 @@ units:
       basis:
         organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
+  concept.biopeia-what-it-is:
+    kind: concept
+    title: What Biopeia is
+    status: TARGET
+    owner_domain: world
+    participating_domains:
+      - organism
+      - embodiment
+      - environment
+      - modality
+      - observation
+      - lab
+    canonical_docs:
+      - explanation/biopeia/what-biopeia-is.md
+    adrs:
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md
+      - docs:technical/adr/ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0079-world-lifecycle-is-independent-from-lab.md
+      - docs:technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+      - docs:technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md
+      - docs:technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md
+      - docs:technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md
+      - docs:technical/adr/ADR-0088-lifecycle-event-ontology.md
+      - docs:technical/adr/ADR-0089-standing-of-historical-adrs-for-the-target-architecture.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0096-world-participation-including-singleton.md
+      - docs:technical/adr/ADR-0097-hybrid-world.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0101-operator-control.md
+      - docs:technical/adr/ADR-0102-lab.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+      - docs:technical/adr/ADR-0107-journal-role.md
+      - docs:technical/adr/ADR-0108-reproduction-and-causal-entropy.md
+      - docs:technical/adr/ADR-0109-population-capacity.md
+      - docs:technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md
+    depends_on:
+      - concept.biopeia-one-step-across-the-domains
+    review:
+      status: RECORDED
+
   concept.biopeia-one-step-across-the-domains:
     kind: concept
     title: One step across the domains

@@ -8,7 +8,7 @@ How Biopeia works, traced to code, tests and decisions. Each directory has its o
 
 ## Start here
 
-[One step across the domains](biopeia/one-step-across-the-domains.md)
+[What Biopeia is](biopeia/what-biopeia-is.md)
 
 ## Reading order
 

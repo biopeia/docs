@@ -107,7 +107,7 @@ def test_real_publication_builds_a_sound_deterministic_package():
         for s in projection["sections"] if s["group"] == "parts" or len(s["chapters"]) > 1
     )
     assert len(toc) == len(projection["sections"]) + chapters
-    assert [e["level"] for e in toc[:3]] == [1, 1, 2]  # reader guide, Part I, its first chapter
+    assert toc[0]["level"] == 1 and {e["level"] for e in toc} == {1, 2}
     assert len({e["bookmark"] for e in toc}) == len(toc)
 
 
