@@ -1040,3 +1040,152 @@ findings:
       - explanation/organism/executive-outcome-ledger.md
     material: false
     status: open
+
+  F-0115:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-articulated-body
+      - mechanism.physical-causal-step
+    summary: >
+      The physical projection given to a solver has no field for joint
+      positions or velocities, so for an articulated body the configuration of
+      the joints does not reach the solver through it; World's articulated
+      fixture sets the hinge from the restored owner state directly. The
+      projection is built from a specification, a pose and two velocities
+      passed separately, not from the body's state, and checks only that
+      correlation and pose name the same body: a correlation naming another
+      World, tick, episode and morphology revision, and velocities unrelated
+      to any state, were accepted.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/32"
+
+  F-0116:
+    class: recovery_durability_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      The digest that binds articulated state and its checkpoint to a
+      morphology covers the generated description only. Contact links,
+      fixed-base flag, surface material, spawn height, structural neighbours
+      and state schema version are not in it, so descriptors of bodies
+      differing in those compare equal and a checkpoint was restored under
+      one of them. A descriptor made by hand with an invented digest is
+      accepted, as the code declares. No checkpoint holds a specification or
+      a descriptor: restoring needs the caller to supply the descriptor
+      again. The articulated state offers no checkpoint digest and no owner
+      validation methods, and its schema name exists only in World's fixture
+      (extends F-0021).
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/33"
+
+  F-0117:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      A body specification and its joint and segment values are not
+      validated. A negative or non-numeric mass, inverted joint limits (until
+      a descriptor is derived), an unknown parent link and a body kind that
+      makes the generated text malformed XML are accepted; a link without a
+      segment silently becomes a point mass of 0.05 and an unreferenced
+      segment is silently dropped. Field names carry no units, and the units
+      of mass, size, torque and damping are stated nowhere; ADR-0073 item 1
+      says public APIs have no implicit units.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0118:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Much of the specification and mechanics modules is read by no code in
+      the seven repositories (search of 2026-10-09): the surface material,
+      fixed-base flag, spawn height, structural neighbours and state schema
+      version of a specification; its ordinal receptor and effector names and
+      counts, which nothing relates to the stable effector identities of the
+      actuation projection; three value types, the ground material and the
+      end-range and solver-tolerance constants. The joint limits written into
+      the description are two degrees narrower at each end than the limits
+      the state enforces, and the tolerance constant takes no part in either.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0119:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+    summary: >
+      The declared pose and joint conventions (metres, right-handed, z up,
+      xyzw, frame names, radians, revision v1) are read by no code except
+      their own test (search of 2026-10-09). The body pose sample accepts any
+      frame names, any contract revision, a free sample kind and value and a
+      negative sample time, and raises an attribute error instead of a value
+      error for a non-text identifier. Checkpoints restate the units as their
+      own text. Environment declares handedness and up axis in a different
+      vocabulary and nothing compares the two. The repository states that the
+      declarations are metadata only.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0120:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-physical-state
+    summary: >
+      The physical duration type is imported by nothing in the seven
+      repositories except its own test (search of 2026-10-09), and its
+      guarantees end at construction: arithmetic returns plain floats and a
+      difference can be negative. No Embodiment value records the physical
+      time a step covers: not the projection, the candidate, the correlation
+      or the state, and the pose's sample time is left unset on adoption. In
+      World's fixtures the step length is a number in the solver model
+      written by the fixture. No host clock is read in the Embodiment source.
+      ADR-0090 requires causal times to be explicit and distinct.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0121:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Joint positions and velocities are stored as given, without conversion
+      to floating point. Two articulated states built with a joint position
+      of 1 and of 1.0 compare equal and encode to different checkpoint bytes,
+      as do 0.0 and -0.0, so equal states can have different hashes in a
+      World cut. A state restored from bytes re-encodes to the same bytes.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
