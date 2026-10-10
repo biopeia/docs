@@ -577,8 +577,14 @@ findings:
     documented_in:
       - explanation/embodiment/somatic-state.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/embodiment/issues/27"
+    disposition: >
+      Resolved in embodiment 9da395d ("Persist physiology config and pending
+      metabolic spend"): the ledger's checkpoint carries the physiology
+      configuration and the amounts spent in the current tick, and the schema
+      is renamed embodiment-checkpoint-v2. Covered by
+      test_checkpoint_preserves_custom_physiology_and_pending_spend.
 
   F-0026:
     class: documentation_inconsistency

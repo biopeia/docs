@@ -1,8 +1,14 @@
 # Somatic state: what a body holds
 
-Reviewed against `embodiment` at commit `a5129f03aa4b024e33d332f917b9235afe97959c`.
+Reviewed against `embodiment` at commit `6114f3d9bcc0d5c44ecbfb6262f87f5824f92903`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
+The ad hoc runs were made at an earlier revision,
+`a5129f03aa4b024e33d332f917b9235afe97959c`, and were not repeated. Between
+the two revisions the body record and the transfer module are unchanged; the
+ledger, the configuration and the checkpoint changed only in what a
+checkpoint carries and what restoring refuses (comparison of the five source
+files on 2026-10-10).
 
 ## What it is
 
@@ -200,11 +206,14 @@ A body's record and its ledger are saved together under a body identifier
 and an embodiment episode identifier
 (`embodiment:src/embodiment/checkpoint.py::EmbodimentCheckpoint`), as
 canonical JSON. The ledger must be bound to that very record. Restoring
-rejects unknown fields in the envelope, a wrong or boolean schema version,
-and a ledger whose stated energy disagrees with the body's
+rejects unknown fields in the envelope, a field given twice, a wrong or
+boolean schema version, numbers too large to be finite, and a ledger whose
+stated energy disagrees with the body's
 (`test_checkpoint_round_trip_is_deterministic_and_preserves_episode_identity`,
 `test_checkpoint_rejects_unknown_envelope_fields`,
+`test_checkpoint_rejects_duplicate_json_fields`,
 `test_checkpoint_rejects_boolean_schema_version`,
+`test_checkpoint_rejects_oversized_json_integers`,
 `test_checkpoint_rejects_ledger_body_energy_mismatch`,
 `test_checkpoint_requires_ledger_bound_to_same_body_object`).
 
@@ -213,17 +222,31 @@ owner: whether bytes are valid for an identity and a schema, and the same
 after restoration
 (`test_owner_checkpoint_validation_checks_identity_schema_and_bytes`). The
 identity compared is the body identifier; the episode is not part of the
-question. The schema it answers to is named `embodiment-checkpoint-v1`.
+question. The schema it answers to is named `embodiment-checkpoint-v2`; the
+earlier name is refused.
+
+The ledger's part of the bytes carries the physiology configuration and
+the amounts spent in the current tick. A ledger with its own thresholds and
+a charge already made reports the same configuration, the same pressure and
+the same spent amount after a round trip, and advancing the original and
+the restored ledger gives the same result
+(`test_checkpoint_preserves_custom_physiology_and_pending_spend`). A caller
+may pass a configuration when restoring a ledger; one that differs from the
+stored one is refused (code). The ledger's part is refused if it is in the
+earlier format, lacks a field or has an unknown one, or holds a
+configuration or spent amounts that are invalid or out of range
+(`test_metabolic_checkpoint_rejects_old_schema_missing_or_unknown_fields`,
+`test_metabolic_checkpoint_rejects_invalid_config_and_spent_values`,
+`test_metabolic_checkpoint_rejects_out_of_range_pending_spend`). Bytes
+written in the earlier format are therefore not restorable; no conversion
+exists in the repository (code).
+
+An earlier revision saved neither the configuration nor the spent amounts,
+recorded as finding F-0025; that is no longer so.
 
 The module calls this "a migration-stage format, not a finalized portable
-World checkpoint". Three limits were observed by running it:
+World checkpoint". One limit remains:
 
-- **The physiology configuration is not saved.** A ledger with its own
-  thresholds reported pressure `elevated`; the same state restored reported
-  `normal`, because restoring uses the default thresholds.
-- **The amounts spent in the current tick are not saved.** A charge of 0.2
-  made before the checkpoint was absent from the restored ledger's snapshot,
-  though the energy it removed stayed removed.
 - **It names no World and no causal tick.** The bytes say which body and
   which episode, not when. The physical state of the same body is a
   separate checkpoint that does name them; see
@@ -248,7 +271,7 @@ dead body.
 ## Lifecycle
 
 What the code shows: a record is created with defaults or given values; it
-is preserved by the checkpoint with the losses listed above; it survives a
+is preserved by the checkpoint; it survives a
 restart only if those bytes were stored elsewhere.
 
 What the code does not contain: any path for re-embodiment or reproduction.
@@ -269,8 +292,8 @@ The Organism repository does not import this package.
 | Claim | Support |
 |---|---|
 | Record round trip, charge debiting energy once, depletion marking death, transfers, checkpoint strictness and owner validation | Code and tests in `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py` and `embodiment:tests/test_checkpoint.py`, run at that revision (all pass) |
-| Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states; dead is final | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
-| A ledger charge empties the reserve without death; tick of death taken from the caller; configuration and spent amounts lost on restore | Code, and the same ad hoc run |
+| Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states; dead is final | Code, and one ad hoc run of the modules at the earlier revision named above; no test is kept for these |
+| A ledger charge empties the reserve without death; tick of death taken from the caller | Code, and the same ad hoc run |
 | Which values are never changed, which configuration values are never read, who calls what | A search of the source at that revision, and of the other repositories' main branches |
 | What a body owns, what reaches the Organism, what ends with a body | Accepted decisions ADR-0094 and [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md); statements of intent, not test results |
 
@@ -294,8 +317,9 @@ aggregate directly left it at 0.99 while the mean of the structures was
 
 - What advances a body through time, in which domain, on which clock. This
   is the subject of embodiment#20.
-- Whether the configuration belongs in the checkpoint, or is fixed
-  elsewhere for the life of a body.
+- Whether the configuration, now carried by every checkpoint, may change
+  during the life of a body. Restoring refuses a different one; nothing
+  else in the code changes or fixes it.
 - Whether depletion through the ledger should be death at once, as it is
   through the record.
 - Whether the per-kind accounts are somatic state. ADR-0094 leaves it

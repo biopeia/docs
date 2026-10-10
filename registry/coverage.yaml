@@ -439,7 +439,7 @@ units:
       status: RECORDED
       basis:
         lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
-        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        embodiment: 6114f3d9bcc0d5c44ecbfb6262f87f5824f92903
         environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
         observation: be82907d1d677b2362e369d15eb1e8e964d893aa
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
@@ -477,7 +477,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
+        lab: d74d7bb67f70f8ae206ee5661b07d3326a459296
         embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
         environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
         observation: be82907d1d677b2362e369d15eb1e8e964d893aa
@@ -1299,7 +1299,7 @@ units:
       status: RECORDED
       basis:
         organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8
 
   component.organism-attention-allocation:
     kind: component
