@@ -76,6 +76,16 @@ revision, and the build fails otherwise. The build manifest records which
 one a file is. The `Publication` workflow builds the published edition on
 `main`.
 
+## Numbered releases
+
+Every build is identified by the day and revision of the documentation it was
+built from. A numbered release is more: an entry in `releases.yaml`, which is
+the revision history the front matter prints, and a tag `docs-v<id>` on the
+commit that carries the entry. The `Publication` workflow builds the published
+edition from the tag, names it by the release number and attaches the four
+files to a GitHub Release. A tag without its entry fails the build. Cutting a
+release is the owner's act; none has been cut.
+
 ## Rules
 
 - A chapter that does not exist, a document listed twice or an unknown
@@ -96,10 +106,8 @@ python tools/publication/model.py   # check the manifest
 - **The style is approved in direction, with refinements open.** The
   generated DOCX has not been opened in Microsoft Word, which the owner
   requires once before the style issue (#80) closes.
-- **No revision history.** The decided front matter includes one. It needs
-  numbered releases, and none has been cut (#92). The executive architecture
-  is `explanation/biopeia/what-biopeia-is.md`, derived from the accepted
-  decision records.
+- **No numbered release has been cut.** The mechanism exists (above); the
+  front matter says so until the first entry in `releases.yaml`.
 - **Pages that are too full are measured, not judged.** The manifest reports
   the fullest page; no limit fails the build.
 - **Parts have no scope statement and chapters no abstract**: the corpus

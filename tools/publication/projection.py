@@ -29,6 +29,7 @@ from validate_registry import (  # noqa: E402
     as_list,
     broken_links,
     load_registry,
+    load_strict_yaml,
     parse_reference,
     validate,
 )
@@ -392,12 +393,56 @@ def git_revision(repo: Path) -> dict[str, Any]:
     }
 
 
-def release_of(docs: dict[str, Any]) -> dict[str, Any]:
-    """Identifier and date of a build: the day and revision of the documentation it was built from."""
+RELEASE_TAG_PREFIX = "docs-v"
+RELEASE_ID_RE = re.compile(r"\d{4}\.\d{1,2}\.\d+")
+
+
+def load_history(docs_root: Path) -> list[dict[str, str]]:
+    """Numbered releases of the publication, oldest first, from publication/releases.yaml."""
+    path = docs_root / "publication" / "releases.yaml"
+    if not path.is_file():
+        return []
+    history = load_strict_yaml(path).get("releases") or []
+    seen: set[str] = set()
+    for entry in history:
+        rid = str((entry or {}).get("id", ""))
+        if not RELEASE_ID_RE.fullmatch(rid) or rid in seen:
+            raise ProjectionError(f"publication/releases.yaml: release id {rid!r} is malformed or repeated")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(entry.get("date", ""))) or not str(entry.get("summary", "")).strip():
+            raise ProjectionError(f"publication/releases.yaml: release {rid} needs a date (YYYY-MM-DD) and a summary")
+        seen.add(rid)
+    return [{"id": str(e["id"]), "date": str(e["date"]), "summary": " ".join(str(e["summary"]).split())} for e in history]
+
+
+def release_tag(docs_root: Path) -> str | None:
+    """The release tag on the commit being built, if it carries one."""
+    try:
+        done = subprocess.run(["git", "-C", str(docs_root), "tag", "--points-at", "HEAD", f"{RELEASE_TAG_PREFIX}*"],
+                              capture_output=True, text=True, check=False)
+    except OSError:
+        return None
+    tags = sorted(done.stdout.split()) if done.returncode == 0 else []
+    return tags[-1] if tags else None
+
+
+def release_of(docs: dict[str, Any], history: list[dict[str, str]], tag: str | None) -> dict[str, Any]:
+    """Identifier and date of a build.
+
+    A commit tagged as a numbered release is that release, and the tag must
+    have its entry in the history. Any other build is named by the day and
+    revision of the documentation it was built from.
+    """
     if not docs["revision"]:
-        return {"id": "unversioned", "date": None}
+        return {"id": "unversioned", "date": None, "numbered": False}
+    if tag and docs["state"] == "clean":
+        number = tag.removeprefix(RELEASE_TAG_PREFIX)
+        entry = next((e for e in history if e["id"] == number), None)
+        if entry is None:
+            raise ProjectionError(f"tag {tag} has no entry in publication/releases.yaml")
+        return {"id": number, "date": entry["date"], "numbered": True}
     suffix = "+modified" if docs["state"] == "modified" else ""
-    return {"id": f"{docs['committed_on'].replace('-', '.')}-{docs['revision'][:7]}{suffix}", "date": docs["committed_on"]}
+    return {"id": f"{docs['committed_on'].replace('-', '.')}-{docs['revision'][:7]}{suffix}",
+            "date": docs["committed_on"], "numbered": False}
 
 
 def sha256(data: bytes) -> str:
@@ -536,7 +581,8 @@ def build_projection(
                ("verified", "unverified", "at_build_revision", "without_revision", "symbol_not_located",
                 "tests_not_located")},
         },
-        "release": release_of(found["docs"]),
+        "release": release_of(found["docs"], history := load_history(docs_root), release_tag(docs_root)),
+        "history": history,
         "registry_digest": registry_digest(registry_dir),
         "sections": out_sections,
     }
