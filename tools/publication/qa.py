@@ -99,18 +99,20 @@ def body_characters(pages: list[str]) -> list[int]:
     return counts
 
 
-def check_density(pages: list[str], limits: dict) -> tuple[list[str], list[int]]:
+def check_density(pages: list[str], limits: dict, terminal: set[int]) -> tuple[list[str], list[int]]:
     """Problems that fail the build, and the pages that are merely sparse.
 
-    A page is measured by the characters of its body: its first line (the
-    running header) and its last two (the footer) are left out. The cover is
-    exempt. A page that holds less than a line is a layout fault; many sparse pages
-    mean the layout wastes paper.
+    A page is measured by the characters of its body. The cover is exempt.
+    `terminal` holds the last page of each part and appendix: a short page
+    there is how a section ends. Anywhere else a sparse page is whitespace in
+    the middle of running text, and a page holding a line or two is an
+    orphan wherever it falls. Both are layout faults.
     """
     counts = body_characters(pages)
     blank = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["blank_page_chars"]]
     sparse = [n for n, count in enumerate(counts, start=1) if n > 1 and count < limits["sparse_page_chars"]]
-    problems = [f"page {n} is empty or nearly so" for n in blank]
+    problems = [f"page {n} holds only an orphaned line or two" for n in blank]
+    problems += [f"page {n} is sparse in the middle of a section" for n in sparse if n not in terminal and n not in blank]
     if pages and len(sparse) / len(pages) > limits["max_sparse_share"]:
         problems.append(
             f"{len(sparse)} of {len(pages)} pages are sparse, more than the {limits['max_sparse_share']:.0%} allowed"

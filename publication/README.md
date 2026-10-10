@@ -39,8 +39,11 @@ Sans and Liberation Mono, whether or not a machine has the named typefaces,
 so that page breaks are the same everywhere. The build fails if the PDF ends
 up set in any other typeface, if a page is empty, or if too many are sparse.
 
-`assets/biopeia-logo.png` is the mark of the Biopeia organisation on GitHub,
-as it stood on 2026-10-10. The accent colour is its dark blue.
+`assets/biopeia-logo.png` is the Biopeia mark, accepted by the Architecture
+Owner on 2026-10-10, and it is the publisher's only source for it. A build
+never fetches the mark from anywhere, and the build manifest records the
+hash of the file and of `style.yaml`, so a past build keeps its identity
+whatever changes elsewhere. The accent colour is the mark's dark blue.
 
 ## Editions
 
@@ -69,19 +72,16 @@ python tools/publication/model.py   # check the manifest
 
 ## Known gaps
 
-- **The style is implemented and not yet accepted.** The decision requires a
-  representative sample to be reviewed by the owner before the style is
-  considered complete.
+- **The style is approved in direction, with refinements open.** The
+  generated DOCX has not been opened in Microsoft Word, which the owner
+  requires once before the style issue (#80) closes.
 - **No executive architecture and no revision history.** The decided front
-  matter includes both. The first needs a document that does not exist; the
-  second needs numbered releases, and none has been cut. The publication says
-  so where the history would be.
-- **The logo is the organisation's avatar, and that is the mark the
-  historical Symbiont documents carried.** Whether it is the Biopeia mark is
-  the owner's call; the file is one line in `style.yaml`.
+  matter includes both. The first needs a canonical source document and must
+  not be invented to fill the layout; the second needs numbered releases,
+  and none has been cut. Tracked in #91 and #92.
 - **Pages that are too full are measured, not judged.** The manifest reports
   the fullest page; no limit fails the build.
-- **Wide tables are not turned to landscape.** Columns are sized for their
+- **Wide tables are not turned to landscape** (#93). Columns are sized for their
   longest unbreakable piece and identifiers break after `/ . _ - :`; nothing
   is clipped, but a very wide table is not rotated.
 - **Parts have no scope statement and chapters no abstract**: the corpus

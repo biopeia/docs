@@ -24,6 +24,7 @@ REQUIRED = {
               "table", "code", "caption", "meta", "kicker"),
     "qa": ("blank_page_chars", "sparse_page_chars", "max_sparse_share"),
     "layout": ("chapter_starts_page",),
+    "cover": ("top_space_mm", "mark_gap_mm", "metadata_gap_mm"),
 }
 
 

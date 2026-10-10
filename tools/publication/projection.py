@@ -71,8 +71,11 @@ def reference(ref: str) -> str:
     return f"`{ref}`"
 
 
+NO_ENTRIES = "No registered entries at this revision."
+
+
 def none_registered(what: str) -> list[str]:
-    return [f"No {what} is registered yet.", ""]
+    return [NO_ENTRIES, ""]
 
 
 # --- sections generated from the registry -------------------------------------
@@ -387,10 +390,18 @@ def chapter_from_document(rel: str, docs_root: Path) -> dict[str, Any]:
     }
 
 
+# Generated sections that render one registry, by the registry they render.
+REGISTRY_OF = {"contracts": "contracts", "contract-catalog": "contracts", "components": "components",
+               "glossary": "glossary", "notation": "notation", "parameters": "parameters", "metrics": "metrics",
+               "designs": "designs"}
+
+
 def chapter_generated(name: str, reg: dict[str, Any], docs_root: Path) -> dict[str, Any]:
     title, source, lines = GENERATORS[name](reg, docs_root)
     body = "\n".join(lines).strip() + "\n"
     return {
+        # A section whose registry holds nothing; renderers show it compactly.
+        "empty": name in REGISTRY_OF and not reg[REGISTRY_OF[name]],
         "id": f"generated-{name}",
         "title": title,
         "source": source,
