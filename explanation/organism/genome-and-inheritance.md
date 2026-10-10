@@ -339,11 +339,12 @@ Each of the three parts can be written to plain data and read back
 (`organism:src/organism/genetics/checkpoint.py`). The genome payload carries
 its hashes and restore checks them. Germline restore validates mark entries,
 rejects duplicate loci, refuses acquired marks when capture is disabled, and
-checks that persisted birth expression matches the genome and marks. Expression
-restore checks the effective values against inherited ranges and requires its
-birth expression to match the genome plus any supplied germline state. These
-are codec contracts, not evidence that the records are included in the
-composed portable Organism checkpoint.
+checks that persisted birth expression matches the genome and inherited marks.
+Expression restore checks the four adaptive effective parameters against
+inherited ranges, normalizes `exploration_drive`, and requires its birth
+expression to match the genome-derived baseline or the supplied germline
+birth expression. These are codec contracts, not evidence that the records
+are included in the composed portable Organism checkpoint.
 
 The cognition reader
 (`organism:src/organism/cognition/checkpoint.py::restore_genome_checkpoint`)
