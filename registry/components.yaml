@@ -485,7 +485,7 @@ components:
       - "a deterministic, versioned byte envelope"
       - "a decoded checkpoint, or a refusal"
     consumers:
-      - "the composed cognitive runtime checkpoint in organism:src/organism/cognition/portable_checkpoint.py (not registered as a unit)"
+      - "the composed cognitive runtime checkpoint in organism:src/organism/cognition/portable_checkpoint.py (mechanism.organism-cognitive-checkpoint)"
 
   ORG-EOL:
     coverage_unit: component.organism-executive-outcome-ledger

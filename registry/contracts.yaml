@@ -284,3 +284,38 @@ contracts:
     documented_in:
       - explanation/embodiment/physical-projection.md
       - explanation/environment/static-scene.md
+
+  contract.cognitive-state-in-a-causal-cut:
+    title: Organism cognitive state in a World causal cut
+    summary: >
+      World's integration fixtures advance Organism's cognitive transition
+      inside a causal transaction and publish the composed cognitive
+      checkpoint as the Organism owner's bytes. The two sides meet only in
+      those fixtures, which import Organism's cognition modules directly: no
+      source in World, Environment, Embodiment, Observation, Modality or Lab
+      imports them (search for `organism.cognition` at each repository's
+      main on 2026-10-10). The answers World asks of an owner are given by a
+      class the fixture defines, under a schema name that appears nowhere in
+      Organism's source.
+    agreement: fixture_only
+    parties:
+      - unit: component.organism-cognitive-graph
+        role: provides the graph and the transition the fixtures advance
+      - unit: mechanism.organism-cognitive-checkpoint
+        role: provides the bytes published and restored as the Organism owner's checkpoint
+      - unit: component.world-durable-runtime
+        role: publishes and restores those bytes in a fixture; an owner contract defined by the fixture answers its two questions
+      - unit: component.world-in-memory-runtime
+        role: commits a transaction in which a fixture advances the cognitive transition
+    governed_by:
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    evidence:
+      - world:tests/integration/test_first_biopeia_causal_tick.py
+      - world:tests/integration/test_durable_checkpoint_restore_slice.py
+    findings:
+      - F-0070
+      - F-0073
+    documented_in:
+      - explanation/organism/cognitive-graph.md
+      - explanation/organism/cognitive-checkpoint.md
