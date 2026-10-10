@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-29 units, 7 cross-domain contracts, 71 findings.
+29 units, 9 cross-domain contracts, 71 findings.
 
 ## World
 
@@ -156,7 +156,7 @@ restates it so that the answers about one unit can be read in one place.
 | Owned by | world; also involves organism, embodiment, environment, observation |
 | Explained in | [explanation/world/physical-step.md](../explanation/world/physical-step.md) |
 | Implemented in | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:src/world/durable_runtime.py` |
-| Cross-domain contracts | Correlation of a physical step (fixture_only); Observation of a committed cut (fixture_only) |
+| Cross-domain contracts | Correlation of a physical step (fixture_only); Observation of a committed cut (fixture_only); Body physical input to a solver (fixture_only) |
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py` |
@@ -208,7 +208,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/environment/static-scene.md](../explanation/environment/static-scene.md) |
 | Implemented in | `environment:src/environment/static_scene.py` |
 | State | owner environment, family environmental_state |
-| Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only) |
+| Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only); Frame and unit conventions between body and scene (by_convention) |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `environment:tests/test_static_scene.py` |
 | Reviewed at | environment@f97ec22272b6 (RECORDED) |
@@ -320,6 +320,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/embodiment/articulated-body.md](../explanation/embodiment/articulated-body.md) |
 | Implemented in | `embodiment:src/embodiment/physics3d/articulated_spec.py`, `embodiment:src/embodiment/physics3d/mechanics.py`, `embodiment:src/embodiment/physics3d/articulated_state.py` |
 | State | owner embodiment, family embodiment_local; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: reset, reproduction: not_inherited |
+| Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only) |
 | Depends on | `component.embodiment-physical-state` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_articulated_spec.py`, `embodiment:tests/test_physics3d_mechanics.py`, `embodiment:tests/test_articulated_state.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
@@ -335,6 +336,7 @@ restates it so that the answers about one unit can be read in one place.
 | Owned by | embodiment; also involves world, environment |
 | Explained in | [explanation/embodiment/physical-projection.md](../explanation/embodiment/physical-projection.md) |
 | Implemented in | `embodiment:src/embodiment/physics3d/physical_projection.py`, `embodiment:src/embodiment/observation.py`, `embodiment:src/embodiment/physics3d/observation_contract.py`, `embodiment:src/embodiment/duration.py` |
+| Cross-domain contracts | Body physical input to a solver (fixture_only); Frame and unit conventions between body and scene (by_convention) |
 | Depends on | `component.embodiment-articulated-body`, `component.embodiment-physical-state` |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_physical_projection.py`, `embodiment:tests/test_body_pose_sample.py`, `embodiment:tests/test_physics3d_observation_contract.py`, `embodiment:tests/test_duration.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py` |
