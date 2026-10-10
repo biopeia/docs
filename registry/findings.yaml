@@ -979,8 +979,15 @@ findings:
     documented_in:
       - explanation/organism/action-path.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/organism/issues/32"
+    disposition: >
+      Resolved in organism fc8a91c ("Use stable effector IDs for actuator
+      surfaces"): a surface is built from effector identifiers kept verbatim,
+      its fingerprint does not depend on their order, and construction from a
+      count is removed. What remains, that a surface does not say which body
+      its effectors belong to and that nothing obtains the names from
+      Embodiment, is part of F-0030.
 
   F-0033:
     class: contract_gap

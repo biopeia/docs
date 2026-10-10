@@ -588,3 +588,19 @@ def test_source_coverage_counts_a_named_directory(ws: Workspace) -> None:
     ws.data["coverage"]["component.genome"]["implementation"] = ["organism:src/organism"]
     ws.write()
     assert vr.source_coverage(ws.registry, ws.repos)["organism"]["uncovered"] == []
+
+
+def test_broken_link_in_a_document_is_reported(ws: Workspace) -> None:
+    (ws.docs / "explanation" / "organism.md").write_text("# Organism\n\nSee [gone](gone.md).\n")
+    assert vr.broken_links(ws.docs) == ["explanation/organism.md: broken link gone.md"]
+
+
+def test_cited_test_that_no_repository_defines_is_reported(ws: Workspace) -> None:
+    (ws.organism / "tests").mkdir()
+    (ws.organism / "tests" / "test_genome.py").write_text("def test_genome_exists():\n    pass\n")
+    (ws.docs / "explanation" / "organism.md").write_text(
+        "# Organism\n\nCovered by `test_genome_exists` and `test_genome_renamed`.\n"
+    )
+    assert vr.unknown_cited_tests(ws.docs, ws.repos, ["organism"]) == [
+        "explanation/organism.md: cites test_genome_renamed, defined in no repository"
+    ]
