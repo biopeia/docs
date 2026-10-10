@@ -642,7 +642,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-identity-checkpoint:
@@ -694,7 +694,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   concept.biopeia-one-step-across-the-domains:
     kind: concept
@@ -857,7 +857,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   component.organism-causal-evidence:
     kind: component
@@ -887,7 +887,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   component.organism-execution-binding:
     kind: component
@@ -914,7 +914,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   component.organism-prospective-deliberation:
     kind: component
@@ -945,7 +945,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   component.organism-genome:
     kind: component
@@ -1031,7 +1031,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   component.organism-capacity-and-pair-statistics:
     kind: component
@@ -1054,7 +1054,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
 
   concept.organism-foundation-conventions:
     kind: concept
@@ -1115,11 +1115,13 @@ units:
       - organism:src/organism/actuation/checkpoint.py
       - organism:src/organism/actuation/types.py
       - organism:src/organism/actuation/state.py
+      - organism:src/organism/actuation/context.py
     tests:
       - organism:tests/source_unit/actuation/test_proposer.py
       - organism:tests/source_unit/actuation/test_candidate.py
       - organism:tests/source_unit/actuation/test_checkpoint_gate.py
       - organism:tests/source_unit/actuation/test_types.py
+      - organism:tests/source_unit/actuation/test_context.py
     adrs:
       - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
       - docs:technical/adr/ADR-0104-body-schema-and-competence.md
@@ -1129,7 +1131,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-cognitive-graph:
@@ -1261,7 +1263,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.organism-cognitive-checkpoint:
@@ -1296,7 +1298,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-attention-allocation:

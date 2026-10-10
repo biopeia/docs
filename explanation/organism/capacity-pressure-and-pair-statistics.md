@@ -1,6 +1,6 @@
 # Capacity pressure and pair statistics
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`.
+Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or neither. Searches of the
 repository were made on 2026-10-10 at that revision.
@@ -107,16 +107,15 @@ is decided by whoever feeds it.
 
 One module imports it
 (`organism:src/organism/actuation/candidate.py`): a candidate actuator keeps
-one accumulator per percept, feeds each with an activation and a change in
-the percept, and takes the largest absolute correlation as its effect
-strength. When it holds too many, it drops the one with the weakest
-correlation, counting an accumulator without an answer as weakest of all.
-That strength is compared with a threshold elsewhere in the actuation code.
-The candidate and what follows from it are outside this document; they were
-read only to see how the accumulator is used. The candidate's tests exercise
-the accumulator through it
-(`organism:tests/source_unit/actuation/test_candidate.py`); no test addresses
-the accumulator directly.
+longitudinal aggregate relations and also keeps relations partitioned by an
+exact body/episode/morphology/surface context. The aggregate evicts its
+weakest relation when the 256-percept bound is reached. A context holds up to
+256 relations and refuses additions at its bound; the candidate retains up
+to 128 contexts and refuses a new one rather than evicting prior context
+evidence. Promotion reads only the current context's effect strength and
+sample count; the pooled longitudinal aggregate cannot promote applicability
+for a new physical context. The candidate's tests exercise the accumulator
+through both layers; no test addresses the accumulator directly.
 
 Other modules in the repository import a module named `statistics`. That is
 the standard library's, not this one.

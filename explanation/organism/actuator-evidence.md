@@ -1,6 +1,6 @@
 # Evidence that an actuator does something
 
-Reviewed against `organism` at commit `2f051b029018a30f10acddaedc70d2b7edd3325c`.
+Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -37,19 +37,25 @@ and never for an actuator the surface does not have. It holds:
 - how many times the channel was observed active;
 - for each percept it has been paired with, a bounded statistical summary of
   the pairs of activation and change in that percept;
+- the same kind of summary partitioned by exact physical context;
 - a state, dormant or active;
 - the tick it was last seen, and the number of samples that was required when
-  it became active.
+  it became active, plus the context fingerprint that justified promotion.
 
-The summaries are aggregates, not a log: no history of activations or
-percepts is kept. At most 256 percepts are tracked per channel, and when a
-new one would exceed that the weakest is dropped
-(`test_effect_relations_bounded_by_max_per_candidate`).
+The model keeps two layers of bounded aggregate, not a log: no history of
+activations or percepts is kept. A longitudinal aggregate tracks up to 256
+percepts per channel and evicts the weakest when full. Separately, evidence is
+partitioned by an exact context consisting of body, embodiment episode,
+morphology revision and surface fingerprint. Up to 128 contexts are retained;
+reaching that limit refuses a new context rather than discarding history.
+Each context can track up to 256 percept relations, and reaching that limit
+also refuses new evidence.
 
-From them comes one number, the **effect strength**: the largest absolute
-correlation between activation and change, over the percepts with at least
-three pairs. A channel whose activation tracks a change scores high and one
-paired with noise scores low
+The longitudinal aggregate exposes an **effect strength**: the largest
+absolute correlation between activation and change, over percepts with at
+least three pairs. Promotion is separate and uses the analogous strength
+and sample count from the current exact context. A channel whose activation
+tracks a change scores high in that summary and one paired with noise scores low
 (`test_effect_strength_is_high_for_causal_relation_and_low_for_noise`); the
 test's name says causal, and what it checks is correlation.
 
@@ -64,8 +70,10 @@ accumulates whatever pair it is handed". A test shows what goes wrong when
 the pairing is shifted
 (`test_observe_effect_pairing_contract_correct_vs_wrong_time_shift`).
 
-So everything downstream is only as good as the pairing done by a caller,
-and at this revision there is no such caller: see "Who uses it".
+So everything downstream is only as good as the pairing done by a caller.
+The code records the pair in both the longitudinal aggregate and the exact
+current context; promotion uses the context-specific evidence, not the pooled
+aggregate.
 
 ## Becoming active
 
@@ -120,14 +128,14 @@ caller to supply it again.
 
 ## Across bodies
 
-The state is matched to a surface by actuator identifiers alone. A run of
-the module restored the state of one two-channel surface onto another surface
-with the same effector names, built with different contract material and
-restored under a different organism identifier. It was accepted and the
-active repertoire was kept. A surface with a different effector name was
-refused.
-
-The organism identifier is stored by the model and read by nothing in it.
+The checkpoint records and validates the owning Organism identity and source
+context. Restoring it for a different Organism is rejected. Restoring it for
+the same Organism under a different body, episode, morphology revision or
+surface retains the prior evidence but demotes active applicability; new
+context-specific evidence is required before promotion. Tests cover rejection
+of a foreign Organism, re-embodiment retention/demotion, and invalidation on
+each physical-context change. The surface constitution must still match the
+checkpoint's actuator set.
 
 Two decisions bear on this.
 [ADR-0094](../../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md)
@@ -173,7 +181,7 @@ checkpoint carries this state.
 | Claim | Support |
 |---|---|
 | What is kept, the bound on percepts, effect strength, promotion rules, export and strict restore | Code and tests in `organism:tests/source_unit/actuation/test_candidate.py`, `test_proposer.py`, `test_checkpoint_gate.py` and `test_types.py` |
-| A constant change does not promote; restore onto another surface with the same effector names and another organism identifier keeps the repertoire | Code, and one ad hoc run of the module at that revision |
+| Promotion is context-specific; foreign-Organism restore rejects; physical-context change retains prior evidence but clears active applicability | Code and tests in `organism:tests/source_unit/actuation/test_checkpoint_gate.py` and `test_candidate.py` |
 | The pairing obligation on the caller | The code's own documentation, and one test |
 | No user outside the package; the Lab module named does not exist | Searches of the repositories at their main branches on 2026-10-10 |
 | What re-embodiment should do to motor learning | Accepted decisions ADR-0094 and ADR-0104; statements of intent |

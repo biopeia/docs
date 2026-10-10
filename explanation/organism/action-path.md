@@ -1,10 +1,10 @@
 # From an affordance to a motor command
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`;
+Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`;
 first written against `6543188`, and the section on the actuator surface was
 rewritten when the surface changed. The one place where the stages are joined
 is a test fixture of World, read at `world` commit
-`e2098a9523446b6a32feda5f05140225f4d2ab86`. Everything below
+`a8d07fd791da76365aa74080eef1e82b11a599fd`. Everything below
 describes those revisions. Statements are marked by what supports them: the
 code, the tests, an ad hoc run, or an accepted decision.
 
@@ -315,8 +315,9 @@ which are always equal (`test_system_rejects_channel_outside_surface`,
 `test_system_rejects_command_for_another_surface`). It is described in the
 code as handing a command "across the opaque body boundary"; what it does is
 validate and return. It has no knowledge of commitments: a command naming a
-commitment that was never created was accepted. The World fixture does not
-use it.
+commitment that was never created was accepted. The World fixture does use it
+to validate the command against the surface and obtain delivered channel
+values before projecting those values into Embodiment.
 
 ## Time
 
@@ -404,10 +405,10 @@ statements of intent; this document does not test them.
 | A commitment needs no arbitration; two can be active at once | Code and the same ad hoc run |
 | What the command binding refuses | Code and tests in `organism:tests/source_unit/actuation/test_command_binding.py` |
 | Controller repeats its last step, accepts repeated and decreasing ticks, has no checkpoint | Code and the same ad hoc run |
-| Actuator identifiers depend on position only; reordered ports under one contract string give equal surfaces | Code, tests in `organism:tests/source_unit/actuation/test_surface.py` for the first part, the ad hoc run for the second |
+| Effector identity is stable under input reordering; contract changes affect fingerprint, not identity | Code and tests in `organism:tests/source_unit/actuation/test_surface.py` |
 | What the surface check accepts and refuses | Code and tests in `organism:tests/source_unit/actuation/test_system.py`; the acceptance of a command with no commitment from the ad hoc run |
 | No Organism source joins the steps; the resolver, the arbitrator and the attempt record have no caller | Search of the repository at that revision |
-| The composition in the fixture | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; it was read, not run, for this document |
+| The composition in the fixture, including use of `ActuatorSystem.execute_command()` | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; it was read, not run, for this document |
 | What a command must be bound to, and that omission is not a command | Accepted decision ADR-0073; a statement of intent |
 
 The modules that would produce the inputs of this path (the competence
