@@ -23,7 +23,7 @@ REQUIRED = {
     "sizes": ("cover_brand", "cover_title", "part", "chapter", "section", "subsection", "body", "list",
               "table", "code", "caption", "meta", "kicker"),
     "qa": ("blank_page_chars", "sparse_page_chars", "max_sparse_share"),
-    "layout": ("chapter_starts_page",),
+    "layout": ("chapter_starts_page", "landscape_min_columns", "landscape_min_characters"),
     "cover": ("top_space_mm", "mark_gap_mm", "metadata_gap_mm"),
 }
 

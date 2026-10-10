@@ -167,6 +167,8 @@ class Document:
         # Links between published chapters become links inside the document.
         self.chapter_bookmarks: dict[str, str] = {}
         self.empty_footer = ""
+        self.landscape_used = False
+        self.running: str | None = None  # header text of the part being written; None in the front matter
         self.parsed: dict[str, list[dict[str, Any]]] = {}
         self.headings = 0
         # References of the chapter being rendered, and where links may lead.
@@ -272,7 +274,7 @@ class Document:
                 self.toc.append({"bookmark": bookmark, "level": min(level, 2), "text": listed_as})
         self.body.append(paragraph(HEADING_STYLES[min(level, 4)], content, properties))
 
-    def column_widths(self, rows: list[list[list[dict[str, Any]]]]) -> list[int]:
+    def column_widths(self, rows: list[list[list[dict[str, Any]]]], available: int | None = None) -> list[int]:
         """Widths that give every column room for its longest unbreakable piece.
 
         An identifier breaks only after a separator, so the piece between two
@@ -286,19 +288,32 @@ class Document:
         for row in rows:
             for index, runs in enumerate(row[:columns]):
                 for run in runs:
-                    words = (BREAK_AFTER_RE.sub(lambda m: m.group(1) + " ", run["text"]) if run["code"] else run["text"]).split()
+                    # The same rule as `breakable`: only a long identifier is allowed to break.
+                    words = (breakable(run["text"]).replace(ZERO_WIDTH_SPACE, " ") if run["code"] else run["text"]).split()
                     longest = max((len(word) for word in words), default=0)
                     needed[index] = max(needed[index], longest * (code_unit if run["code"] else text_unit) + 200)
                 weights[index] = max(weights[index], min(60, max(6, len(plain(runs)))))
-        needed = [min(need, self.text_width * 0.55) for need in needed]
-        if sum(needed) >= self.text_width:
-            return [int(self.text_width * need / sum(needed)) for need in needed]
-        spare = self.text_width - sum(needed)
+        available = available or self.text_width
+        needed = [min(need, available * 0.55) for need in needed]
+        if sum(needed) >= available:
+            return [int(available * need / sum(needed)) for need in needed]
+        spare = available - sum(needed)
         return [int(need + spare * weight / sum(weights)) for need, weight in zip(needed, weights)]
+
+    def is_wide(self, rows: list[list[list[dict[str, Any]]]]) -> bool:
+        """Genuinely wide and large: worth pages of its own turned sideways."""
+        layout = self.style["layout"]
+        characters = sum(len(plain(cell)) for row in rows for cell in row)
+        return (self.running is not None and len(rows[0]) >= layout["landscape_min_columns"]
+                and characters >= layout["landscape_min_characters"])
 
     def table(self, block: dict[str, Any], base: str) -> None:
         rows = [block["header"], *block["rows"]]
-        widths = self.column_widths(rows)
+        landscape = self.is_wide(rows)
+        if landscape:
+            # What precedes ends its own upright section; the table opens a sideways one.
+            self.close_section(self.running)
+        widths = self.column_widths(rows, self.text_height if landscape else None)
         shade, code_size = self.style["colours"]["shade"], self.style["sizes"]["table"] - 0.5
         xml = ['<w:tbl><w:tblPr><w:tblStyle w:val="RuledTable"/><w:tblW w:w="5000" w:type="pct"/>'
                '<w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>']
@@ -320,6 +335,8 @@ class Document:
         self.body.append("".join(xml))
         # A table must be followed by a paragraph; this one also spaces it.
         self.body.append(paragraph("TableText", ""))
+        if landscape:
+            self.close_section(self.running, landscape=True)
 
     def list(self, block: dict[str, Any], base: str) -> None:
         # ponytail: one numbering sequence per level of a list block; two
@@ -416,17 +433,20 @@ class Document:
 
     # --- sections of the document --------------------------------------------
 
-    def end_section(self, running: str, cover: bool = False) -> str:
+    def end_section(self, running: str, cover: bool = False, landscape: bool = False) -> str:
         """Section properties for everything since the previous section, with its own running header."""
         name = f"header{sum(1 for h in self.headers if h != 'header0.xml') + 1}.xml"
         publication = self.projection["publication"]
-        tab = f'<w:tabs><w:tab w:val="right" w:pos="{self.text_width}"/></w:tabs>'
+        width = self.text_height if landscape else self.text_width
+        tab = f'<w:tabs><w:tab w:val="right" w:pos="{width}"/></w:tabs>'
         self.headers[name] = (
             f'{XML_HEADER}<w:hdr xmlns:w="{W_NS}">'
             + paragraph("Header", text_run(publication["title"]) + "<w:r><w:tab/></w:r>" + text_run(running), tab)
             + "</w:hdr>"
         )
-        header, footer = self.relate(f"{R_NS}/header", name), self.relate(f"{R_NS}/footer", "footer1.xml")
+        self.landscape_used = self.landscape_used or landscape
+        header = self.relate(f"{R_NS}/header", name)
+        footer = self.relate(f"{R_NS}/footer", "footer2.xml" if landscape else "footer1.xml")
         first = ""
         if cover:
             # The cover carries no running header or footer: its own are empty.
@@ -437,23 +457,28 @@ class Document:
         m = self.margins
         return (f'<w:sectPr><w:headerReference w:type="default" r:id="{header}"/>'
                 f'<w:footerReference w:type="default" r:id="{footer}"/>{first}'
-                f'<w:pgSz w:w="{self.page_width}" w:h="{self.page_height}"/>'
+                + (f'<w:pgSz w:w="{self.page_height}" w:h="{self.page_width}" w:orient="landscape"/>' if landscape
+                   else f'<w:pgSz w:w="{self.page_width}" w:h="{self.page_height}"/>')
+                + 
                 f'<w:pgMar w:top="{m["top"]}" w:right="{m["right"]}" w:bottom="{m["bottom"]}" w:left="{m["left"]}" '
                 'w:header="560" w:footer="560" w:gutter="0"/>'
                 + ("<w:titlePg/>" if cover else "") + "</w:sectPr>")
 
-    def close_section(self, running: str, cover: bool = False) -> None:
+    def close_section(self, running: str, cover: bool = False, landscape: bool = False) -> None:
         # The section ends in its own last paragraph: a paragraph added only to
         # carry the break could fall alone onto an otherwise empty page.
         last = self.body[-1]
         assert last.startswith("<w:p><w:pPr>"), "a section must end in a paragraph"
-        self.body[-1] = last.replace("</w:pPr>", self.end_section(running, cover) + "</w:pPr>", 1)
+        if "<w:sectPr" in last:
+            # The section was just closed by a sideways table that ended it.
+            return
+        self.body[-1] = last.replace("</w:pPr>", self.end_section(running, cover, landscape) + "</w:pPr>", 1)
 
     def footer_text(self) -> str:
         return f"{EDITIONS[self.edition][0]} · {self.projection['release']['id']}"
 
-    def footer_xml(self) -> str:
-        tab = f'<w:tabs><w:tab w:val="right" w:pos="{self.text_width}"/></w:tabs>'
+    def footer_xml(self, landscape: bool = False) -> str:
+        tab = f'<w:tabs><w:tab w:val="right" w:pos="{self.text_height if landscape else self.text_width}"/></w:tabs>'
         left = self.footer_text()
         return (f'{XML_HEADER}<w:ftr xmlns:w="{W_NS}">'
                 + paragraph("Footer", text_run(left) + "<w:r><w:tab/></w:r>" + text_run("Page ") + field("PAGE")
@@ -584,6 +609,9 @@ class Document:
         titled = [c for c in section["chapters"] if c["label"]]
         if len(titled) > 1:
             # The divider says what the part holds, so its page is never empty.
+            # Chapters are numbered through the whole publication, so the list
+            # of a part rarely starts at one; the caption says what the list is.
+            self.body.append(paragraph("Meta", text_run("Chapters in this part"), '<w:spacing w:after="60"/>'))
             for entry in titled:
                 link = f'<w:hyperlink w:anchor="{entry["bookmark"]}">{text_run(entry["label"])}</w:hyperlink>'
                 self.body.append(paragraph("ChapterList", link))
@@ -619,9 +647,13 @@ class Document:
         self.close_section(self.projection["publication"].get("subtitle") or "", cover=True)
         rest = [s for s in outline if s["group"] != "front"]
         for index, section in enumerate(rest):
+            self.running = section["label"]
             self.section(section, starts_document_section=True)
             if index < len(rest) - 1:
                 self.close_section(section["label"])
+        # ponytail: a sideways table as the very last thing of the document would
+        # leave the final section empty; none is, and the assertion says so if one appears.
+        assert "<w:sectPr" not in self.body[-1], "the document must not end in a sideways table"
         return self.end_section(rest[-1]["label"] if rest else "")
 
     # --- parts of the package -------------------------------------------------
@@ -663,6 +695,7 @@ class Document:
             "/word/numbering.xml": "numbering",
             "/word/fontTable.xml": "fontTable",
             "/word/footer1.xml": "footer",
+            **({"/word/footer2.xml": "footer"} if self.landscape_used else {}),
             **({"/word/footer0.xml": "footer"} if self.empty_footer else {}),
             **{f"/word/{name}": "header" for name in self.headers},
         }
@@ -822,6 +855,7 @@ def build_docx(
         "word/numbering.xml": document.numbering_xml(),
         "word/fontTable.xml": font_table_xml(style),
         "word/footer1.xml": document.footer_xml(),
+        **({"word/footer2.xml": document.footer_xml(landscape=True)} if document.landscape_used else {}),
         **({"word/footer0.xml": document.empty_footer} if document.empty_footer else {}),
         **{f"word/{name}": xml for name, xml in document.headers.items()},
         **{f"word/media/{name}": data for name, data in sorted(document.media.items())},

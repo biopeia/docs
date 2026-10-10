@@ -102,9 +102,6 @@ python tools/publication/model.py   # check the manifest
   decision records.
 - **Pages that are too full are measured, not judged.** The manifest reports
   the fullest page; no limit fails the build.
-- **Wide tables are not turned to landscape** (#93). Columns are sized for their
-  longest unbreakable piece and identifiers break after `/ . _ - :`; nothing
-  is clipped, but a very wide table is not rotated.
 - **Parts have no scope statement and chapters no abstract**: the corpus
   holds neither.
 - **One publication, in the order of the domains.** Two publications from the

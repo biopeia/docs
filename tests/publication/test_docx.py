@@ -294,6 +294,40 @@ def test_chapters_follow_on_or_open_a_page_as_the_style_says():
     assert paged.count("pageBreakBefore") == flowing.count("pageBreakBefore") + 1
 
 
+def wide_table(rows: int) -> str:
+    head = "| A | B | C | D | E | F |\n|---|---|---|---|---|---|\n"
+    return head + "".join("| " + " | ".join(f"cell {r} {c} some words here" for c in range(6)) + " |\n" for r in range(rows))
+
+
+def test_genuinely_wide_table_gets_sideways_pages_of_its_own():
+    data, _ = build_docx(small(chapter("explanation/w/a.md", "Before.\n\n" + wide_table(12) + "\nAfter.\n")))
+    xml = document_xml(data)
+    assert xml.count('w:orient="landscape"') == 1
+    before, after = xml.index("Before."), xml.index("After.")
+    assert before < xml.index('w:orient="landscape"') < after
+    package = zipfile.ZipFile(io.BytesIO(data))
+    assert "word/footer2.xml" in package.namelist() and qa.check_docx(data) == []
+
+
+def test_small_or_narrow_tables_stay_in_the_text():
+    small_wide = document_xml(build_docx(small(chapter("explanation/w/a.md", wide_table(2))))[0])
+    narrow = document_xml(build_docx(small(chapter("explanation/w/a.md", "| A | B |\n|---|---|\n" + "| x | y |\n" * 200)))[0])
+    assert "landscape" not in small_wide and "landscape" not in narrow
+
+
+def test_identifier_at_the_break_limit_is_given_room_whole():
+    table = "| Name | Text |\n|---|---|\n| `confidence_classes` | " + "word " * 80 + "|\n"
+    xml = document_xml(build_docx(small(chapter("explanation/w/a.md", table)))[0])
+    grid = xml[xml.rindex("<w:tblGrid>"):]
+    first = int(re.search(r'<w:gridCol w:w="(\d+)"/>', grid).group(1))
+    assert first > 18 * 8 * 20 * 0.6  # eighteen characters of the technical typeface, unbroken
+
+
+def test_part_divider_says_its_list_is_the_chapters_of_the_part():
+    xml = document_xml(build_docx(small(chapter("explanation/w/a.md", "A.\n"), chapter("explanation/w/b.md", "B.\n")))[0])
+    assert "Chapters in this part" in xml
+
+
 def test_symbols_the_fallbacks_lack_are_set_in_the_symbols_typeface():
     xml = document_xml(build_docx(small(chapter("explanation/w/a.md", "Go ▶ there.\n")))[0])
     assert '<w:rStyle w:val="SymbolChar"/></w:rPr><w:t xml:space="preserve">▶</w:t>' in xml
