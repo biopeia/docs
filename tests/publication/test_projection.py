@@ -62,9 +62,17 @@ def test_registry_sections_reflect_the_registry(projection):
     assert projection["inventory"]["Components"] == len(reg["components"])
     placed = sum(len(s.get("chapters") or []) for s in sections(load_manifest()))
     assert projection["inventory"]["Chapters taken from documents"] == placed
-    assert "No registered entries at this revision." in by_id["generated-metrics"]
     empty = {c["id"] for c in chapters(projection) if c.get("empty")}
     assert empty == {f"generated-{name}" for name in ("notation", "parameters", "metrics") if not reg[name]}
+    for param in reg["parameters"].values():
+        assert f"`{param['symbol']}`" in by_id["generated-parameters"]
+    for metric in reg["metrics"]:
+        assert f"`{metric}`" in by_id["generated-metrics"]
+    for symbol in reg["notation"]:
+        assert f"**{symbol}**" in by_id["generated-notation"]
+    # Reverse index: a record lists the units that cite it, a component the contracts it is party to.
+    assert "| Cited by |" in by_id["generated-decisions"] and "World causal journal" in by_id["generated-decisions"]
+    assert "| Contracts |" in by_id["generated-components"]
     assert "ADR-0073" in by_id["generated-decisions"]
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -95,7 +96,7 @@ def test_without_a_checkout_the_link_is_made_and_counted_unverified():
 def test_commits_issues_and_components():
     r = resolver(None)
     sha = "b" * 40
-    assert r.code_token(f"world@{sha}", {}) == {"url": f"{GITHUB}/world/commit/{sha}"}
+    assert r.code_token(f"world@{sha}", {}) == {"url": f"{GITHUB}/world/commit/{sha}", "label": "world@bbbbbbb"}
     assert r.plain_token("world#29") == {"url": f"{GITHUB}/world/issues/29"}
     component = next(iter(load_registry(ROOT / "registry")["components"]))
     assert r.plain_token(component) == {"component": component} == r.code_token(component, {})
@@ -124,3 +125,12 @@ def test_document_not_yet_committed_is_linked_and_counted_unverified(tmp_path):
     assert r.stats["unverified"] == 1
     with pytest.raises(ReferenceError):
         r.blob("docs", "explanation/absent.md", {})
+
+
+def test_revision_is_shown_by_its_day_and_short_hash(world):
+    repos, first, head = world
+    r = resolver(repos, head)
+    found = r.code_token(first, {})
+    assert found["url"] == f"{GITHUB}/world/commit/{first}"
+    assert re.fullmatch(r"\d{4}\.\d{2}\.\d{2}-" + first[:7], found["label"])
+    assert re.fullmatch(r"world@\d{4}\.\d{2}\.\d{2}-" + first[:7], r.code_token(f"world@{first[:12]}", {})["label"])

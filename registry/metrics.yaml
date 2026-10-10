@@ -1,4 +1,32 @@
 schema_version: 1
 
 # Measurement semantics. A lab metric never implies organism visibility.
-metrics: {}
+#
+# A first, bounded set: the counters a bounded table of the Organism keeps
+# about itself. They are measurements of a table, kept beside it. The owning
+# unit document found no reader for them, so `consumer` names none.
+metrics:
+
+  organism.capacity.admissions:
+    class: organism_internal
+    owner_domain: organism
+    unit: items
+    meaning: Items a bounded table has taken in.
+    documented_in: explanation/organism/capacity-pressure-and-pair-statistics.md
+    not_to_be_read_as: a measure of what was learned
+
+  organism.capacity.evictions:
+    class: organism_internal
+    owner_domain: organism
+    unit: items
+    meaning: Items a bounded table has dropped to make room.
+    documented_in: explanation/organism/capacity-pressure-and-pair-statistics.md
+    not_to_be_read_as: forgetting in any sense beyond removal from one table
+
+  organism.capacity.relearned-after-eviction:
+    class: organism_internal
+    owner_domain: organism
+    unit: items
+    meaning: Dropped items that came back into the same table.
+    documented_in: explanation/organism/capacity-pressure-and-pair-statistics.md
+    not_to_be_read_as: evidence that the table is too small, without a study that says so

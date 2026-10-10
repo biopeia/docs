@@ -1,4 +1,126 @@
 schema_version: 1
 
 # Architectural and scientifically interpretable parameters.
-parameters: {}
+#
+# A first, bounded set: values that a unit document already states and that
+# the code defines under a name. `symbol` is the name the code gives the
+# value; no mathematical notation is invented for it. `read_by` says what the
+# owning unit document found reads the value at its reviewed revision.
+parameters:
+
+  organism.foundation.established-signal-min-samples:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: established_signal_min_samples
+    dimension: count
+    unit: samples
+    value: 5
+    description: Samples a running average needs before a signal counts as established.
+    read_by: the sensory normaliser in the cognition code
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.established_signal_min_samples
+
+  organism.foundation.ewma-alpha:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: ewma_alpha
+    dimension: dimensionless
+    unit: none
+    value: 0.06
+    description: Smoothing factor of the moving average the sensory normaliser keeps.
+    read_by: the sensory normaliser in the cognition code
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.ewma_alpha
+
+  organism.foundation.confidence-classes:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: confidence_classes
+    dimension: count
+    unit: classes
+    value: 16
+    description: Number of classes a confidence is meant to be expressed in.
+    read_by: nothing; the experience record uses a scale of its own, 0 to 7
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.confidence_classes
+
+  organism.foundation.maturity-classes:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: maturity_classes
+    dimension: count
+    unit: classes
+    value: 8
+    description: Number of maturity classes.
+    read_by: nothing
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.maturity_classes
+
+  organism.foundation.maturity-thresholds:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: maturity_thresholds
+    dimension: count
+    unit: units of support
+    value: "0, 1, 2, 4, 8, 16, 32, 64"
+    description: Support needed to enter each maturity class.
+    read_by: nothing
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.maturity_thresholds
+
+  organism.foundation.recency-thresholds:
+    owner: concept.organism-foundation-conventions
+    source: CODE
+    symbol: recency_thresholds
+    dimension: duration
+    unit: idle ticks
+    value: "10, 40, 120, 400"
+    description: Idle ticks at which the recency class changes.
+    read_by: only the classification method of the same value
+    implementation:
+      ref: organism:src/organism/foundation/epistemic.py
+      symbol: EpistemicConventions.recency_thresholds
+
+  organism.agency.max-outcome-values:
+    owner: component.organism-prospective-deliberation
+    source: CODE
+    symbol: MAX_OUTCOME_VALUES
+    dimension: count
+    unit: entries
+    value: 256
+    description: Most outcomes the outcome-value ledger keeps a value for; the least sampled, then oldest, entry is dropped beyond it.
+    read_by: the outcome-value ledger
+    implementation:
+      ref: organism:src/organism/agency/value.py
+      symbol: MAX_OUTCOME_VALUES
+
+  organism.agency.max-contextual-outcome-values:
+    owner: component.organism-prospective-deliberation
+    source: CODE
+    symbol: MAX_CONTEXTUAL_OUTCOME_VALUES
+    dimension: count
+    unit: entries
+    value: 1024
+    description: Most outcome-and-context pairs the outcome-value ledger keeps a value for.
+    read_by: the outcome-value ledger
+    implementation:
+      ref: organism:src/organism/agency/value.py
+      symbol: MAX_CONTEXTUAL_OUTCOME_VALUES
+
+  organism.agency.confidence-saturation-samples:
+    owner: component.organism-prospective-deliberation
+    source: CODE
+    symbol: _CONFIDENCE_SATURATION_SAMPLES
+    dimension: count
+    unit: samples
+    value: 16
+    description: Samples at which the confidence of a value estimate reaches its maximum of one.
+    read_by: the outcome-value ledger
+    implementation:
+      ref: organism:src/organism/agency/value.py
+      symbol: _CONFIDENCE_SATURATION_SAMPLES

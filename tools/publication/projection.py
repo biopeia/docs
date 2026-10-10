@@ -113,6 +113,8 @@ def gen_reader_guide(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, li
         "  a link shows the code the text describes, not today's. The Biopeia",
         "  repositories are private: the links open only for a reader with access.",
         "- A component identifier is a link to its sheet in the component catalog.",
+        "- A revision is shown as the day it was committed and its short hash, like the",
+        "  release identifier of this document, and links to the exact commit.",
         "",
         "## Words that carry a state",
         "",
@@ -225,6 +227,8 @@ def gen_components(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list
                 ["Inputs", many(comp.get("inputs"))],
                 ["Outputs", many(comp.get("outputs"))],
                 ["Consumers", many(comp.get("consumers"))],
+                ["Contracts", many(c["title"] for c in reg["contracts"].values()
+                                   if any(p["unit"] == comp["coverage_unit"] for p in c["parties"]))],
                 ["Implementation", many(reference(r) for r in as_list(unit.get("implementation")))],
                 ["Tests", many(reference(r) for r in as_list(unit.get("tests")))],
                 ["Decisions", many(reference(r) for r in as_list(unit.get("adrs")))],
@@ -249,17 +253,43 @@ def gen_glossary(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[s
     return "Glossary", "registry/glossary.yaml", body
 
 
-def _plain_registry(name: str, title: str, what: str):
-    def gen(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
-        body = [f"Generated from `registry/{name}.yaml`.", ""]
-        for key, entry in reg[name].items():
-            body += [f"## {key}", ""]
-            body += [f"- **{field}:** {' '.join(str(value).split())}" for field, value in entry.items()] + [""]
-        if not reg[name]:
-            body += none_registered(what)
-        return title, f"registry/{name}.yaml", body
+def gen_parameters(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
+    units = reg["coverage"]
+    body = ["Generated from `registry/parameters.yaml`. The name is the one the code gives the value.", ""]
+    rows = []
+    for param in reg["parameters"].values():
+        impl = param.get("implementation") or {}
+        where = f"`{impl['ref']}::{impl['symbol']}`" if impl.get("ref") else param.get("source", "")
+        rows.append([f"`{param['symbol']}`", param.get("value", ""), param["unit"], param.get("description", ""),
+                     param.get("read_by", "not recorded"), where, units.get(param["owner"], {}).get("title", param["owner"])])
+    body += table(["Parameter", "Value", "Unit", "What it is", "Read by", "Defined in", "Documented under"], rows) \
+        if rows else none_registered("parameter")
+    return "Parameters", "registry/parameters.yaml", body
 
-    return gen
+
+def gen_metrics(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
+    body = ["Generated from `registry/metrics.yaml`. A metric kept by the laboratory is never, by that fact, visible to an Organism.", ""]
+    rows = [
+        [f"`{mid}`", m["class"].replace("_", " "), m["owner_domain"], m.get("unit", ""), m.get("meaning", ""),
+         m.get("not_to_be_read_as", ""), f"[{m['documented_in']}]({m['documented_in']})" if m.get("documented_in") else ""]
+        for mid, m in reg["metrics"].items()
+    ]
+    body += table(["Metric", "Class", "Owner", "Unit", "Meaning", "Not to be read as", "Documented in"], rows) \
+        if rows else none_registered("metric")
+    return "Metrics", "registry/metrics.yaml", body
+
+
+def gen_notation(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
+    units = reg["coverage"]
+    body = ["Generated from `registry/notation.yaml`. Each entry says what a named quantity is and what it must not be taken to mean.", ""]
+    for symbol, entry in reg["notation"].items():
+        body += [f"**{symbol}** ({entry['scope']}; {units.get(entry['owner'], {}).get('title', entry['owner'])}). "
+                 f"{' '.join(entry['meaning'].split())}", ""]
+        body += bullets("Not to be read as", entry.get("forbidden_meanings"))
+        body += bullets("Explained in", [f"[{p}]({p})" for p in as_list(entry.get("canonical_refs"))])
+    if not reg["notation"]:
+        body += none_registered("symbol")
+    return "Notation", "registry/notation.yaml", body
 
 
 def gen_decisions(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
@@ -272,12 +302,15 @@ def gen_decisions(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[
             raise ProjectionError(f"{root}{doc.name}: decision record has no title or no Status line")
         number, _, title = heading.group(1).partition(" — ")
         rel = f"{root}{doc.name}"
-        rows.append([f"[{number}]({rel})", title or number, status.group(1)])
+        citing = [u["title"] for u in reg["coverage"].values() if f"docs:{rel}" in as_list(u.get("adrs"))]
+        rows.append([f"[{number}]({rel})", title or number, status.group(1), "; ".join(citing) or "no unit"])
     body = [
         f"Generated from the records under `{root}`. The status is the one each",
         "record states for itself; listing a record here does not accept it.",
         "",
-        *(table(["Record", "Title", "Status"], rows) if rows else none_registered("decision record")),
+        "The last column lists the documented units that cite the record.",
+        "",
+        *(table(["Record", "Title", "Status", "Cited by"], rows) if rows else none_registered("decision record")),
     ]
     return "Decision record index", root, body
 
@@ -311,9 +344,9 @@ GENERATORS = {
     "contract-catalog": gen_contract_catalog,
     "components": gen_components,
     "glossary": gen_glossary,
-    "notation": _plain_registry("notation", "Notation", "symbol"),
-    "parameters": _plain_registry("parameters", "Parameters", "parameter"),
-    "metrics": _plain_registry("metrics", "Metrics", "metric"),
+    "notation": gen_notation,
+    "parameters": gen_parameters,
+    "metrics": gen_metrics,
     "decisions": gen_decisions,
     "designs": gen_designs,
 }

@@ -16,6 +16,7 @@ unverified; a published edition allows none.
 from __future__ import annotations
 
 import ast
+import os
 import re
 import subprocess
 from collections import Counter
@@ -86,7 +87,7 @@ class Resolver:
         self.code_ref = re.compile(rf"({alternatives}):([^\s:`]+)(?:::([\w.]+))?")
         self.repo_at = re.compile(rf"({alternatives})@([0-9a-f]{{7,40}})")
         self.plain = re.compile(
-            rf"\b(F-\d{{4}}|ADR-\d{{4}}|(?:{alternatives}|workspace)#\d+|(?:{prefixes})-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b")
+            rf"\b([0-9a-f]{{40}}|F-\d{{4}}|ADR-\d{{4}}|(?:{alternatives}|workspace)#\d+|(?:{prefixes})-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b")
         self.stats: Counter[str] = Counter()
         self._cache: dict[tuple, Any] = {}
 
@@ -107,7 +108,8 @@ class Resolver:
             root = self._dir(repo)
             out = None
             if root is not None:
-                done = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True, check=False)
+                done = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True, check=False,
+                                      env={**os.environ, "TZ": "UTC"})
                 out = done.stdout if done.returncode == 0 else None
             self._cache[key] = out
         return self._cache[key]
@@ -162,6 +164,25 @@ class Resolver:
     def commit_url(self, repo: str, sha: str) -> str:
         return f"{GITHUB}/{repo}/commit/{self._commit(repo, sha) or sha}"
 
+    def commit_label(self, repo: str, sha: str) -> str:
+        """How a revision is shown: the day it was committed and its short hash, `2026.10.10-ddd6037`.
+
+        The day needs the checkout; without it the short hash stands alone.
+        The link still leads to the exact commit.
+        """
+        commit = self._commit(repo, sha)
+        day = self._git(repo, "log", "-1", "--date=format-local:%Y.%m.%d", "--format=%cd", commit) if commit else None
+        return f"{day.strip()}-{(commit or sha)[:7]}" if day else sha[:7]
+
+    def bare_commit(self, sha: str) -> dict[str, str] | None:
+        """A hash written without its repository: a reviewed revision, or a commit one of the checkouts has."""
+        repo = next((r for known, r in self.sha_repo.items() if known.startswith(sha)), None)
+        repo = repo or next((r for r in self.repos if len(sha) >= 12 and self._commit(r, sha)), None)
+        return self.commit_reference(repo, sha) if repo else None
+
+    def commit_reference(self, repo: str, sha: str, prefix: str = "") -> dict[str, str]:
+        return {"url": self.commit_url(repo, sha), "label": prefix + self.commit_label(repo, sha)}
+
     def test(self, name: str, basis: dict[str, str]) -> str | None:
         """Link to where a cited test is defined, searched at the reviewed revision of each repository."""
         for repo in [*basis, *(d for d in self.domains if d not in basis)]:
@@ -187,10 +208,9 @@ class Resolver:
             return {"url": url} if url else None
         match = self.repo_at.fullmatch(token)
         if match:
-            return {"url": self.commit_url(match.group(1), match.group(2))}
+            return self.commit_reference(match.group(1), match.group(2), prefix=f"{match.group(1)}@")
         if SHA_RE.fullmatch(token):
-            repo = next((r for sha, r in self.sha_repo.items() if sha.startswith(token)), None)
-            return {"url": self.commit_url(repo, token)} if repo else None
+            return self.bare_commit(token)
         if TEST_RE.fullmatch(token):
             url = self.test(token, basis)
             return {"url": url} if url else None
@@ -203,6 +223,8 @@ class Resolver:
         """What an identifier written in running text refers to."""
         if token in self.components:
             return {"component": token}
+        if SHA_RE.fullmatch(token):
+            return self.bare_commit(token)
         if token.startswith("F-"):
             issue = (self.findings.get(token) or {}).get("issue")
             return {"url": issue} if issue else None
