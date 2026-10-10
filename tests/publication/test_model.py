@@ -74,3 +74,11 @@ def test_excluded_document_with_reason_is_accepted(tmp_path):
         excluded=[{"path": "explanation/world/b.md", "reason": "superseded draft"}],
     )
     load_manifest(write(tmp_path, data), tmp_path)
+
+
+def test_a_selection_need_not_place_every_document(tmp_path):
+    data = manifest(
+        publication={"id": "p", "title": "P", "output": "P", "selection": True},
+        parts=[{"id": "w", "title": "W", "chapters": ["explanation/world/a.md"]}],
+    )
+    load_manifest(write(tmp_path, data), tmp_path)

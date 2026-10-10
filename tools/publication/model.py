@@ -98,6 +98,11 @@ def manifest_errors(manifest: dict[str, Any], docs_root: Path) -> list[str]:
             errors.append(f"document is both a chapter and excluded: {path}")
         excluded[path] = reason
 
+    # A selection presents part of the corpus on purpose and accounts for no
+    # more than it lists. Only a complete publication must place every document.
+    if publication.get("selection"):
+        return errors
+
     # Every explanatory document is accounted for. README.md files are
     # navigation indexes, not chapters.
     for doc in sorted((docs_root / "explanation").rglob("*.md")):
