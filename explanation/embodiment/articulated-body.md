@@ -1,6 +1,6 @@
 # The articulated body: what it is made of and where its joints are
 
-Reviewed against `embodiment` at commit `a5129f03aa4b024e33d332f917b9235afe97959c`.
+Reviewed against `embodiment` at commit `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -53,10 +53,11 @@ is an immutable record built from the value types of
   and damping values), a flag for a **fixed base**, a **spawn height**, a
   body kind and a state schema version.
 
-The record is immutable, but its segments are held in an ordinary mapping
-that can still be changed in place; a specification cannot be hashed for
-that reason (ad hoc run). Immutability of the joint and segment values is
-covered by `test_physical_specifications_are_immutable_value_objects`.
+An `ArticulatedBodySpec` is not itself guaranteed to detach a caller's
+`segments` mapping. When the owner creates its active morphology, it snapshots
+and freezes the normalized declared payload. That owner-bound payload has a
+canonical serialization and SHA-256 identity distinct from the digest of
+generated description text.
 
 ### The description
 
@@ -84,13 +85,10 @@ Read from the code and confirmed by running the module at that revision:
   torque, velocity and damping). Two specifications whose masses differ in
   the thirteenth digit give the same text.
 
-Only part of a specification reaches the description. The contact link
-names, the structural neighbours, the surface material, the fixed-base flag,
-the spawn height and the state schema version are not written into it.
-A search of the source and test trees of all seven repositories at their
-main branches on 2026-10-09 found that the contact link names are copied
-into [the physical projection](physical-projection.md) and that the other
-five are read by no code at all.
+Only part of a specification reaches the URDF description. The full
+normalized declared specification is nevertheless covered by its separate
+payload hash; the URDF hash identifies the generated description, not all
+morphology content.
 
 ### What a specification does not check
 
@@ -159,12 +157,9 @@ caller-supplied descriptor as authority." A descriptor built directly, with
 a digest of sixty-four zeros and invented joint ranges, is accepted, and so
 is one with no joints.
 
-**The digest covers the description, not the specification.** Because six
-fields never reach the description, two specifications that differ in their
-contact links, fixed-base flag or surface material give descriptors that
-compare equal. The morphology revision is a label supplied by the caller;
-nothing derives it from the specification, and the same label with a
-different description gives a different, equally valid descriptor.
+The active morphology records both the specification payload identity and
+the generated-description identity. The morphology revision remains a
+caller-supplied label; hashing does not allocate or advance it.
 
 ## The joint state
 
@@ -243,25 +238,23 @@ velocity, however implausible. Joints are bounded: by position and by speed.
 
 ## Checkpoint
 
-The state encodes itself as canonical JSON under schema version 1. The
-bytes hold the root's own checkpoint, nested whole under its schema
-version 2; the four fields that bind the descriptor (body, episode,
-morphology revision, digest of the description); the joints; and the two
-units, `rad` and `rad/s`, by name.
+The state encodes itself as canonical JSON under the current checkpoint
+schema. The checkpoint carries the owner-bound active morphology/specification
+payload, its identity, the nested root checkpoint, joints and explicit units.
 
-The bytes do **not** hold the joint limits, the description or the
-specification. Restoring therefore needs something the checkpoint does not
-contain: the caller must supply the active descriptor, and the state is
-checked against it. The class explains the choice: state construction and
-recovery "verify against this owner-supplied descriptor rather than
-trusting checkpoint ranges."
+The checkpoint carries the active morphology/specification payload and its
+identity with the articulated state. Restore validates this state against
+the active owner descriptor; it does not silently accept a different
+morphology. This owner boundary does not authenticate the descriptor's
+external origin.
 
 Restoring is strict (`test_articulated_checkpoint_rejects_unknown_schema_and_implicit_units`,
 `test_state_and_checkpoint_must_match_active_morphology_descriptor`, and an
 ad hoc run for the rest): the set of top-level fields must be exactly the
-expected one, the schema version must be the integer 1, the units must be
-the two named, the binding must equal the supplied descriptor's field for
-field, and the decoded state must pass every rule of construction. Altered
+expected one, the outer articulated-checkpoint schema version must be the
+integer 2 (the nested root checkpoint has its own schema version), the units
+must be the two named, the binding must equal the supplied descriptor's
+field for field, and the decoded state must pass every rule of construction. Altered
 bytes with a joint out of range, a joint missing, an extra field in a joint,
 another owner marker or another body in the root were all refused.
 
@@ -275,12 +268,6 @@ process, on values.
 
 Four things follow, read from the code and confirmed by a run:
 
-- **The binding is as wide as the digest.** A checkpoint was restored under
-  a descriptor derived from a specification with different contact links
-  and a fixed base, because that descriptor is equal to the original.
-- **The body's shape has no checkpoint.** Nothing in Embodiment encodes a
-  specification or a descriptor. After a restart the specification has to
-  come from wherever the caller keeps it.
 - **Equal states do not always give equal bytes.** Joint positions are kept
   as given. Two states built with the joint position `1` and `1.0` compare
   equal and encode differently, and so do `0.0` and `-0.0`. A state
@@ -291,7 +278,7 @@ Four things follow, read from the code and confirmed by a run:
   two validation questions of World's durable runtime, and the schema name
   under which World's fixture stores it,
   `embodiment-articulated-physical-state-v1`, appears only in that fixture
-  (read at `world@c162b67e698de9b47450264402677b0165e6e20e`).
+  (read at `world@a8d07fd791da76365aa74080eef1e82b11a599fd`).
 
 ## Time
 

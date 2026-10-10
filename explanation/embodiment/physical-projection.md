@@ -1,6 +1,6 @@
 # What Embodiment hands to a solver: the physical projection, the body pose and its conventions
 
-Reviewed against `embodiment` at commit `a5129f03aa4b024e33d332f917b9235afe97959c`.
+Reviewed against `embodiment` at commit `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -81,30 +81,21 @@ by tests.
 
 The projection
 (`embodiment:src/embodiment/physics3d/physical_projection.py::BodyPhysicalInput`)
-is the solver's input for one body and one step. One function builds it from
-four things: a body specification, a pose sample, a step correlation, and
-the root's two velocities. The result holds:
+is built from one `ArticulatedEmbodimentPhysicalState` and an explicit step
+correlation. It snapshots owner state into solver-facing input, including:
 
-- the body identifier and the correlation of the step;
-- the body kind;
-- the pose: both frame names, the position and the orientation;
-- the linear velocity in metres per second and the angular velocity in
-  radians per second, in the reference frame;
-- the **description** of the body, generated from the specification as
-  text (see [the articulated body](articulated-body.md));
-- the contact link names of the specification.
+- body, episode and morphology identity and the source state's causal context;
+- root pose, frame names, linear velocity in `m/s` and angular velocity in
+  `rad/s`;
+- the complete morphology-content digest and generated description;
+- articulated joint position/range data keyed by stable `joint_id`;
+- contact links, surface material and fixed-base declaration.
 
-Covered by `test_projection_snapshots_pose_morphology_and_contact_links`.
-The value is immutable and building it changes neither the specification
-nor the pose
-(`test_projection_is_immutable_and_does_not_mutate_owner_inputs`). Because
-the description is text generated at that moment, changing the
-specification's segments afterwards does not change a projection already
-made
-(`test_projection_captures_description_instead_of_live_mutable_spec_mapping`).
-
-The module is explicit about what the value is not: "It is not a solver, a
-semantic physics authority, or a body-state transition."
+The projection is immutable and does not retain mutable morphology mappings.
+Current tests cover complete owner-state projection by stable joint identity,
+input isolation and rejection of correlation that is not bound to the source
+state. The module remains a projection, not a solver, semantic physics
+authority or state transition.
 
 ### What is deliberately left out
 
@@ -117,30 +108,19 @@ is given.
 
 ### What the projection does not carry or check
 
-Read from the code and confirmed by running the module at that revision.
+- **World authorization.** The correlation is checked against the source
+  state's context, but the projection does not authenticate that World
+  authorized the step. A caller-constructible correlation is not proof of
+  World authority.
+- **Whether a solver's candidate is authoritative.** The projection supplies
+  inputs only; Embodiment adoption remains a separate owner validation.
+- **Production execution.** Current consumers are World integration fixtures;
+  this does not demonstrate a production solver adapter.
 
-- **Joint state.** The projection has no field for a joint's angle or
-  speed. For an articulated body it gives a solver the shape and the root's
-  pose, and nothing about the configuration of the joints.
-- **The surface material and the fixed-base flag** of the specification.
-  They are not in the description and not in the projection.
-- **That its inputs belong together.** The function takes a specification,
-  a pose and two velocities as separate arguments; it does not take the
-  body's state. It checks one thing: that the correlation and the pose name
-  the same body. A projection was built with a correlation naming another
-  World, another tick, another episode and another morphology revision than
-  anything else in hand, and with a velocity of 10³⁰ metres per second
-  unrelated to any state.
-- **That contact links exist.** A contact link name that is no link of the
-  description is carried through.
-- **Itself, when built directly.** Only the two velocities are validated
-  (`test_projection_rejects_nonfinite_root_velocity`). Built without the
-  function, a projection with an empty identifier, a non-numeric position
-  and a description that is not XML was accepted.
-
-The morphology revision in the correlation and the specification given to
-the function are related only by the caller. A specification carries no
-revision, so the function has nothing to compare.
+Directly constructed solver inputs are validated against finite values and
+active morphology constraints. Tests cover those fail-closed checks, including
+rejection of stale/wrong morphology correlation. This is structural/domain
+validation, not proof of physical calibration.
 
 ## The declared conventions
 
@@ -162,9 +142,8 @@ does not change the declaration
 
 These are declarations and nothing more. The test file states it: its
 assertions "do not verify that a runtime emits samples conforming to the
-declarations or that any physical simulation is valid". A search of the
-source and test trees of all seven repositories at their main branches on
-2026-10-09 found the two tables read by their own test and by nothing else.
+declarations or that any physical simulation is valid". A search at the pinned
+revisions found the two tables read by their own test and by nothing else.
 In particular:
 
 - the pose sample does not consult them: it accepts any frame names and any
@@ -182,7 +161,7 @@ with, whatever they were.
 Environment declares the same two properties for its scenes in its own
 words. Its frame is `RIGHT_HANDED` with up axis `Z`
 (`environment:src/environment/static_scene.py`, read at
-`environment@f97ec22272b6be1e6742770e37cd370e7d96d6bc`), where Embodiment
+`environment@0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41`), where Embodiment
 writes `right` and `+z`. Neither repository imports the other. That a body
 and a scene given to one solver share a frame is ensured by whoever puts
 them together.
@@ -229,18 +208,21 @@ fixture composes for the solver configuration revision.
 reads: "Host wall-clock time is never implicit causal authority", and
 requires that causal times "must be explicit and distinct". Set beside the
 code: the source tree of `embodiment` at that revision contains no import of
-a clock and no read of host time (search of 2026-10-09 for the `time` and
-`datetime` modules), so nothing here takes its time from the host. A type
+a clock and no read of host time (source search at the pinned revision), so
+nothing here takes its time from the host. A type
 for physical time exists and is distinct from the tick. No value carries
 it. The decision leaves open which authority advances each time. This is a
 comparison of content, not a ruling on conformance.
 
 ## Where it is used
 
-No source module of any repository builds a projection (same search). Two
-integration fixtures of World do, described in
-[the physical causal step](../world/physical-step.md); read at
-`world@c162b67e698de9b47450264402677b0165e6e20e`.
+Embodiment's source module defines `project_body_physical_input`, which builds
+the projection from one validated owner state and a correlation. World's
+reusable physical-step coordinator calls injected projection ports; the
+current concrete consumers are World integration fixtures, described in
+[the physical causal step](../world/physical-step.md), read at
+`world@a8d07fd791da76365aa74080eef1e82b11a599fd`. No production solver
+adapter or non-test caller is established by these sources.
 
 In both, a function of the fixture parses the description as XML, takes
 from it the masses, the sizes of the boxes and, for the articulated body,
@@ -251,8 +233,8 @@ moments of inertia, torque limit and velocity limit are not used.
 
 In `test_articulated_mujoco_candidate_is_adopted_and_world_committed`, the
 second step starts from a restored state whose hinge is no longer at zero.
-The fixture sets the hinge's angle and speed in the solver by reading them
-from the restored state directly, since the projection does not carry them.
+The projection carries the restored joint state keyed by `joint_id`; the
+fixture maps that projected value into MuJoCo's joint arrays.
 
 `test_procedural_spheres_are_adopted_committed_restored_and_reused` uses a
 single-box body and checks, before stepping, that the projection names the
@@ -262,14 +244,15 @@ frame of the generated scene.
 
 [ADR-0098](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)
 says that "the physical substrate executes numerical coupled resolution over
-owner projections". Set beside the code: there is one value that an owner
-builds for a solver, and it is immutable and separate from the state. For
-an articulated body it does not contain all of the state a solver needs, and
-it is assembled from arguments that the function cannot tie to the state.
+owner projections". Set beside the code: Embodiment now provides an immutable
+projection from one validated owner state. World coordinates the step through
+injected ports, but the repository does not yet provide a production solver
+adapter. The projection is not a solver, authority or state transition.
 
 [ADR-0073](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md),
 item 3, says that "Embodiment and Environment provide their projections".
-The function exists; what calls it is a test.
+The Embodiment projection function exists; the demonstrated caller is an
+integration fixture, not a production runtime adapter.
 
 This is a comparison of content, not a ruling on conformance.
 
@@ -278,22 +261,21 @@ This is a comparison of content, not a ruling on conformance.
 | Claim | Support |
 |---|---|
 | Checks of the pose sample; absence of a World identifier | Code and tests in `embodiment:tests/test_body_pose_sample.py`, run at that revision (all pass) |
-| Content, immutability and snapshot behaviour of the projection; refusal of non-finite velocities | Code and tests in `embodiment:tests/test_physical_projection.py`, run at that revision (all pass) |
+| Projection from one owner state, stable joint identities, detachment from morphology mappings, correlation binding, and direct-value validation | Code and tests in `embodiment:tests/test_physical_projection.py` at the pinned Embodiment revision |
 | Content of the two declarations and that copies are independent | Code and tests in `embodiment:tests/test_physics3d_observation_contract.py`, run at that revision (all pass) |
 | What a duration accepts and refuses | Code and tests in `embodiment:tests/test_duration.py`, run at that revision (all pass) |
-| Free frame names, revision, kind and value; negative time; unnormalised quaternion; projection built from unrelated inputs or directly; arithmetic on durations; adopted pose has no time | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
-| No joint state, material or fixed-base flag in the projection | Code (the fields of the value), and the same run |
-| The declarations and the duration are read by nothing; no source module builds a projection; no clock is read | A search of the source and test trees of the seven repositories at their main branches on 2026-10-09 |
-| How World's fixtures consume the projection; Environment's frame vocabulary | Code of the two fixtures under `world:tests/integration/physical_step/` and of `environment:src/environment/static_scene.py`, read; not run for this document |
+| Free frame names, revision, kind and value; negative sample time; arithmetic on durations; adopted pose has no time | Code and bounded ad hoc observations; these are not established by the listed tests |
+| Joint state and active morphology properties are included in the projection | Code (`BodyPhysicalInput`) and the projection tests at the pinned Embodiment revision |
+| The declarations and duration have no production consumers in the pinned source trees; the projection function is source-defined but has no demonstrated non-test caller | Source search across the pinned repositories; tests are excluded from the production-caller claim |
+| How World's fixtures consume the projection; Environment's frame vocabulary | Code of the World integration fixtures and `environment:src/environment/static_scene.py` at the pinned revisions; read, not run for this document |
 | That a solver works over owner projections; that host time is not causal authority | Accepted decisions ADR-0098, ADR-0073, ADR-0090; statements of intent, not test results |
 
 No run with a real solver and no experiment was examined for this document.
 
 ## Open questions
 
-- Whether the projection of an articulated body should carry its joint
-  state, and whether it should be built from the state rather than from
-  separate arguments.
+- Which production solver adapter, if any, should consume the engine-neutral
+  projection; the current fixtures do not establish a production adapter.
 - Which value, owned by whom, records the physical time a step covers.
 - Whether the declared frames and units should be enforced by the values
   that are meant to follow them, and how Embodiment's and Environment's

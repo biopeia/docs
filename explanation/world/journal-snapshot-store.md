@@ -1,6 +1,6 @@
 # The journal snapshot store
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -92,7 +92,7 @@ directories, and no test or run here checks what survives a crash.
 | Claim | Support |
 |---|---|
 | Snapshot content, naming, immutable publication, the shape of the reference, verification and reading | Code |
-| A committed tick publishes a journal snapshot before the manifest is complete | Code and `test_durable_tick_publishes_journal_and_owner_checkpoint_before_complete_manifest` in `world:tests/test_durable_runtime.py` |
+| A committed tick publishes a journal snapshot before the manifest is complete; owner causal records survive later ticks and restore as part of the prefix | Code and `test_durable_tick_publishes_journal_and_owner_checkpoint_before_complete_manifest`, `test_owner_causal_record_survives_later_tick_and_restore` in `world:tests/test_durable_runtime.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | File hash and prefix digest differ; a store for another World reads the snapshot; all snapshots are kept and grow | Code, and one ad hoc run of the module at that revision |
 
 No test in the repository addresses the store alone; it is exercised through

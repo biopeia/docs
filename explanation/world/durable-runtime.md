@@ -1,6 +1,6 @@
 # The durable World runtime
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -27,14 +27,15 @@ identity, its initial presences, the owners registered with it, one initial
 checkpoint reference per owner, and, per owner, a contract able to validate
 that owner's checkpoints.
 
-The specification is a declaration by whoever creates the World. The code
-says so: it is "not a discovery mechanism for authorities external to the
-accepted specification". World checks the declaration for internal
-consistency (every registered owner has a reference and a contract, and no
-reference lacks an owner); it cannot know whether an authority that should
-have been declared was left out. Tests:
+The specification is a declaration by whoever creates the World. It requires
+exactly one registered owner link for every initial active presence, as well
+as a reference and contract for every registered owner. The code says genesis
+is "not a discovery mechanism for authorities external to the accepted
+specification": World guarantees roster completeness relative to the accepted
+genesis, not completeness against undeclared external authorities. Tests:
 `test_genesis_spec_is_authoritative_input_for_tick_zero_roster`,
-`test_complete_cut_requires_nonempty_stable_owner_identity_closure`.
+`test_genesis_requires_explicit_unique_links_to_registered_owners` and
+`test_genesis_requires_presence_owner_and_durable_checkpoint_closure`.
 
 Initialisation writes an empty journal snapshot, verifies every reference,
 and publishes the manifest of tick zero in a way that cannot overwrite an
@@ -59,13 +60,16 @@ The order is the substance. Read from
 4. **Open the transition durably.** The manifest is rewritten as preparing,
    still describing the previous cut, with the proposed rosters attached.
 5. **Ask the owners to save.** A callback supplied by the caller persists the
-   owners' new state and returns one reference per participant.
+   owners' new state and returns one reference per participant. It may also
+   return owner-authored opaque causal records associated with the transition.
 6. **Check what came back.** The references must name exactly the proposed
    participants. For each, World reads the bytes at the locator itself,
    compares their hash with the reference, and asks that owner's contract
-   whether the checkpoint is valid.
-7. **Extend the journal on a copy.** One record for the tick is appended to a
-   copy of the journal, and the copy is written as a snapshot.
+   whether the checkpoint is valid. Owner causal records must be structurally
+   valid, uniquely identified and bound to participating owners.
+7. **Extend the journal on a copy.** World appends the tick record and any
+   owner causal records to a copy of the journal, then writes the copy as a
+   snapshot.
 8. **Publish the cut.** The manifest of the new cut is committed through the
    manifest store, which re-verifies the references. Only then do the
    runtime's in-memory journal and manifest advance.
@@ -144,22 +148,26 @@ the repository's. Stated here so they are not lost:
 
 - **It is not a transaction across owners.** There is no rollback. Coherence
   after a failure depends on the owners' restorers.
-- **One logical writer is a precondition, not an enforced property.** Within
-  one runtime a second tick is refused. Across runtimes or processes nothing
-  holds a transition open exclusively: a second actor that checks the
-  manifest while a tick is in progress marks it interrupted, and the first
-  tick then fails at commit. A runtime notices that another actor changed the
-  manifest only when it begins its next tick.
+- **Writer coordination evidence is bounded.** A thread-based test excludes
+  a second concurrent transition from preparing
+  (`test_only_one_cross_process_transition_can_prepare_at_a_time`). The
+  implementation uses POSIX advisory `flock`, intended to serialize processes
+  on a compliant local filesystem, but this test is not multi-process
+  evidence. This is not distributed consensus, multi-writer coordination
+  across arbitrary stores, or a general recovery protocol.
   [ADR-0084](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md)
-  requires either a single writer or explicit coordination; this
-  implementation relies on the first.
-- **Crash consistency is not demonstrated.** The recovery path is described
-  in the code as "not crash-consistency proof or a multi-process recovery
-  protocol".
+  still defines the broader architectural requirement.
+- **Crash consistency is not generally demonstrated.** A process-termination
+  test shows that a process stopped after PREPARING reopens with the prior cut
+  and `RECOVERY_REQUIRED` (`test_process_termination_after_preparing_reopens_prior_cut_as_recovery_required`). This targeted result is not a power-loss guarantee, exhaustive crash-point analysis, or general multi-process recovery proof.
 - **Completeness of the roster rests on the genesis declaration.**
-- **One presence acts.** A runtime is bound to one presence, which cannot
-  unregister itself in its own tick. The association between a presence and
-  an owner is checked at genesis only and is not kept in the manifest.
+- **Presence ownership is explicit and durable.** Each active presence has
+  exactly one registered owner link, persisted in the manifest and changed
+  only through explicit lifecycle transitions. One owner may support multiple
+  presences. This is not authority discovery; completeness is relative to the
+  accepted genesis and explicit lifecycle inputs. The runtime still exposes an
+  `active_presence_id` for its single-actor convenience path; do not mistake
+  that for a one-owner/one-presence restriction.
 
 ## Time and identity
 
@@ -172,13 +180,12 @@ the caller.
 
 | Claim | Support |
 |---|---|
-| Genesis as authoritative input; order of publication; roster and presence changes; contract required for new owners; validation of owner bytes before acceptance; restore and explicit recovery; refusal when restoration cannot be confirmed | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `9da5ecce209e66d955627cff1b57c58080683fa9` |
+| Genesis owner-link closure; order of publication; roster and presence changes; contract required for new owners; validation of owner bytes before acceptance; restore and explicit recovery; refusal when restoration cannot be confirmed | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | An end-to-end tick with real owners from the other repositories | `world:tests/integration`, run by that repository's integration job in CI at pinned revisions |
-| A roster error before the transition opens leaves the runtime usable; a failure after the callback can leave an unreferenced owner checkpoint | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `9da5ecce209e66d955627cff1b57c58080683fa9`; this does not imply automatic cleanup |
+| A roster error before the transition opens leaves the runtime usable; a failure after the callback can leave an unreferenced owner checkpoint | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `a8d07fd791da76365aa74080eef1e82b11a599fd`; this does not imply automatic cleanup |
 | The limits listed above | Code and its documentation; they are statements of what is not provided, not results |
 
-No crash, power-loss or concurrent-process test was examined, and none
-appears to exist in the repository.
+The test suite includes process termination after PREPARING, recovery-publication retry, and thread-level exclusion of concurrent preparation. The implementation's advisory file lock is intended for process-level serialization on supported local filesystems, but the cited concurrency test does not exercise separate processes. These tests do not prove power-loss durability, exhaustive crash consistency, or general distributed coordination.
 
 ## Open questions
 

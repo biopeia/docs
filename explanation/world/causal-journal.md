@@ -1,6 +1,6 @@
 # The World causal journal
 
-Reviewed against `world` at commit `dce2c944abaab87e2c75f4fe49d9aa9dadc33a00`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -75,8 +75,10 @@ test:
 - staging lives in memory only. The module's own description calls it "an
   in-memory transaction aid, not a durable commit protocol".
 
-At this revision neither World runtime uses staging. Both append a single
-record per committed tick.
+At this revision neither World runtime uses staging. The durable runtime
+appends the committed tick record and may append zero or more opaque
+`world.owner_record.committed` records supplied by participating owners. The
+in-memory runtime appends only its tick record.
 
 ## The running digest
 
@@ -133,9 +135,13 @@ not of the journal.
 
 ## How World uses it
 
-Both runtimes in the repository write the same kind of record: one per
-committed tick, of type `world.causal_tick.committed`, identified as
-`<world id>:tick:<n>`, with the active presence as actor.
+Both runtimes write a `world.causal_tick.committed` record per committed tick,
+identified as `<world id>:tick:<n>`, with the active presence as actor. The
+durable runtime additionally accepts zero or more opaque owner-authored
+records (`world.owner_record.committed`) in that committed journal cut. Each
+owner record is bound to its tick, owner identity and stable record ID; World
+validates structural uniqueness and JSON shape but does not interpret the
+payload. Tests cover records surviving later ticks and restore.
 
 - The in-memory coordinator (`world:src/world/runtime.py::WorldRuntime.tick`)
   runs the transition, then appends the record. If either step raises, the
@@ -174,7 +180,7 @@ it, as the durable coordinator does.
 |---|---|
 | Record validation, payload immutability, append order, batch behaviour, read paths, digest reproduction and sensitivity | Code and tests in `world:tests/test_journal.py` |
 | Staged records survive a failed commit; duplicate identifiers, mixed Worlds and unordered ticks are accepted | Code, and one ad hoc run of the module at that revision; no test is kept for them |
-| Neither runtime uses staging; both write one record per tick | Code only |
+| Neither runtime uses staging; durable runtime writes the tick record plus zero or more opaque owner records | Code and tests in `world:tests/test_durable_runtime.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | The journal's role as history and not sole state authority | Accepted decision ADR-0107; it is a statement of intent, not a test result |
 
 No runtime trace, persisted journal or experiment was examined. Nothing here

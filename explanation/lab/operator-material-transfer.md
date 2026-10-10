@@ -1,15 +1,15 @@
 # The operator material transfer
 
-Reviewed against `lab` at commit `4d5ff706b8329ddf25e1852ad53cbde5285d2851`.
+Reviewed against `lab` at commit `6aa3e530ff087594c1ac1332670df2caa5151b29`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 A decision states intent; it is not a result.
 
 The code this component calls in other repositories was read at
-`embodiment` `a5129f03aa4b024e33d332f917b9235afe97959c`,
-`environment` `f97ec22272b6be1e6742770e37cd370e7d96d6bc`,
-`observation` `397c0b4691b5e460e6ebc3914f9820ff434a3661` and
-`world` `c162b67e698de9b47450264402677b0165e6e20e`.
+`embodiment` `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`,
+`environment` `0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41`,
+`observation` `be82907d1d677b2362e369d15eb1e8e964d893aa` and
+`world` `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 
 ## What it is
 
@@ -52,9 +52,11 @@ checks who the caller is.
 The request keeps two identities apart, and the difference matters for what
 may later be said about a transfer.
 
-The **intervention identity** names this act of intervening. It is always
-required. The **run identity** names a scientific execution the act took
-place in, if there was one. The kind states which case applies:
+The **intervention identity** names one logical intervention. It is always
+required. One intervention may contain multiple material acts; each has its
+own **intervention action identity**. The **run identity** names a scientific
+execution the act took place in, if there was one. The kind states which case
+applies:
 
 - an intervention declared as part of an experimental run must carry a run
   identity (`test_experimental_intervention_requires_real_run_context`);
@@ -62,21 +64,21 @@ place in, if there was one. The kind states which case applies:
   the code; no test exercises this refusal.
 
 The evidence checkpoint is filed under the intervention identity, never under
-the run identity, and when a run is declared it is written into the evidence
-as a separate field
-(`test_real_run_context_is_explicit_in_committed_evidence`). The identifier of
-the World transition is a third identity, and must differ from the
-intervention identity
-(`test_transition_id_is_distinct_from_intervention_id`).
+the run identity. The action identity and World transition identity are
+distinct; the action identity is recorded in evidence and in a durable World
+owner causal record. A run, when declared, remains separate
+(`test_real_run_context_is_explicit_in_committed_evidence`). Tests cover
+distinct actions under one intervention, duplicate-action rejection, immutable
+intervention context and action-scoped limits.
 
 What the code checks is the shape of these declarations: that a run identity
 is present or absent, and not empty. It cannot know whether a run identity
-names a real run. Three further things were confirmed by running the module:
+names a real run. The tests establish that:
 
 - a non-experimental request may carry a study and a protocol identifier
   while carrying no run;
-- the same intervention identity can be used for two successive transfers in
-  one World, and both commit;
+- the same logical intervention can have multiple actions when immutable
+  context matches and action identities are distinct;
 - a transfer of zero commits a tick and writes evidence like any other.
 
 ## What happens in one transfer
@@ -150,12 +152,12 @@ they no longer match the committed cut. Confirmed by running the module.
 
 ## The evidence checkpoint
 
-The evidence is a small JSON document, written with sorted keys. Its content
-is fixed by `test_intervention_commits_durable_owner_cut_and_lab_evidence`:
-the intervention and operator identifiers, the declared kind, the transition
-identifier, the World and the causal tick, the source and the target body,
-the four quantities, and the label of the quantity. Run, study, experiment
-and protocol appear only when the request carried them.
+The evidence is a small JSON document, written with sorted keys. The current
+schema is version 2. It records intervention identity, action identity,
+operator, declared kind, transition identity, World and causal tick, source
+and target body, quantities and their label; run, study, experiment and
+protocol appear only when supplied. Tests cover action identity, duplicate
+action rejection, context immutability and action-scoped limits.
 
 It is stored by a store that Lab provides
 (`lab:src/lab/interventions/material_transfer.py::MaterialTransferCheckpointStore`).
@@ -166,37 +168,32 @@ writes the Environment and Embodiment checkpoint files. The bytes of those
 come from the owners' own encodings; Lab writes them to disk without reading
 their meaning.
 
-What World is told about the evidence is a
-[checkpoint reference](../world/causal-manifest.md) and a contract. The
-contract Lab supplies answers yes to any JSON object whose schema version is
-1 and whose intervention identifier equals the identity in the reference. It
-does not look at any other field. Confirmed by running the module: a document
-holding only those two fields is accepted.
+What World receives is a
+[checkpoint reference](../world/causal-manifest.md) and a Lab-owned validation
+contract. The contract requires evidence schema version 2 and checks required
+identity fields, including intervention and action identity; it does not
+validate the scientific-method interpretation of the payload. The associated
+owner causal record is opaque to World.
 
 ### What the record does and does not preserve
 
-Three facts, each confirmed by running the module, belong together.
+The current implementation establishes the following bounded behavior.
 
-- **The World record does not carry the intervention.** The record World
-  appends for the tick holds the acting presence and nothing about the
-  transfer. Lab's migration notes say so: "World's generic causal record does
-  not itself contain the intervention payload." The only link between the
-  tick and the evidence is the reference in the World manifest.
-- **That link lasts one tick.** The evidence is a participant of its own step
-  only. After the next committed tick the manifest no longer refers to it,
-  and no file in the World's durable state names the earlier evidence or its
-  intervention. The evidence file remains on disk.
-- **A failed transfer can leave an evidence file too.** If World fails after
-  the callback has written the files, the evidence file stays on disk,
-  complete, stating the tick it would have had. The migration notes state how
-  it must be read: "an orphaned file after a failed preparation is not accepted
-  state or evidence". Nothing in the file says so.
+- **World does not interpret Lab evidence.** The generic tick record is distinct
+  from the opaque owner causal record Lab commits for an intervention action.
+  World preserves and validates that record under the owner contract; Lab
+  retains semantic interpretation and scientific custody.
+- **The action/evidence relation is durable in the tested journal path.** The
+  journal retains the owner causal record beyond its tick, and tests cover
+  retrieval after later ticks and restart. This does not make World the
+  scientific custodian of the evidence.
+- A failure after a callback writes evidence may leave an unreferenced file;
+  its existence alone does not establish a committed intervention. The
+  committed World owner record and Lab evidence reference are the tested path.
 
-Taken together: while a transfer is the latest committed tick, the manifest
-tells its evidence apart from a leftover. Once the World has moved on, the
-durable state examined here no longer distinguishes an evidence file whose
-transfer committed from one whose transfer did not. Whether another record is
-meant to hold that history is not decided in the code.
+Tests establish the action/evidence relation in the journal and checkpoint
+path used here. They do not establish a general power-loss guarantee, external
+evidence immutability or scientific admissibility of physical interpretation.
 
 ## When it fails
 
@@ -212,22 +209,16 @@ restorer the caller supplies, as described in
 
 ## What reaches Observation
 
-After the commit Lab offers Observation's projection six values: a source
-name, the body identifier, the tick (twice), a body kind, the ratio of the
-body's reserve to its capacity, and the quantity remaining in the resource.
-The projection returns three events, of types body, cognition and vitals
-(`test_intervention_commits_durable_owner_cut_and_lab_evidence`). None of
-them carries a run identifier.
+After commit Lab supplies a minimal projection input including source, body
+identity, tick and current body state. The current Lab integration does not
+supply a metabolic reserve ratio. The passive projection output is limited by
+fields recognized by Observation and supplied by Lab; it carries no run ID.
 
-Confirmed by running the module at these revisions:
-
-- the remaining quantity appears in the vitals event;
-- the reserve ratio appears in no event. The projection copies only the keys
-  it knows, and this is not one of them;
-- the event of type cognition carries the source, the body identifier and the
-  tick, and nothing else. No organism takes part in the transfer; the event
-  exists because the projection always returns three. Its type is a name
-  given by the projection and describes no cognitive content here.
+The source and tests at these revisions show that the remaining quantity
+appears in the vitals event. Lab does not pass the previously computed reserve
+ratio to Observation in this integration. With the current input, projection
+returns body and vitals events; no cognition event is emitted because no
+recognized cognition data is present. No Organism takes part in the transfer.
 
 The projection describes itself as working "without fabricating absent
 observations". The events are returned to the caller; this component does not
