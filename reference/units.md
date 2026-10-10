@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-48 units, 10 cross-domain contracts, 105 findings.
+49 units, 10 cross-domain contracts, 105 findings.
 
 ## World
 
@@ -448,6 +448,17 @@ restates it so that the answers about one unit can be read in one place.
 | Tests | `organism:tests/source_unit/agency/test_executive_outcome.py` |
 | Reviewed at | organism@3cc0f319f4ac (RECORDED) |
 | Known findings | F-0036 implementation finding (open); F-0037 evidence gap (open); F-0038 documentation inconsistency (open) |
+
+### The life of an Organism, as the code has it
+
+`concept.organism-life-across-mechanisms` · concept · CURRENT
+
+| | |
+|---|---|
+| Owned by | organism; also involves modality |
+| Explained in | [explanation/organism/life-of-an-organism.md](../explanation/organism/life-of-an-organism.md) |
+| Depends on | `concept.biopeia-research-hypotheses`, `concept.biopeia-what-it-is`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-attention-allocation`, `component.organism-capacity-and-pair-statistics`, `component.organism-causal-evidence`, `component.organism-causal-provenance-log`, `mechanism.organism-cognitive-checkpoint`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-experience-ledger`, `concept.organism-foundation-conventions`, `component.organism-generative-resident`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation` |
+| Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0088-lifecycle-event-ontology.md](../technical/adr/ADR-0088-lifecycle-event-ontology.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 
 ### Competence development engine
 

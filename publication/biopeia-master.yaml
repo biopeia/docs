@@ -38,6 +38,7 @@ parts:
   - id: organism
     title: Organism
     chapters:
+      - explanation/organism/life-of-an-organism.md
       - explanation/organism/foundation-conventions.md
       - explanation/organism/identity-and-checkpoint.md
       - explanation/organism/genome-and-inheritance.md
