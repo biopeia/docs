@@ -47,6 +47,15 @@ HEADING_STYLES = {1: "Heading1", 2: "Heading2", 3: "Heading3", 4: "Heading4"}
 BULLET_NUM_ID = 1
 
 
+# What the front page says about the build. A published edition is one whose
+# every source is a clean, identified revision; publish.py enforces it.
+EDITIONS = {
+    "working": ("Working edition.", "Built from whatever state the sources were in. A repository below may be "
+                "unresolved or carry local modifications, so this copy must not be cited as a state of Biopeia."),
+    "published": ("Published edition.", "Every source repository below is a clean, identified revision."),
+}
+
+
 def roman(number: int) -> str:
     out = ""
     for value, symbol in ((1000, "M"), (900, "CM"), (500, "D"), (400, "CD"), (100, "C"), (90, "XC"),
@@ -74,8 +83,9 @@ class Document:
     """Accumulates the body and the parts it refers to."""
 
     def __init__(self, projection: dict[str, Any], pages: dict[str, int] | None,
-                 render_diagram: Callable[[str], bytes]) -> None:
+                 render_diagram: Callable[[str], bytes], edition: str = "working") -> None:
         self.projection = projection
+        self.edition = edition
         self.pages = pages
         self.render_diagram = render_diagram
         self.body: list[str] = []
@@ -248,6 +258,8 @@ class Document:
         self.body.append(paragraph("Title", text_run(publication["title"])))
         if publication.get("subtitle"):
             self.body.append(paragraph("Subtitle", text_run(publication["subtitle"])))
+        self.body.append(paragraph("Normal", text_run(EDITIONS[self.edition][0], bold=True)
+                                   + text_run(" " + EDITIONS[self.edition][1])))
         self.body.append(paragraph("Normal", text_run(
             "This document is generated. It presents the Biopeia documentation in reading order; the "
             "documents and registries of the documentation repository remain the only source. It was built "
@@ -390,13 +402,14 @@ def build_docx(
     projection: dict[str, Any],
     pages: dict[str, int] | None = None,
     render_diagram: Callable[[str], bytes] = mermaid.render,
+    edition: str = "working",
 ) -> tuple[bytes, list[dict[str, Any]]]:
     """The DOCX bytes and its table-of-contents entries (bookmark, level, text).
 
     Without `pages` every entry shows a placeholder of fixed width, so that
     filling the real numbers in does not move any page.
     """
-    document = Document(projection, pages, render_diagram)
+    document = Document(projection, pages, render_diagram, edition)
     document.build()
     document.relate(f"{R_NS}/styles", "styles.xml")
     document.relate(f"{R_NS}/numbering", "numbering.xml")

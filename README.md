@@ -154,13 +154,15 @@ projection `biopeia-master.json`, `Biopeia-Master.docx`, `Biopeia-Master.pdf`
 and `publication-manifest.json`, which records the revision of every source
 repository available to the build, the registry and projection digests and the
 SHA-256 of each artifact. `--repos-root` makes the domain repositories'
-revisions part of that record. A diagram needs `@mermaid-js/mermaid-cli` at
+revisions part of that record. Without `--release` the result is a working
+edition and says so on its front page; with it, the build fails unless every
+source repository is at a clean revision. A diagram needs `@mermaid-js/mermaid-cli` at
 the version pinned in `tools/publication/mermaid.py`. See
 `publication/README.md` for what the publication contains and why.
 
 The `Publication` workflow builds it on every pull request, where it also
-requires every publication test to run, and on `main`, where the four files
-are kept as a workflow artifact.
+requires every publication test to run, and on `main`, where it builds the
+published edition and keeps the four files as a workflow artifact.
 
 CI runs two jobs. `registry` needs only this repository and blocks on registry
 integrity. `cross-repository` clones the seven domain repositories with a

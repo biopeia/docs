@@ -8,17 +8,17 @@ How Biopeia works, traced to code, tests and decisions. Each directory has its o
 
 ## Start here
 
-[Foundation conventions: thresholds, an evidence count and limits](organism/foundation-conventions.md)
+[One step across the domains](biopeia/one-step-across-the-domains.md)
 
 ## Reading order
 
 The order of the main publication, set in [publication/biopeia-master.yaml](../publication/biopeia-master.yaml).
 
-1. Biopeia: no explanatory document yet
+1. Biopeia: 1 document ([biopeia](biopeia/README.md))
 2. Organism: 18 documents ([organism](organism/README.md))
 3. Embodiment: 5 documents ([embodiment](embodiment/README.md))
 4. Environment: 5 documents ([environment](environment/README.md))
 5. World: 8 documents ([world](world/README.md))
 6. Modality and Observation: 4 documents ([modality](modality/README.md), [observation](observation/README.md))
 7. Lab: 3 documents ([lab](lab/README.md))
-8. Cross-domain architecture: 1 document ([biopeia](biopeia/README.md))
+8. Cross-domain architecture: no explanatory document yet

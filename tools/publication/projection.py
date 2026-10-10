@@ -339,8 +339,13 @@ def build_projection(
 
     out_sections = []
     for section in sections(manifest):
-        chapters = [chapter_from_document(rel, docs_root) for rel in section.get("chapters") or []]
-        chapters += [chapter_generated(name, reg, docs_root) for name in section.get("generated") or []]
+        chapters = []
+        # A section presents its keys in the order the manifest writes them.
+        for key in section:
+            if key == "chapters":
+                chapters += [chapter_from_document(rel, docs_root) for rel in section["chapters"] or []]
+            elif key == "generated":
+                chapters += [chapter_generated(name, reg, docs_root) for name in section["generated"] or []]
         out_sections.append(
             {"id": section["id"], "title": section["title"], "group": section["group"], "chapters": chapters}
         )
