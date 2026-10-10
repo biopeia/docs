@@ -228,7 +228,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
 
   component.environment-finite-resource:
     kind: component
@@ -567,7 +567,7 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
+        observation: faa85b729bb3591e38025135d3d0cef7d5e1c00c
 
   component.observation-inherited-projection:
     kind: component
@@ -634,8 +634,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
-        world: e2098a9523446b6a32feda5f05140225f4d2ab86
+        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
+        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
 
   component.organism-identity-checkpoint:
     kind: component
@@ -849,7 +849,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
 
   component.organism-causal-evidence:
     kind: component
@@ -948,6 +948,7 @@ units:
     canonical_docs:
       - explanation/organism/genome-and-inheritance.md
     implementation:
+      - organism:src/organism/cognition/genome.py
       - organism:src/organism/genetics/genome.py
       - organism:src/organism/genetics/schema.py
       - organism:src/organism/genetics/expression.py
@@ -1159,7 +1160,7 @@ units:
       status: RECORDED
       basis:
         organism: 6543188ff302a5f2dc8002c0086252d6061e5310
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
 
   mechanism.organism-graph-plasticity:
     kind: mechanism
@@ -1286,3 +1287,23 @@ units:
       basis:
         organism: 6543188ff302a5f2dc8002c0086252d6061e5310
         world: 9da5ecce209e66d955627cff1b57c58080683fa9
+
+  component.organism-attention-allocation:
+    kind: component
+    title: Attention budget allocation
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-CAT
+    canonical_docs:
+      - explanation/organism/attention-allocation.md
+    implementation:
+      - organism:src/organism/cognition/attention.py
+    tests:
+      - organism:tests/source_unit/cognition/test_attention.py
+    adrs:
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    review:
+      status: RECORDED
+      basis:
+        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
