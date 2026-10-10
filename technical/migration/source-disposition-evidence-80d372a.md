@@ -102,3 +102,15 @@ The Git tree at that revision identifies these exact test blobs. They exercise t
 TARGET comparison was checked against `biopeia/.github@671b13855d48ea9ec5a81044f05b416ea2cbfd24` and `biopeia/.github-private@010ef3c748689aa369016d2c9a95a87a1f207837`. The public repository contains repo-native reusable workflows; the private repository contains the separately ratified agent work/review contracts. Neither tree contains the source test modules or the tested source monorepo planner, PR-summary script, or cross-member version-sync utility. This supports `DROP` for these three source test files only; it does not assess every governance test, claim that Biopeia has no future governance needs, or replace testing of the current TARGET contracts.
 
 This is a **MIGRATION_CLOSURE ledger disposition** for the three source test paths. It creates no **POST_MIGRATION** implementation task: a future change to Biopeia CI, PR summaries, or project versioning would need its own current TARGET requirement and issue. It does not close the broader test-inventory or migration-reconciliation findings in `docs#63`.
+
+## Additional source-test evidence: one-time removal of a prohibited source directory
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d` (tree `915146b807a2f3b4b362b485d0fd4010bb4c7cde`). The tracked source test has the following exact identity:
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `tests/docs/test_internal_is_gone.py` | `586a09d3f3d6a48122165ddaafa89fd42611f9a0` | `DROP` |
+
+This test asserts two completed source-corpus cleanup facts: the historical `docs/_internal/` directory is absent, and a source-only `SOURCES.md` no longer names that removed directory. It has no target test destination: neither assertion specifies a Biopeia contract, and the historical Symbiont documentation and directory are not part of the Biopeia target corpus. This records `DROP` as a TARGET test only; it neither deletes source history nor claims that Biopeia has no future documentation-integrity needs. Any new Biopeia documentation invariant must be specified and tested against current Biopeia requirements rather than copied from this cleanup test.
+
+Target comparison revision: `biopeia/docs@27ab5aa` (the Docs `main` base reviewed for this bounded row). This row is a source-test disposition only; it does not close other source-test rows or any part of the `docs#63` umbrella beyond this exact file.
