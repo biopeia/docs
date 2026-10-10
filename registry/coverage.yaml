@@ -972,6 +972,7 @@ units:
       - organism:tests/source_unit/cognition/test_checkpoint.py
       - organism:tests/source_unit/cognition/test_birth.py
       - organism:tests/source_unit/actuation/test_genome_motor_genes.py
+      - organism:tests/source_unit/genetics/test_checkpoint.py
     adrs:
       - docs:technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md
       - docs:technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md
@@ -983,7 +984,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        organism: e008495ea473fb3d2ca7a3b68af81a1dc0fb7f02
 
   component.organism-experience-ledger:
     kind: component

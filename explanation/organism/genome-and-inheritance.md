@@ -337,24 +337,14 @@ described above.
 
 Each of the three parts can be written to plain data and read back
 (`organism:src/organism/genetics/checkpoint.py`). The genome payload carries
-its hashes and restore checks them; expression restore checks range, and
-germline restore checks whether marks target regulable loci. Tests cover the
-current cognition and genetics genome-checkpoint readers, including rejection
-of missing, invalid and mismatched `genotype_hash` values. This is checkpoint
-codec evidence, not evidence that these records are included in the composed
-portable Organism checkpoint.
-
-Some things the germline reader accepts, each seen in the same run:
-
-- an entry in a list of marks that is not a mapping is skipped without error;
-- the birth expression in the payload replaces the one derived from the
-  genome and the marks, without being compared with it: a payload saying 0.4
-  where the genome and mark give 0.03 was accepted, and the record then
-  reported both numbers, one from each table;
-- acquired marks are accepted in a record whose capture flag is off.
-
-The expression reader likewise accepts a birth value that differs from the
-genome's baseline, as long as it lies in the range.
+its hashes and restore checks them. Germline restore validates mark entries,
+rejects duplicate loci, refuses acquired marks when capture is disabled, and
+checks that persisted birth expression matches the genome and inherited marks.
+Expression restore checks the four adaptive effective parameters against
+inherited ranges, normalizes `exploration_drive`, and requires its birth
+expression to match the genome-derived baseline or the supplied germline
+birth expression. These are codec contracts, not evidence that the records
+are included in the composed portable Organism checkpoint.
 
 The cognition reader
 (`organism:src/organism/cognition/checkpoint.py::restore_genome_checkpoint`)
@@ -364,7 +354,11 @@ tests `test_exported_payload_carries_both_required_genome_hashes`,
 `test_cognition_and_genetics_codecs_both_reject_mismatched_genotype_hash` and
 `test_cognition_and_genetics_codecs_both_reject_missing_genotype_hash` exercise
 that parity. The broader genetics expression and germline behaviors described
-above are not all covered by these tests.
+above have focused restore tests in
+`organism:tests/source_unit/genetics/test_checkpoint.py`, including rejection
+of an in-range but inconsistent expression baseline and acceptance of one
+derived from an inherited mark. These tests exercise restoration, not the
+regulator's broader computation or biological efficacy.
 
 As with the [executive outcome ledger](executive-outcome-ledger.md), what
 matters most is what these payloads are not part of. A search of the
@@ -379,7 +373,7 @@ checkpoint in the repository carries them.
 |---|---|---|
 | Birth | A genome is read from the packaged seed; expression and germline records are derived from it. Nothing in source performs a birth | Code and test for the seed; ad hoc run for the rest |
 | Checkpoint | Each part can be exported; no checkpoint includes any of them | Code and ad hoc run; search of the repository |
-| Restart | Each part can be rebuilt from its export, with the leniencies listed above | Code and ad hoc run |
+| Restart | Each part can be rebuilt from its export subject to the validation described above | Code and focused codec tests |
 | Re-embodiment | Nothing here reacts. One signal is named for embodiment mismatch and one gene is its gain; a caller would have to supply the signal | Code; no operation performs a re-embodiment |
 | Reproduction | A value type is shaped to carry a genome and marks to an offspring. No operation fills it | Code; search of the repository |
 
@@ -431,7 +425,8 @@ establish it.
 |---|---|
 | Shape of the genome, what the reader refuses, the kernel check, key-order independence of the genome hash, absence of body genes, content of the packaged seed | Code and tests in `organism:tests/source_unit/cognition/test_genome.py`, `organism:tests/source_unit/cognition/test_birth.py` and `organism:tests/source_unit/actuation/test_genome_motor_genes.py` |
 | Round trip and refusal of a tampered genome payload | Code and tests in `organism:tests/source_unit/cognition/test_checkpoint.py`, which exercise the reader in the cognition package, not the one in this directory |
-| The regulator's computation and the table of values; frozen updates; the germline record, marks, capture after 64 calls, weakening of marks; the binding counts; the three round trips and what the readers accept; the two hashes under two identifiers; the difference between the two genome readers | Code, and ad hoc runs of the modules at that revision. No test in the repository covers `expression.py`, `germline.py`, `bindings.py`, `schema.py` or `checkpoint.py` of this directory |
+| Expression and germline checkpoint validation, including inconsistent birth-expression rejection and inherited-mark restoration | Code and `organism:tests/source_unit/genetics/test_checkpoint.py`; this is codec evidence, not a test of the regulator's efficacy |
+| The regulator's computation and the table of values; frozen updates; capture after 64 calls and weakening of marks; binding counts; the two hashes under two identifiers; the difference between the two genome readers | Code and ad hoc runs at the reviewed revision. The focused genetics checkpoint tests do not cover those behaviors; no test in the repository covers the regulator's computation, `bindings.py` or `schema.py` behavior described here |
 | No mutation, recombination or reproduction operation; no reader of a gene value or of the expression state outside the directory; no caller of the package type, the capture, the weakening, the binding check or the identifier factory; no reader of the mutation fields of the schema; none of the 18 test names defined; no checkpoint carrying genetic state; no source of randomness or host time | Searches of `src` and `tests` at that revision, made on 2026-10-10, for the names concerned and for imports of random, entropy, clock and identifier modules |
 | That the directory does not demonstrate endogenous reproduction or evolution | The repository's own migration record |
 | What reproduction, heritable allocation and causal entropy must be | Accepted decisions ADR-0082, ADR-0087, ADR-0094, ADR-0108; statements of intent |
@@ -448,6 +443,4 @@ regulator's response is useful, is not supported by anything reviewed here.
   the kernel limits that currently hold similar numbers.
 - Whether three of the five effective values are meant to stay displaced
   when all signals are zero.
-- Whether a restored germline record should be refused when its birth
-  expression disagrees with its genome and marks.
 - Which of the two genome readers is the intended one.
