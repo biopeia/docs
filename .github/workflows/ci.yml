@@ -52,5 +52,5 @@ jobs:
       # References into the domain repositories must resolve; this blocks.
       # Staleness is reported in the job summary and does not block.
       - run: |
-          python tools/validate_registry.py --repos-root "$RUNNER_TEMP/repos" --stale \
+          python tools/validate_registry.py --repos-root "$RUNNER_TEMP/repos" --stale --coverage \
             | tee -a "$GITHUB_STEP_SUMMARY"

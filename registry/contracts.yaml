@@ -24,6 +24,8 @@ contracts:
         role: answers them for a static scene owner
       - unit: component.embodiment-physical-state
         role: takes part in a causal cut but provides neither method; a caller must wrap it
+      - unit: component.embodiment-articulated-body
+        role: takes part in a causal cut but provides neither method; a fixture wraps it under a schema name that exists only there
       - unit: component.lab-operator-material-transfer
         role: supplies the contracts of the owners it composes and of its own evidence checkpoint
     governed_by:
@@ -36,6 +38,7 @@ contracts:
     findings:
       - F-0004
       - F-0021
+      - F-0116
     documented_in:
       - explanation/world/durable-runtime.md
       - explanation/environment/finite-resource.md
@@ -46,17 +49,24 @@ contracts:
     summary: >
       Every owner taking part in a physical step accepts a result only if it
       carries the correlation the owner was told to expect: World, source
-      tick, step, and the owner's own identity and revision. Each domain
-      defines its own correlation type and nothing in code ties them or shows
-      that World authorised them.
+      tick, step, and the owner's own identity and revision. World's
+      coordinator issues one context for the step, with explicit source and
+      target ticks; each domain still defines its own correlation type, and
+      the adapters that derive an owner's correlation from World's context
+      exist only in test fixtures. An owner cannot verify that World
+      authorised what it is handed.
     agreement: fixture_only
     parties:
       - unit: mechanism.physical-causal-step
         role: builds the correlations of one step and passes them to the owners
       - unit: component.environment-static-scene
-        role: adopts a candidate only against the expected correlation
+        role: adopts a candidate only against the expected correlation, for the World it is bound to
+      - unit: component.environment-dynamic-state
+        role: adopts a changed object state against the expected correlation, for the World it is bound to
       - unit: component.embodiment-physical-state
         role: adopts a solver candidate only against the expected correlation, with its own correlation type
+      - unit: component.embodiment-articulated-body
+        role: adopts through its root state, under the same correlation
     governed_by:
       - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
       - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
@@ -217,3 +227,54 @@ contracts:
     documented_in:
       - explanation/lab/body-interoception-transducer.md
       - explanation/modality/current-state.md
+
+  contract.body-physical-input:
+    title: Body physical input to a solver
+    summary: >
+      Embodiment projects a body's state as the input a solver needs. No
+      solver adapter consumes that projection in source: World's fixtures
+      parse the body description and write the solver model by hand, and the
+      projection carries no joint state, so the articulated fixture sets the
+      joint from the restored owner state directly.
+    agreement: fixture_only
+    parties:
+      - unit: mechanism.embodiment-physical-projection
+        role: builds the body physical input
+      - unit: mechanism.physical-causal-step
+        role: consumes it in a test fixture and writes the solver model
+    governed_by:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    evidence:
+      - embodiment:tests/test_physical_projection.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    findings:
+      - F-0115
+      - F-0002
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+      - explanation/world/physical-step.md
+
+  contract.frame-and-unit-conventions:
+    title: Frame and unit conventions between body and scene
+    summary: >
+      A body and the scene it stands in must agree on handedness, the up
+      axis, the reference frame, length unit and quaternion order. Embodiment
+      and Environment each declare these in their own vocabulary and neither
+      imports the other; only a fixture's own check ties the two.
+    agreement: by_convention
+    parties:
+      - unit: mechanism.embodiment-physical-projection
+        role: declares the body's frame, units and orientation convention
+      - unit: component.environment-static-scene
+        role: declares the scene's frame, handedness, up axis and units
+    governed_by:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    evidence:
+      - embodiment:tests/test_physics3d_observation_contract.py
+      - environment:tests/test_static_scene.py
+    findings:
+      - F-0119
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+      - explanation/environment/static-scene.md

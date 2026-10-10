@@ -250,6 +250,17 @@ designs:
         - "observation:tests/test_plane.py"
         - "observation:tests/test_semantic_model.py"
         - "observation:tests/test_projection.py"
+      verified_independently: >
+        The coordinator re-checked this evaluation against observation
+        397c0b4691b5 on 2026-10-09, separately from the agent that wrote it:
+        the three test files pass (44 cases); the authority enumeration has
+        exactly ORGANISM, EMBODIMENT, ENVIRONMENT, WORLD and LAB; no source
+        module of observation imports another domain; among the other
+        repositories only lab's source imports observation, and only its
+        inherited projection; no ObservationPlane is constructed outside
+        observation's own tests; a value mutated by its producer after
+        publication is seen mutated in the plane's current view (F-0041);
+        and a delivery-sequence kind is refused as domain time.
       observed: >
         Evaluated point by point against the observation repository; its
         three test files pass in an extraction of that revision (44 test

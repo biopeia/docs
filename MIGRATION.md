@@ -180,6 +180,28 @@ A registry of cross-domain contracts and a generated reference page were
 added at the same time, and the first explanation that crosses all the
 domains, derived from the unit documents.
 
+### Measuring what is covered
+
+`tools/validate_registry.py --coverage` counts, per domain repository, the
+source modules named by some unit, and lists those named by none. Measured on
+2026-10-09 against the main branches:
+
+| Repository | Source modules | Named by a unit |
+|---|---:|---:|
+| world | 4 | 4 |
+| environment | 5 | 5 |
+| observation | 4 | 4 |
+| lab | 5 | 5 |
+| embodiment | 14 | 8 |
+| organism | 90 | 14 |
+| modality | 0 | 0 |
+
+Modality has no source module at all: its package is an `__init__.py` that
+exports nothing, with one test asserting that. Its unit therefore documents
+everything the repository holds, and a second unit would have nothing to
+describe. That is the real state of the domain, not a gap in documentation;
+the gap is in the code, and is tracked as a finding with an issue.
+
 ### What the staleness check cannot see
 
 The staleness check compares, for each unit, the paths the unit already

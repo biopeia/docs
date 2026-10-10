@@ -27,7 +27,13 @@ findings:
     units:
       - mechanism.physical-causal-step
     summary: >
-      The physical causal step is orchestrated only by test fixtures, of which there are two. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
+      No solver adapter and no domain adapters for the physical causal step
+      exist in source: the solver calls and the projections handed to World's
+      coordinator are written inside two test fixtures. In them the organism
+      checkpoint is a stand-in, the body's physiology is created inside the
+      step, the scene is static and Modality takes no part. As first recorded
+      this finding also said no component orchestrated the step; World added a
+      protocol-driven coordinator, run_physical_step, in world f496422.
     documented_in:
       - explanation/world/physical-step.md
     material: true
@@ -62,8 +68,12 @@ findings:
     documented_in:
       - explanation/world/durable-runtime.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/world/issues/31"
+    disposition: >
+      Resolved in world ba3b38b ("Remove no-op owner recovery receipt"): the
+      receipt type and its construction were removed, and the validation is
+      now the hash comparison and the owner contract's answer only.
 
   F-0005:
     class: performance_concern
@@ -192,13 +202,18 @@ findings:
     observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
     units:
       - component.environment-static-scene
+      - component.environment-dynamic-state
       - mechanism.physical-causal-step
     summary: >
       The static scene owner cannot verify that World authorised a step's
-      correlation, does not bind successive steps to one World, and does not
-      tie its owner identifier to the scene's environment identifier.
-      Environment and Embodiment each define their own PhysicalStepCorrelation
-      type; their agreement for one step is ensured only by whoever builds them.
+      correlation, and does not tie its owner identifier to the scene's
+      environment identifier. Environment and Embodiment each define their own
+      PhysicalStepCorrelation type; their agreement for one step is ensured
+      only by whoever builds them. As first recorded this finding also said
+      the owner did not bind successive steps to one World; that part was
+      fixed in environment 0a9f4fb, which binds an owner to one World, and the
+      correlation class now states that it is not proof of World
+      authorization.
     documented_in:
       - explanation/environment/static-scene.md
     material: true
@@ -236,13 +251,15 @@ findings:
       - explanation/environment/finite-resource.md
       - explanation/environment/resource-geometry.md
     material: false
-    status: accepted
+    status: open
     disposition: >
-      Corrected on review of the projection module. As first recorded this
-      finding said the resource carried no units as if that were an omission.
-      For lengths the code declares relative values and provides the
-      projection, so that part is the stated design. What remains open is
-      only that the quantity has no unit, which no decision record requires.
+      The geometry module explicitly declares relative lengths and requires
+      a caller-supplied scale for projection to metres. The remaining
+      quantity and transfer bound have no declared units. Their intended
+      meaning (including whether they are abstract, dimensionless values or
+      physical quantities) is unresolved; no unit or physical interpretation
+      is inferred here. Define that meaning before treating the contract gap
+      as closed.
 
   F-0016:
     class: implementation_finding
@@ -282,9 +299,11 @@ findings:
     units:
       - component.environment-resource-geometry
     summary: >
-      No consumer of the resource geometry projection exists in the source or
-      tests of any other repository; where a projected resource sphere enters
-      a physical scene is not established by any code.
+      No consumer of the resource geometry projection was found by source
+      search in the inspected Biopeia code snapshots; where a projected
+      resource sphere enters a physical scene is not established by that
+      code. This bounded search does not assert that no external consumer
+      exists.
     documented_in:
       - explanation/environment/resource-geometry.md
     material: false
@@ -663,8 +682,13 @@ findings:
     documented_in:
       - explanation/lab/study-utilities.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/lab/issues/34"
+    disposition: >
+      Resolved in lab PR #36 (commit c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4).
+      Introduced v2 canonical JSON serialization with length-prefixed framing and
+      domain separators for world and config digests, preserving numeric types
+      without separator collisions. Tested in lab:tests/unit/test_digests.py.
 
   F-0065:
     class: evidence_gap
@@ -1038,6 +1062,204 @@ findings:
     documented_in:
       - explanation/organism/action-path.md
       - explanation/organism/executive-outcome-ledger.md
+    material: false
+    status: open
+
+  F-0115:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-articulated-body
+      - mechanism.physical-causal-step
+    summary: >
+      The physical projection given to a solver has no field for joint
+      positions or velocities, so for an articulated body the configuration of
+      the joints does not reach the solver through it; World's articulated
+      fixture sets the hinge from the restored owner state directly. The
+      projection is built from a specification, a pose and two velocities
+      passed separately, not from the body's state, and checks only that
+      correlation and pose name the same body: a correlation naming another
+      World, tick, episode and morphology revision, and velocities unrelated
+      to any state, were accepted.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/32"
+
+  F-0116:
+    class: recovery_durability_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      The digest that binds articulated state and its checkpoint to a
+      morphology covers the generated description only. Contact links,
+      fixed-base flag, surface material, spawn height, structural neighbours
+      and state schema version are not in it, so descriptors of bodies
+      differing in those compare equal and a checkpoint was restored under
+      one of them. A descriptor made by hand with an invented digest is
+      accepted, as the code declares. No checkpoint holds a specification or
+      a descriptor: restoring needs the caller to supply the descriptor
+      again. The articulated state offers no checkpoint digest and no owner
+      validation methods, and its schema name exists only in World's fixture
+      (extends F-0021).
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/33"
+
+  F-0117:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      A body specification and its joint and segment values are not
+      validated. A negative or non-numeric mass, inverted joint limits (until
+      a descriptor is derived), an unknown parent link and a body kind that
+      makes the generated text malformed XML are accepted; a link without a
+      segment silently becomes a point mass of 0.05 and an unreferenced
+      segment is silently dropped. Field names carry no units, and the units
+      of mass, size, torque and damping are stated nowhere; ADR-0073 item 1
+      says public APIs have no implicit units.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0118:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Much of the specification and mechanics modules is read by no code in
+      the seven repositories (search of 2026-10-09): the surface material,
+      fixed-base flag, spawn height, structural neighbours and state schema
+      version of a specification; its ordinal receptor and effector names and
+      counts, which nothing relates to the stable effector identities of the
+      actuation projection; three value types, the ground material and the
+      end-range and solver-tolerance constants. The joint limits written into
+      the description are two degrees narrower at each end than the limits
+      the state enforces, and the tolerance constant takes no part in either.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0119:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+    summary: >
+      The declared pose and joint conventions (metres, right-handed, z up,
+      xyzw, frame names, radians, revision v1) are read by no code except
+      their own test (search of 2026-10-09). The body pose sample accepts any
+      frame names, any contract revision, a free sample kind and value and a
+      negative sample time, and raises an attribute error instead of a value
+      error for a non-text identifier. Checkpoints restate the units as their
+      own text. Environment declares handedness and up axis in a different
+      vocabulary and nothing compares the two. The repository states that the
+      declarations are metadata only.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0120:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-physical-state
+    summary: >
+      The physical duration type is imported by nothing in the seven
+      repositories except its own test (search of 2026-10-09), and its
+      guarantees end at construction: arithmetic returns plain floats and a
+      difference can be negative. No Embodiment value records the physical
+      time a step covers: not the projection, the candidate, the correlation
+      or the state, and the pose's sample time is left unset on adoption. In
+      World's fixtures the step length is a number in the solver model
+      written by the fixture. No host clock is read in the Embodiment source.
+      ADR-0090 requires causal times to be explicit and distinct.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0121:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Joint positions and velocities are stored as given, without conversion
+      to floating point. Two articulated states built with a joint position
+      of 1 and of 1.0 compare equal and encode to different checkpoint bytes,
+      as do 0.0 and -0.0, so equal states can have different hashes in a
+      World cut. A state restored from bytes re-encodes to the same bytes.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0125:
+    class: contract_gap
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner answers the checkpoint validation question
+      World asks of an owner but does not provide the confirmation after a
+      restoration, which the durable World runtime calls during restore and
+      recovery. The static scene owner and the identified resource provide
+      both.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: open
+
+  F-0126:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner adopts any finite position for its object; it
+      judges who a candidate is for and when, not whether what it proposes is
+      admissible.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it demonstrates a bounded state
+      transition contract and does not define environmental laws.
+
+  F-0127:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner has no consumer: no other repository's source
+      or tests use it, so no physical step moves an environmental object.
+    documented_in:
+      - explanation/environment/dynamic-state.md
     material: false
     status: open
 

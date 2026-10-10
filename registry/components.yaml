@@ -518,6 +518,69 @@ components:
     consumers:
       - "the history callback of admission in mechanism.organism-action-path; no code builds that callback at the reviewed revision"
 
+  EMB-ART:
+    coverage_unit: component.embodiment-articulated-body
+    name: "Articulated body specification, active morphology and joint state"
+    authority:
+      owns: "the description of one body's segments, hinge joints and topology, its binding to a body, an embodiment episode and a morphology revision, and the position and velocity of every joint of that body at one World causal tick"
+      may_decide:
+        - "whether a solver candidate names exactly the active joints and keeps each within its declared position range and velocity limit"
+        - "whether checkpoint bytes decode to a state consistent with the active morphology descriptor supplied to it"
+      must_not:
+        - "execute a solver or let a solver change the state"
+        - "coordinate or commit a World causal cut"
+        - "treat the position of a joint in a collection as its identity"
+        - "authenticate the origin of a morphology descriptor"
+    state:
+      owner: embodiment
+      family: embodiment_local
+    # birth, checkpoint and restart are read from the code; restart also needs
+    # the caller to supply the active descriptor again, which no checkpoint
+    # holds (F-0116). For re-embodiment the code has one fact, that a
+    # checkpoint is refused under another episode, revision or description
+    # digest, and no path that creates the successor state. The values for
+    # re-embodiment and reproduction record the intent of ADR-0094 and
+    # ADR-0104, not observed behaviour.
+    lifecycle:
+      birth: initialize
+      checkpoint: preserve
+      restart: preserve
+      reembodiment: reset
+      reproduction: not_inherited
+    inputs:
+      - "a body specification with the body, episode and morphology revision it is active for"
+      - "a solver candidate for root and joints, and the correlation to expect"
+    outputs:
+      - "a textual description of the body and its SHA-256"
+      - "a new articulated state one causal tick later"
+      - "deterministic checkpoint bytes"
+    consumers:
+      - mechanism.embodiment-physical-projection
+      - mechanism.physical-causal-step
+
+  ENV-DYN:
+    coverage_unit: component.environment-dynamic-state
+    name: "Dynamic object state and its owner"
+    authority:
+      owns: "the position of one identified object in the environment, and the record of the last physical step Environment accepted for it"
+      may_decide:
+        - "whether a candidate is for this World, environment, revision, object and frame, and is the next step"
+        - "whether checkpoint bytes are a valid state of this owner under its schema"
+      must_not:
+        - "define environmental laws or judge whether a proposed position is physically admissible"
+        - "solve physics or claim a candidate was calibrated"
+        - "mint the authority of a physical step"
+    state:
+      owner: environment
+      family: environmental_state
+    inputs:
+      - "a candidate object state with a correlation, and the correlation to expect"
+    outputs:
+      - "the object's current state"
+      - "a checkpoint holding the binding, the object state and the last accepted correlation"
+    consumers:
+      - "none found in the source or tests of any other repository at the revision reviewed"
+
   ORG-ACD:
     coverage_unit: component.organism-competence-development
     name: "Competence development engine"

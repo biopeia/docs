@@ -570,3 +570,21 @@ def test_domain_without_declared_dimensions_requires_no_state_block(ws: Workspac
     ws.write()
     errors, _ = ws.validate()
     assert errors == []
+
+
+def test_source_coverage_reports_modules_no_unit_names(ws: Workspace) -> None:
+    (ws.organism / "src" / "organism" / "unnamed.py").write_text("X = 1\n")
+    (ws.organism / "src" / "organism" / "__init__.py").write_text("")
+    report = vr.source_coverage(ws.registry, ws.repos)
+    assert report["organism"] == {
+        "modules": 2,
+        "covered": 1,
+        "uncovered": ["src/organism/unnamed.py"],
+    }
+
+
+def test_source_coverage_counts_a_named_directory(ws: Workspace) -> None:
+    (ws.organism / "src" / "organism" / "other.py").write_text("X = 1\n")
+    ws.data["coverage"]["component.genome"]["implementation"] = ["organism:src/organism"]
+    ws.write()
+    assert vr.source_coverage(ws.registry, ws.repos)["organism"]["uncovered"] == []

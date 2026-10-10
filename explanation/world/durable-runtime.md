@@ -87,23 +87,23 @@ failed registration keeping the previous cut
 
 ## What World checks, and what it trusts
 
-World verifies three things about an owner's checkpoint without understanding
-it: that a file is where the reference says, that its bytes hash to the
-recorded value, and that the owner's own contract, given those exact bytes,
-answers that they are valid
-(`test_world_issues_receipt_only_after_owner_checkpoint_validation`).
+For a causal cut, World verifies the journal snapshot, passes the non-World
+checkpoint references to the configured reference verifier, and then checks
+each owner reference itself: it reads the bytes at the locator, compares their
+SHA-256 with the reference, and asks the registered owner contract to validate
+those bytes for the recorded owner identity and schema version. The owner
+contract and verifier are supplied by the caller; World does not parse or own
+the checkpoint's private schema. There is no per-owner
+`OwnerRecoveryReceipt` created by this validation path. The contract check is
+covered by `test_world_rejects_owner_checkpoint_unless_contract_returns_true`
+in `world:tests/test_durable_runtime.py`.
 
 Everything else is trust. The contract is code supplied by the owner and
 runs in the same process; World cannot tell whether it is honest or whether
 the checkpoint is semantically complete. The repository's own documentation
-states that the owner component is trusted code.
-
-One detail of the implementation is worth stating exactly. After a positive
-answer the runtime constructs a "recovery receipt" from the reference and
-compares it with that same reference. Because the receipt is built from the
-fields it is then compared against, that comparison cannot fail, and the
-receipt is neither stored nor returned. The effective checks are the hash and
-the contract's answer. Confirmed by running the module.
+states that the owner component is trusted code. These checks are not a
+cryptographic attestation by the owner and do not demonstrate resistance to a
+malicious or defective adapter.
 
 ## After a failure
 
@@ -122,8 +122,11 @@ Recovery (`DurableWorldRuntime.recover_previous_cut`) is explicit and is
 delegated: World verifies the previous cut's references, calls a restorer
 supplied by the caller to put the owners back, asks each owner's contract to
 confirm the restoration, verifies the references again, and only then has the
-manifest store write a receipt and republish the previous cut. If the
-restoration cannot be confirmed the World stays in recovery
+manifest store write an immutable rollback-operation receipt and republish
+the previous cut. This receipt records the World, transition, restored tick,
+and hashes of the pending and recovered manifests; it is distinct from
+checkpoint validation and is not an owner attestation. If the restoration
+cannot be confirmed the World stays in recovery
 (`test_explicit_recovery_restores_prior_cut_through_owner_and_records_receipt`,
 `test_failed_owner_recovery_keeps_recovery_required_manifest`). The code
 requires the restorer to be safe to retry.
@@ -169,9 +172,9 @@ the caller.
 
 | Claim | Support |
 |---|---|
-| Genesis as authoritative input; order of publication; roster and presence changes; contract required for new owners; validation of owner bytes before acceptance; restore and explicit recovery; refusal when restoration cannot be confirmed | Code and tests in `world:tests/test_durable_runtime.py` |
+| Genesis as authoritative input; order of publication; roster and presence changes; contract required for new owners; validation of owner bytes before acceptance; restore and explicit recovery; refusal when restoration cannot be confirmed | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `9da5ecce209e66d955627cff1b57c58080683fa9` |
 | An end-to-end tick with real owners from the other repositories | `world:tests/integration`, run by that repository's integration job in CI at pinned revisions |
-| A roster error before the transition opens leaves the runtime usable; a failure after the callback leaves an unreferenced owner checkpoint; the receipt comparison cannot fail | Code, and one ad hoc run of the module at that revision |
+| A roster error before the transition opens leaves the runtime usable; a failure after the callback can leave an unreferenced owner checkpoint | Code and tests in `world:tests/test_durable_runtime.py` at Biopeia World `9da5ecce209e66d955627cff1b57c58080683fa9`; this does not imply automatic cleanup |
 | The limits listed above | Code and its documentation; they are statements of what is not provided, not results |
 
 No crash, power-loss or concurrent-process test was examined, and none
@@ -182,6 +185,4 @@ appears to exist in the repository.
 - What should enforce the single logical writer, if anything in World should.
 - Whether unreferenced owner checkpoints and journal snapshots left by failed
   transitions are to be cleaned, and by whom.
-- Whether the receipt is intended to become a durable artefact; as written it
-  has no effect.
 - What would count as evidence of crash consistency for this protocol.
