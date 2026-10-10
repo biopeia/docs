@@ -20,6 +20,7 @@ MANIFEST = ROOT / "publication" / "biopeia-master.yaml"
 # Sections rendered from the registry; projection.py holds one renderer each.
 GENERATED_SECTIONS = (
     "reader-guide",
+    "authority-map",
     "domains",
     "contracts",
     "contract-catalog",

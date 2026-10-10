@@ -110,6 +110,27 @@ and the end of a lineage are seven different events. A body that is no longer
 viable ends that body, not by that fact the Organism
 ([ADR-0088](../../technical/adr/ADR-0088-lifecycle-event-ontology.md)).
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+stateDiagram-v2
+  direction LR
+  [*] --> Embodied
+  Embodied --> Dormant: body death
+  Dormant --> Embodied: re-embodiment
+  Embodied --> Dead: Organism death
+  Dormant --> Dead: Organism death
+  Dead --> [*]
+```
+
+The Organism through the death of a body, as decided in ADR-0088. Embodied:
+in one body, for one episode. Dormant: the same Organism with no active body.
+Dead: the identity cannot resume. Not every
+body death is recoverable, and Organism death is resolved under an explicit
+contract; World may not infer it from a body dying, a process stopping, a
+missing checkpoint or an administrative removal. The end of a presence in a
+World, the death of an offspring and the end of a lineage are further,
+separate events that the diagram leaves out.
+
 ### Everything shared happens in a World
 
 Every embodied Organism that is causally active takes part in a World, even
@@ -154,6 +175,27 @@ aggregate, visualise and record, and it has no authority to change the causal
 state it observes (ADR-0078). Projecting state at run time, carrying and
 presenting it, and keeping durable scientific evidence are three separate
 things; the last belongs to the scientific apparatus (ADR-0100).
+
+```mermaid
+%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%
+flowchart TB
+  operator["Operator control"]
+  owners["Authorities"]
+  observation["Observation"]
+  presentation["Presentation"]
+  lab["Lab"]
+  operator -->|"explicit request"| owners
+  owners -->|"projections"| observation
+  observation -->|"facts"| presentation
+  observation -->|"facts"| lab
+```
+
+How looking and intervening are kept apart, as decided in ADR-0078, ADR-0100
+and ADR-0101. The authorities are Organism, Embodiment, Environment and
+World; each projects its own state. Observation is passive, and Lab keeps
+the durable evidence. No arrow leaves Observation towards an authority: a
+request to pause, step or inject is operator control, goes to the authority
+concerned, and World validates and commits it.
 
 ### Reproduction belongs to life
 

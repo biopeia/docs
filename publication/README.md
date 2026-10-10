@@ -66,6 +66,18 @@ edition allows none, which is why its build clones the domain repositories
 with their history. The Biopeia repositories are private, so the links open
 only for a reader with access; the reader guide says so.
 
+## Diagrams
+
+A diagram is Mermaid text, versioned like any other source, and rendered by
+one pinned version of mermaid-cli; nothing is drawn by hand into a published
+file. There are two kinds. The map of authorities and contracts is generated
+from the registry on every build. The others are written in the documents
+that explain a decision (the ten decided steps, the Organism through the
+death of a body, looking and intervening), restate that decision and say so
+in their caption. A build renders each diagram and fails if one does not
+compile; a projection-only check (`--no-pdf`) assembles the document without
+rendering them.
+
 ## Editions
 
 A build is a **working edition** unless it is built with `--release`. A

@@ -98,8 +98,10 @@ def test_markdown_unclosed_fence_is_an_error():
 
 def test_real_publication_builds_a_sound_deterministic_package():
     projection = build_projection()
-    first, toc = build_docx(projection)
-    assert build_docx(projection)[0] == first
+    first, toc = build_docx(projection, render_diagram=mermaid.placeholder)
+    assert build_docx(projection, render_diagram=mermaid.placeholder)[0] == first
+    diagrams = sum(c["markdown"].count("```mermaid") for s in projection["sections"] for c in s["chapters"])
+    assert diagrams >= 4 and len([n for n in zipfile.ZipFile(io.BytesIO(first)).namelist() if "diagram-" in n]) == diagrams
     assert qa.check_docx(first) == []
     # Every chapter of a part is listed; elsewhere a lone chapter is its section.
     chapters = sum(
@@ -392,6 +394,7 @@ def test_diagram_is_embedded_and_scaled_to_the_page():
 
 
 def test_diagram_without_renderer_fails_closed(monkeypatch):
+    mermaid.render.cache_clear()
     monkeypatch.setattr(mermaid.shutil, "which", lambda name: None)
     with pytest.raises(mermaid.MermaidError, match="not installed"):
         build_docx(small(chapter("explanation/w/a.md", "```mermaid\ngraph TD; A-->B\n```\n")))
@@ -417,6 +420,19 @@ def test_check_docx_reports_damage():
 def test_pinned_mermaid_renders_a_png():
     width, height = mermaid.png_size(mermaid.render("graph TD\n  A[World] --> B[Organism]\n"))
     assert width > 0 and height > 0
+
+
+@pytest.mark.skipif(not mermaid.available(), reason="mmdc (mermaid-cli) is not installed; publication.yml installs it")
+def test_every_diagram_of_the_corpus_renders_and_renders_the_same_twice():
+    sources = [
+        block["text"]
+        for section in build_projection()["sections"] for c in section["chapters"]
+        for block in markdown.parse(c["markdown"]) if block["type"] == "code" and block["language"] == "mermaid"
+    ]
+    assert len(sources) >= 4
+    for source in sources:
+        uncached = mermaid.render.__wrapped__
+        assert uncached(source) == uncached(source)
 
 
 def test_style_file_is_validated(tmp_path):

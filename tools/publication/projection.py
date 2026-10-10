@@ -153,6 +153,42 @@ def gen_reader_guide(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, li
     return "Reader guide", "publication/biopeia-master.yaml", body
 
 
+def gen_authority_map(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
+    """A diagram of the seven areas by nature, joined where a registered contract binds two of them."""
+    units, domains = reg["coverage"], reg["schema"]["domains"]
+    groups = {"semantic-authority": "Semantic authorities", "capability": "Capabilities", "apparatus": "Apparatus"}
+    order = list(domains)
+    lines = ["%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%", "flowchart LR"]
+    for nature, label in groups.items():
+        lines.append(f'  subgraph {nature.replace("-", "_")}["{label}"]')
+        lines += [f'    {d}["{d.capitalize()}"]' for d, spec in domains.items() if spec["nature"] == nature]
+        lines.append("  end")
+    joined: dict[tuple[str, str], list[str]] = {}
+    legend = []
+    for number, contract in enumerate(reg["contracts"].values(), start=1):
+        parties = list(dict.fromkeys(
+            units[p["unit"]]["owner_domain"] for p in contract["parties"] if p["unit"] in units))
+        legend.append([number, contract["title"], contract["agreement"], ", ".join(parties)])
+        # The first party is the one that defines or drives the contract; it is joined to each other.
+        for other in parties[1:]:
+            pair = tuple(sorted((parties[0], other), key=order.index))
+            joined.setdefault(pair, []).append(str(number))
+    lines += [f'  {a} ---|"{", ".join(numbers)}"| {b}' for (a, b), numbers in joined.items()]
+    body = [
+        "Generated from `registry/schema.yaml` and `registry/contracts.yaml`. The boxes are the",
+        "seven areas, grouped by what each is. A line joins two areas where a registered",
+        "cross-domain contract binds them; its numbers are those of the table below. The",
+        "diagram shows what the registry records, not what runs.",
+        "",
+        "```mermaid",
+        *lines,
+        "```",
+        "",
+        *table(["No.", "Contract", "How the sides are bound", "Areas"], legend),
+    ]
+    return "Map of authorities and contracts", "registry/contracts.yaml", body
+
+
 def gen_domains(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:
     units = reg["coverage"]
     rows = []
@@ -353,6 +389,7 @@ def gen_designs(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[st
 
 
 GENERATORS = {
+    "authority-map": gen_authority_map,
     "reader-guide": gen_reader_guide,
     "domains": gen_domains,
     "contracts": gen_contracts,

@@ -78,11 +78,17 @@ def build(
     edition = "published" if release else "working"
     projection_json = projection_bytes(projection)
     style = load_style()
-    draft, toc = build_docx(projection, edition=edition, style=style)
+    if with_pdf and pdf.soffice() is None:
+        # Said first: without it nothing that follows can produce a publication.
+        raise pdf.PdfError("LibreOffice (soffice) is needed to render the PDF and is not installed")
+    # A projection-only check assembles the document without rendering diagrams,
+    # so that it needs neither LibreOffice nor mermaid-cli.
+    render = mermaid.render if with_pdf else mermaid.placeholder
+    draft, toc = build_docx(projection, edition=edition, style=style, render_diagram=render)
     require(qa.check_docx(draft), "the DOCX package is malformed")
     if check:
         again = build_projection(manifest_path=manifest, repos_root=repos_root)
-        if projection_bytes(again) != projection_json or build_docx(again, edition=edition, style=style)[0] != draft:
+        if projection_bytes(again) != projection_json or build_docx(again, edition=edition, style=style, render_diagram=render)[0] != draft:
             raise QualityError("two builds from the same sources differ")
 
     publication = projection["publication"]
@@ -107,7 +113,7 @@ def build(
         substitutions = font_substitutions(style)
         first_pdf = pdf.convert(draft, substitutions)
         first = pdf.locate(toc, pdf.destinations(first_pdf))
-        final, _ = build_docx(projection, pages=first, edition=edition, style=style)
+        final, _ = build_docx(projection, pages=first, edition=edition, style=style, render_diagram=render)
         require(qa.check_docx(final), "the final DOCX package is malformed")
         rendered = pdf.convert(final, substitutions)
         first_pages, final_pages = pdf.page_texts(first_pdf), pdf.page_texts(rendered)
