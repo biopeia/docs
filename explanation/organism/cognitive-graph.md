@@ -113,7 +113,7 @@ run in which every case below was constructed.
 | Edge kind `gating` | Multiplicative factor, as above. |
 | Edge kinds `excitatory`, `inhibitory`, `predictive` | Identical. Each adds weight times source value. An edge of kind `inhibitory` with weight +1 raised its target exactly as an `excitatory` one did; whether an edge inhibits is decided by the sign of its weight alone. |
 | `tau` | A divisor inside the `tanh`. It is not a time constant: a node keeps no value between passes that could decay. |
-| `plasticity`, `stable_ticks` on an edge | Validated, stored and saved. No function in the package reads `plasticity` or writes `stable_ticks` (search of `organism:src` for both names, 2026-10-09). |
+| `plasticity`, `stable_ticks` on an edge | Validated, stored and saved. No activation or update function uses `plasticity`, and nothing writes `stable_ticks` (search of `organism:src` for both names, 2026-10-09). |
 | The tick | Copied into the frame. It does not enter the arithmetic. |
 
 A node of kind `gate` and the constant `GATE_RANGE` are declared and nothing

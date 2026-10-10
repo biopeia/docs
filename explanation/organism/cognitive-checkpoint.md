@@ -114,7 +114,8 @@ advanced one more tick on the same input.
 Saving a restored checkpoint again gives the same bytes, so the loss happens
 once. The transition state survives exactly; the test in the World repository
 that restores this payload after a committed tick compares the state and does
-not compare the graph.
+not compare the graph. Its one edge has weight 0.75, which is one of the 17
+levels, so that fixture would not show the rounding in any case.
 
 Two things follow, stated as facts and not as judgments.
 
