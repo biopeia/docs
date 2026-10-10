@@ -23,6 +23,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from model import MANIFEST, ManifestError, load_manifest, sections  # noqa: E402
+from references import GITHUB, ReferenceError, Resolver  # noqa: E402
 from validate_registry import (  # noqa: E402
     ROOT,
     as_list,
@@ -107,6 +108,11 @@ def gen_reader_guide(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, li
         "  reviewed against. What it states holds for that revision.",
         "- Chapters describe what exists in code, and say so when something is only",
         "  decided, or only exercised by a test.",
+        "- A reference to code, a test, a commit, a decision record or an issue is a link",
+        "  to GitHub. Code is linked at the revision the chapter was reviewed against, so",
+        "  a link shows the code the text describes, not today's. The Biopeia",
+        "  repositories are private: the links open only for a reader with access.",
+        "- A component identifier is a link to its sheet in the component catalog.",
         "",
         "## Words that carry a state",
         "",
@@ -428,6 +434,8 @@ def build_projection(
         raise ProjectionError(f"publication manifest is not publishable:\n{exc}") from exc
     reg = {**load_registry(registry_dir), "manifest": manifest}
 
+    found = sources(reg, docs_root, repos_root)
+    resolver = Resolver(reg, docs_root, repos_root, found)
     out_sections = []
     for section in sections(manifest):
         chapters = []
@@ -437,6 +445,13 @@ def build_projection(
                 chapters += [chapter_from_document(rel, docs_root) for rel in section["chapters"] or []]
             elif key == "generated":
                 chapters += [chapter_generated(name, reg, docs_root) for name in section["generated"] or []]
+        for chapter in chapters:
+            basis = resolver.basis_of(None if chapter["generated"] else chapter["source"])
+            try:
+                chapter["references"] = resolver.chapter(chapter["markdown"], basis)
+                chapter["source_url"] = resolver.blob("docs", chapter["source"].rstrip("/"), {})
+            except ReferenceError as exc:
+                raise ProjectionError(f"{chapter['source']}: {exc}") from exc
         out_sections.append(
             {"id": section["id"], "title": section["title"], "group": section["group"], "chapters": chapters}
         )
@@ -460,7 +475,16 @@ def build_projection(
         "schema_version": PROJECTION_SCHEMA,
         "publication": manifest["publication"],
         "inventory": inventory,
-        "sources": (found := sources(reg, docs_root, repos_root)),
+        "sources": found,
+        # Where links lead and how many could be checked against a checkout.
+        "links": {
+            "github": GITHUB,
+            "docs_tree": f"{GITHUB}/docs/blob/{found['docs']['revision']}/" if found["docs"]["revision"] else None,
+            "components": sorted(reg["components"]),
+            **{key: resolver.stats[key] for key in
+               ("verified", "unverified", "at_build_revision", "without_revision", "symbol_not_located",
+                "tests_not_located")},
+        },
         "release": release_of(found["docs"]),
         "registry_digest": registry_digest(registry_dir),
         "sections": out_sections,

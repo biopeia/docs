@@ -207,6 +207,68 @@ def test_logo_is_a_file_of_this_repository():
     assert logo.is_file() and ROOT in logo.resolve().parents
 
 
+def linked(xml: str, data: bytes) -> dict[str, str]:
+    """Text of every external link of a document, by the address it leads to."""
+    rels = zipfile.ZipFile(io.BytesIO(data)).read("word/_rels/document.xml.rels").decode("utf-8")
+    targets = dict(re.findall(r'Id="(rId\d+)" Type="[^"]+/hyperlink" Target="([^"]+)"', rels))
+    out = {}
+    for rid, inner in re.findall(r'<w:hyperlink r:id="(rId\d+)">(.*?)</w:hyperlink>', xml):
+        out["".join(re.findall(r">([^<]*)</w:t>", inner)).replace("\u200b", "")] = targets[rid].replace("&amp;", "&")
+    return out
+
+
+def test_references_become_links_to_github():
+    text = "See `world:src/world/journal.py::CausalJournal`, finding F-0001, ADR-0107 and `not.a.reference`.\n"
+    one = chapter("explanation/w/a.md", text)
+    one["references"] = {
+        "world:src/world/journal.py::CausalJournal": {"url": "https://github.com/biopeia/world/blob/abc/src/world/journal.py#L9"},
+        "F-0001": {"url": "https://github.com/biopeia/world/issues/28"},
+        "ADR-0107": {"url": "https://github.com/biopeia/docs/blob/abc/technical/adr/ADR-0107-journal-role.md"},
+    }
+    one["source_url"] = "https://github.com/biopeia/docs/blob/abc/explanation/w/a.md"
+    data, _ = build_docx(small(one))
+    xml = document_xml(data)
+    links = linked(xml, data)
+    assert links["world:src/world/journal.py::CausalJournal"].endswith("journal.py#L9")
+    assert links["F-0001"].endswith("/world/issues/28") and links["ADR-0107"].endswith("ADR-0107-journal-role.md")
+    assert links["explanation/w/a.md"] == one["source_url"]
+    assert "not.a.reference" not in links and 'w:val="CodeLink"' in xml
+    assert qa.check_docx(data) == []
+
+
+def test_component_identifier_links_to_its_sheet_and_anchor_links_to_its_section():
+    reader = chapter("explanation/w/a.md", "It uses `WLD-JRN`. See [why](b.md#why-it-exists) and [here](#local-part).\n\n## Local part\n\nText.\n")
+    reader["references"] = {"WLD-JRN": {"component": "WLD-JRN"}}
+    other = chapter("explanation/w/b.md", "## Why it exists\n\nBecause.\n")
+    projection = small(reader, other)
+    catalog = {**chapter("registry/components.yaml", "### `WLD-JRN` — journal\n\nSheet.\n"), "generated": True}
+    projection["sections"][1] = {"id": "app", "title": "Catalog", "group": "appendices", "chapters": [catalog]}
+    projection["links"] = {"components": ["WLD-JRN"], "github": "https://github.com/biopeia", "docs_tree": None}
+    data, _ = build_docx(projection)
+    xml = document_xml(data)
+    names = dict(re.findall(r'w:name="(h\d+)"/>(?:<w:r>.*?</w:r>)*?<w:r>(?:<w:rPr>.*?</w:rPr>)?<w:t xml:space="preserve">([^<]+)<', xml))
+    by_text = {text: name for name, text in names.items()}
+    assert f'w:anchor="{by_text["WLD-JRN"]}"' in xml          # the mention in prose
+    assert f'w:anchor="{by_text["Why it exists"]}"' in xml     # a section of another chapter
+    assert f'w:anchor="{by_text["Local part"]}"' in xml        # a section of the same chapter
+    assert qa.check_docx(data) == []
+
+
+def test_link_to_a_document_outside_the_publication_goes_to_github():
+    one = chapter("explanation/w/a.md", "See [the decision](../../technical/adr/ADR-0107-journal-role.md).\n")
+    projection = {**small(one), "links": {"docs_tree": "https://github.com/biopeia/docs/blob/abc/", "components": []}}
+    data, _ = build_docx(projection)
+    assert linked(document_xml(data), data)["the decision"] == (
+        "https://github.com/biopeia/docs/blob/abc/technical/adr/ADR-0107-journal-role.md")
+
+
+def test_document_carries_title_subject_and_the_date_of_its_sources():
+    data, _ = build_docx(small(chapter("explanation/w/a.md", "A.\n")), edition="published")
+    core = zipfile.ZipFile(io.BytesIO(data)).read("docProps/core.xml").decode("utf-8")
+    assert "<dc:title>P — S</dc:title>" in core and "Published edition · Release 2026.01.02-abcdef0" in core
+    assert "2026-01-02T00:00:00Z" in core and qa.check_docx(data) == []
+
+
 def test_identifier_in_a_heading_keeps_the_technical_typeface():
     xml = document_xml(build_docx(small(chapter("explanation/w/a.md", "## `WLD-JRN` — journal\n")))[0])
     heading = xml[xml.index('w:val="Heading3"'):]

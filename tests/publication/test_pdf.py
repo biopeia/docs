@@ -81,6 +81,12 @@ def test_published_edition_refuses_unresolved_or_modified_sources(tmp_path, caps
     assert publish.unclean_sources(sources) == ["world: has local modifications"]
 
 
+def test_published_edition_refuses_links_it_could_not_check(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(publish, "unclean_sources", lambda sources: [])
+    assert publish.main(["--no-pdf", "--release", "--output", str(tmp_path)]) == 1
+    assert "links to code could not be checked" in capsys.readouterr().out
+
+
 def test_build_without_libreoffice_fails_closed(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(pdf, "soffice", lambda: None)
     assert publish.main(["--output", str(tmp_path)]) == 1
@@ -114,5 +120,9 @@ def test_full_build_has_real_page_numbers_and_a_truthful_manifest(tmp_path):
     assert "\u200b" not in "".join(pages)
     assert "Page 1 of" not in pages[0] and f"Page 2 of {len(pages)}" in pages[1]
     assert record["release"]["id"] in pages[1]
+    assert pdf.has_outline(rendered)
+    assert pdf.properties(rendered)["Title"].startswith("Biopeia")
+    # No domain checkout beside this build: links to code are made but not checked.
+    assert record["links"]["unverified"] > 0 and record["links"]["verified"] > 0
     logo = record["style"]["logo"]
     assert hashlib.sha256((ROOT / logo["path"]).read_bytes()).hexdigest() == logo["sha256"]

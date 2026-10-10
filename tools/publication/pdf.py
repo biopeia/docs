@@ -41,7 +41,10 @@ def tool_versions() -> dict[str, str]:
 # read back. Images are kept lossless: JPEG turns the white of the mark and of
 # a diagram into an off-white box on the page.
 EXPORT_FILTER = ('pdf:writer_pdf_Export:{"ExportBookmarksToPDFDestination":{"type":"boolean","value":"true"},'
-                 '"UseLosslessCompression":{"type":"boolean","value":"true"}}')
+                 '"UseLosslessCompression":{"type":"boolean","value":"true"},'
+                 # The outline of parts and chapters, shown when the file is opened.
+                 '"ExportBookmarks":{"type":"boolean","value":"true"},'
+                 '"InitialView":{"type":"long","value":"1"}}')
 
 
 def _substitution_settings(substitutions: dict[str, str]) -> str:
@@ -115,6 +118,16 @@ def destinations(pdf: bytes) -> dict[str, int]:
         if match:
             out[match.group(2)] = int(match.group(1))
     return out
+
+
+def properties(pdf: bytes) -> dict[str, str]:
+    """Document properties of the PDF (Title, Subject, Author...)."""
+    lines = _poppler("pdfinfo", pdf).decode("utf-8", "replace").splitlines()
+    return {key.strip(): value.strip() for key, _, value in (line.partition(":") for line in lines) if value.strip()}
+
+
+def has_outline(pdf: bytes) -> bool:
+    return b"/Outlines" in pdf
 
 
 def fonts_used(pdf: bytes) -> list[str]:

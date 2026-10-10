@@ -45,6 +45,27 @@ never fetches the mark from anywhere, and the build manifest records the
 hash of the file and of `style.yaml`, so a past build keeps its identity
 whatever changes elsewhere. The accent colour is the mark's dark blue.
 
+## Links
+
+A reference in a chapter becomes a link (`tools/publication/references.py`):
+
+- code (`world:src/world/journal.py`), with the line when it names a symbol
+  (`…::CausalJournal`), cited tests, commits, the source line of each
+  chapter, decision records, designs, findings that have an issue, and
+  issues, to GitHub;
+- a component identifier to its sheet in the catalog, and a link with an
+  anchor to that section, inside the document.
+
+Code is linked at the revision the chapter was reviewed against
+(`review.basis` in the registry), because that is the code the text
+describes. A file that did not exist then is linked at the revision of the
+build. Every link is checked against the local checkouts, without network:
+a reference that exists at neither revision fails the build. Without a
+checkout a link is still made and counted as unverified; a published
+edition allows none, which is why its build clones the domain repositories
+with their history. The Biopeia repositories are private, so the links open
+only for a reader with access; the reader guide says so.
+
 ## Editions
 
 A build is a **working edition** unless it is built with `--release`. A

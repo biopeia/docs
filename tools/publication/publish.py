@@ -72,6 +72,9 @@ def build(
     projection = build_projection(manifest_path=manifest, repos_root=repos_root)
     if release:
         require(unclean_sources(projection["sources"]), "a published edition needs every source at a clean revision")
+        unchecked = projection["links"]["unverified"] + projection["links"]["without_revision"]
+        require([f"{unchecked} links to code could not be checked against a checkout"] if unchecked else [],
+                "a published edition needs every link verified")
     edition = "published" if release else "working"
     projection_json = projection_bytes(projection)
     style = load_style()
@@ -91,6 +94,7 @@ def build(
         "revision": projection["sources"]["docs"]["revision"],
         "sources": projection["sources"],
         "registry_digest": projection["registry_digest"],
+        "links": {key: value for key, value in projection["links"].items() if isinstance(value, int)},
         "projection_digest": sha256(projection_json),
         "tools": {"mermaid_cli_pinned": mermaid.PINNED_VERSION},
         # What gave the build its look: the style file and the mark it names.
@@ -111,6 +115,11 @@ def build(
             qa.check_pagination(toc, first, pdf.locate(toc, pdf.destinations(rendered)), len(first_pages), len(final_pages)),
             "the contents list does not match the rendered pages",
         )
+        require([] if pdf.has_outline(rendered) else ["the PDF has no outline of parts and chapters"],
+                "the PDF cannot be navigated")
+        title = pdf.properties(rendered).get("Title", "")
+        require([] if publication["title"] in title else [f"the PDF title is {title!r}"],
+                "the PDF does not carry the publication's title")
         used = pdf.fonts_used(rendered)
         require(qa.check_fonts(used, [font["fallback"] for font in style["fonts"].values()]),
                 "the PDF is not set in the typefaces of the style")
