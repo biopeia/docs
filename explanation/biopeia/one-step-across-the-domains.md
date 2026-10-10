@@ -38,8 +38,10 @@ because it is the main result.
 | Lab records evidence | Source code, for an operator's transfer only | [operator material transfer](../lab/operator-material-transfer.md) |
 
 Read down the middle column. The pieces owned by a single domain exist. What
-connects one domain to the next mostly does not exist outside tests. There is
-no component, in any repository, that runs this chain.
+connects one domain to the next mostly does not exist outside tests. World
+has a coordinator that sequences projection, solving, adoption and commit for
+one physical step, but the adapters it is given, and the solver, are written
+inside test fixtures; nothing in any repository runs the whole chain.
 
 ## Link by link
 

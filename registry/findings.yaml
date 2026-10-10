@@ -27,7 +27,13 @@ findings:
     units:
       - mechanism.physical-causal-step
     summary: >
-      The physical causal step is orchestrated only by test fixtures, of which there are two. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
+      No solver adapter and no domain adapters for the physical causal step
+      exist in source: the solver calls and the projections handed to World's
+      coordinator are written inside two test fixtures. In them the organism
+      checkpoint is a stand-in, the body's physiology is created inside the
+      step, the scene is static and Modality takes no part. As first recorded
+      this finding also said no component orchestrated the step; World added a
+      protocol-driven coordinator, run_physical_step, in world f496422.
     documented_in:
       - explanation/world/physical-step.md
     material: true
@@ -62,8 +68,12 @@ findings:
     documented_in:
       - explanation/world/durable-runtime.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/world/issues/31"
+    disposition: >
+      Resolved in world ba3b38b ("Remove no-op owner recovery receipt"): the
+      receipt type and its construction were removed, and the validation is
+      now the hash comparison and the owner contract's answer only.
 
   F-0005:
     class: performance_concern
@@ -192,13 +202,18 @@ findings:
     observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
     units:
       - component.environment-static-scene
+      - component.environment-dynamic-state
       - mechanism.physical-causal-step
     summary: >
       The static scene owner cannot verify that World authorised a step's
-      correlation, does not bind successive steps to one World, and does not
-      tie its owner identifier to the scene's environment identifier.
-      Environment and Embodiment each define their own PhysicalStepCorrelation
-      type; their agreement for one step is ensured only by whoever builds them.
+      correlation, and does not tie its owner identifier to the scene's
+      environment identifier. Environment and Embodiment each define their own
+      PhysicalStepCorrelation type; their agreement for one step is ensured
+      only by whoever builds them. As first recorded this finding also said
+      the owner did not bind successive steps to one World; that part was
+      fixed in environment 0a9f4fb, which binds an owner to one World, and the
+      correlation class now states that it is not proof of World
+      authorization.
     documented_in:
       - explanation/environment/static-scene.md
     material: true
@@ -1196,5 +1211,54 @@ findings:
       World cut. A state restored from bytes re-encodes to the same bytes.
     documented_in:
       - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0125:
+    class: contract_gap
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner answers the checkpoint validation question
+      World asks of an owner but does not provide the confirmation after a
+      restoration, which the durable World runtime calls during restore and
+      recovery. The static scene owner and the identified resource provide
+      both.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: open
+
+  F-0126:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner adopts any finite position for its object; it
+      judges who a candidate is for and when, not whether what it proposes is
+      admissible.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it demonstrates a bounded state
+      transition contract and does not define environmental laws.
+
+  F-0127:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner has no consumer: no other repository's source
+      or tests use it, so no physical step moves an environmental object.
+    documented_in:
+      - explanation/environment/dynamic-state.md
     material: false
     status: open
