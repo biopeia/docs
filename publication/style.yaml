@@ -48,6 +48,12 @@ sizes:
   meta: 8
   kicker: 9
 
+# Whether each chapter opens a new page. When false, chapters follow one
+# another inside their part and only parts open a page: fewer pages that hold
+# the last two lines of a chapter and nothing else.
+layout:
+  chapter_starts_page: false
+
 logo:
   path: publication/assets/biopeia-logo.png
   width_mm: 26
@@ -56,8 +62,8 @@ logo:
 # (running header and footer left out). A page under `blank_page_chars` fails
 # the build. A page under `sparse_page_chars` is reported in the build
 # manifest, and the build fails when more than `max_sparse_share` of the
-# pages are sparse.
+# pages are sparse. The fullest page is reported too.
 qa:
-  blank_page_chars: 15
+  blank_page_chars: 60
   sparse_page_chars: 400
   max_sparse_share: 0.10

@@ -34,13 +34,14 @@ def test_locate_reads_pages_from_destinations_and_fails_when_one_is_missing():
 
 
 def test_density_check_fails_on_an_empty_page_and_reports_sparse_ones():
-    limits = {"blank_page_chars": 15, "sparse_page_chars": 400, "max_sparse_share": 0.5}
+    limits = {"blank_page_chars": 60, "sparse_page_chars": 400, "max_sparse_share": 0.5}
     furniture = "Biopeia\nPart I\n{}\nWorking edition\nPage 1 of 4\n"
-    pages = ["cover", furniture.format("x" * 900), furniture.format("one last line of a chapter"), furniture.format("")]
+    pages = ["cover", furniture.format("x" * 900), furniture.format("y" * 200), furniture.format("one orphaned line of a chapter")]
     problems, sparse = qa.check_density(pages, limits)
     assert problems == ["page 4 is empty or nearly so"] and sparse == [3, 4]
     problems, _ = qa.check_density(pages[:3], {**limits, "max_sparse_share": 0.1})
     assert problems == ["1 of 3 pages are sparse, more than the 10% allowed"]
+    assert qa.body_characters(pages) == [0, 900, 200, 25]
 
 
 def test_font_check_reports_a_typeface_the_style_does_not_name():

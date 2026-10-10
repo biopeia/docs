@@ -101,7 +101,8 @@ def test_real_publication_builds_a_sound_deterministic_package():
     first, toc = build_docx(projection)
     assert build_docx(projection)[0] == first
     assert qa.check_docx(first) == []
-    chapters = sum(len(s["chapters"]) for s in projection["sections"] if s["group"] == "parts")
+    # Every chapter of a part is listed; elsewhere a lone chapter is its section.
+    chapters = sum(len(s["chapters"]) for s in projection["sections"] if s["group"] == "parts" or len(s["chapters"]) > 1)
     assert len(toc) == len(projection["sections"]) + chapters
     assert [e["level"] for e in toc[:3]] == [1, 1, 2]  # reader guide, Part I, its first chapter
     assert len({e["bookmark"] for e in toc}) == len(toc)
@@ -173,6 +174,20 @@ def test_long_identifiers_break_after_separators_only():
     assert xml.count("<w:r><w:t>\u200b</w:t></w:r>") >= 5 and ">short.py<" in xml
     assert breakable("a/b") == "a/b"
     assert breakable("explanation/organism/x.md") == "explanation/\u200borganism/\u200bx.\u200bmd"
+
+
+def test_identifier_in_a_heading_keeps_the_technical_typeface():
+    xml = document_xml(build_docx(small(chapter("explanation/w/a.md", "## `WLD-JRN` — journal\n")))[0])
+    heading = xml[xml.index('w:val="Heading3"'):]
+    assert '<w:rStyle w:val="CodeChar"/>' in heading[: heading.index("</w:p>")]
+
+
+def test_chapters_follow_on_or_open_a_page_as_the_style_says():
+    projection = small(chapter("explanation/w/a.md", "A.\n"), chapter("explanation/w/b.md", "B.\n"))
+    style = load_style()
+    flowing = document_xml(build_docx(projection, style={**style, "layout": {"chapter_starts_page": False}})[0])
+    paged = document_xml(build_docx(projection, style={**style, "layout": {"chapter_starts_page": True}})[0])
+    assert paged.count("pageBreakBefore") == flowing.count("pageBreakBefore") + 1
 
 
 def test_symbols_the_fallbacks_lack_are_set_in_the_symbols_typeface():

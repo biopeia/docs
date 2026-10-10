@@ -195,7 +195,7 @@ def gen_components(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list
         for cid, comp in mine:
             unit = units[comp["coverage_unit"]]
             authority, state = comp.get("authority") or {}, comp.get("state") or {}
-            body += [f"### {cid} — {comp['name']}", ""]
+            body += [f"### `{cid}` — {comp['name']}", ""]
 
             def many(values: Any) -> str:
                 return " • ".join(" ".join(str(v).split()) for v in as_list(values)) or "none recorded"
