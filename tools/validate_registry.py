@@ -638,6 +638,45 @@ def find_stale_units(
     return stale, downstream
 
 
+LINK_RE = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
+CITED_TEST_RE = re.compile(r"`(test_[a-z0-9_]+)`")
+
+
+def broken_links(docs_root: Path) -> list[str]:
+    """Relative links in explanation, technical and reference documents that do not resolve."""
+    problems: list[str] = []
+    for top in ("explanation", "technical", "reference"):
+        for doc in sorted((docs_root / top).rglob("*.md")) if (docs_root / top).is_dir() else []:
+            for target in LINK_RE.findall(doc.read_text(encoding="utf-8")):
+                if target.startswith(("http://", "https://", "mailto:")):
+                    continue
+                if not (doc.parent / target).exists():
+                    problems.append(f"{doc.relative_to(docs_root).as_posix()}: broken link {target}")
+    return problems
+
+
+def unknown_cited_tests(docs_root: Path, repos_root: Path, domains: list[str]) -> list[str]:
+    """Test names an explanation cites that no test file of any repository defines.
+
+    A test that was renamed or removed after a document was written shows up
+    here even when the file that held it is not among the unit's paths.
+    """
+    defined: set[str] = set()
+    for repo in domains:
+        tests = repos_root / repo / "tests"
+        if tests.is_dir():
+            for path in tests.rglob("*.py"):
+                defined.update(re.findall(r"^\s*def (test_[a-z0-9_]+)\(", path.read_text(encoding="utf-8"), re.M))
+    problems: list[str] = []
+    if not defined:
+        return problems
+    for doc in sorted((docs_root / "explanation").rglob("*.md")):
+        for name in sorted(set(CITED_TEST_RE.findall(doc.read_text(encoding="utf-8")))):
+            if name not in defined:
+                problems.append(f"{doc.relative_to(docs_root).as_posix()}: cites {name}, defined in no repository")
+    return problems
+
+
 def source_coverage(registry_dir: Path, repos_root: Path) -> dict[str, dict[str, Any]]:
     """Per domain repository: which source modules are named by some unit.
 
@@ -681,6 +720,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     errors, unresolved = validate(args.registry, args.docs_root, args.repos_root)
+    errors += broken_links(args.docs_root)
     for line in errors:
         print(f"ERROR {line}")
     if unresolved:
@@ -703,6 +743,12 @@ def main(argv: list[str] | None = None) -> int:
         for uid, via in sorted(downstream.items()):
             print(f"DOWNSTREAM {uid} (depends on {', '.join(via)})")
         print(f"Staleness: {len(stale)} stale, {len(downstream)} downstream")
+        cited = unknown_cited_tests(
+            args.docs_root, args.repos_root, list(load_registry(args.registry)["schema"]["domains"])
+        )
+        for line in cited:
+            print(f"CITED {line}")
+        print(f"Cited tests not found: {len(cited)}")
         if stale and args.fail_on_stale:
             return 1
 

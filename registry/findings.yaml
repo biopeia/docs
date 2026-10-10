@@ -27,7 +27,13 @@ findings:
     units:
       - mechanism.physical-causal-step
     summary: >
-      The physical causal step is orchestrated only by test fixtures, of which there are two. No component in any repository orchestrates it and no solver adapter exists in source. In the fixture the organism checkpoint is a stand-in, the body's physiology is created inside the step, the scene is static and Modality takes no part.
+      No solver adapter and no domain adapters for the physical causal step
+      exist in source: the solver calls and the projections handed to World's
+      coordinator are written inside two test fixtures. In them the organism
+      checkpoint is a stand-in, the body's physiology is created inside the
+      step, the scene is static and Modality takes no part. As first recorded
+      this finding also said no component orchestrated the step; World added a
+      protocol-driven coordinator, run_physical_step, in world f496422.
     documented_in:
       - explanation/world/physical-step.md
     material: true
@@ -62,8 +68,12 @@ findings:
     documented_in:
       - explanation/world/durable-runtime.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/world/issues/31"
+    disposition: >
+      Resolved in world ba3b38b ("Remove no-op owner recovery receipt"): the
+      receipt type and its construction were removed, and the validation is
+      now the hash comparison and the owner contract's answer only.
 
   F-0005:
     class: performance_concern
@@ -192,13 +202,18 @@ findings:
     observed_at: f97ec22272b6be1e6742770e37cd370e7d96d6bc
     units:
       - component.environment-static-scene
+      - component.environment-dynamic-state
       - mechanism.physical-causal-step
     summary: >
       The static scene owner cannot verify that World authorised a step's
-      correlation, does not bind successive steps to one World, and does not
-      tie its owner identifier to the scene's environment identifier.
-      Environment and Embodiment each define their own PhysicalStepCorrelation
-      type; their agreement for one step is ensured only by whoever builds them.
+      correlation, and does not tie its owner identifier to the scene's
+      environment identifier. Environment and Embodiment each define their own
+      PhysicalStepCorrelation type; their agreement for one step is ensured
+      only by whoever builds them. As first recorded this finding also said
+      the owner did not bind successive steps to one World; that part was
+      fixed in environment 0a9f4fb, which binds an owner to one World, and the
+      correlation class now states that it is not proof of World
+      authorization.
     documented_in:
       - explanation/environment/static-scene.md
     material: true
@@ -236,13 +251,15 @@ findings:
       - explanation/environment/finite-resource.md
       - explanation/environment/resource-geometry.md
     material: false
-    status: accepted
+    status: open
     disposition: >
-      Corrected on review of the projection module. As first recorded this
-      finding said the resource carried no units as if that were an omission.
-      For lengths the code declares relative values and provides the
-      projection, so that part is the stated design. What remains open is
-      only that the quantity has no unit, which no decision record requires.
+      The geometry module explicitly declares relative lengths and requires
+      a caller-supplied scale for projection to metres. The remaining
+      quantity and transfer bound have no declared units. Their intended
+      meaning (including whether they are abstract, dimensionless values or
+      physical quantities) is unresolved; no unit or physical interpretation
+      is inferred here. Define that meaning before treating the contract gap
+      as closed.
 
   F-0016:
     class: implementation_finding
@@ -282,9 +299,11 @@ findings:
     units:
       - component.environment-resource-geometry
     summary: >
-      No consumer of the resource geometry projection exists in the source or
-      tests of any other repository; where a projected resource sphere enters
-      a physical scene is not established by any code.
+      No consumer of the resource geometry projection was found by source
+      search in the inspected Biopeia code snapshots; where a projected
+      resource sphere enters a physical scene is not established by that
+      code. This bounded search does not assert that no external consumer
+      exists.
     documented_in:
       - explanation/environment/resource-geometry.md
     material: false
@@ -663,8 +682,13 @@ findings:
     documented_in:
       - explanation/lab/study-utilities.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/lab/issues/34"
+    disposition: >
+      Resolved in lab PR #36 (commit c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4).
+      Introduced v2 canonical JSON serialization with length-prefixed framing and
+      domain separators for world and config digests, preserving numeric types
+      without separator collisions. Tested in lab:tests/unit/test_digests.py.
 
   F-0065:
     class: evidence_gap
@@ -955,8 +979,15 @@ findings:
     documented_in:
       - explanation/organism/action-path.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/organism/issues/32"
+    disposition: >
+      Resolved in organism fc8a91c ("Use stable effector IDs for actuator
+      surfaces"): a surface is built from effector identifiers kept verbatim,
+      its fingerprint does not depend on their order, and construction from a
+      count is removed. What remains, that a surface does not say which body
+      its effectors belong to and that nothing obtains the names from
+      Embodiment, is part of F-0030.
 
   F-0033:
     class: contract_gap
@@ -1038,6 +1069,561 @@ findings:
     documented_in:
       - explanation/organism/action-path.md
       - explanation/organism/executive-outcome-ledger.md
+    material: false
+    status: open
+
+  F-0115:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-articulated-body
+      - mechanism.physical-causal-step
+    summary: >
+      The physical projection given to a solver has no field for joint
+      positions or velocities, so for an articulated body the configuration of
+      the joints does not reach the solver through it; World's articulated
+      fixture sets the hinge from the restored owner state directly. The
+      projection is built from a specification, a pose and two velocities
+      passed separately, not from the body's state, and checks only that
+      correlation and pose name the same body: a correlation naming another
+      World, tick, episode and morphology revision, and velocities unrelated
+      to any state, were accepted.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/32"
+
+  F-0116:
+    class: recovery_durability_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      The digest that binds articulated state and its checkpoint to a
+      morphology covers the generated description only. Contact links,
+      fixed-base flag, surface material, spawn height, structural neighbours
+      and state schema version are not in it, so descriptors of bodies
+      differing in those compare equal and a checkpoint was restored under
+      one of them. A descriptor made by hand with an invented digest is
+      accepted, as the code declares. No checkpoint holds a specification or
+      a descriptor: restoring needs the caller to supply the descriptor
+      again. The articulated state offers no checkpoint digest and no owner
+      validation methods, and its schema name exists only in World's fixture
+      (extends F-0021).
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/embodiment/issues/33"
+
+  F-0117:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      A body specification and its joint and segment values are not
+      validated. A negative or non-numeric mass, inverted joint limits (until
+      a descriptor is derived), an unknown parent link and a body kind that
+      makes the generated text malformed XML are accepted; a link without a
+      segment silently becomes a point mass of 0.05 and an unreferenced
+      segment is silently dropped. Field names carry no units, and the units
+      of mass, size, torque and damping are stated nowhere; ADR-0073 item 1
+      says public APIs have no implicit units.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0118:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Much of the specification and mechanics modules is read by no code in
+      the seven repositories (search of 2026-10-09): the surface material,
+      fixed-base flag, spawn height, structural neighbours and state schema
+      version of a specification; its ordinal receptor and effector names and
+      counts, which nothing relates to the stable effector identities of the
+      actuation projection; three value types, the ground material and the
+      end-range and solver-tolerance constants. The joint limits written into
+      the description are two degrees narrower at each end than the limits
+      the state enforces, and the tolerance constant takes no part in either.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0119:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+    summary: >
+      The declared pose and joint conventions (metres, right-handed, z up,
+      xyzw, frame names, radians, revision v1) are read by no code except
+      their own test (search of 2026-10-09). The body pose sample accepts any
+      frame names, any contract revision, a free sample kind and value and a
+      negative sample time, and raises an attribute error instead of a value
+      error for a non-text identifier. Checkpoints restate the units as their
+      own text. Environment declares handedness and up axis in a different
+      vocabulary and nothing compares the two. The repository states that the
+      declarations are metadata only.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0120:
+    class: contract_gap
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - mechanism.embodiment-physical-projection
+      - component.embodiment-physical-state
+    summary: >
+      The physical duration type is imported by nothing in the seven
+      repositories except its own test (search of 2026-10-09), and its
+      guarantees end at construction: arithmetic returns plain floats and a
+      difference can be negative. No Embodiment value records the physical
+      time a step covers: not the projection, the candidate, the correlation
+      or the state, and the pose's sample time is left unset on adoption. In
+      World's fixtures the step length is a number in the solver model
+      written by the fixture. No host clock is read in the Embodiment source.
+      ADR-0090 requires causal times to be explicit and distinct.
+    documented_in:
+      - explanation/embodiment/physical-projection.md
+    material: false
+    status: open
+
+  F-0121:
+    class: implementation_finding
+    repository: embodiment
+    observed_at: a5129f03aa4b024e33d332f917b9235afe97959c
+    units:
+      - component.embodiment-articulated-body
+    summary: >
+      Joint positions and velocities are stored as given, without conversion
+      to floating point. Two articulated states built with a joint position
+      of 1 and of 1.0 compare equal and encode to different checkpoint bytes,
+      as do 0.0 and -0.0, so equal states can have different hashes in a
+      World cut. A state restored from bytes re-encodes to the same bytes.
+    documented_in:
+      - explanation/embodiment/articulated-body.md
+    material: false
+    status: open
+
+  F-0125:
+    class: contract_gap
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner answers the checkpoint validation question
+      World asks of an owner but does not provide the confirmation after a
+      restoration, which the durable World runtime calls during restore and
+      recovery. The static scene owner and the identified resource provide
+      both.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: open
+
+  F-0126:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner adopts any finite position for its object; it
+      judges who a candidate is for and when, not whether what it proposes is
+      admissible.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the module itself: it demonstrates a bounded state
+      transition contract and does not define environmental laws.
+
+  F-0127:
+    class: implementation_finding
+    repository: environment
+    observed_at: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+    units:
+      - component.environment-dynamic-state
+    summary: >
+      The dynamic object owner has no consumer: no other repository's source
+      or tests use it, so no physical step moves an environmental object.
+    documented_in:
+      - explanation/environment/dynamic-state.md
+    material: false
+    status: open
+
+  F-0100:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-causal-evidence
+      - component.organism-prospective-deliberation
+    summary: >
+      Nothing turns what the competence development engine learns into the record the rest of the package uses: the engine keeps motor primitives, while bindings, availability and the affordance resolver take a competence record that no code, source or tests, constructs; a primitive carries no effect and no controller. The effect space, the evidence ledger, the three models, the signature and dimension registries and the resolver are constructed nowhere; deliberation and the outcome-value ledger are called only by tests and a deliberation outcome is consumed by nothing.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/prospective-deliberation.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/39"
+
+  F-0101:
+    class: contract_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+    summary: >
+      Learned motor state cannot follow a change of body. The engine's restore refuses another body string or channel list; the method documented as registering prior-body motor hypotheses silently skips every entry whose body string differs from the engine's own. The binding registry keeps one row per competence, so evidence on a second surface overwrites the first, keeping its evidence references and valid-from tick and recording no transition; no code marks a binding stale. The resolver never reads its own surface fingerprint or a binding's status. The engine's body string, a binding's surface fingerprint and the resolver's embodiment identifier are unrelated caller-supplied strings. ADR-0104 says re-embodiment must not silently erase longitudinal learning.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/40"
+
+  F-0102:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-execution-binding
+      - component.organism-prospective-deliberation
+    summary: >
+      No checkpoint includes any actuation or agency state: each structure has its own export and nothing assembles them. The competence library and the forward effect model have no export. Restoring the engine loses the concurrency limit and a non-default gate and accepts another organism identifier; the binding registry loses transitions not yet collected; the schema version constant of the agency checkpoint module is unused.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/prospective-deliberation.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/41"
+
+  F-0103:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-causal-evidence
+      - component.organism-competence-development
+      - component.organism-execution-binding
+    summary: >
+      The controllability confidence does not read the hits when no alternative window is on record (eight rows without a single hit give 0.25, as do eight hits of eight), and its alternatives include the rows of every other source, so two sources that each always produce an effect get zero when there are no passive windows. The name controllability denotes three unrelated numbers: this difference of rates, a primitive's effect size times consistency compared with an absolute threshold in the units of the body signals, and a caller-supplied field of a binding; the resolver falls back from the first to the third.
+    documented_in:
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/42"
+
+  F-0104:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-prospective-deliberation
+    summary: >
+      In prospective deliberation: a contextual value estimate with a single sample displaces the estimate for the outcome alone, although the class says lookup falls back while a context is evidence-poor, and the policy then discards it for low confidence; candidates predicting the same outcome tie and none is selected; the epistemic value orders only exact ties, which the default margin rejects; the reasons no_active_model and insufficient_margin are also returned for an empty context and for a non-positive utility; budget_exhausted is never returned; the query budget keeps the first candidates in input order; two readiness conditions are fed the same fact.
+    documented_in:
+      - explanation/organism/prospective-deliberation.md
+    material: false
+    status: open
+
+  F-0105:
+    class: evidence_gap
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-causal-evidence
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-prospective-deliberation
+    summary: >
+      No test exists for the evidence ledger, the effect registry beyond its static rounding function, the forward, controllability and agency models, the intervention signature and action dimension registries, the attempt record, the composition engine, the exploration ordering, the competence library, the affordance resolver, the readiness check or the exported competence_candidates function. Their behaviour as documented rests on the code and ad hoc runs. The footprint tests build evidence rows by hand and never pass rows from a ledger. Extends F-0037.
+    documented_in:
+      - explanation/organism/causal-evidence-and-controllability.md
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/prospective-deliberation.md
+    material: false
+    status: open
+
+  F-0106:
+    class: implementation_finding
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-causal-evidence
+    summary: >
+      Smaller inconsistencies read from the code and confirmed by running it: the registry's is_executable and derive_availability disagree for a binding stale for a live reason; the engine's snapshot counts candidates against a direction threshold of 0.60 whatever gate is set; a primitive's failure count is always zero although the robust label depends on it; the candidate function returns the first eight established primitives by identifier; without probing the passive baseline received no sample in 600 ticks; two different passive windows with the same ticks, context and prior state share an evidence identifier; the ledger and the binding registry accept ticks out of order.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/causal-evidence-and-controllability.md
+    material: false
+    status: open
+
+  F-0107:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 6543188ff302a5f2dc8002c0086252d6061e5310
+    units:
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-execution-binding
+    summary: >
+      Docstrings in these modules refer to things absent from the repository: an ActionDomain as owner of commitments and exploration, numbered sections of specifications that are not present, a lab.studies module, host/adaptive.py and ADR-0062. The method register_historical_primitive_candidates is described as registering prior-body hypotheses and accepts only the current body's. The schema strings hashed into intervention signature, channel and action dimension identifiers keep the historical name symbiont. Extends F-0038.
+    documented_in:
+      - explanation/organism/competence-development.md
+      - explanation/organism/causal-evidence-and-controllability.md
+    material: false
+    status: open
+
+  F-0085:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      No code outside the genetics directory reads a gene value or the gene expression state; the expression regulator, the germline record, the identifier factory and the gene binding check have no caller. The binding registry requires every one of the 42 loci to name a runtime consumer and a test, and the check passes on strings alone: none of its 18 test names is defined in the repository and its 22 consumer names identify nothing in the code. No test covers the expression, germline, bindings, schema or checkpoint modules of the directory.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/48"
+
+  F-0086:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      The genetics directory holds no mutation, recombination, offspring construction or reproductive trigger. The inheritance package type is never constructed; the capture of acquired marks and the weakening of marks have no caller; the mutation and recombination fields of the schema, the evolvability genes and the mutation policy have no reader; no locus is named for a maintenance-versus-reproduction allocation. No module of the directory draws on randomness, entropy, a clock or an identifier generator. The repository's migration record declares that the directory does not demonstrate endogenous reproduction or evolution.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/49"
+
+  F-0087:
+    class: recovery_durability_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      Restoring a germline record skips mark entries that are not mappings without error, replaces the derived birth expression with the payload's without comparing them, and accepts acquired marks when capture is off; restoring an expression state accepts birth values that differ from the genome's baselines. Two genome codecs exist and disagree on whether the genotype hash is required, and only the one in the cognition package is tested. No checkpoint in the repository includes a genome, an expression state or a germline record.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/50"
+
+  F-0088:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+    summary: >
+      In the expression regulator the step is proportional to pressure, so with every signal at zero the structural plasticity and the growth and pruning thresholds stay where the last pressure left them; only the learning rate and the exploration drive have a decay toward their birth values, while a comment attributes a slow return toward the baseline to that decay. Resource pressure alone moves nothing. The module states that evidence through tick t updates the state only for tick t+1, and the regulator takes no tick; its update count and the 64-step persistence of mark capture count calls.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+    material: false
+    status: open
+
+  F-0089:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-experience-ledger
+    summary: >
+      Nothing constructs an experience record or an experience ledger outside tests, and no checkpoint includes the ledger; the cognitive payload writes only records handed to it. Beyond three construction rules no code reads a record's status, source kind or confidence class, and nothing resolves an evidence reference. A model-sourced record marked supported is accepted; the corpus builder that the record's docstring relies on for the anti-self-confirmation invariant is not in the repository. A record identifier can be reused once its record has been dropped, and a correcting record is not linked to the record it corrects.
+    documented_in:
+      - explanation/organism/experience-record-and-ledger.md
+    material: false
+    status: open
+
+  F-0090:
+    class: contract_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-causal-provenance-log
+    summary: >
+      No causal provenance log is constructed in source or tests and none is given to the one class that can emit to it, so no causal event is emitted at this revision; no subscriber is registered and the Organism package imports nothing from Lab or Observation, so the journal the module describes as holding durable history is a docstring only. The frontier has no bound of its own and shrinks only when a caller retires a reference; it keeps one level and the last production of a reference. The ring of events is not exported, and no checkpoint includes the export.
+    documented_in:
+      - explanation/organism/causal-provenance-log.md
+    material: false
+    status: open
+
+  F-0091:
+    class: evidence_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-causal-provenance-log
+      - component.organism-capacity-and-pair-statistics
+      - concept.organism-foundation-conventions
+    summary: >
+      The provenance module, the capacity pressure module and the conventions and limits modules of the foundation directory have no test; the pair accumulator is exercised only through the tests of a candidate actuator. The behaviour documented for them rests on the code and on ad hoc runs.
+    documented_in:
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+      - explanation/organism/foundation-conventions.md
+    material: false
+    status: open
+
+  F-0092:
+    class: implementation_finding
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-capacity-and-pair-statistics
+    summary: >
+      The promotions and demotions counters of capacity pressure are never set by any code and are exported as zero; the snapshot method offered by the effect table has no caller; restoring takes the capacity from the caller and ignores the exported one and the schema version; the reported pressure ratio is not limited to 1. Restoring a pair accumulator accepts combinations of its six numbers that no stream of pairs could produce.
+    documented_in:
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+    material: false
+    status: open
+
+  F-0093:
+    class: contract_gap
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - concept.organism-foundation-conventions
+      - component.organism-experience-ledger
+      - component.organism-genome
+    summary: >
+      The table of Organism limits has no reader, and several of its ceilings are named for body and host state that the accepted architecture does not assign to the Organism. Of the epistemic conventions only the smoothing factor and the established-signal threshold are read; the class counts, maturity thresholds and recency classification are not. The evidence count type is used by no module and arithmetic on it yields a plain integer. Unrelated numbers stand for the same notion: sixteen confidence classes in the conventions against 0 to 7 in the experience record, and 64 epigenetic priors in the limits against eight marks in the germline protocol.
+    documented_in:
+      - explanation/organism/foundation-conventions.md
+      - explanation/organism/experience-record-and-ledger.md
+      - explanation/organism/genome-and-inheritance.md
+    material: false
+    status: open
+
+  F-0094:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: fc8a91c61d865663ba6f9468216171506fd29e7a
+    units:
+      - component.organism-genome
+      - component.organism-causal-provenance-log
+      - component.organism-capacity-and-pair-statistics
+      - concept.organism-foundation-conventions
+    summary: >
+      Docstrings and data in the reviewed modules refer to things that are not in the repository and keep the historical name: design documents cited by path or title in the provenance and capacity modules, modules of a symbiont package cited in the foundation directory, a schema described as owned by the Symbiont kernel, a packaged genome identified as genome_symbiont_base_v2, and a provenance docstring stating that every state-changing decision emits a causal event. Same pattern as F-0038.
+    documented_in:
+      - explanation/organism/genome-and-inheritance.md
+      - explanation/organism/causal-provenance-log.md
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+      - explanation/organism/foundation-conventions.md
+    material: false
+    status: open
+
+  F-0128:
+    class: contract_gap
+    repository: embodiment
+    observed_at: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+    units:
+      - component.embodiment-actuator-binding
+    summary: >
+      The actuator binding can be saved and restored but provides neither of
+      the two validation methods World asks of an owner in a causal cut, and
+      records the fingerprint of an Organism surface as a string supplied by
+      whoever builds it: nothing in code obtains it from Organism.
+    documented_in:
+      - explanation/embodiment/actuation-projection.md
+    material: false
+    status: open
+
+  F-0129:
+    class: contract_gap
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The evidence accumulated about each actuator, including the active
+      repertoire, is matched to a surface by actuator identifier alone:
+      restoring it onto another surface with the same effector names, built
+      with different contract material and under another organism identifier,
+      keeps it. The organism identifier is stored and read by nothing.
+      ADR-0094 says body-bound motor competence is not transferred and must be
+      reacquired.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
+    material: true
+    status: issue_opened
+    issue: "https://github.com/biopeia/organism/issues/51"
+
+  F-0130:
+    class: implementation_finding
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The record cannot verify how the pairs of activation and change it is
+      handed were formed, and the promotion threshold is not part of the
+      exported state.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
+    material: false
+    status: accepted
+    disposition: >
+      Declared by the code itself: the method states that it does not and
+      cannot verify the pairing contract, and the restore function states
+      that the threshold is configuration supplied by the caller.
+
+  F-0131:
+    class: implementation_finding
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-actuator-evidence
+    summary: >
+      The actuator evidence model has no caller outside its own package and
+      tests, no Organism checkpoint carries its state, the reporting snapshot
+      in the same package is constructed nowhere, and the Lab module its
+      documentation says the probing apparatus moved to does not exist.
+    documented_in:
+      - explanation/organism/actuator-evidence.md
     material: false
     status: open
 

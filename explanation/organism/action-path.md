@@ -1,8 +1,10 @@
 # From an affordance to a motor command
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
-The one place where the stages are joined is a test fixture of World, read at
-`world` commit `c162b67e698de9b47450264402677b0165e6e20e`. Everything below
+Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`;
+first written against `6543188`, and the section on the actuator surface was
+rewritten when the surface changed. The one place where the stages are joined
+is a test fixture of World, read at `world` commit
+`e2098a9523446b6a32feda5f05140225f4d2ab86`. Everything below
 describes those revisions. Statements are marked by what supports them: the
 code, the tests, an ad hoc run, or an accepted decision.
 
@@ -274,27 +276,36 @@ channels, each with an opaque identifier, a legal range inside the unit
 interval, a neutral value and an availability flag, together with a
 fingerprint of the whole. The module states the intent: "The surface states
 only which opaque commands are legal." Nothing about what a channel does is
-present, and `test_surface_is_command_contract_not_body_model` checks that
+present, and `test_surface_exposes_only_legal_command_contract` checks that
 some such fields are absent.
 
-How the identifiers are made matters. Each is a hash of a fixed schema string
-and the channel's ordinal position. The schema string still carries the
-historical name `symbiont`. Read from the code and confirmed by
-running it:
+How the identifiers are made matters, and it changed. When this document was
+first written an identifier was a hash of the channel's position in the list,
+so two bodies shared their first identifiers and a list of reordered physical
+ports gave an equal surface. That was recorded as a finding and has since been
+fixed in the repository.
 
-- Any two surfaces with at least two channels have the same first two
-  identifiers. A surface of two channels and a surface of three built for
-  another body shared them; only the fingerprints differed
-  (`test_actuator_ids_are_unique_and_stable_for_same_body_cardinality`,
-  `test_body_contract_metadata_changes_fingerprint_not_opaque_channel_ids`).
-- A surface built from named physical ports does not keep the names. Built
-  from the ports `left, right` and from `right, left` with the same contract
-  string, the two surfaces were equal: same identifiers, same fingerprint.
-  Without a contract string the fingerprints differed and the identifiers were
-  still the same.
+At the revision reviewed a surface is built from effector identifiers
+supplied by the caller. Read from the code and confirmed by running it:
 
-So an actuator identifier identifies a position in a list, and which physical
-thing sits at that position is known only to whoever built the surface.
+- An actuator identifier is the effector identifier it was given, kept
+  verbatim (`test_effector_ids_are_unique_and_preserved_verbatim`). Empty or
+  repeated identifiers are refused, and a single string is not taken for a
+  sequence (`test_scalar_string_is_not_treated_as_sequence_of_effector_ids`).
+- The order in which the identifiers are supplied does not change the
+  fingerprint: the same identifiers in another order give the same
+  fingerprint, and each keeps its own identifier
+  (`test_effector_identity_is_stable_when_input_order_changes`).
+- Building a surface from a count alone is no longer possible
+  (`test_positional_count_construction_is_not_supported`).
+- Contract material changes the fingerprint and not the identifiers
+  (`test_contract_metadata_changes_fingerprint_not_effector_identity`).
+
+So an actuator identifier now names an effector, not a place in a list. What
+the surface still cannot tell is whose effectors they are: two surfaces built
+from the same effector names and the same contract material are equal,
+whichever body they were built for. The names are supplied by whoever builds
+the surface; nothing in Organism obtains them from Embodiment.
 
 The package also contains a class
 (`organism:src/organism/actuation/system.py::ActuatorSystem`) that checks a
@@ -372,7 +383,7 @@ and the Embodiment side was not reviewed.
 |---|---|
 | "Omission is not a command." An omitted channel "does not imply zero or neutral." | A command lists only the channels the controller named. The surface check returns results only for those, and an empty command yields an empty result. In the fixture one of two channels is commanded and the comment reads "the missing right channel remains NO COMMAND". Every surface channel nevertheless carries a neutral value, 0.0 unless set otherwise; nothing reviewed here applies it. |
 | A command is bound to `body_id`, `embodiment_episode_id`, `morphology_revision`, `effector_id` and `command_kind`. | A motor command carries a surface fingerprint, an optional embodiment identifier and opaque actuator identifiers. It has no body, morphology revision, effector or kind. In the fixture those are supplied at Embodiment's projection. |
-| "Array/list position is never authoritative." | An actuator identifier is a hash of the channel's position in the surface. |
+| "Array/list position is never authoritative." | An actuator identifier is the effector identifier supplied when the surface is built; the order of the list does not enter the identifier or the fingerprint. |
 | Public APIs have no implicit units; the effector descriptor defines the valid range. | An activation is a bare number required to lie between zero and one. |
 
 [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md)

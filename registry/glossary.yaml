@@ -266,6 +266,137 @@ terms:
     canonical_refs:
       - explanation/organism/action-path.md
 
+  body-specification:
+    term: "Body specification"
+    definition: >
+      An engine-neutral, immutable record of what an articulated body is made
+      of: segments, hinge joints, topology and some further properties. It has
+      no identity of its own, names no body, episode or revision, and holds no
+      state. A textual description is generated from part of it.
+    distinguishes_from:
+      - active-morphology-descriptor
+    owners:
+      - component.embodiment-articulated-body
+    canonical_refs:
+      - explanation/embodiment/articulated-body.md
+
+  active-morphology-descriptor:
+    term: "Active morphology descriptor"
+    definition: >
+      A value that binds one generated body description, by its SHA-256, and
+      the joint ranges of one body specification to a body, an embodiment
+      episode and a morphology revision. Joint state and its checkpoint are
+      verified against it. It does not authenticate its own origin and it is
+      not the specification.
+    distinguishes_from:
+      - body-specification
+    owners:
+      - component.embodiment-articulated-body
+    canonical_refs:
+      - explanation/embodiment/articulated-body.md
+
+  physical-duration:
+    term: "Physical duration"
+    definition: >
+      A non-negative, finite number of seconds of time elapsed in the physical
+      substrate. It is supplied, not measured. It is not the causal tick, which
+      counts committed transitions, and not host wall-clock time.
+    distinguishes_from:
+      - causal-tick
+    owners:
+      - mechanism.embodiment-physical-projection
+    canonical_refs:
+      - explanation/embodiment/physical-projection.md
+
+  motor-primitive:
+    term: "Motor primitive"
+    definition: >
+      A record kept by the competence development engine for one body: a
+      four-step sequence of quantised activations with a sample count, the
+      mean and variance of the change in body signals that followed it and two
+      consistency numbers. Its maturity label is computed from those numbers.
+      It names no effect and no controller.
+    distinguishes_from:
+      - competence-record
+    owners:
+      - component.organism-competence-development
+    canonical_refs:
+      - explanation/organism/competence-development.md
+
+  competence-record:
+    term: "Competence record"
+    definition: >
+      The record that execution bindings, availability and the affordance
+      resolver take: a competence identifier, a controller identifier, an
+      optional effect identifier and evidence counts. No code constructs one
+      at the reviewed revision, and none is derived from a motor primitive.
+    distinguishes_from:
+      - motor-primitive
+      - execution-binding
+    owners:
+      - component.organism-execution-binding
+    canonical_refs:
+      - explanation/organism/execution-binding-and-affordances.md
+      - explanation/organism/competence-development.md
+
+  execution-binding:
+    term: "Execution binding"
+    definition: >
+      A row recording that a competence was last confirmed on one actuator
+      surface, with evidence references and a status of valid, stale or
+      invalidated. It is kept apart from the competence record so that
+      knowing a pattern and being able to use it now are separate answers. It
+      is a record, not an enforcement.
+    distinguishes_from:
+      - competence-record
+      - action-commitment
+    owners:
+      - component.organism-execution-binding
+    canonical_refs:
+      - explanation/organism/execution-binding-and-affordances.md
+
+  genome-hash:
+    term: "Genome hash"
+    definition: >
+      SHA-256 over the whole canonical form of a genome: its identifier, its
+      kernel compatibility statement and its genes. It identifies one
+      materialised genome; two genomes with the same genes and different
+      identifiers have different genome hashes.
+    distinguishes_from:
+      - genotype-hash
+    owners:
+      - component.organism-genome
+    canonical_refs:
+      - explanation/organism/genome-and-inheritance.md
+
+  genotype-hash:
+    term: "Genotype hash"
+    definition: >
+      SHA-256 over the schema version and the gene values of a genome only.
+      It is the same for every genome carrying those genes, whatever its
+      identifier, and does not depend on the schema that bounds the genes.
+    distinguishes_from:
+      - genome-hash
+    owners:
+      - component.organism-genome
+    canonical_refs:
+      - explanation/organism/genome-and-inheritance.md
+
+  provenance-frontier:
+    term: "Provenance frontier"
+    definition: >
+      In the causal provenance log, the table that maps each reference still
+      in use to the event that last produced it and to the causes that event
+      declared. It keeps one level and the last production only, is what the
+      log exports, and shrinks only when a caller retires a reference. The
+      ring of recent events is separate and is not exported.
+    distinguishes_from:
+      - causal-record
+    owners:
+      - component.organism-causal-provenance-log
+    canonical_refs:
+      - explanation/organism/causal-provenance-log.md
+
   generative-model:
     term: "Generative model (Organism)"
     definition: >

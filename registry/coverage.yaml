@@ -21,7 +21,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: dce2c944abaab87e2c75f4fe49d9aa9dadc33a00
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.world-causal-manifest:
     kind: component
@@ -45,7 +45,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.world-journal-snapshot-store:
     kind: component
@@ -67,7 +67,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.world-durable-runtime:
     kind: component
@@ -97,7 +97,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.world-in-memory-runtime:
     kind: component
@@ -121,7 +121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   mechanism.world-causal-transition:
     kind: mechanism
@@ -147,7 +147,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   mechanism.world-genesis-and-rosters:
     kind: mechanism
@@ -171,7 +171,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   mechanism.world-recovery:
     kind: mechanism
@@ -194,7 +194,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: cb4bd6b0506b554bf4187b36c23095a7521c4504
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   mechanism.physical-causal-step:
     kind: mechanism
@@ -209,10 +209,12 @@ units:
     canonical_docs:
       - explanation/world/physical-step.md
     implementation:
+      - world:src/world/physical_step.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
       - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
       - world:src/world/durable_runtime.py
     tests:
+      - world:tests/unit/test_physical_step.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
       - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
     design:
@@ -226,7 +228,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.environment-finite-resource:
     kind: component
@@ -277,7 +279,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
 
   component.environment-procedural-genesis:
     kind: component
@@ -392,6 +394,7 @@ units:
     canonical_docs:
       - explanation/embodiment/actuation-projection.md
     implementation:
+      - embodiment:src/embodiment/physics3d/actuator_binding.py
       - embodiment:src/embodiment/physics3d/actuation_projection.py
     tests:
       - embodiment:tests/test_actuation_projection.py
@@ -402,7 +405,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
 
   component.embodiment-somatic-state:
     kind: component
@@ -470,7 +473,7 @@ units:
         embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
         environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
         observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        world: 9da5ecce209e66d955627cff1b57c58080683fa9
 
   component.lab-study-utilities:
     kind: component
@@ -491,7 +494,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+        lab: c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4
 
   component.lab-body-interoception-transducer:
     kind: component
@@ -631,8 +634,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        world: e2098a9523446b6a32feda5f05140225f4d2ab86
 
   component.organism-identity-checkpoint:
     kind: component
@@ -718,6 +721,405 @@ units:
       - component.observation-plane
       - mechanism.organism-action-path
       - component.organism-identity-checkpoint
+
+  component.embodiment-articulated-body:
+    kind: component
+    title: Articulated body specification, active morphology and joint state
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+    component_id: EMB-ART
+    canonical_docs:
+      - explanation/embodiment/articulated-body.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/articulated_spec.py
+      - embodiment:src/embodiment/physics3d/mechanics.py
+      - embodiment:src/embodiment/physics3d/articulated_state.py
+    tests:
+      - embodiment:tests/test_articulated_spec.py
+      - embodiment:tests/test_physics3d_mechanics.py
+      - embodiment:tests/test_articulated_state.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    depends_on:
+      - component.embodiment-physical-state
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  mechanism.embodiment-physical-projection:
+    kind: mechanism
+    title: Physical projection for a solver, body pose sample, declared conventions and physical duration
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - world
+      - environment
+    canonical_docs:
+      - explanation/embodiment/physical-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/physical_projection.py
+      - embodiment:src/embodiment/observation.py
+      - embodiment:src/embodiment/physics3d/observation_contract.py
+      - embodiment:src/embodiment/duration.py
+    tests:
+      - embodiment:tests/test_physical_projection.py
+      - embodiment:tests/test_body_pose_sample.py
+      - embodiment:tests/test_physics3d_observation_contract.py
+      - embodiment:tests/test_duration.py
+      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:tests/integration/physical_step/test_procedural_sphere_world_step.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.embodiment-articulated-body
+      - component.embodiment-physical-state
+    review:
+      status: RECORDED
+      basis:
+        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        world: c162b67e698de9b47450264402677b0165e6e20e
+
+  component.environment-dynamic-state:
+    kind: component
+    title: Dynamic object state and its owner
+    status: CURRENT
+    owner_domain: environment
+    participating_domains:
+      - world
+    component_id: ENV-DYN
+    canonical_docs:
+      - explanation/environment/dynamic-state.md
+    implementation:
+      - environment:src/environment/dynamic_state.py
+    tests:
+      - environment:tests/test_dynamic_state.py
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
+    adrs:
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+    depends_on:
+      - component.environment-static-scene
+    review:
+      status: RECORDED
+      basis:
+        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+
+  component.organism-competence-development:
+    kind: component
+    title: Competence development engine
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-ACD
+    canonical_docs:
+      - explanation/organism/competence-development.md
+    implementation:
+      - organism:src/organism/actuation/sensorimotor.py
+      - organism:src/organism/actuation/competence.py
+      - organism:src/organism/actuation/composition.py
+      - organism:src/organism/actuation/exploration.py
+      - organism:src/organism/agency/candidates.py
+    tests:
+      - organism:tests/source_unit/actuation/test_sensorimotor.py
+      - organism:tests/source_unit/actuation/test_causal_probing.py
+      - organism:tests/source_unit/actuation/test_genome_motor_genes.py
+      - organism:tests/source_unit/agency/test_candidates.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-causal-evidence:
+    kind: component
+    title: Effects, causal evidence and controllability
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-ACE
+    canonical_docs:
+      - explanation/organism/causal-evidence-and-controllability.md
+    implementation:
+      - organism:src/organism/actuation/effects.py
+      - organism:src/organism/actuation/evidence.py
+      - organism:src/organism/actuation/model.py
+      - organism:src/organism/actuation/intervention.py
+      - organism:src/organism/actuation/dimension.py
+      - organism:src/organism/actuation/attempt.py
+      - organism:src/organism/actuation/footprint.py
+    tests:
+      - organism:tests/source_unit/actuation/test_effect_atoms.py
+      - organism:tests/source_unit/actuation/test_causal_footprints.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-execution-binding:
+    kind: component
+    title: Execution bindings, availability and the affordance resolver
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-AEB
+    canonical_docs:
+      - explanation/organism/execution-binding-and-affordances.md
+    implementation:
+      - organism:src/organism/actuation/binding.py
+      - organism:src/organism/agency/availability.py
+      - organism:src/organism/agency/affordances.py
+    tests:
+      - organism:tests/source_unit/agency/test_competence_availability.py
+    adrs:
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+    depends_on:
+      - mechanism.organism-action-path
+      - component.organism-competence-development
+      - component.organism-causal-evidence
+      - component.organism-executive-outcome-ledger
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-prospective-deliberation:
+    kind: component
+    title: Prospective deliberation and the outcome-value ledger
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-APD
+    canonical_docs:
+      - explanation/organism/prospective-deliberation.md
+    implementation:
+      - organism:src/organism/agency/prospective.py
+      - organism:src/organism/agency/policy.py
+      - organism:src/organism/agency/value.py
+      - organism:src/organism/agency/readiness.py
+      - organism:src/organism/agency/types.py
+      - organism:src/organism/agency/checkpoint.py
+    tests:
+      - organism:tests/source_unit/agency/test_prospective.py
+      - organism:tests/source_unit/agency/test_policy.py
+      - organism:tests/source_unit/agency/test_value.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+      - docs:technical/adr/ADR-0105-cognition-structure.md
+    depends_on:
+      - mechanism.organism-action-path
+      - component.organism-competence-development
+    review:
+      status: RECORDED
+      basis:
+        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+
+  component.organism-genome:
+    kind: component
+    title: Genome, expression and germline record
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-GNM
+    canonical_docs:
+      - explanation/organism/genome-and-inheritance.md
+    implementation:
+      - organism:src/organism/genetics/genome.py
+      - organism:src/organism/genetics/schema.py
+      - organism:src/organism/genetics/expression.py
+      - organism:src/organism/genetics/germline.py
+      - organism:src/organism/genetics/bindings.py
+      - organism:src/organism/genetics/checkpoint.py
+      - organism:src/organism/genetics/factory.py
+      - organism:src/organism/genetics/defaults/base-genome-v2.json
+      - organism:src/organism/cognition/birth.py
+      - organism:src/organism/cognition/checkpoint.py
+    tests:
+      - organism:tests/source_unit/cognition/test_genome.py
+      - organism:tests/source_unit/cognition/test_checkpoint.py
+      - organism:tests/source_unit/cognition/test_birth.py
+      - organism:tests/source_unit/actuation/test_genome_motor_genes.py
+    adrs:
+      - docs:technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md
+      - docs:technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0108-reproduction-and-causal-entropy.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-experience-ledger:
+    kind: component
+    title: Experience record and its ledger
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-MEX
+    canonical_docs:
+      - explanation/organism/experience-record-and-ledger.md
+    implementation:
+      - organism:src/organism/memory/experience.py
+      - organism:src/organism/memory/ledger.py
+    tests:
+      - organism:tests/memory/test_experience.py
+      - organism:tests/memory/test_ledger.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.organism-identity-checkpoint
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-causal-provenance-log:
+    kind: component
+    title: Causal provenance log
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-PRV
+    canonical_docs:
+      - explanation/organism/causal-provenance-log.md
+    implementation:
+      - organism:src/organism/provenance.py
+      - organism:src/organism/actuation/footprint.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+    depends_on:
+      - component.organism-causal-evidence
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.organism-capacity-and-pair-statistics:
+    kind: component
+    title: Capacity pressure and pair statistics
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-PCS
+    canonical_docs:
+      - explanation/organism/capacity-pressure-and-pair-statistics.md
+    implementation:
+      - organism:src/organism/capacity.py
+      - organism:src/organism/statistics.py
+      - organism:src/organism/actuation/candidate.py
+    tests:
+      - organism:tests/source_unit/actuation/test_candidate.py
+    adrs:
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - component.organism-executive-outcome-ledger
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  concept.organism-foundation-conventions:
+    kind: concept
+    title: Foundation conventions, evidence count and limits
+    status: CURRENT
+    owner_domain: organism
+    canonical_docs:
+      - explanation/organism/foundation-conventions.md
+    implementation:
+      - organism:src/organism/foundation/epistemic.py
+      - organism:src/organism/foundation/evidence.py
+      - organism:src/organism/foundation/limits.py
+      - organism:src/organism/cognition/activation.py
+    tests:
+      - organism:tests/foundation/test_evidence_count.py
+    adrs:
+      - docs:technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+    review:
+      status: RECORDED
+      basis:
+        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+
+  component.embodiment-actuator-binding:
+    kind: component
+    title: Actuator binding
+    status: CURRENT
+    owner_domain: embodiment
+    participating_domains:
+      - organism
+    component_id: EMB-BND
+    canonical_docs:
+      - explanation/embodiment/actuation-projection.md
+    implementation:
+      - embodiment:src/embodiment/physics3d/actuator_binding.py
+    tests:
+      - embodiment:tests/test_actuation_projection.py
+    adrs:
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
+    review:
+      status: RECORDED
+      basis:
+        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+
+  component.organism-actuator-evidence:
+    kind: component
+    title: Actuator evidence model
+    status: CURRENT
+    owner_domain: organism
+    component_id: ORG-AEV
+    canonical_docs:
+      - explanation/organism/actuator-evidence.md
+    implementation:
+      - organism:src/organism/actuation/proposer.py
+      - organism:src/organism/actuation/candidate.py
+      - organism:src/organism/actuation/checkpoint.py
+      - organism:src/organism/actuation/types.py
+      - organism:src/organism/actuation/state.py
+    tests:
+      - organism:tests/source_unit/actuation/test_proposer.py
+      - organism:tests/source_unit/actuation/test_candidate.py
+      - organism:tests/source_unit/actuation/test_checkpoint_gate.py
+      - organism:tests/source_unit/actuation/test_types.py
+    adrs:
+      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
+      - docs:technical/adr/ADR-0104-body-schema-and-competence.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+    depends_on:
+      - mechanism.organism-action-path
+    review:
+      status: RECORDED
+      basis:
+        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
 
   component.organism-cognitive-graph:
     kind: component

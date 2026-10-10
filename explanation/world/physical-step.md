@@ -1,10 +1,11 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world` at commit `c162b67e698de9b47450264402677b0165e6e20e`,
+Reviewed against `world` at commit `f496422a5cfb62cd4710ffc61522c9d43b49c6c5`,
 with `organism@f15c4c5`, `embodiment@3fe3cda`, `environment@f97ec22` and
 `observation@cb07ace`, the revisions pinned by World's integration extra at
-that commit. First written against `world@cb4bd6b`; corrected when a second
-fixture was found to exist.
+`c162b67`. First written against `world@cb4bd6b`; updated when a second
+fixture was found, and when World added its protocol-driven physical-step
+coordinator in `world:src/world/physical_step.py`.
 
 ## What this is about
 
@@ -15,21 +16,26 @@ authorises it, Embodiment and Environment project their state, a solver
 computes a candidate, each owner validates and adopts its own part, and World
 commits the cut.
 
-This document describes where that sequence exists in code today. The answer
-needs stating plainly at the start: **it exists in two integration test
-fixtures, not as a component.** No module in `world`, or in any other
-repository, orchestrates a physical step. The sequence below is carried out
-by one function inside
-`world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`,
+This document describes where that sequence exists in code today.
+A protocol coordinator exists in World (`world:src/world/physical_step.py::run_physical_step`),
+which issues explicit source and target causal ticks in a `PhysicalStepContext`
+inside a durable World transition, sequences owner projections, numerical solving,
+owner adoption, and checkpoint reference returns, and propagates failures to latch
+recovery. However, **the solver calls and domain adapters belong to integration test
+fixtures, not production adapters.** No solver adapter exists in source, and the
+scene projection contracts remain fixture-specific.
+
+The end-to-end integration sequence below is exercised through that coordinator
+in `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`,
 which says of itself that it is "not a scientific validation or a
 production solver adapter". A second fixture,
 `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`,
 carries out a shorter version of it over a generated scene and is described
 in its own section below.
 
-What is real production code are the pieces the fixture calls: the
-[durable World runtime](durable-runtime.md), and functions and types of
-Organism, Embodiment, Environment and Observation.
+What is real production code are the coordinator and the pieces it calls:
+`run_physical_step`, the [durable World runtime](durable-runtime.md), and
+functions and types of Organism, Embodiment, Environment and Observation.
 
 ## The sequence the fixture carries out
 
@@ -117,8 +123,10 @@ or production crash durability".
 
 Stated by the fixture or evident from it:
 
-- **No orchestrating component exists.** The order of the steps above is the
-  order of statements in a test. Nothing enforces it elsewhere.
+- **No production solver adapter or domain adapter exists in source.** While
+  World provides the protocol coordinator (`run_physical_step`), the domain
+  projections, solver invocation, and adoption ports are wired inside the
+  integration test fixtures.
 - **The solver calls belong to the fixtures.** Each of the two has its own
   function that advances the simulation. There is no solver adapter in any
   repository's source.
@@ -143,6 +151,7 @@ Stated by the fixture or evident from it:
 
 | Claim | Support |
 |---|---|
-| The sequence | Code of the fixture, read in full |
+| The sequence and coordinator integration | Code of `world:src/world/physical_step.py` and the fixture, read in full |
 | Determinism, permutation, omitted channel, gravity, stale morphology, articulated restore, and the generated scene's effect, persistence and reuse | The tests named, run by World's integration job in CI at pinned revisions |
-| Absence of an orchestrating component and of a solver adapter | A search of the source and test trees of all seven repositories at their main branches on 2026-10-09 found the call that advances a MuJoCo simulation in these two fixtures and nowhere else; the fixtures' own statements |
+| Coordinator protocol invariants and solver failure propagation | Unit tests in `world:tests/unit/test_physical_step.py` |
+| Absence of a production solver adapter | A search of the source and test trees of all seven repositories at their main branches on 2026-10-09 found the call that advances a MuJoCo simulation in these two fixtures and nowhere else; the fixtures' own statements |
