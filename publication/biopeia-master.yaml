@@ -95,6 +95,9 @@ appendices:
   - id: components
     title: Canonical component catalog
     generated: [components]
+  - id: contracts
+    title: Cross-domain contract catalog
+    generated: [contract-catalog]
   - id: glossary
     title: Glossary
     generated: [glossary]

@@ -21,6 +21,7 @@ MANIFEST = ROOT / "publication" / "biopeia-master.yaml"
 GENERATED_SECTIONS = (
     "domains",
     "contracts",
+    "contract-catalog",
     "components",
     "glossary",
     "notation",
