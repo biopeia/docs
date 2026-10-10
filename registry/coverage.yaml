@@ -849,6 +849,17 @@ units:
       - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
       - docs:technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md
       - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+      - docs:technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md
+      - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+      - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
+      - docs:technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md
+      - docs:technical/adr/ADR-0099-modality-contract-library.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0106-hybrid-multi-owner-persistence.md
+    design:
+      - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     depends_on:
       - component.world-causal-manifest
       - component.world-durable-runtime
@@ -864,6 +875,7 @@ units:
       - component.observation-plane
       - mechanism.organism-action-path
       - component.organism-identity-checkpoint
+      - component.organism-cognitive-graph
 
   component.embodiment-articulated-body:
     kind: component

@@ -1,8 +1,9 @@
 # One step across the domains
 
-This document is derived. It adds no fact of its own: every statement comes
-from one of the unit documents it links to, and each of those names the
-commit it was reviewed against. If a unit document and this one disagree, the
+This document is derived. It adds no fact of its own: every statement about
+code comes from one of the unit documents it links to, and each of those
+names the commit it was reviewed against; every statement about what is
+decided comes from the decision record, design or owner decision it cites. If a unit document and this one disagree, the
 unit document is right and this one is out of date. In the registry this
 document depends on every unit it draws from, so a change in any of them
 marks it for review.
@@ -156,6 +157,68 @@ far:
   Embodiment's expected command.
 - The correlation of a physical step and the observation of a committed cut
   are tied together only by a test fixture.
+
+## The same step as it is decided
+
+Everything above says what exists. This section sets beside it what has been
+decided, so that the distance between the two can be read off. It describes
+no code.
+
+The accepted contracts for the physical step are in
+[ADR-0073](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md),
+which adopts the design
+[Biopeia Physical-Step and Causal-Commit Integration v1](../../technical/design/runtime/biopeia-physical-step-integration-v1.md).
+The design register records that design as approved, its implementation as
+partial and its scope as target. The whole cycle, from the environment to
+an observer, is the ten steps the owner requires to be shown before the
+migration closes
+([workspace#7](https://github.com/biopeia/workspace/issues/7), decision of
+2026-10-10; [world#86](https://github.com/biopeia/world/issues/86) carries
+it).
+
+| Step, as decided | What must hold | Today |
+|---|---|---|
+| 1. Environment owns the external state | Environment owns environmental truth and its meaning (ADR-0074) | Exists in source |
+| 2. Modality transduces it into an opaque input | Transduction, not interpretation; every persistent state it needs has one owner, and none is Modality's (ADR-0099, ADR-0073) | Nothing: a constant in a test |
+| 3. The Organism's transition processes the input through its public boundary | Others do not read or rewrite the Organism's private state (ADR-0092) | The transition exists; nothing calls it |
+| 4. An intent to act originates in the Organism | The Organism's condition reaches others as what it emits (ADR-0092) | Six pieces, joined only in a test fixture |
+| 5. The complete motor command is built by production code | A command names body, episode, morphology revision, effector and kind; position in a list is never authoritative; an omitted channel is not a command (ADR-0073) | Embodiment's projection exists in source; the command reaches it only in a fixture |
+| 6. World issues the physical step and a configured solver computes a candidate | The solver computes and has no semantic authority; it never changes an owner's state (ADR-0098, ADR-0073) | A coordinator in World; the solver and its adapters are in test fixtures |
+| 7. Each owner validates and adopts only its own state | A failed solver, a rejected candidate or a missing adoption cannot produce a committed step (ADR-0073) | Exists in source for Embodiment; for Environment, for an unchanged scene only |
+| 8. World commits one coherent cut | A cut is committed only after every required owner state is durably identifiable and recoverable; a failure before commit requires recovery, and a partial cut is never taken for a complete one (ADR-0083, ADR-0093, ADR-0106) | Exists in source |
+| 9. Owners' projections of the committed state reach Observation | Observation is passive and cannot change what it observes (ADR-0078) | Claim types in source; built by a test fixture; nothing published |
+| 10. One evidence record traces the run from initial state to committed result | An intervention by Lab is attributable, not privileged; evidence custody is the apparatus's (ADR-0073, ADR-0100) | Exists for an operator's transfer only |
+
+The third column repeats the table at the top of this document and, for
+step 3, [the cognitive graph](../organism/cognitive-graph.md). Steps 1 and 8
+exist, and step 7 in part; the others exist as pieces or not at all, and
+nothing joins the ten.
+
+## What would let an implementation be accepted
+
+The same owner decision says what evidence is required, and it is worth
+stating because a green test suite is not it.
+
+- One bounded scenario exercises all ten steps through production
+  integration paths. A test may launch and inspect the run. It may not supply
+  a missing join or build an intermediate whose construction is part of the
+  contract.
+- The run is repeated at least twice from the same declared initial state,
+  configuration and controlled randomness, and gives the same result.
+- The required test fails when a segment is unavailable. It does not skip
+  and does not substitute a fixture.
+- The record gives the exact revision of every repository, the command, the
+  inputs, the identities and revisions involved, the evidence of each owner's
+  adoption, of the committed cut and of delivery to Observation, and what the
+  run does not prove.
+- The candidate and its report receive an independent adversarial review
+  before the migration is closed.
+
+What the decision does not require is as explicit: no claim that anything is
+scientifically effective, no successful locomotion, no universal resistance
+to crash or power loss. Checkpoint and recovery closure are separate gates.
+Existing sensing and physical-step tests are separate fixture compositions
+and do not meet the criterion.
 
 ## What this does not show
 
