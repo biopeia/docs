@@ -1,6 +1,6 @@
 # How a repeated motor pattern becomes a competence
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `2f051b029018a30f10acddaedc70d2b7edd3325c`; first written against `6543188`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -223,16 +223,18 @@ timestamps out of order
 `test_sensorimotor_restore_rejects_coerced_or_nonfinite_skill_state`,
 `test_sensorimotor_restore_rejects_corrupted_primitive_lifecycle`).
 
-Three things do not come back, confirmed by running the class:
+When this document was first written, three things did not come back from an
+export: the limit on simultaneous channels, a non-default gate, and the
+organism identifier. Since `organism@2f051b0` two of them do. The export
+carries the organism identifier and the effective limit, and restoring
+refuses another identifier or a limit that disagrees with the one expected
+(`test_checkpoint_restore_preserves_identity_and_effective_concurrency_output`,
+`test_restore_rejects_max_concurrent_mismatch_and_invalid_checkpoint_value`).
 
-- the limit on simultaneous channels: an engine built with a limit of 1 was
-  restored with a limit of 4;
-- a non-default gate: it is described in the code as organism configuration
-  and is not exported, so the restored engine applied the default until the
-  caller set it again;
-- the organism identifier, which is not exported and is not checked: the
-  export of one organism was restored under another identifier without
-  objection, after which exploration follows the new identifier.
+One still does not: a non-default gate. It is described in the code as
+organism configuration and is not exported, so a restored engine applies the
+default until the caller sets it again (confirmed by running the class at the
+revision first reviewed; the change since does not touch the gate).
 
 No checkpoint in the repository includes this export. The composed cognitive
 payload described under
@@ -294,7 +296,7 @@ body-schema state". No `acquisition.py` exists under
 | Boundary | What happens | Support |
 |---|---|---|
 | Birth | A new engine has no statistics and no primitives | Code |
-| Checkpoint | The whole state can be exported, except the concurrency limit, the gate and the organism identifier | Code, tests and ad hoc run |
+| Checkpoint | The whole state can be exported, except the gate | Code, tests and ad hoc run |
 | Restart | An export can be restored for the same body string and channels; no checkpoint carries it | Code and tests; search of the repository |
 | Re-embodiment | No operation exists. Restoring for another body is refused; historical candidates from another body are dropped | Code, test and ad hoc run |
 | Reproduction | No operation exists. The genome carries no motor genes | `test_genome_v2_has_no_motor_genes`; search of the genetics code for the engine, 2026-10-10 |
@@ -329,7 +331,7 @@ not consecutive are ignored for sequence statistics, without error
 | The candidate function and its limit of eight | Code and tests in `organism:tests/source_unit/agency/test_candidates.py`; that it returns the first eight by identifier, from the ad hoc run |
 | Nothing constructs a competence record or the library; nothing outside tests constructs the engine; composition and exploration ordering are unused | Search of the seven repositories at `origin/main`, 2026-10-09 |
 | Export and strict restore | Code and tests |
-| The concurrency limit, the gate and the organism identifier do not survive a restore | The ad hoc run; no test |
+| The gate does not survive a restore; the concurrency limit and the organism identifier do, and are checked | The ad hoc run for the gate; tests for the other two |
 | Refusal for another body | Code and test |
 | Historical candidates from another body are skipped | Code and the ad hoc run; the test covers only the same body |
 | What re-embodiment must not do | Accepted decision ADR-0104; a statement of intent |

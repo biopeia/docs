@@ -762,8 +762,13 @@ findings:
     documented_in:
       - explanation/observation/observation-plane.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/observation/issues/13"
+    disposition: >
+      Resolved in observation faa85b7 ("Signal run boundaries to resumed
+      observation streams"): a clear reserves a delivery sequence for the
+      boundary, and a stream resumed with an older watermark receives a rebase
+      request with the reason run_boundary. Covered by three tests.
 
   F-0041:
     class: implementation_finding
@@ -1325,6 +1330,11 @@ findings:
     material: true
     status: issue_opened
     issue: "https://github.com/biopeia/organism/issues/41"
+    update: >
+      Partly fixed in organism 2f051b0 ("Bind sensorimotor checkpoints to
+      identity and concurrency"): the engine's export now carries the organism
+      identifier and the concurrency limit, and restore checks both. The gate
+      is still not exported, and no checkpoint includes this state.
 
   F-0103:
     class: implementation_finding
@@ -1750,5 +1760,19 @@ findings:
       - explanation/organism/graph-plasticity.md
       - explanation/organism/generative-resident.md
       - explanation/organism/cognitive-checkpoint.md
+    material: false
+    status: open
+
+  F-0132:
+    class: implementation_finding
+    repository: organism
+    observed_at: 2f051b029018a30f10acddaedc70d2b7edd3325c
+    units:
+      - component.organism-attention-allocation
+    summary: >
+      The attention budget allocator has no caller in the source of any
+      repository; it is exercised only by its own tests.
+    documented_in:
+      - explanation/organism/attention-allocation.md
     material: false
     status: open

@@ -1,6 +1,6 @@
 # The observation plane
 
-Reviewed against `observation` at commit `397c0b4691b5e460e6ebc3914f9820ff434a3661`.
+Reviewed against `observation` at commit `faa85b729bb3591e38025135d3d0cef7d5e1c00c`; first written against `397c0b4`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
@@ -63,8 +63,8 @@ counts publications to this plane instance, across all families, starting
 from one. It says in what order the plane received things. It does not say
 when they held.
 
-The code states it: "Message sequence is globally increasing in publish
-order, not domain time." The sequence is carried on the message, outside the
+The code states it: "Delivery sequence is globally increasing within the
+plane, not domain time." The sequence is carried on the message, outside the
 observation, and the claim model refuses `delivery_sequence` as a kind of
 domain time. The time at which a claim holds stays inside the observation,
 in the terms of its own authority.
@@ -167,25 +167,29 @@ by sequence".
 The plane's own summary of the guarantee is: "Within one healthy
 subscription, each sequence is delivered at most once."
 
-## Clearing, and a gap in the signal
+## Clearing, and the run boundary
 
 `clear` empties the current view and the replay history and sends every open
 stream a rebase request with the reason `run_boundary`. It does not reset the
-sequence counter: after a clear, the next publication continues the count (ad
-hoc run). No test calls `clear`.
+sequence counter. Since `observation@faa85b7` it also reserves one delivery
+sequence for the boundary and remembers it
+(`test_run_boundary_reaches_active_stream_and_reserves_delivery_watermark`).
 
-The signal reaches only the streams that are open at that moment. The
-boundary is not recorded in the sequence. In an ad hoc run:
+That closes a gap recorded when this document was first written. A consumer
+that was disconnected across a clear and came back with its last watermark
+used to be given no sign that the view it held had been discarded. Now a
+stream resumed with a watermark older than the last boundary receives a
+rebase request with the reason `run_boundary`, even when new observations
+have been published since, and after several clears an older watermark is
+rebased at the latest boundary
+(`test_late_resume_before_run_boundary_requires_rebase_even_with_new_history`,
+`test_each_clear_advances_boundary_and_older_watermark_rebases_at_latest`).
+A run of the module at that revision showed the counter standing at 3 after
+two publications and a clear.
 
-- two observations were published, for subjects *a* and *b* (sequences 1 and
-  2), and then the plane was cleared;
-- a stream opened with watermark 2 received nothing: no rebase;
-- a third observation was published for subject *c*;
-- a stream opened with watermark 2 received message 3 and nothing else.
-
-A consumer that was disconnected across the clear and comes back with its
-last watermark is therefore given no indication that the view it holds, with
-*a* and *b* in it, was discarded. This is recorded as finding F-0040.
+The boundary is kept in memory like everything else in the plane. The code
+states that it is "not durable; a new process cannot recover it or resume
+this plane".
 
 ## What it holds, and whose it is
 
@@ -247,18 +251,16 @@ control out of observation. The package contains no control path of any kind.
 | Claim | Support |
 |---|---|
 | Bounded current view and live delivery; separation of entries by contract, revision, identity scope and lifetime, and epistemic kind; eviction; rebase on expired replay, on a bootstrap larger than the queue and on a slow consumer; validation of watermarks | Code and tests in `observation:tests/test_plane.py` (16 test cases, passing in an extraction of that revision) |
-| Successful replay; the other three rebase reasons on resume; family-filtered gaps; delivery after an overflow; `clear` and its effects; the missing signal after a clear; last-published replacement; replacement across asserters; observations held by reference; contiguous sequences under threads | Code, and ad hoc runs of the module at that revision |
+| Successful replay; the other three rebase reasons on resume; family-filtered gaps; delivery after an overflow; the effect of a clear on the counter; last-published replacement; replacement across asserters; observations held by reference; contiguous sequences under threads | Code, and ad hoc runs of the module at that revision |
 | No use of the plane outside its tests; no adapter | Text search of the main branches of the other repositories on the day of review |
 | No persistence; standard-library imports only | Code reading |
 | Passivity, ownership of the plane, replay not being evidence, delivery guarantees as intended | ADR-0078, ADR-0100, ADR-0101 and the two designs: intent, not results |
 
-No test examined uses more than one thread, and none calls `clear`. Nothing
+No test examined uses more than one thread. Nothing
 here is evidence about cost: the plane was not measured.
 
 ## Open questions
 
-- How a run boundary should be made visible to a consumer that reconnects
-  after it.
 - Whether current should mean last published or latest in domain time, and
   whether the asserter belongs in the key.
 - Whether observations should be copied or made immutable on publication.

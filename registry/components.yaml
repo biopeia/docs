@@ -985,3 +985,32 @@ components:
     consumers:
       - "mechanism.organism-cognitive-checkpoint"
       - "the generative and epistemic-value parameters of admission in mechanism.organism-action-path; no code connects them at the reviewed revision"
+
+  ORG-CAT:
+    coverage_unit: component.organism-attention-allocation
+    name: "Attention budget allocation"
+    authority:
+      owns: "a deterministic greedy selection of named candidates under a fixed budget, from uncertainty and cost supplied by the caller"
+      may_decide:
+        - "which candidates fit the budget, in order of uncertainty per cost"
+      must_not:
+        - "observe sensors, infer threats, inspect outcomes or execute a choice"
+        - "claim to be an optimal solver or a scientific result"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    # The allocator holds no state between calls. The five axes are required
+    # for an Organism component and none describes a stateless function; the
+    # values say only that nothing exists to initialize, keep or inherit.
+    lifecycle:
+      birth: empty
+      checkpoint: not_applicable
+      restart: reset
+      reembodiment: reset
+      reproduction: not_applicable
+    inputs:
+      - "candidates with a name, an uncertainty, a cost, a ranking cost and a count of observations; a budget"
+    outputs:
+      - "the selected candidates"
+    consumers:
+      - "none in the source of any repository at the revision reviewed"
