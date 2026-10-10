@@ -193,6 +193,9 @@ large record counts.
   Whether it is intended for a later multi-record tick or is a leftover of the
   source it was reconstructed from is not recorded.
 - The durable coordinator copies and re-encodes the whole journal on every
-  tick. The cost as the journal grows has not been measured.
+  tick. A bounded synthetic direct-store characterization confirms quadratic
+  retained-byte growth at World `cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8`;
+  workload-level cost remains unknown. See the [journal snapshot-store
+  characterization](journal-snapshot-store.md#follow-up-size-and-write-characterization).
 - Whether uniqueness of record identifiers should be a property of the
   journal rather than of its callers is undecided.

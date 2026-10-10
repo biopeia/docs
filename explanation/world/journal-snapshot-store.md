@@ -87,13 +87,45 @@ host clock. What it writes survives the process; that is its purpose.
 Durability under power loss was not examined: the code flushes files and
 directories, and no test or run here checks what survives a crash.
 
+## Follow-up size and write characterization
+
+The description above is pinned to World `a8d07fd791da76365aa74080eef1e82b11a599fd`.
+A later bounded local characterization was run against World
+`cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8` using `EventJournal` and
+`DurableJournalSnapshotStore.write` directly. It appended one synthetic record
+per tick with a 32-character payload string and wrote each full prefix once to
+a temporary local directory. The production store path (including file and
+directory `fsync`) was used; the temporary files were removed after each run.
+
+| Records/ticks | Newest prefix | Prefix files retained | Total retained bytes | Elapsed |
+|---:|---:|---:|---:|---:|
+| 10 | 2,145 B | 10 | 11,793 B | 0.202 s |
+| 50 | 10,825 B | 50 | 275,533 B | 1.033 s |
+| 100 | 21,678 B | 100 | 1,093,461 B | 1.976 s |
+| 200 | 43,678 B | 200 | 4,372,261 B | 6.772 s |
+
+This confirms the implementation-level quadratic retained-byte growth for
+fixed-size records: each saved prefix contains earlier records, and no older
+prefix is removed. The elapsed values are one local run, not a stable
+performance estimate. The benchmark is synthetic and does not include the
+full `DurableWorldRuntime`, representative record sizes or production
+storage. No intended tick rate, run duration, retention horizon, filesystem,
+or storage budget was supplied, so the measurements do not establish whether
+the cost is unacceptable for Biopeia's intended workloads. The bounded method
+and results are recorded in [World issue #32](https://github.com/biopeia/world/issues/32#issuecomment-6094690365).
+
+This characterization does not authorize deleting prefixes. Any future
+retention, compaction or incremental-storage design must preserve the committed
+cut's recovery requirements and the journal's causal/evidentiary role in
+[ADR-0107](../../technical/adr/ADR-0107-journal-role.md).
+
 ## What supports this description
 
 | Claim | Support |
 |---|---|
 | Snapshot content, naming, immutable publication, the shape of the reference, verification and reading | Code |
 | A committed tick publishes a journal snapshot before the manifest is complete; owner causal records survive later ticks and restore as part of the prefix | Code and `test_durable_tick_publishes_journal_and_owner_checkpoint_before_complete_manifest`, `test_owner_causal_record_survives_later_tick_and_restore` in `world:tests/test_durable_runtime.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
-| File hash and prefix digest differ; a store for another World reads the snapshot; all snapshots are kept and grow | Code, and one ad hoc run of the module at that revision |
+| File hash and prefix digest differ; a store for another World reads the snapshot; all snapshots are kept and grow | Code and one ad hoc run at the reviewed revision; later fixed-size-prefix growth characterization at World `cb6bfb7c9bccd16c2f85f0f24deba1a12bfc80c8` |
 
 No test in the repository addresses the store alone; it is exercised through
 the durable runtime's tests.
@@ -105,5 +137,5 @@ the durable runtime's tests.
   ([ADR-0107](../../technical/adr/ADR-0107-journal-role.md)) treats the
   journal as causal and evidentiary history, which bears on the answer.
 - Whether the World check belongs in the store's own verification.
-- The cost of writing the full prefix on every tick as the journal grows has
-  not been measured.
+- The cost has only been measured with a synthetic direct-store benchmark.
+  Whether it is operationally material for intended workloads remains open.
