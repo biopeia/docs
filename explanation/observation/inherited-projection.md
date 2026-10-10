@@ -1,6 +1,6 @@
 # The inherited projection
 
-Reviewed against `observation` at commit `397c0b4691b5e460e6ebc3914f9820ff434a3661`.
+Reviewed against `observation` at commit `be82907d1d677b2362e369d15eb1e8e964d893aa`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
@@ -10,26 +10,29 @@ accepted decision. A decision is intent, not a result.
 Before the `observation` repository had a
 [claim model](semantic-claim-model.md) or a [plane](observation-plane.md), it
 received two pieces copied from the source repository: a function that turns
-one flat record of telemetry into three smaller records, and a data class
-for a composed frame. They are still there, and they are the only part of
-the repository that other Biopeia code calls today.
+one flat record of telemetry into body and vitals records, with a cognition
+record when recognized cognition data is present, and a data class for a
+composed frame. They are still there, and they are the only part of the
+repository that other Biopeia code calls today.
 
-They are best understood as a filter. The function takes a mapping that some
+They are best understood as a transitional filter. The function takes a mapping that some
 caller has assembled about one tick, picks out the keys it knows, tidies
-their types, and returns them grouped under three headings. It does not read
-any domain, hold any state or deliver anything. Whatever the result means,
-it means because of what the caller put in.
+their types, and returns body and vitals events plus a cognition event only
+when recognized cognition data is present. It does not read any domain, hold
+any state or deliver anything. Whatever the result means, it means because
+of what the caller put in.
 
-The names of those keys, and of the three headings, were inherited. The
+The names of those keys and event headings were inherited. The
 repository's README says: "this is not a compatibility promise or a ratified
 Biopeia API". This document describes the operations performed and treats
 the names as copied labels.
 
-## Three records from one mapping
+## Records projected from one mapping
 
 `observation:src/observation/projection.py::runtime_tick_events` accepts a
-mapping and returns three dictionaries, tagged `body`, `cognition` and
-`vitals`. Anything that is not a mapping is refused
+mapping and returns body and vitals dictionaries, plus a cognition dictionary
+only when at least one recognized cognition field is present. Anything that
+is not a mapping is refused
 (`test_projection_does_not_invent_observations_and_rejects_non_mapping`).
 
 Each record begins with up to four keys copied from the input when present:
@@ -37,12 +40,13 @@ Each record begins with up to four keys copied from the input when present:
 Here `sequence` is whatever the caller supplied; it is unrelated to the
 delivery sequence of the plane.
 
-After that, each record receives a fixed list of keys:
+For each record, the function recognizes the following keys and copies those
+present and convertible:
 
 - **body**: `tick`, `body_kind`, a base position and orientation, a resource
   position, a list of joints (name and position), a list of links (name,
   position and orientation) and four contact counts;
-- **cognition**: `tick`, a second tick under the inherited name
+- **cognition, when emitted**: `tick`, a second tick under the inherited name
   `symbiont_tick`, and about thirty counters and scalars with names such as
   `schema_confidence`, `predictor_count` and `motor_primitives`, plus a few
   values passed through as they are, such as `prediction_error`;
@@ -61,16 +65,18 @@ under which the individual is called Organism.
 
 The function's stated purpose is to "Project one canonical runtime tick
 without fabricating absent observations." A key that is missing from the
-input is missing from the output. Given only a tick number, each record
-contains its tag and the tick and nothing else
-(`test_projection_does_not_invent_observations_and_rejects_non_mapping`). The
+input is missing from the output. Given only a tick number, the result contains body and vitals records, but no
+cognition event; identity/tick context alone is not a cognition observation
+(`test_projection_does_not_invent_observations_and_rejects_non_mapping`,
+`test_projection_emits_cognition_only_when_cognition_data_is_present`). The
 input is not modified
 (`test_runtime_tick_projection_is_mapping_only_and_does_not_mutate_source`).
 
 The same rule is applied to values the function cannot convert: a number
 that cannot be read as a number is dropped without an error, as is a link
 whose position does not have three components or whose orientation does not
-have four.
+have four. Cognition is omitted when recognized cognition keys are absent or
+all recognized optional values are `None`.
 
 That has a consequence for the caller. **A key the function does not know is
 dropped silently**, exactly like a key that was never there. In an ad hoc
@@ -202,8 +208,8 @@ not something this documentation decides.
 
 | Claim | Support |
 |---|---|
-| Three tagged records; absent keys stay absent; the input is not modified; non-mappings refused; text converted to numbers; both reserve keys omitted; the frame's event and its provenance block | Code and tests in `observation:tests/test_projection.py` (6 test cases, passing in an extraction of that revision) |
-| Unknown keys dropped silently; truncation and boolean coercion of integer keys; not-a-number passing through; pass-through of unconverted values by reference; treatment of empty and short lists; shallow copies in the frame; empty run identifier accepted | Code, and ad hoc runs of the module at that revision |
+| Body/vitals emission, conditional cognition emission, absence preservation, input non-mutation, non-mapping refusal, reserve-key omission and frame provenance | Code and tests in `observation:tests/test_projection.py` at the reviewed revision |
+| Unknown keys dropped silently; numeric coercion; treatment of malformed lists; shallow nested copies in `ObservedFrame.as_event`; empty run identifier accepted | Code, and ad hoc runs of the module at the reviewed revision |
 | The two callers and what they pass; no use of the frame | Text search and reading of `lab` and `world` at the commits named above; they exercise `observation@cb07ace`, where these two modules are identical |
 | Origin of the code and the reasons for what was left out | The repository's `MIGRATION.md`, a record of provenance and intent |
 | That the projection is transitional | The approved design, point P8: a decision, not a property of the code |

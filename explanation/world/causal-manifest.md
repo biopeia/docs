@@ -1,6 +1,6 @@
 # The World causal manifest
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -30,6 +30,8 @@ it. It carries:
 
 - the World identifier and the causal tick of the cut;
 - the active presences at that cut;
+- exactly one registered owner link for each active presence, with stable
+  owner identity;
 - one checkpoint reference per participant, each naming an owner, the
   identity of the owner's subject, a checkpoint identifier, a schema version,
   a locator and a SHA-256;
@@ -44,15 +46,15 @@ it. It carries:
 The reference to the journal itself is recognisable by its owner name and is
 not counted as a participant.
 
-## Recovery limitation: presence-to-owner association
+## Presence-to-owner association
 
-The manifest records active presence identities and participant owner
-identities as separate collections. In the reviewed World revision, the
-presence-to-owner links supplied at genesis are not persisted in this
-manifest. The cut therefore does not by itself provide enough information to
-reconstruct that association after restart. This is narrower than the
-participant checkpoint-reference guarantees described above; do not infer
-complete World reconstruction from the manifest alone.
+Schema v4 persists committed and pending presence-owner links alongside the
+presence and owner rosters. The committed link set is validated against active
+presences and registered owner identities; a pending transition carries its
+proposed link set. Consequently this association is included in the cut and
+is available to restoration/recovery. This proves persistence of the mapping,
+not discovery of an authority omitted from the accepted genesis input or
+reconstruction of every external owner state.
 
 ## What a manifest must satisfy to exist
 
@@ -68,6 +70,9 @@ the code; the tests named cover some of them.
   (`test_manifest_rejects_duplicate_owner_identity_reference`), and no
   presence appears twice
   (`test_manifest_rejects_duplicate_active_presence_ids`).
+- Every active presence has exactly one link to a registered owner; committed
+  and pending link sets are validated during manifest construction and
+  lifecycle transition.
 - The set of non-journal references is exactly the union of the two rosters.
   A participant without a reference, or a reference without a participant, is
   rejected.
@@ -163,20 +168,23 @@ Changes take an advisory lock on a companion file. Reading takes no lock.
 - **It is not a transaction over the owners' states.** The manifest names
   checkpoints; it does not write them, and it cannot make several owners'
   writes succeed or fail together.
-- **The lock protects each change, not a whole transition.** The lock is
-  released between opening a transition and committing it. A second process
-  that checks for ordinary activity in that interval finds the open
-  transition, treats it as interrupted, and marks recovery required; the
-  first process's commit then fails. One logical writer is assumed, as
-  [ADR-0084](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md)
-  requires of shared persistent state, and is not enforced here.
+- **The lock protects individual state changes, not the whole transition.** A
+  thread-based test shows a second concurrent transition-open attempt is
+  refused while a transition is pending
+  (`test_only_one_cross_process_transition_can_prepare_at_a_time`). The
+  implementation uses POSIX advisory file locking intended to serialize
+  processes on a compliant local filesystem, but this test does not exercise
+  separate processes. The lock is not held across the owner callback and does
+  not constitute a distributed coordinator. The broader single-logical-writer requirement remains as stated in
+  [ADR-0084](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md).
 - **The lock is advisory and local.** It relies on POSIX file locking and says
   nothing about other hosts or about filesystems that do not honour it.
 - **It is not a security boundary.** The code says so of its own mutation
   methods: they are internal to the durable runtime and do not stop trusted
   code in the same process, or anything with access to the files.
-- **Durability under power loss was not examined.** The code flushes files and
-  directories; no test or run here checks what survives a crash.
+- **Power-loss behavior remains unverified.** The targeted process-termination
+  tests establish only their specific process boundary; they do not establish
+  what survives power loss or interruption during individual writes.
 
 ## Time and identity
 
@@ -191,14 +199,14 @@ line with
 | Claim | Support |
 |---|---|
 | Journal boundary, uniqueness of references and presences, single open transition, refusal of ordinary execution while pending, commit conditions on owner state, roster and verifier, durable failure detail, no-overwrite initialisation | Code and tests in `world:tests/test_manifest.py` |
-| Roster must equal the set of references; pending manifest keeps the previous cut; recovery writes a receipt and restores the previous tick | Code, and one ad hoc run of the module at that revision |
+| Manifest v4 persists committed/pending presence-owner links; pending state retains the previous cut; recovery writes a receipt before republishing; a thread-level test excludes concurrent transition preparation | Code and tests in `world:tests/test_manifest.py`, including `test_only_one_cross_process_transition_can_prepare_at_a_time`, at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | A refused verifier leaves the manifest preparing until the next activity check | Code and `test_unverified_checkpoint_dependency_leaves_durable_recovery_required` |
-| An activity check by a second actor during an open transition marks recovery required and makes the original commit fail | Code, and the same ad hoc run; no test is kept for it |
+| Retrying recovery publication after receipt creation reuses and syncs the existing receipt directory | `test_retry_after_recovery_publication_interruption_fsyncs_existing_receipt_directory` in `world:tests/test_durable_runtime.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | What the manifest is for, and what recovery must mean | Accepted decisions ADR-0106, ADR-0093, ADR-0084; statements of intent, not test results |
 
-The durable runtime that drives this store, and its own tests, were not
-reviewed for this document. No persisted manifest from a real run, no crash
-test and no experiment was examined.
+The durable runtime and its tests were reviewed at the pinned revision. No
+persisted manifest from a real run or experiment was examined; targeted process
+termination tests are not power-loss evidence.
 
 ## Correspondence with the decision on persistence
 
@@ -218,5 +226,6 @@ this component.
   caller.
 - What should happen to a transition left preparing by a refused verifier if
   the caller does not record the failure.
-- The receipts accumulate in a directory and nothing reads them back in this
-  component; their intended consumer is not recorded.
+- Receipts are immutable and reused for retrying an interrupted recovery
+  publication. The implementation does not establish a separate consumer
+  beyond that recovery path.

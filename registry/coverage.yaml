@@ -21,7 +21,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.world-causal-manifest:
     kind: component
@@ -45,7 +45,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.world-journal-snapshot-store:
     kind: component
@@ -67,7 +67,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.world-durable-runtime:
     kind: component
@@ -97,7 +97,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.world-in-memory-runtime:
     kind: component
@@ -121,7 +121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.world-causal-transition:
     kind: mechanism
@@ -147,7 +147,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.world-genesis-and-rosters:
     kind: mechanism
@@ -171,7 +171,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.world-recovery:
     kind: mechanism
@@ -194,7 +194,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.physical-causal-step:
     kind: mechanism
@@ -228,7 +228,11 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
 
   component.environment-finite-resource:
     kind: component
@@ -434,7 +438,11 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
+        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.lab-operator-material-transfer:
     kind: component
@@ -469,11 +477,11 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
-        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
-        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
+        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.lab-study-utilities:
     kind: component
@@ -567,7 +575,7 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: faa85b729bb3591e38025135d3d0cef7d5e1c00c
+        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
 
   component.observation-inherited-projection:
     kind: component
@@ -594,9 +602,9 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
-        world: c162b67e698de9b47450264402677b0165e6e20e
-        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
 
   mechanism.organism-action-path:
     kind: mechanism
@@ -634,8 +642,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
-        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-identity-checkpoint:
     kind: component
@@ -754,8 +762,8 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.embodiment-physical-projection:
     kind: mechanism
@@ -791,8 +799,8 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.environment-dynamic-state:
     kind: component
@@ -937,7 +945,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
 
   component.organism-genome:
     kind: component
@@ -975,7 +983,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: fc8a91c61d865663ba6f9468216171506fd29e7a
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
 
   component.organism-experience-ledger:
     kind: component
@@ -1120,7 +1128,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-cognitive-graph:
     kind: component
@@ -1159,8 +1168,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
-        world: 6ded06cf8c1f5f6424d6f8a44b541e8952dc348b
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.organism-graph-plasticity:
     kind: mechanism
@@ -1251,7 +1260,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.organism-cognitive-checkpoint:
     kind: mechanism
@@ -1285,8 +1295,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 6543188ff302a5f2dc8002c0086252d6061e5310
-        world: 9da5ecce209e66d955627cff1b57c58080683fa9
+        organism: 0c2c543e71d335a45e6e07a791c20de1e58c6404
+        world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-attention-allocation:
     kind: component

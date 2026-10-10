@@ -1,6 +1,6 @@
 # World genesis, rosters and participant closure
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -41,15 +41,17 @@ A World begins from a genesis specification
 World, at least one initial presence, the registered owners, one initial
 checkpoint reference per owner and one checkpoint contract per owner.
 
-It may also declare which owner stands behind each presence
-(`PresenceOwnerLink`). If any link is given, the links must cover every
-initial presence exactly once and each must point at a registered owner.
+It must declare exactly one registered owner link for every initial active
+presence (`PresenceOwnerLink`). Missing or duplicate links, or links to an
+unregistered owner, are rejected. One registered owner may be linked to more
+than one presence.
 
 Initialisation refuses a genesis in which the active presence is not among
 the initial presences, an owner lacks a contract, or the references do not
 match the registered owners exactly. It then publishes the cut of tick zero.
-Covered by `test_genesis_spec_is_authoritative_input_for_tick_zero_roster`
-and `test_complete_cut_requires_nonempty_stable_owner_identity_closure`.
+Covered by `test_genesis_spec_is_authoritative_input_for_tick_zero_roster`,
+`test_genesis_requires_explicit_unique_links_to_registered_owners` and
+`test_genesis_requires_presence_owner_and_durable_checkpoint_closure`.
 
 ## How membership changes
 
@@ -100,13 +102,16 @@ Each of these is read from the code. None is a test result.
   code's words, "not a discovery mechanism for authorities external to the
   accepted specification". If an authority that ought to take part is never
   declared, no check notices.
-- **The link between a presence and an owner is not kept.** It is validated
-  at genesis and then discarded: the code states that the durable manifest
-  "does not preserve it for later lifecycle transitions or restoration".
-  After genesis, World knows who is present and whose state is in the cut,
-  and holds no record of which is which.
-- **Registering a presence does not require an owner**, and registering an
-  owner does not require a presence. The two rosters change independently.
+- **Presence-owner links are part of durable roster state.** The manifest
+  persists committed and pending links, validates exact active-presence
+  coverage, and lifecycle changes update the links with the presence roster.
+  Recovery therefore has the prior committed association available. This is
+  bounded to the accepted genesis and explicit lifecycle inputs; World does
+  not discover undeclared external authorities.
+- **Not every registered owner needs its own presence.** A registered causal
+  owner may participate independently, and an owner may be linked to multiple
+  presences. Each active presence nevertheless has exactly one registered
+  causal owner.
 
 ## How this stands against the accepted contract
 
@@ -116,17 +121,16 @@ active World presence, registered causal owners, step-specific participants,
 and explicit lifecycle transitions", and that callers "cannot establish
 roster completeness by supplying an arbitrary list".
 
-The implementation validates exactly and durably against the roster. It does
-not derive the roster from presence, because it keeps no relation between
-presences and owners, and the step participants and lifecycle changes of a
-tick are supplied by the caller. Whether that satisfies the contract or falls
-short of it is a question of interpretation that this document does not
-settle; it is recorded as a finding.
+The implementation validates the roster against the accepted genesis and
+explicit lifecycle updates, including exactly one durable owner link per
+active presence. This does not provide magical discovery: completeness is
+relative to the accepted World genesis/registration inputs. Step-specific
+participants are still explicitly supplied for the transition.
 
 ## What supports this description
 
 | Claim | Support |
 |---|---|
-| Genesis validation; roster and presence changes only through a tick; contracts required; exact match of references and roster; failed registration keeps the previous cut | Code and tests in `world:tests/test_durable_runtime.py` |
-| The manifest's own equality between references and rosters | Code in `world:src/world/manifest.py`, and an ad hoc run recorded in [the manifest document](causal-manifest.md) |
+| Genesis requires unique registered-owner links for active presences; lifecycle updates and recovery preserve committed/pending rosters; exact match of references and roster | Code and tests in `world:tests/test_durable_runtime.py` |
+| Manifest v4 persists and validates committed/pending presence-owner links and owner-reference roster closure | Code and tests in `world:src/world/manifest.py` and `world:tests/test_manifest.py` |
 | The limits under "What closure does not mean" | Code and its documentation |

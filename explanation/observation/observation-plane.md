@@ -1,6 +1,6 @@
 # The observation plane
 
-Reviewed against `observation` at commit `faa85b729bb3591e38025135d3d0cef7d5e1c00c`; first written against `397c0b4`.
+Reviewed against `observation` at commit `be82907d1d677b2362e369d15eb1e8e964d893aa`; first written against `397c0b4`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
@@ -46,12 +46,12 @@ its tests and by running it, not the behaviour of a system in which it runs.
    keys if more than the allowed number are held (4096 by default);
 4. offers the message to each open stream.
 
-The observation is not copied, checked or altered. In an ad hoc run the
-object returned by `current()` was the very object that had been published.
-The claim value inside it is likewise the producer's own object (see
-[the claim model](semantic-claim-model.md) on shallow freezing). A consumer
-in the same process that changes that value changes it for the plane and for
-every other consumer.
+Before publication changes any sequence or retained state, the plane validates
+claim values as built-in scalar/container trees and deep-copies the
+observation. Unsupported custom values and recursive containers fail before
+publication side effects. Current views, replay/bootstrap and each live
+subscriber receive detached snapshots. The source must still remain stable
+while the initial copy is captured; the plane cannot synchronize an owner.
 
 Publishing never waits for a consumer and returns nothing from one. The
 module imports only the Python standard library and the claim model.
@@ -251,7 +251,7 @@ control out of observation. The package contains no control path of any kind.
 | Claim | Support |
 |---|---|
 | Bounded current view and live delivery; separation of entries by contract, revision, identity scope and lifetime, and epistemic kind; eviction; rebase on expired replay, on a bootstrap larger than the queue and on a slow consumer; validation of watermarks | Code and tests in `observation:tests/test_plane.py` (16 test cases, passing in an extraction of that revision) |
-| Successful replay; the other three rebase reasons on resume; family-filtered gaps; delivery after an overflow; the effect of a clear on the counter; last-published replacement; replacement across asserters; observations held by reference; contiguous sequences under threads | Code, and ad hoc runs of the module at that revision |
+| Detached publication/current/replay/live snapshots; rejection of unsupported custom and recursive values before sequence changes; semantic-key behavior; bounded current/replay and explicit rebase cases | Code and tests in `observation:tests/test_plane.py` at the reviewed revision |
 | No use of the plane outside its tests; no adapter | Text search of the main branches of the other repositories on the day of review |
 | No persistence; standard-library imports only | Code reading |
 | Passivity, ownership of the plane, replay not being evidence, delivery guarantees as intended | ADR-0078, ADR-0100, ADR-0101 and the two designs: intent, not results |
@@ -263,7 +263,7 @@ here is evidence about cost: the plane was not measured.
 
 - Whether current should mean last published or latest in domain time, and
   whether the asserter belongs in the key.
-- Whether observations should be copied or made immutable on publication.
+- Whether the accepted built-in value tree is broad enough for every future family adapter; richer domain values must be explicitly projected before publication.
 - What publishes to the plane, and from which boundary of each authority.
 - How, and whether, plane-origin conditions are meant to be attached to
   observations, given that losses are signalled by rebase.

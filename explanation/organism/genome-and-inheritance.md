@@ -1,6 +1,6 @@
 # The genome, its expression and the germline record
 
-Reviewed against `organism` at commit `fc8a91c61d865663ba6f9468216171506fd29e7a`.
+Reviewed against `organism` at commit `0c2c543e71d335a45e6e07a791c20de1e58c6404`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or neither. Searches of the
 repository were made on 2026-10-10 at that revision.
@@ -336,12 +336,13 @@ described above.
 ## Across a restart
 
 Each of the three parts can be written to plain data and read back
-(`organism:src/organism/genetics/checkpoint.py`). The genome's payload carries
-both hashes and is refused if either does not match the genes read; the
-expression payload is refused if a value lies outside the genome's range; the
-germline payload is refused if a mark targets a locus that is not regulable.
-All three round trips were exact in an ad hoc run. No test exercises this
-module.
+(`organism:src/organism/genetics/checkpoint.py`). The genome payload carries
+its hashes and restore checks them; expression restore checks range, and
+germline restore checks whether marks target regulable loci. Tests cover the
+current cognition and genetics genome-checkpoint readers, including rejection
+of missing, invalid and mismatched `genotype_hash` values. This is checkpoint
+codec evidence, not evidence that these records are included in the composed
+portable Organism checkpoint.
 
 Some things the germline reader accepts, each seen in the same run:
 
@@ -355,14 +356,15 @@ Some things the germline reader accepts, each seen in the same run:
 The expression reader likewise accepts a birth value that differs from the
 genome's baseline, as long as it lies in the range.
 
-A second reader and writer for the genome exists in the cognition package
-(`organism:src/organism/cognition/checkpoint.py::restore_genome_checkpoint`).
-It is the one the tests exercise (`test_valid_genome_round_trips_exactly`,
-`test_tampered_payload_is_rejected_on_restore`,
-`test_restore_rejects_a_genome_that_no_longer_satisfies_kernel_limits`,
-`test_restore_does_not_use_legacy_kernel_validation_for_old_genomes`). The two
-differ in one respect: the reader in this directory requires the genotype
-hash, and the one in cognition accepts a payload without it (ad hoc run).
+The cognition reader
+(`organism:src/organism/cognition/checkpoint.py::restore_genome_checkpoint`)
+and the genetics reader now both require and validate `genotype_hash`. The
+tests `test_exported_payload_carries_both_required_genome_hashes`,
+`test_cognition_and_genetics_codecs_both_reject_invalid_genotype_hash`,
+`test_cognition_and_genetics_codecs_both_reject_mismatched_genotype_hash` and
+`test_cognition_and_genetics_codecs_both_reject_missing_genotype_hash` exercise
+that parity. The broader genetics expression and germline behaviors described
+above are not all covered by these tests.
 
 As with the [executive outcome ledger](executive-outcome-ledger.md), what
 matters most is what these payloads are not part of. A search of the

@@ -1,11 +1,10 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world` at commit `f496422a5cfb62cd4710ffc61522c9d43b49c6c5`,
-with `organism@f15c4c5`, `embodiment@3fe3cda`, `environment@f97ec22` and
-`observation@cb07ace`, the revisions pinned by World's integration extra at
-`c162b67`. First written against `world@cb4bd6b`; updated when a second
-fixture was found, and when World added its protocol-driven physical-step
-coordinator in `world:src/world/physical_step.py`.
+Reviewed against `world@a8d07fd791da76365aa74080eef1e82b11a599fd`,
+`organism@0c2c543e71d335a45e6e07a791c20de1e58c6404`,
+`embodiment@97cb09a82b0bc9bf4ad11f6497cce071b85efedd`,
+`environment@0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41`, and
+`observation@be82907d1d677b2362e369d15eb1e8e964d893aa`.
 
 ## What this is about
 

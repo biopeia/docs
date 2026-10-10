@@ -1,6 +1,6 @@
 # World recovery
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or neither.
 
@@ -43,7 +43,7 @@ survives the process. In the third it is a latch in one runtime's memory.
 Every further tick, and restoring a runtime from the stored cut. Covered by
 the tests named above. The manifest keeps describing the last committed cut
 throughout, together with the identifier and tick of the transition that
-failed, the roster it proposed, and a description of the failure
+failed, the proposed owner/presence roster and links, and a description of the failure
 (`test_failure_detail_is_durable_and_does_not_clear_recovery_state` in
 `world:tests/test_manifest.py`).
 
@@ -97,14 +97,20 @@ The first was observed in an ad hoc run recorded in
 [the durable runtime document](durable-runtime.md). Nothing in `world`
 removes such files.
 
+The committed and pending presence-to-owner associations are part of the
+manifest state used for restoration. Recovery validates them relative to the
+accepted genesis and explicit lifecycle inputs; it does not discover omitted
+external authorities.
+
 ## What recovery does not establish
 
 - **That the owners are back where they were.** World checks that the
   previous checkpoints are intact and that each owner's contract answers yes.
   It cannot see the owners' live state.
-- **Crash consistency.** The code calls this path "not crash-consistency
-  proof or a multi-process recovery protocol". No test stops a process in the
-  middle of a write.
+- **General crash consistency.** The process-termination test covers a specific
+  stop after PREPARING and verifies that restart reopens the prior cut as
+  `RECOVERY_REQUIRED`. It does not prove power-loss durability, exhaustively
+  test crash points, or establish a general multi-process recovery protocol.
 - **Safety of a partial restoration.** The code requires the restorer to be
   "safe to retry"; that is an obligation on the caller, not something
   checked.
@@ -124,7 +130,7 @@ presence, and any failure in a tick puts the whole World in recovery.
 
 | Claim | Support |
 |---|---|
-| Failure and interruption lead to a durable recovery-required state; ticks and restore are refused; explicit recovery restores the previous cut and writes a receipt; a failed restoration keeps the state | Code and tests in `world:tests/test_durable_runtime.py` and `world:tests/test_manifest.py` |
+| Failure and interruption lead to a durable recovery-required state; ticks and restore are refused; explicit recovery restores the previous cut and writes a receipt; a failed restoration keeps the state | Code and tests in `world:tests/test_durable_runtime.py` and `world:tests/test_manifest.py` at World `a8d07fd791da76365aa74080eef1e82b11a599fd` |
 | A manifest changed outside the runtime latches it at the next tick | Code only |
 | Residue left by a failed tick | Code, and one ad hoc run |
 | What recovery must mean | Accepted decision ADR-0093; a statement of intent |
