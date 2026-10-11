@@ -89,6 +89,9 @@ lifecycle:
   reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
 
 # Design register (registry/designs.yaml). Three independent axes.
+# `cross-domain` is a register scope for designs with no single semantic
+# domain owner. Such designs must name their affected domains explicitly.
+design_cross_domain: cross-domain
 design_document_statuses:
   - proposed
   - in_review

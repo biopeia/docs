@@ -31,6 +31,7 @@ Explanatory documents of the Observation domain (capability).
 
 ## Designs
 
+- [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Observation Semantic Model v1](../../technical/design/observability/observation-semantic-model-v1.md): document approved, implementation partial, scope TARGET
 - [Observation Architecture v1 — Target Design](../../technical/design/observability/observation-architecture-target-design-v1.md): document superseded, implementation not_applicable, scope HISTORICAL
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET

@@ -229,7 +229,8 @@ def validate(
                     f"{where}: document front matter declares a status; "
                     "registry/designs.yaml is the only authority for it"
                 )
-        if design.get("domain") not in domains:
+        cross_domain = schema.get("design_cross_domain")
+        if design.get("domain") not in domains and design.get("domain") != cross_domain:
             errors.append(f"{where}: domain {design.get('domain')!r} not in {sorted(domains)}")
         for p in as_list(design.get("participating_domains")):
             if p not in domains or p == design.get("domain"):

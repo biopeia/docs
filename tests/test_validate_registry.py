@@ -456,6 +456,14 @@ def test_sentinel_detects_corruption(
     assert any(expected in e for e in errors), errors
 
 
+def test_cross_domain_design_scope_is_valid(ws: Workspace) -> None:
+    ws.data = copy.deepcopy(ws.data)
+    ws.data["designs"][D]["domain"] = "cross-domain"
+    ws.write()
+    errors, _ = ws.validate()
+    assert not errors, errors
+
+
 def test_component_unit_without_registry_entry(ws: Workspace) -> None:
     ws.data["components"].clear()
     ws.write()
