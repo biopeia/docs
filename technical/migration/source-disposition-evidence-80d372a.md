@@ -142,3 +142,30 @@ The Git tree at that revision identifies these exact governance tooling blobs. T
 | `scripts/governance/version.py` | `256cacedf4e33499418d21b3e5b4386ed563d96a` | `DROP` |
 
 Target comparison revision: `biopeia/docs@24cbff8`. None of these source scripts are present in Biopeia target repositories. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
+
+## Additional source-package evidence: historical host infrastructure package
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d` (tree `596491547744632143e682cf7fde85ada813e3f6`).
+The 17 modules of the legacy `symbiont.host` package implement host-resident discovery, telemetry, acclimation, checkpointing, and hypotheses testing tied directly to historical monorepo execution. Biopeia target architecture decouples Organism from local host discovery; target code imports none of these modules. They are disposed with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `symbiont/src/symbiont/host/__init__.py` | `b480455f44dc651280dce049e48e1d1fb81b262f` | `DROP` |
+| `symbiont/src/symbiont/host/acclimation.py` | `94cce3bca3d16069bcd39f2eb2eea9f358f59c52` | `DROP` |
+| `symbiont/src/symbiont/host/adaptive.py` | `2dcba6ee561a2892701274eadd648711e23c96ef` | `DROP` |
+| `symbiont/src/symbiont/host/checkpoint.py` | `aa784cfacf0fd215840588cfd3135a9d3e8dad18` | `DROP` |
+| `symbiont/src/symbiont/host/consolidated_baseline.py` | `f4c7bcd36dd890c56877d827112a989623ddb597` | `DROP` |
+| `symbiont/src/symbiont/host/continuity.py` | `468fec1651cf9f7e0175bbf01217b40026fb055a` | `DROP` |
+| `symbiont/src/symbiont/host/contracts.py` | `7d41e8b0e6997e1462402fffebae506d5b5d4ffb` | `DROP` |
+| `symbiont/src/symbiont/host/discovery.py` | `6318e4feedc6ac6163ba8285eb264b10ccdf84f7` | `DROP` |
+| `symbiont/src/symbiont/host/drift.py` | `a17e8eb3105144b477fb06ef9e9af708581d3ca1` | `DROP` |
+| `symbiont/src/symbiont/host/durable.py` | `ec71f45eedf1e33fcdfe066777f84a117d6bd619` | `DROP` |
+| `symbiont/src/symbiont/host/hypotheses.py` | `af2f0b583b1148afcf8a66c20a2ad1e4285a84f1` | `DROP` |
+| `symbiont/src/symbiont/host/lifecycle.py` | `b602c782b760e215255f06ef48fa619ecd922247` | `DROP` |
+| `symbiont/src/symbiont/host/percepts.py` | `78ae657f0be5bd33fea25a3929336ceb30596bbb` | `DROP` |
+| `symbiont/src/symbiont/host/readings.py` | `6429335837437d2a234cf5242407a087ceb882d1` | `DROP` |
+| `symbiont/src/symbiont/host/rhythms.py` | `07d25a51a8d91cd654549c8e6be9268a38fe120d` | `DROP` |
+| `symbiont/src/symbiont/host/second_look.py` | `1d31ab8ab6735117abbe41805a301584c14ed98b` | `DROP` |
+| `symbiont/src/symbiont/host/sources.py` | `10caaf11bdc5b5b3e1f421ebccadd79dfaae17b1` | `DROP` |
+
+Target comparison revision: `biopeia/docs@215325d`. No Biopeia repository contains this package. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
