@@ -133,13 +133,27 @@ The exact source identity and direct-transfer disposition are:
 
 The source file identifies itself as a historical Symbiont roadmap log containing completed milestones, merge-sequence history, and per-patch tracking. The corresponding path is absent from Biopeia Docs at comparison revision `9611f882571a2116026dfa872875dffc9b65cd86`. This supports `DROP` as a direct source-file transfer only: the historical source remains preserved in Symbiont, and this row does not determine whether Biopeia may later need a separately reconstructed explanation. It does not reconcile other rows or close the broader `docs#63` issue.
 
-## Additional source-tooling evidence: repository governance scripts
+## Additional source-tooling evidence: repository scripts and governance tooling
 
 Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
-The Git tree at that revision identifies these exact governance tooling blobs. They implement the source monorepo's CI test selection, release publishing, version sync, classification, and PR summary scripts. They are disposed as historical monorepo tooling with `DROP` from target code.
+The Git tree at that revision identifies these 27 governance and benchmark tooling blobs. They implement historical monorepo test running, CI planning, benchmarking, profiling, kernel characterization, and version synchronization. They are disposed as historical monorepo tooling with `DROP` from target code.
 
 | Source path | Source blob SHA-1 | Disposition |
 |---|---|---|
+| `scripts/agentctl.py` | `e264a567c2c8577ff7ddb694f8054c15c8b587d5` | `DROP` |
+| `scripts/aggregate_e8_label_invariance.py` | `82c57ff0f06ed98337222c4678538d6bca14ffe3` | `DROP` |
+| `scripts/bench_age_scaling.py` | `016180361782ba65a2587aad246f080b01bd0f3b` | `DROP` |
+| `scripts/bench_browser_layout.mjs` | `086d97251096f71b18e03320d6040fa9b6606b9a` | `DROP` |
+| `scripts/bench_cognitive_scaling.py` | `10255c1783edf89d9c43e7afac27ea972ac3fa2d` | `DROP` |
+| `scripts/bench_observability_tax.py` | `c6974b9847b59d2772eb06cf55ab998f111d481e` | `DROP` |
+| `scripts/bench_organism_tick.py` | `0696e995d16347674bfab2afcf21672438a13784` | `DROP` |
+| `scripts/bench_p1_observability_components.py` | `3d02fd366bdd74dff2785dd947631fbbb1b364da` | `DROP` |
+| `scripts/bench_ridge_predictor.py` | `0522daeb45c9298abfd4f1118e27d3711cc1d139` | `DROP` |
+| `scripts/bench_sensorimotor_matching.py` | `3d81831d810f0ce4c12f8152c0735f0c89e87dea` | `DROP` |
+| `scripts/bench_sse_transport.py` | `6d659b62fb7f0ffdf729b8bd06441580aa66cfff` | `DROP` |
+| `scripts/bench_world_journal_index.py` | `47e66ac469626339ee156d4ea00a4dcdc8330f4a` | `DROP` |
+| `scripts/characterize_kernel.py` | `278af30a340c87e52d9eadef54ec239cf6e48753` | `DROP` |
+| `scripts/check_isolation.py` | `b2ae2bca4190a53edf74afb883bd1b6af7a791fe` | `DROP` |
 | `scripts/governance/__init__.py` | `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` | `DROP` |
 | `scripts/governance/ci_plan.py` | `d05c01013a139b6a6144f6d88712b849d4a5ab81` | `DROP` |
 | `scripts/governance/classify.py` | `b2a4430e857597f0b8db5f7ee868c899f3def9b2` | `DROP` |
@@ -147,8 +161,14 @@ The Git tree at that revision identifies these exact governance tooling blobs. T
 | `scripts/governance/publish.py` | `c2c4966edd6742725035674b1b346633d2509d1d` | `DROP` |
 | `scripts/governance/test_impact.py` | `5ef6a452c4b6190c307084fc4bb61ea16feecae9` | `DROP` |
 | `scripts/governance/version.py` | `256cacedf4e33499418d21b3e5b4386ed563d96a` | `DROP` |
+| `scripts/profile_cognitive_hotpath.py` | `66e14a7b99d7872165b0d7b8e20d3e2fce8fd36c` | `DROP` |
+| `scripts/reprofile_performance.py` | `d0ebf6b3dcda530205932d7af1c5f394fe4b4e35` | `DROP` |
+| `scripts/run-ecosystem.sh` | `4cbaa112b977c91503eb111228333724e00ce1d2` | `DROP` |
+| `scripts/run_e8_label_invariance.py` | `24b5a5828b8de6a75493591d9f1295e5dfdccb82` | `DROP` |
+| `scripts/run_tests.py` | `005279ca627b05ddd54bde9f5496b8ce83434a4a` | `DROP` |
+| `scripts/tick_state_hash_trace.py` | `198da8cf99151046ce754d63547219c7bc2bf876` | `DROP` |
 
-Target comparison revision: `biopeia/docs@24cbff8`. None of these source scripts are present in Biopeia target repositories. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
+Target comparison revision: `biopeia/docs@4042d40`. None of these source scripts are present in Biopeia target repositories. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
 
 ## Additional source-package evidence: historical host infrastructure package
 
