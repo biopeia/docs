@@ -96,14 +96,20 @@ each level, and the shape used before the migration is refused without a
 compatibility path (`test_resource_checkpoint_rejects_source_era_v1_shape`,
 `test_identified_resource_checkpoint_rejects_unknown_fields_at_each_level`).
 
-The identified resource also answers the two questions World asks of any
-owner during a causal cut: are these bytes a valid checkpoint for this
-identity under this schema, and, after a restoration, are they still
-(`test_owner_checkpoint_validation_checks_identity_schema_and_bytes`). It does
-so without importing anything from World. The agreement between the two is
-one of shape: World calls two methods by name, and Environment happens to
-provide them. See
+The identified resource validates checkpoints and verifies a restored owner
+against an independent `OwnerRestorationReference`. It does so without
+importing anything from World. The restoration interface is not a direct
+runtime connection: an adapter must provide the reference in the form the
+owner requires. See
 [the durable World runtime](../world/durable-runtime.md).
+
+`IdentifiedFiniteScalarField` is a separate wrapper over an identified
+resource. It binds resource identity and revision to an Environment
+revision and frame, and samples a dimensionless profile in `[0, 1]` with
+explicit identity and correlation. For this wrapper only, positions and
+radii are expressed in metres. This does not change the units or meaning of
+all `FiniteResourceState` uses, and it does not make a resource food or a
+reward.
 
 ## Time
 
@@ -124,7 +130,7 @@ not reviewed for this document.
 
 | Claim | Support |
 |---|---|
-| Validation, the field, offer and acceptance, checkpoint round trip and strictness, owner validation | Code and tests in `environment:tests/unit/test_resource.py` and `environment:tests/test_identified_resource.py` |
+| Validation, offer and acceptance, checkpoint round trip and strictness, identified scalar field and owner restoration verification | Code and tests in `environment:tests/unit/test_resource.py`, `environment:tests/test_identified_resource.py`, and `environment:tests/test_restoration.py` |
 | The field does not shrink with use; the bound is per call; direct assignment is possible | Code, and one ad hoc run of the module at that revision |
 | Lengths are relative, by declaration; the quantity has no unit | Code of this module and of `environment:src/environment/physical.py` |
 | Why the quantity belongs to Environment | Accepted decision ADR-0095; a statement of intent |

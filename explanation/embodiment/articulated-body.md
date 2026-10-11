@@ -248,15 +248,18 @@ the active owner descriptor; it does not silently accept a different
 morphology. This owner boundary does not authenticate the descriptor's
 external origin.
 
-Restoring is strict (`test_articulated_checkpoint_rejects_unknown_schema_and_implicit_units`,
-`test_state_and_checkpoint_must_match_active_morphology_descriptor`, and an
-ad hoc run for the rest): the set of top-level fields must be exactly the
-expected one, the outer articulated-checkpoint schema version must be the
-integer 2 (the nested root checkpoint has its own schema version), the units
-must be the two named, the binding must equal the supplied descriptor's
-field for field, and the decoded state must pass every rule of construction. Altered
-bytes with a joint out of range, a joint missing, an extra field in a joint,
-another owner marker or another body in the root were all refused.
+The canonical outer schema identifier is
+`ARTICULATED_PHYSICAL_CHECKPOINT_SCHEMA = "embodiment-articulated-physical-checkpoint-v2"`;
+the nested root checkpoint has its own schema. Restore is strict: the set of
+top-level fields must be exact, units explicit, the binding must match the
+active descriptor field for field, and decoded state must pass construction
+rules. `validate_checkpoint` independently checks checkpoint bytes against
+the active morphology, schema and SHA-256 reference;
+`verify_restoration` checks that restored state corresponds exactly to the
+referenced bytes. These checks do not authenticate the external origin of
+the descriptor and do not establish durable storage or recovery after
+process failure. Tests cover altered bytes, invalid state, wrong owner
+identity, and mismatched restored state.
 
 A state encoded and restored equals the original and encodes to the same
 bytes (`test_articulated_checkpoint_is_deterministic_and_restores_exact_state`),
@@ -272,13 +275,11 @@ Four things follow, read from the code and confirmed by a run:
   as given. Two states built with the joint position `1` and `1.0` compare
   equal and encode differently, and so do `0.0` and `-0.0`. A state
   restored from bytes re-encodes to those same bytes.
-- **Less is offered than by the root.** The root state has a digest of its
-  checkpoint and an explicit statement that it has no durable reference.
-  The articulated state has neither. Like the root, it does not answer the
-  two validation questions of World's durable runtime, and the schema name
-  under which World's fixture stores it,
-  `embodiment-articulated-physical-state-v1`, appears only in that fixture
-  (read at `world@a8d07fd791da76365aa74080eef1e82b11a599fd`).
+- **The verification boundary is limited.** Owner validation and restoration
+  verification exist in Embodiment, but they verify against a supplied
+  independent reference; they do not authenticate who created it or prove
+  durable storage/recovery. The World integration fixture still supplies
+  the adapter and does not make this a production-integrated checkpoint.
 
 ## Time
 
@@ -307,8 +308,8 @@ not behaviour observed here.
 
 ## Where it is used
 
-No source module of any repository uses these types (search of 2026-10-09
-named above). They are used by two integration fixtures of World, described
+No production source module was identified using these types in the reviewed
+repository trees. World contains two integration fixtures that use them, described
 in [the physical causal step](../world/physical-step.md). In
 `test_articulated_mujoco_candidate_is_adopted_and_world_committed` a body of
 two boxes and one hinge is stepped, its state is adopted and stored, the
@@ -316,10 +317,10 @@ owners are restored from the committed cut, and a second step is taken. The
 fixture calls itself "a workspace-local integration fixture, not a production
 solver adapter".
 
-World's integration extra pins `embodiment` at an earlier commit,
-`3fe3cda64516dd5a8148ec49b826c025925396c0`. The six modules described in
-this document and in [the physical projection](physical-projection.md) are
-identical at the two commits.
+World's integration extra pins `embodiment` at
+`badf444f8f62e91d1c5ed4a65f3fe23c6cbda6b8`, earlier than the reviewed
+Embodiment revision. That fixture therefore does not exercise the current
+owner-validation and restoration-verification methods described above.
 
 ## Correspondence with the decisions
 
@@ -348,12 +349,12 @@ This is a comparison of content, not a ruling on conformance.
 | Claim | Support |
 |---|---|
 | Determinism of the description, the two topology checks, channel names, immutability of the value types | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_physics3d_mechanics.py`, run at that revision (all pass) |
-| Rules of construction of the state, adoption by identifier, refusals, stale morphology, checkpoint determinism and strictness, descriptor binding, continuation after restore | Code and tests in `embodiment:tests/test_articulated_state.py`, run at that revision (all pass) |
-| Carrier links, dropped segments, narrowed limits, precision, absence of validation, malformed text | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
+| Rules of construction of the state, adoption by identifier, refusals, stale morphology, checkpoint determinism and strictness, descriptor binding, owner validation and restoration verification | Code and tests in `embodiment:tests/test_articulated_state.py` |
+| Carrier links, dropped segments, narrowed limits, precision, malformed text | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_articulated_state.py` |
 | Hand-made descriptor accepted; digest blind to six fields; checkpoint restored under a descriptor from a different specification; equal states with different bytes; limits enforced at the specification's values | Code, and the same ad hoc run |
 | Inherited limits of adoption (caller-supplied expectation, invented revisions, two candidates for one step) | The same ad hoc run, on the articulated state |
 | Fields, names and constants read by no code; no source module uses these types | A search of the source and test trees of the seven repositories at their main branches on 2026-10-09 |
-| Use in World's fixture; the schema name | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, read; run by World's integration job at pinned revisions, not run for this document |
+| Use in World's fixture | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; fixture composition, not production wiring |
 | Who owns body truth; what ends with a body | Accepted decisions ADR-0073, ADR-0098, ADR-0104, ADR-0094, ADR-0095; statements of intent, not test results |
 
 No run with a real solver, no stored checkpoint and no experiment was

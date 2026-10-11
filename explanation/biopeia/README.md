@@ -14,7 +14,8 @@ Explanations that cross domains. They are derived from the unit documents and ad
 
 1. [What Biopeia is](what-biopeia-is.md)
 2. [What Biopeia sets out to find out: candidate hypotheses](research-hypotheses.md)
-3. [One step across the domains](one-step-across-the-domains.md)
+3. [Capability maturity: what the documented evidence supports](capability-maturity.md)
+4. [One step across the domains](one-step-across-the-domains.md)
 
 ## Canonical documents
 
@@ -23,6 +24,7 @@ Explanations that cross domains. They are derived from the unit documents and ad
 | [what-biopeia-is.md](what-biopeia-is.md) | `concept.biopeia-what-it-is` | TARGET | RECORDED |
 | [research-hypotheses.md](research-hypotheses.md) | `concept.biopeia-research-hypotheses` | UNRESOLVED | REVIEW_PENDING |
 | [one-step-across-the-domains.md](one-step-across-the-domains.md) | `concept.biopeia-one-step-across-the-domains` | CURRENT | not recorded |
+| [capability-maturity.md](capability-maturity.md) | `concept.biopeia-capability-maturity` | CURRENT | RECORDED |
 
 ## Related domains
 

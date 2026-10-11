@@ -75,10 +75,19 @@ every level, the previous schema version is refused with no compatibility path,
 and a restored owner refuses to adopt again a step it had already accepted
 (`test_checkpoint_persists_accepted_step_and_rejects_replay_after_restore`,
 `test_checkpoint_rejects_unknown_fields_at_each_scene_level`,
-`test_checkpoint_v4_persists_spheres_and_rejects_v3_without_compatibility`).
+`test_checkpoint_v5_persists_contact_properties_and_rejects_v4_without_compatibility`).
 
-Like the [finite resource](finite-resource.md), the owner answers World's
-two validation questions without importing World.
+Like the [finite resource](finite-resource.md), the owner validates its
+checkpoint and verifies restoration against an independent reference without
+importing World. Its `verify_restoration(OwnerRestorationReference)` API
+requires adaptation to the World runtime's interface; that is not automatic
+production wiring.
+
+The owner also exposes a physical projection bound to scene revision,
+geometry, units and World step context. It fails closed if contact properties
+are absent or the context is stale. Checkpoint schema v5 preserves explicit
+sliding-friction properties for the plane and sphere; v4 is rejected without
+a compatibility path.
 
 ## Time
 
@@ -123,7 +132,7 @@ whoever builds them, which today is a test fixture; see
 
 | Claim | Support |
 |---|---|
-| Scene validation, projection, adoption rules, checkpoint strictness, replay refused after restore | Code and tests in `environment:tests/test_static_scene.py` |
+| Scene validation, physical projection, adoption rules, checkpoint strictness, contact-property preservation and replay refused after restore | Code and tests in `environment:tests/test_static_scene.py`, `environment:tests/test_environment_physical_projection.py`, and `environment:tests/test_restoration.py` |
 | A step from another World is refused; owner and environment identifiers are not tied | Code, tests, and one ad hoc run of the module at that revision |
 | The offset of one between the owner's tick and World's | Code of this module and of World's physical step fixture |
 | That a solver does not own the scene | Accepted decision ADR-0098; a statement of intent |

@@ -1,6 +1,6 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`. The
+Reviewed against `world@e423a04a113e6015a7eca0986d303129eebaceaa`. The
 fixtures described here import the other repositories at the revisions pinned
 in `world:pyproject.toml`, and that is where World's integration job runs
 them: `organism@8bf1eafeb2c05459e4cbaae3a377d2f1c35504c6`,
@@ -258,19 +258,20 @@ The pinned revisions are behind the heads named at the top: Organism by 23
 commits, Embodiment by 4, Environment by 3, Modality by 1, Observation by 2.
 The integration job says nothing about the heads.
 
-In an ad hoc run on 2026-10-11, the whole of `world:tests/integration` was
-run with World and the five other repositories at their heads, MuJoCo 3.14.0
-and Python 3.12. Of 31 test cases, 25 passed and 6 failed. The six are all
-the tests of `test_procedural_sphere_world_step.py`, and all fail the same
-way while building the scene: Environment's procedural genesis configuration
-now requires a sliding friction coefficient that the fixture does not supply.
-The requirement was added after the pinned Environment revision. The five
-tests of the first fixture, the two of the third, and the tests of the
-MuJoCo executor passed.
+An ad hoc run on 2026-10-11 used World and the five other repositories at
+their then-current heads, MuJoCo 3.14.0 and Python 3.12. Of 31 cases, 25
+passed and the six cases in `test_procedural_sphere_world_step.py` failed
+while constructing the scene: the Environment genesis specification now
+requires an explicit sliding-friction coefficient. At the reviewed World
+revision, that fixture sets the coefficient to `0.0`, matching its
+frictionless MuJoCo contacts. The change repairs the fixture configuration;
+it is not evidence that the six cases have since been rerun successfully. The
+five cases of the first fixture, two of the third fixture, and MuJoCo executor
+tests passed in the earlier run.
 
-So the second fixture describes Environment as pinned, not as it is at its
-head. This is recorded as a finding and nothing here was changed to make it
-pass.
+The earlier failures are historical evidence, not a current result. The
+fixture now declares the Environment input it requires; no new test result is
+claimed here.
 
 ## What supports this description
 
