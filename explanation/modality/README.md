@@ -20,6 +20,10 @@ Explanatory documents of the Modality domain (capability).
 |---|---|---|---|
 | [current-state.md](current-state.md) | `concept.modality-current-state` | CURRENT | RECORDED |
 
+## Related domains
+
+No cross-domain contract registered for these units.
+
 ## Designs
 
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
