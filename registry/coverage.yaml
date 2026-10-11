@@ -121,7 +121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: e423a04a113e6015a7eca0986d303129eebaceaa
 
   mechanism.world-causal-transition:
     kind: mechanism
@@ -231,8 +231,8 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        world: e423a04a113e6015a7eca0986d303129eebaceaa
+        organism: 8ba912a28f7297a06e9e7011e5e277991becad60
         embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
         environment: e91bb67f81f3bc15715489cf1262328934454f1b
         modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
@@ -1124,7 +1124,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: 8ba912a28f7297a06e9e7011e5e277991becad60
 
   component.organism-execution-binding:
     kind: component

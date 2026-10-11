@@ -217,8 +217,12 @@ registry.
 
 Both modules, and the attempt record
 (`organism:src/organism/actuation/attempt.py::ActionAttempt`), have no test
-and no caller. The schema strings hashed into signature, channel and dimension
-identifiers still carry the historical name `symbiont`.
+and no caller. The identifier namespaces now use Biopeia names: intervention signatures
+use `biopeia-intervention-signature-v2`, and action dimensions use
+`biopeia-action-dimension-v3`. Both registry schema versions were incremented
+so checkpoints carrying the previous identifier namespaces fail closed instead
+of silently retaining those identities. This is a compatibility boundary, not
+evidence that either registry is integrated into an Organism checkpoint.
 
 ## Footprints
 
