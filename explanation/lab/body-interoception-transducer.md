@@ -45,7 +45,7 @@ them to this transducer.
 
 Five fields of a body state: the energy reserve and its maximum, structural
 integrity, temperature and fatigue
-(`lab:src/lab/apparatus/interoception.py::SomaticInteroceptionInput`). Lab
+([SomaticInteroceptionInput — código histórico](https://github.com/biopeia/lab/blob/4d5ff706b8329ddf25e1852ad53cbde5285d2851/src/lab/apparatus/interoception.py)). Lab
 declares the shape it needs and imports nothing from Embodiment. Any object
 with those five attributes is accepted; the tests use a stand-in of their
 own. Confirmed by running the module that Embodiment's body state has the
@@ -161,7 +161,7 @@ consumer learns. No experiment is described or authorised here.
 
 | Claim | Support |
 |---|---|
-| The four bounded values and their source order; the permutation; refusal of non-permutations; the state left unchanged; the checkpoint holding only the permutation | Code and tests in `lab:tests/unit/test_interoception.py`; the 18 unit tests of the repository passed when run for this document |
+| The four bounded values and their source order; the permutation; refusal of non-permutations; the state left unchanged; the checkpoint holding only the permutation | Code and tests in [Pruebas históricas de interocepción](https://github.com/biopeia/lab/blob/4d5ff706b8329ddf25e1852ad53cbde5285d2851/tests/unit/test_interoception.py); the 18 unit tests of the repository passed when run for this document |
 | Embodiment's body state can be sampled; out-of-range and not-a-number inputs; restoring with other or reordered identifiers; conversion of identifiers and positions | Code, and ad hoc runs of the module at that revision, once with Embodiment at the revision pinned in `lab:pyproject.toml` (`0562febd8dfffaa826c339600bb548ea172fa256`) and once at the revision named at the top, with identical output |
 | No consumer in Biopeia | A search of the seven domain repositories at their main branches on the day of review |
 | How somatic state should reach an Organism and who should own transducer state | Accepted decisions ADR-0094 and ADR-0099; statements of intent |
