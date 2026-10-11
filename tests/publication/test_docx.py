@@ -168,9 +168,29 @@ def test_style_is_data_and_changes_only_the_look():
     first, changed = build_docx(projection, style=style)[0], build_docx(projection, style=other)[0]
     assert document_xml(first) == document_xml(changed)
     styles = zipfile.ZipFile(io.BytesIO(changed)).read("word/styles.xml").decode("utf-8")
-    assert "AA0000" in styles and 'w:ascii="Aptos"' in styles and 'w:ascii="Consolas"' in styles
+    assert "AA0000" in styles and 'w:ascii="Liberation Sans"' in styles and 'w:ascii="Liberation Mono"' in styles
     fonts = zipfile.ZipFile(io.BytesIO(first)).read("word/fontTable.xml").decode("utf-8")
-    assert '<w:font w:name="Aptos"><w:altName w:val="Liberation Sans"/>' in fonts
+    assert '<w:font w:name="Liberation Sans"><w:altName w:val="Aptos"/>' in fonts
+    assert '<w:font w:name="Liberation Mono"><w:altName w:val="Consolas"/>' in fonts
+
+
+def test_docx_font_strategy_renders_deterministically_in_clean_libreoffice():
+    """Clean LibreOffice rendering without Aptos/Consolas matches fallback metrics."""
+    projection = small(chapter("explanation/w/a.md", "Deterministic text and `identifier`.\n"))
+    docx_bytes, _ = build_docx(projection)
+    styles = zipfile.ZipFile(io.BytesIO(docx_bytes)).read("word/styles.xml").decode("utf-8")
+    assert 'w:ascii="Liberation Sans"' in styles and 'w:ascii="Liberation Mono"' in styles
+    # When explicit docx_name is given, it is preserved
+    custom_style = {
+        **load_style(),
+        "fonts": {
+            "text": {"name": "Aptos", "fallback": "Liberation Sans", "docx_name": "Custom Font"},
+            "code": {"name": "Consolas", "fallback": "Liberation Mono"},
+        },
+    }
+    custom_docx, _ = build_docx(projection, style=custom_style)
+    custom_styles = zipfile.ZipFile(io.BytesIO(custom_docx)).read("word/styles.xml").decode("utf-8")
+    assert 'w:ascii="Custom Font"' in custom_styles
 
 
 def test_long_identifiers_break_after_separators_only():

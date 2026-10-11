@@ -721,10 +721,22 @@ class Document:
         )
 
 
+def docx_font_name(font_entry: dict[str, Any]) -> str:
+    """The typeface written into the DOCX.
+
+    Uses `docx_name` if specified, otherwise the deterministic open `fallback`
+    so that clean environments lacking proprietary typefaces render with
+    stable metrics.
+    """
+    return str(font_entry.get("docx_name") or font_entry["fallback"])
+
+
 def font_table_xml(style: dict[str, Any]) -> str:
     """Names the fallback of each typeface, for a reader who does not have it."""
     fonts = "".join(
-        f'<w:font w:name="{font["name"]}"><w:altName w:val="{font["fallback"]}"/></w:font>'
+        f'<w:font w:name="{docx_font_name(font)}">'
+        + (f'<w:altName w:val="{font["name"]}"/>' if font.get("name") and font["name"] != docx_font_name(font) else "")
+        + "</w:font>"
         for font in style["fonts"].values()
     )
     return f'{XML_HEADER}<w:fonts xmlns:w="{W_NS}">{fonts}</w:fonts>'
@@ -732,7 +744,8 @@ def font_table_xml(style: dict[str, Any]) -> str:
 
 def styles_xml(style: dict[str, Any], text_width: int) -> str:
     sizes, colours = style["sizes"], style["colours"]
-    text_font, code_font = style["fonts"]["text"]["name"], style["fonts"]["code"]["name"]
+    text_font = docx_font_name(style["fonts"]["text"])
+    code_font = docx_font_name(style["fonts"]["code"])
 
     def fonts(name: str) -> str:
         return f'<w:rFonts w:ascii="{name}" w:hAnsi="{name}" w:cs="{name}"/>'
@@ -789,7 +802,7 @@ def styles_xml(style: dict[str, Any], text_width: int) -> str:
         f'<w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/><w:rPr>{fonts(code_font)}'
         f'<w:sz w:val="{round((sizes["body"] - 1) * 2)}"/></w:rPr></w:style>',
         '<w:style w:type="character" w:styleId="SymbolChar"><w:name w:val="Symbol Char"/><w:rPr>'
-        + fonts((style["fonts"].get("symbols") or style["fonts"]["text"])["name"]) + "</w:rPr></w:style>",
+        + fonts(docx_font_name(style["fonts"].get("symbols") or style["fonts"]["text"])) + "</w:rPr></w:style>",
         f'<w:style w:type="character" w:styleId="CodeLink"><w:name w:val="Code Link"/><w:rPr>{fonts(code_font)}'
         f'<w:color w:val="{colours["accent"]}"/><w:sz w:val="{round((sizes["body"] - 1) * 2)}"/>'
         '<w:u w:val="single"/></w:rPr></w:style>',
