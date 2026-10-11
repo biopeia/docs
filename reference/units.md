@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-52 units, 10 cross-domain contracts, 120 findings.
+53 units, 10 cross-domain contracts, 120 findings.
 
 ## World
 
@@ -206,6 +206,17 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-manifest`, `component.world-durable-runtime`, `mechanism.world-recovery`, `mechanism.physical-causal-step`, `component.environment-finite-resource`, `component.environment-static-scene`, `concept.modality-current-state`, `component.embodiment-physical-state`, `mechanism.embodiment-actuation-projection`, `component.lab-operator-material-transfer`, `component.observation-semantic-claim-model`, `component.observation-plane`, `mechanism.organism-action-path`, `component.organism-identity-checkpoint`, `component.organism-cognitive-graph` |
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 
+### Capability maturity from documented evidence
+
+`concept.biopeia-capability-maturity` · concept · CURRENT
+
+| | |
+|---|---|
+| Owned by | world; also involves organism, embodiment, environment, modality, observation, lab |
+| Explained in | [explanation/biopeia/capability-maturity.md](../explanation/biopeia/capability-maturity.md) |
+| Depends on | `concept.biopeia-one-step-across-the-domains`, `concept.biopeia-research-hypotheses`, `concept.organism-life-across-mechanisms`, `concept.modality-current-state`, `mechanism.organism-action-path`, `mechanism.organism-cognitive-checkpoint`, `mechanism.organism-sense-to-checkpoint-transition`, `mechanism.physical-causal-step`, `component.embodiment-articulated-body`, `component.embodiment-physical-state`, `component.environment-dynamic-state`, `component.environment-finite-resource`, `component.environment-static-scene`, `component.environment-procedural-genesis`, `component.organism-genome`, `component.organism-actuator-evidence`, `component.organism-causal-evidence`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-prospective-deliberation`, `component.world-durable-runtime`, `mechanism.world-recovery`, `component.observation-semantic-claim-model`, `component.observation-plane`, `component.lab-operator-material-transfer` |
+| Reviewed at | organism@ba0011797a6a, embodiment@597cc4a09f4a, environment@caa885a11ec0, world@95f5064c6b06, modality@79b779152d4b, observation@6aac3c766848, lab@29e25d85e796 (RECORDED) |
+
 ## Environment
 
 ### Finite resource
@@ -223,8 +234,8 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner environment, family environmental_state |
 | Cross-domain contracts | Owner checkpoint validation (structural); Operator material transfer (shared_type) |
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md) |
-| Tests | `environment:tests/unit/test_resource.py`, `environment:tests/test_identified_resource.py` |
-| Reviewed at | environment@f97ec22272b6 (RECORDED) |
+| Tests | `environment:tests/unit/test_resource.py`, `environment:tests/test_identified_resource.py`, `environment:tests/test_restoration.py` |
+| Reviewed at | environment@caa885a11ec0 (RECORDED) |
 | Known findings | F-0014 implementation finding (open); F-0015 contract gap (open); F-0016 implementation finding (open) |
 
 ### Static scene and its owner
@@ -242,8 +253,8 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner environment, family environmental_state |
 | Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only); Frame and unit conventions between body and scene (by_convention) |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `environment:tests/test_static_scene.py` |
-| Reviewed at | environment@0a9f4fbb1922 (RECORDED) |
+| Tests | `environment:tests/test_static_scene.py`, `environment:tests/test_environment_physical_projection.py`, `environment:tests/test_restoration.py` |
+| Reviewed at | environment@caa885a11ec0 (RECORDED) |
 | Known findings | F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)) |
 
 ### Procedural genesis of a scene
@@ -262,7 +273,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-static-scene` |
 | Governed by | [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
 | Tests | `environment:tests/test_genesis.py` |
-| Reviewed at | environment@f97ec22272b6 (RECORDED) |
+| Reviewed at | environment@caa885a11ec0 (RECORDED) |
 | Known findings | F-0017 implementation finding (accepted); F-0019 evidence gap (open) |
 
 ### Physical projection of resource geometry
@@ -300,8 +311,8 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Correlation of a physical step (fixture_only) |
 | Depends on | `component.environment-static-scene` |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `environment:tests/test_dynamic_state.py` |
-| Reviewed at | environment@0a9f4fbb1922 (RECORDED) |
+| Tests | `environment:tests/test_dynamic_state.py`, `environment:tests/test_restoration.py`, `world:tests/integration/test_environment_dynamic_adoption_restore.py` |
+| Reviewed at | environment@caa885a11ec0, world@95f5064c6b06 (RECORDED) |
 | Known findings | F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0125 contract gap (open); F-0126 implementation finding (accepted); F-0127 implementation finding (open) |
 
 ## Embodiment
@@ -322,7 +333,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only) |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_physical_transition.py`, `embodiment:tests/test_body_pose_sample.py` |
-| Reviewed at | embodiment@a5129f03aa4b, world@c162b67e698d (RECORDED) |
+| Reviewed at | embodiment@597cc4a09f4a, world@c162b67e698d (RECORDED) |
 | Known findings | F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0021 contract gap (open); F-0120 contract gap (open) |
 
 ### Actuation projection by stable effector identity
@@ -376,7 +387,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.embodiment-physical-state` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_articulated_spec.py`, `embodiment:tests/test_physics3d_mechanics.py`, `embodiment:tests/test_articulated_state.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
-| Reviewed at | embodiment@97cb09a82b0b, world@a8d07fd791da (RECORDED) |
+| Reviewed at | embodiment@597cc4a09f4a, world@a8d07fd791da (RECORDED) |
 | Known findings | F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0116 recovery durability gap ([issue](https://github.com/biopeia/embodiment/issues/33)); F-0117 implementation finding (open); F-0118 implementation finding (open); F-0121 implementation finding (open) |
 
 ### Physical projection for a solver, body pose sample, declared conventions and physical duration
@@ -424,12 +435,12 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | organism; also involves world, embodiment |
 | Explained in | [explanation/organism/action-path.md](../explanation/organism/action-path.md) |
-| Implemented in | `organism:src/organism/agency/affordance.py`, `organism:src/organism/agency/prospective.py`, `organism:src/organism/agency/intention.py`, `organism:src/organism/actuation/action.py`, `organism:src/organism/actuation/arbitration.py`, `organism:src/organism/actuation/commitment.py`, `organism:src/organism/actuation/controller.py`, `organism:src/organism/actuation/command.py`, `organism:src/organism/actuation/surface.py`, `organism:src/organism/actuation/system.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
+| Implemented in | `organism:src/organism/agency/affordance.py`, `organism:src/organism/agency/prospective.py`, `organism:src/organism/agency/intention.py`, `organism:src/organism/actuation/action.py`, `organism:src/organism/actuation/arbitration.py`, `organism:src/organism/actuation/commitment.py`, `organism:src/organism/actuation/controller.py`, `organism:src/organism/actuation/command.py`, `organism:src/organism/actuation/domain.py`, `organism:src/organism/actuation/surface.py`, `organism:src/organism/actuation/system.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
 | Depends on | `mechanism.physical-causal-step` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
-| Tests | `organism:tests/source_unit/agency/test_executive_admission.py`, `organism:tests/source_unit/actuation/test_command_binding.py`, `organism:tests/source_unit/actuation/test_surface.py`, `organism:tests/source_unit/actuation/test_system.py` |
-| Reviewed at | organism@3cc0f319f4ac, world@a8d07fd791da (RECORDED) |
+| Tests | `organism:tests/source_unit/agency/test_executive_admission.py`, `organism:tests/source_unit/actuation/test_command_binding.py`, `organism:tests/source_unit/actuation/test_domain.py`, `organism:tests/source_unit/actuation/test_surface.py`, `organism:tests/source_unit/actuation/test_system.py` |
+| Reviewed at | organism@ba0011797a6a, world@95f5064c6b06 (RECORDED) |
 | Known findings | F-0030 contract gap ([issue](https://github.com/biopeia/organism/issues/30)); F-0032 contract gap ([issue](https://github.com/biopeia/organism/issues/32)); F-0035 implementation finding (open); F-0037 evidence gap (open); F-0038 documentation inconsistency (open) |
 
 ### Organism identity and the checkpoint envelope
@@ -466,7 +477,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `organism:tests/source_unit/agency/test_executive_outcome.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0036 implementation finding (open); F-0037 evidence gap (open); F-0038 documentation inconsistency (open) |
 
 ### The life of an Organism, as the code has it
@@ -477,7 +488,7 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | organism; also involves modality |
 | Explained in | [explanation/organism/life-of-an-organism.md](../explanation/organism/life-of-an-organism.md) |
-| Depends on | `concept.biopeia-research-hypotheses`, `concept.biopeia-what-it-is`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-attention-allocation`, `component.organism-capacity-and-pair-statistics`, `component.organism-causal-evidence`, `component.organism-causal-provenance-log`, `mechanism.organism-cognitive-checkpoint`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-experience-ledger`, `concept.organism-foundation-conventions`, `component.organism-generative-resident`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation` |
+| Depends on | `concept.biopeia-research-hypotheses`, `concept.biopeia-what-it-is`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-attention-allocation`, `component.organism-capacity-and-pair-statistics`, `component.organism-causal-evidence`, `component.organism-causal-provenance-log`, `mechanism.organism-cognitive-checkpoint`, `mechanism.organism-sense-to-checkpoint-transition`, `component.organism-transition-and-continuation`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-experience-ledger`, `concept.organism-foundation-conventions`, `component.organism-generative-resident`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0088-lifecycle-event-ontology.md](../technical/adr/ADR-0088-lifecycle-event-ontology.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 
 ### Competence development engine
@@ -496,7 +507,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 | Tests | `organism:tests/source_unit/actuation/test_sensorimotor.py`, `organism:tests/source_unit/actuation/test_causal_probing.py`, `organism:tests/source_unit/actuation/test_genome_motor_genes.py`, `organism:tests/source_unit/agency/test_candidates.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0101 contract gap ([issue](https://github.com/biopeia/organism/issues/40)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
 
 ### Effects, causal evidence and controllability
@@ -515,7 +526,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 | Tests | `organism:tests/source_unit/actuation/test_effect_atoms.py`, `organism:tests/source_unit/actuation/test_causal_footprints.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
 
 ### Execution bindings, availability and the affordance resolver
@@ -534,7 +545,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path`, `component.organism-competence-development`, `component.organism-causal-evidence`, `component.organism-executive-outcome-ledger` |
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 | Tests | `organism:tests/source_unit/agency/test_competence_availability.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0101 contract gap ([issue](https://github.com/biopeia/organism/issues/40)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
 
 ### Prospective deliberation and the outcome-value ledger
@@ -553,7 +564,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path`, `component.organism-competence-development` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/agency/test_prospective.py`, `organism:tests/source_unit/agency/test_policy.py`, `organism:tests/source_unit/agency/test_value.py` |
-| Reviewed at | organism@3cc0f319f4ac (RECORDED) |
+| Reviewed at | organism@ba0011797a6a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0104 implementation finding (open); F-0105 evidence gap (open) |
 
 ### Genome, expression and germline record
@@ -661,7 +672,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
 | Tests | `organism:tests/source_unit/actuation/test_proposer.py`, `organism:tests/source_unit/actuation/test_candidate.py`, `organism:tests/source_unit/actuation/test_checkpoint_gate.py`, `organism:tests/source_unit/actuation/test_types.py`, `organism:tests/source_unit/actuation/test_context.py` |
-| Reviewed at | organism@3cc0f319f4ac, world@a8d07fd791da (RECORDED) |
+| Reviewed at | organism@ba0011797a6a, world@a8d07fd791da (RECORDED) |
 | Known findings | F-0129 contract gap ([issue](https://github.com/biopeia/organism/issues/51)); F-0130 implementation finding (accepted); F-0131 implementation finding (open) |
 
 ### The cognitive graph and its explicit-tick transition
@@ -788,19 +799,19 @@ restates it so that the answers about one unit can be read in one place.
 
 ## Modality
 
-### Modality: decided role and current state of the repository
+### Modality: a narrow transduction contract, not a sensory system
 
-`concept.modality-current-state` · concept · TARGET
+`concept.modality-current-state` · concept · CURRENT
 
 | | |
 |---|---|
 | Owned by | modality; also involves world, organism |
 | Explained in | [explanation/modality/current-state.md](../explanation/modality/current-state.md) |
-| Implemented in | `modality:src/modality/__init__.py` |
+| Implemented in | `modality:src/modality/scalar_field.py` |
 | Cross-domain contracts | Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `modality:tests/test_unratified_surface.py`, `world:tests/integration/test_first_biopeia_causal_tick.py` |
-| Reviewed at | modality@9bd1b77c9eab, world@c162b67e698d (RECORDED) |
+| Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
+| Reviewed at | modality@79b779152d4b, world@95f5064c6b06, organism@ba0011797a6a, embodiment@597cc4a09f4a, environment@caa885a11ec0, observation@6aac3c766848, lab@29e25d85e796 (RECORDED) |
 | Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation
@@ -929,5 +940,5 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | lab; also involves organism, embodiment, environment, world, modality, observation |
 | Explained in | [explanation/biopeia/research-hypotheses.md](../explanation/biopeia/research-hypotheses.md) |
-| Depends on | `component.embodiment-somatic-state`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-causal-evidence`, `mechanism.organism-cognitive-checkpoint`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation`, `concept.biopeia-what-it-is`, `concept.biopeia-one-step-across-the-domains` |
+| Depends on | `component.embodiment-somatic-state`, `concept.modality-current-state`, `mechanism.organism-action-path`, `component.organism-actuator-evidence`, `component.organism-causal-evidence`, `mechanism.organism-cognitive-checkpoint`, `mechanism.organism-sense-to-checkpoint-transition`, `component.organism-transition-and-continuation`, `component.organism-cognitive-graph`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-genome`, `mechanism.organism-graph-plasticity`, `component.organism-identity-checkpoint`, `component.organism-prospective-deliberation`, `concept.biopeia-what-it-is`, `concept.biopeia-one-step-across-the-domains` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md](../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md), [technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md](../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
