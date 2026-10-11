@@ -71,25 +71,26 @@ the next tick
 `test_checkpoint_is_closed_and_requires_exact_schema`,
 `test_checkpoint_rejects_last_correlation_from_another_world`).
 
-The owner answers the first of the two questions World asks of an owner in a
-causal cut, whether checkpoint bytes are valid for an identity and schema
-(`test_checkpoint_schema_and_checkpoint_reference_validation_are_explicit`).
-It does not provide the second, the confirmation after a restoration, which
-the durable World runtime calls during restore and recovery; see
-[the durable World runtime](../world/durable-runtime.md). Confirmed by
-inspecting the class at that revision.
+The owner answers both restoration questions through separate methods:
+checkpoint validation and `verify_restoration(reference)`. The latter checks
+the restored owner against an independent `OwnerRestorationReference`; it
+does not import World. Environment's signature is not the same as the
+adapter-facing World runtime signature, so a caller must adapt the reference
+rather than assuming direct wiring. See
+[the durable World runtime](../world/durable-runtime.md).
 
 ## Who uses it
 
-Nobody yet. A search of the source and test trees of the other six
-repositories at their main branches on 2026-10-10 found no use of this
-module. It is exercised only by its own tests.
+World exercises it in
+`world:tests/integration/test_environment_dynamic_adoption_restore.py`:
+the fixture adapts the owner, validates and restores its checkpoint, then
+checks continuation. This is test composition, not a production consumer or
+runtime connection.
 
 ## What supports this description
 
 | Claim | Support |
 |---|---|
 | Adoption rules, refusal without change, checkpoint strictness and continuity, World binding | Code and tests in `environment:tests/test_dynamic_state.py` |
-| Any finite position is adopted; the restoration confirmation is absent | Code, and one ad hoc run of the module at that revision |
-| No consumer | A search of the other repositories on 2026-10-10 |
+| Any finite position is adopted; restoration confirmation and World integration | Code and tests in `environment:tests/test_dynamic_state.py`, `environment:tests/test_restoration.py`, and `world:tests/integration/test_environment_dynamic_adoption_restore.py` |
 | That it defines no environmental law | The module's own documentation |

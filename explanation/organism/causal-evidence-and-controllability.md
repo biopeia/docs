@@ -1,6 +1,6 @@
 # Effects, causal evidence and controllability
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -19,15 +19,12 @@ many rows there are. Agency is a weighted sum of three such numbers. Nothing
 here intervenes, randomises or tests a hypothesis; the structures count what a
 caller reports to them.
 
-**No code builds or feeds these structures.** The effect registry, the
-evidence ledger and the three models are constructed nowhere in the Biopeia
-repositories, in source or in tests; the only tests that touch this code check
-the pure functions that decompose a change into atoms and the footprint
-registry (search of the seven repositories at `origin/main`, 2026-10-09). The
-record of an executed command that the ledger expects is never constructed
-either, as [the action path](action-path.md) already notes. What follows
-therefore describes parts that are complete in themselves, read from the code
-and exercised by hand.
+The evidence ledger and inference models are implemented as composable
+Organism mechanisms and have source-unit coverage. The reviewed source does
+not itself assemble them into a live runtime: they are instantiated in tests,
+not by a production Organism/world orchestrator, and no complete observed
+causal cycle was examined. The findings below describe those mechanisms and
+their tested contracts, not demonstrated causal learning.
 
 ## The parts
 
@@ -131,7 +128,7 @@ The function
 "Intervention reliability beyond the alternative rate, times support.") is:
 
 ```text
-if action_n == 0:  0
+if action_n == 0 or action_hits == 0:  0
 if other_n  == 0:  min(0.25, action_n / 32)
 otherwise:         (action_hits / action_n  -  other_hits / other_n)  *  min(1, min(action_n, other_n) / 8)
                    limited to the range 0 to 1
@@ -144,16 +141,17 @@ function and the ledger:
 | Rows on record | Result for source A |
 |---|---|
 | A eight times, effect each time; nothing else | 0.25 |
-| A eight times, effect never; nothing else | 0.25 |
+| A eight times, effect never; nothing else | 0.0 |
 | A eight of eight; eight passive windows without the effect | 1.0 |
 | A eight of eight; eight passive windows without; B eight of eight with the same effect | 0.5 |
 | A eight of eight; B eight of eight with the same effect; no passive windows | 0.0 |
 
-Two rows deserve a sentence each. The second shows that when nothing else is
-on record the result does not depend on whether the effect ever followed: the
-branch for an empty comparison reads only the number of rows. The last shows
-that two sources that each produce an effect every time cancel one another
-when there are no passive windows. Both are recorded in finding F-0103.
+The zero-hit guard prevents a positive controllability estimate when no
+action-linked observation of the effect exists. With observed hits but no
+comparison rows, the estimate remains capped at 0.25; it is a bounded score,
+not a demonstrated causal result. The last row shows that two sources that
+each produce an effect every time cancel one another when no passive windows
+exist. These edge cases are recorded in finding F-0103.
 
 The model stores one estimate per source, effect and context, at most 8192,
 most recently updated kept. It can be rebuilt from the ledger and exports its
@@ -309,20 +307,19 @@ after it starts; nothing else relates one row's ticks to another's.
 |---|---|
 | How a change becomes an effect identifier; the count and confidence; the bound | Code and one ad hoc run of the module at that revision; tests cover only the static rounding function |
 | Atoms | Code and tests in `organism:tests/source_unit/actuation/test_effect_atoms.py` |
-| What a row holds, the two bounds, incremental counts, round trip, acceptance of unordered ticks, shared passive identifiers | Code and the ad hoc run; the ledger has no test |
+| What a row holds, the two bounds, incremental counts and round trip | Code and tests in `organism:tests/source_unit/actuation/test_causal_evidence_checkpoint.py` |
 | That the other rows include other sources | Code and the ad hoc run |
-| The controllability formula and the table of values | Code and the ad hoc run; no test |
-| The agency formula and values | Code and the ad hoc run; no test |
+| The controllability formula and zero-hit guard | Code and tests in `organism:tests/source_unit/actuation/test_controllability_model.py` |
+| The agency formula and values | Code and tests in `organism:tests/source_unit/actuation/test_controllability_model.py` |
 | The forward model | Code and the ad hoc run; no test |
 | Signatures and dimensions | Code and the ad hoc run; no test |
 | Footprint membership, logging, pinning and restore | Code and tests in `organism:tests/source_unit/actuation/test_causal_footprints.py`; not run separately beyond the test suite |
-| Nothing constructs the effect space, the ledger, the models, the signature and dimension registries or the attempt record | Search of the seven repositories at `origin/main`, 2026-10-09 |
+| These mechanisms are not assembled by a production Organism/world runtime; test fixtures construct and exercise selected compositions | Source search at the reviewed repository heads; unit-test suite |
 | Whose state this is | Accepted decisions ADR-0092, ADR-0095 and ADR-0104; statements of intent |
 
-All 267 tests under `organism:tests/source_unit/actuation/` and
-`organism:tests/source_unit/agency/` passed at that revision when run for this
-document. No evidence recorded from a run of an Organism was examined, because
-none can exist. That these numbers track what an Organism can in fact control
+The source-unit coverage includes these mechanisms, including strict checkpoint
+validation. No evidence from a production Organism run was examined; the code
+and tests do not establish such a run. That these numbers track what an Organism can in fact control
 is not supported by anything reviewed here.
 
 ## Open questions

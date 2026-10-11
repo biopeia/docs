@@ -1,6 +1,6 @@
 # Prospective deliberation and the outcome-value ledger
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -20,12 +20,14 @@ the value is a running mean of numbers a caller recorded. Nothing reviewed
 here supports saying that an Organism foresees or weighs anything in a wider
 sense.
 
-**The result goes nowhere.** No code calls the deliberation outside its tests,
-no code records a value in the ledger outside its tests, and no code turns the
-returned record into an intent, a proposal or anything else on the action path
-(search of the seven repositories at `origin/main`, 2026-10-09). The class
-describes its own limits as "Never executes motors. Never records experience.
-Never imports lab."
+The reviewed source keeps prospective deliberation distinct from action
+admission. `ProspectiveAgency.deliberate()` returns a `DeliberationOutcome`;
+the admission helper separately returns a `ProspectiveDecision`, which
+`ActionDomain.admit()` can materialize as an intent. These are composable
+source-level contracts with unit tests, not evidence of a production caller
+running the deliberator or a complete causal runtime. The class describes its
+own limits as "Never executes motors. Never records experience. Never imports
+lab."
 
 ## The outcome-value ledger
 
@@ -186,7 +188,7 @@ The class exports the ledger and a schema version, and restores from it
 strict: an unknown version, a malformed entry, a duplicate or a table over
 capacity is refused whole, and a version-one export without contexts is
 accepted (`test_checkpoint_roundtrip_preserves_statistics_and_context`,
-`test_restore_accepts_v1_global_checkpoint`,
+`test_restore_accepts_current_global_only_checkpoint`,
 `test_restore_rejects_corrupted_entry_instead_of_returning_partial_ledger`,
 `test_restore_rejects_global_checkpoint_over_capacity_without_truncation`).
 

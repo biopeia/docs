@@ -8,17 +8,17 @@ Explanatory documents of the Modality domain (capability).
 
 ## Start here
 
-[Modality: what was decided, and what the repository holds today](current-state.md)
+[Modality: a narrow transduction contract, not a sensory system](current-state.md)
 
 ## Reading order
 
-1. [Modality: what was decided, and what the repository holds today](current-state.md)
+1. [Modality: a narrow transduction contract, not a sensory system](current-state.md)
 
 ## Canonical documents
 
 | Document | Unit | Status | Review |
 |---|---|---|---|
-| [current-state.md](current-state.md) | `concept.modality-current-state` | TARGET | RECORDED |
+| [current-state.md](current-state.md) | `concept.modality-current-state` | CURRENT | RECORDED |
 
 ## Related domains
 

@@ -9,6 +9,11 @@ been confirmed yet. This is a first draft to be argued with, assembled from
 the project's public statement of purpose and from what the unit documents
 say exists.
 
+This synthesis was refreshed after the cognition/continuity review at
+`organism@ba0011797a6a3b4d48c7731651e50560c4043f18` and the cross-domain
+review at `world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`. It extends
+neither review's evidence.
+
 Nothing below is a result. Where it says what exists, it repeats a unit
 document, which names the revision it was reviewed against. If a unit
 document and this one disagree, the unit document is right.
@@ -66,15 +71,22 @@ it happened otherwise.
 [how it is changed](../organism/graph-plasticity.md) hold weights and rules
 that could move them.
 
-**What exists today.** The pieces, each tested alone. The evidence
-structures are constructed nowhere, in source or in tests. The rules that
-change the graph are called by nothing. What an activation correlated with
-is not shown to be what it caused; the unit document says so.
+**What exists today.** The evidence structures are not an integrated
+acquisition loop. A bounded
+[sense-to-checkpoint composition](../organism/sense-to-checkpoint-transition.md)
+now accepts bound opaque signals, activates a supplied graph, applies
+caller-selected weight updates and saves the result as one accepted step.
+Its parameters do not themselves come from prediction error, the genome or
+an experiment selected by the Organism. Correlation is still not evidence
+that an activation caused a change.
 
-**What stands in the way.** Nothing turns a phenomenon in the environment
-into a signal for the Organism: Modality holds no transduction
-([Modality](../modality/current-state.md)). Nothing reports a transition to
-the evidence structures.
+**What stands in the way.** The World sensing fixture samples an Environment
+scalar field and passes it through Modality's narrow identity transduction
+([Modality](../modality/current-state.md)) to a bound sense node. It uses the
+sense-input helper, not the accepted checkpointed step, and joins neither
+action selection nor the evidence structures to sensing. The packaged birth
+graph is empty and the reviewed source supplies no first sense node. Those
+bounded paths are not the acquisition process proposed in H1.
 
 ### H2. Repeated action with consequences gives rise to reusable behaviour
 
@@ -99,14 +111,20 @@ path a use would take.
 [prospective deliberation](../organism/prospective-deliberation.md) are the
 two places where past outcomes could change what is chosen next.
 
-**What exists today.** Each piece, tested alone. The competence engine has
-never been run against a body in the repository and is constructed only by
-its own tests. No component turns a usable pattern into a competence record,
-a binding and an affordance. The six steps of the action path are joined only
-in a test fixture. The result of deliberation goes nowhere.
+**What exists today.** The competence and deliberation units do not
+establish a running acquisition-and-reuse loop. The action path now has an
+in-source `ActionDomain` coordinator. Its `admit` operation creates an intent
+and checks consistency against the supplied supporting affordance; the
+standalone intent constructor remains permissive. The coordinator arbitrates
+a commitment, issues and validates commands, and can close an action with a
+caller-supplied outcome sample. Unit tests and a World physical-step fixture
+exercise that composition. It neither derives a competence from a retained
+pattern nor authenticates the affordance's evidence or observes the outcome.
 
-**What stands in the way.** The composition: something that owns the path as
-a whole.
+**What stands in the way.** A path from experienced consequences to an
+acquired competence, binding and affordance, and a runtime joining that path
+to sensing and action. The coordinator is not evidence that a retained
+pattern is acquired or reused by an Organism.
 
 ### H3. Behaviour can be organised by internal regulation, without one reward imposed from outside
 
@@ -135,14 +153,17 @@ numbers in response to six signals.
 [Prospective deliberation](../organism/prospective-deliberation.md) keeps a
 running value per outcome.
 
-**What exists today.** The body's record and a few operations on it; nothing
-advances a body through time. No component computes the six signals. No
-component records a value.
+**What exists today.** The somatic-state unit describes a body record
+and operations, not a demonstrated regulation loop. The action coordinator
+can record supplied executive outcomes; that is not computing a value from
+bodily state. The cognitive accepted step calls neither the expression
+regulator nor prospective deliberation.
 
-**What stands in the way.** Somatic dynamics, which Embodiment records as a
-required capability not yet implemented
-([embodiment#20](https://github.com/biopeia/embodiment/issues/20)), and the
-path from bodily state to the Organism.
+**What stands in the way.** The path from bodily state through interoceptive
+transduction to Organism choices, and evidence that those choices preserve
+viability without an externally imposed reward. Somatic dynamics are tracked
+by [embodiment#20](https://github.com/biopeia/embodiment/issues/20); the issue
+and somatic-state unit, not this candidate, carry their implementation status.
 
 ### H4. What was acquired survives a restart and a change of body, and the individual stays the same
 
@@ -164,15 +185,23 @@ not silently erase what was learned
 ([ADR-0081](../../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md),
 [ADR-0104](../../technical/adr/ADR-0104-body-schema-and-competence.md)).
 
-**What exists today.** An identity and an envelope that carry bytes exactly.
-The one thing that fills the envelope is not exact (a restored graph computes
-different numbers) and not complete (it describes itself as "not a complete
-Organism checkpoint"). No operation performs a re-embodiment. The competence
-engine refuses to restore for another body and drops what it held for one.
+**What exists today.** The cognitive checkpoint now preserves graph
+weights and eligibility traces exactly; tests compare future activation and
+learning transitions before and after restore. It remains explicitly
+incomplete: structural counts, agency/actuation state and some external
+dependencies are not assembled into one complete continuation. A
+[transition and continuation boundary](../organism/transition-and-continuation.md)
+now counts accepted steps and records lifecycle changes. Dormancy followed by
+reactivation can change the body-context reference while preserving identity
+and the opaque envelope. Its registry guards leases within one registry
+object, not across processes or copied stores.
 
-**What stands in the way.** A decision on how much divergence a resumed
-Organism may show, which the checkpoint document lists as open; and a
-re-embodiment operation.
+**What stands in the way.** Complete state/dependency closure, durable
+continuation authority, and revalidation or rebinding of body-specific state.
+Changing a reference does not itself make retained competence executable on
+the new body. The owner still has to approve the behavioural comparison;
+exact graph round trips already have a stricter local test and should not be
+described as an unresolved rounding problem.
 
 ### H5. What is inherited makes an observable difference, distinct from what is acquired
 
@@ -213,13 +242,17 @@ no candidate can honestly be written for them.
 
 ## What all five have in common today
 
-Read the five "what exists today" paragraphs together. In each, the pieces
-are present and tested alone, and what would connect them is absent. No
-hypothesis here can be tested at this revision, and the reason is the same
-for all: there is no run of the whole, which
-[One step across the domains](one-step-across-the-domains.md) shows link by
-link. The first evidence any of them could have is the same evidence: one
-Organism, in one body, in one World, acting over time.
+Some bounded compositions now exist in source and are exercised by tests:
+opaque sensing, checkpointed cognitive progression, action execution and
+continuation bookkeeping. It is no longer accurate to say that every piece
+is tested only alone or that all connections are absent.
+
+None of the reviewed evidence establishes a candidate above as a scientific
+result. [One step across the domains](one-step-across-the-domains.md) says what
+the fixtures join and leave apart; no reviewed runtime joins sensing,
+choosing, acting, acquired change and complete continuation over a life.
+Component tests can constrain parts of a candidate and expose failures, but
+cannot substitute for its proposed experimental comparison.
 
 How strong the support for a statement is, once there is some, is said in
 the vocabulary of
@@ -230,6 +263,7 @@ the vocabulary of
 - Which of these, if any, is the question that started the project, and
   which is missing.
 - Whether H3 is a hypothesis to be tested or a principle of design.
-- For H4, how much a resumed Organism may differ from its uninterrupted self.
+- For H4, the behavioural comparison and tolerance, distinct from the exact
+  graph-payload round-trip contract already tested.
 - Whether the evaluation criteria above, all of them candidates, are the
   right kind: each compares with a baseline and each can come out negative.

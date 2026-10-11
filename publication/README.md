@@ -15,7 +15,8 @@ which are rendered from the registry. A published document therefore never
 decides what the canonical documentation is: it presents sources that stay
 canonical where they are.
 
-The order starts with the system view (the domains, and how one step crosses
+The order starts with the system view (the domains, candidate research
+hypotheses, a derived capability-maturity summary, and how one step crosses
 them today), then goes down into the domains: Organism, Embodiment,
 Environment, World, Modality and Observation, Lab. The contracts that bind
 one domain to another come last, followed by the
@@ -125,12 +126,15 @@ python tools/publication/model.py   # check the manifest
 - **Parts have no scope statement and chapters no abstract**: the corpus
   holds neither.
 - **One publication, in the order of the domains.** Two publications from the
-  same sources (an architecture overview and a technical reference), system
-  diagrams generated from the registry, a maturity table per capability and
-  the editorial design are recorded as work for after the migration
-  (issues #78, #79, #80).
-- **Notation, parameters and metrics are empty registries.** Their appendices
-  say so instead of being omitted.
+  same sources (an architecture overview and a technical reference), a new
+  part order and hand-authored system diagrams remain deferred until after
+  the migration (#78, #79). Capability maturity is now a derived chapter in
+  Part I; it does not replace the unit registry or claim integrated runtime
+  behaviour.
+- **The reference registries are a bounded first set, not exhaustive.** The
+  current registry contains 9 parameters and 3 metrics; notation has no
+  registered entries. The appendices state this explicitly rather than
+  implying that an empty catalogue is complete.
 
 ## Provenance
 

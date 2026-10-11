@@ -32,6 +32,7 @@ parts:
     title: Biopeia
     chapters:
       - explanation/biopeia/research-hypotheses.md
+      - explanation/biopeia/capability-maturity.md
       - explanation/biopeia/one-step-across-the-domains.md
     generated: [authority-map, domains]
 

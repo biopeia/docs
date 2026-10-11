@@ -278,6 +278,7 @@ units:
     tests:
       - environment:tests/unit/test_resource.py
       - environment:tests/test_identified_resource.py
+      - environment:tests/test_restoration.py
     adrs:
       - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
       - docs:technical/adr/ADR-0074-biopeia-world-environment-authority-split.md
@@ -285,7 +286,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
 
   component.environment-static-scene:
     kind: component
@@ -301,6 +302,8 @@ units:
       - environment:src/environment/static_scene.py
     tests:
       - environment:tests/test_static_scene.py
+      - environment:tests/test_environment_physical_projection.py
+      - environment:tests/test_restoration.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -310,7 +313,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
 
   component.environment-procedural-genesis:
     kind: component
@@ -332,7 +335,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
 
   component.environment-resource-geometry:
     kind: component
@@ -360,8 +363,8 @@ units:
 
   concept.modality-current-state:
     kind: concept
-    title: "Modality: decided role and current state of the repository"
-    status: TARGET
+    title: "Modality: a narrow transduction contract, not a sensory system"
+    status: CURRENT
     owner_domain: modality
     participating_domains:
       - world
@@ -369,10 +372,10 @@ units:
     canonical_docs:
       - explanation/modality/current-state.md
     implementation:
-      - modality:src/modality/__init__.py
+      - modality:src/modality/scalar_field.py
     tests:
-      - modality:tests/test_unratified_surface.py
-      - world:tests/integration/test_first_biopeia_causal_tick.py
+      - modality:tests/test_scalar_field.py
+      - world:tests/integration/sensing/test_environment_to_organism_scalar_field.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -383,8 +386,13 @@ units:
     review:
       status: RECORDED
       basis:
-        modality: 9bd1b77c9eabc271969109cfab52394dc5b52012
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
 
   component.embodiment-physical-state:
     kind: component
@@ -412,7 +420,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: a5129f03aa4b024e33d332f917b9235afe97959c
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
         world: c162b67e698de9b47450264402677b0165e6e20e
 
   mechanism.embodiment-actuation-projection:
@@ -652,12 +660,14 @@ units:
       - organism:src/organism/actuation/commitment.py
       - organism:src/organism/actuation/controller.py
       - organism:src/organism/actuation/command.py
+      - organism:src/organism/actuation/domain.py
       - organism:src/organism/actuation/surface.py
       - organism:src/organism/actuation/system.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
     tests:
       - organism:tests/source_unit/agency/test_executive_admission.py
       - organism:tests/source_unit/actuation/test_command_binding.py
+      - organism:tests/source_unit/actuation/test_domain.py
       - organism:tests/source_unit/actuation/test_surface.py
       - organism:tests/source_unit/actuation/test_system.py
     adrs:
@@ -669,8 +679,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.organism-identity-checkpoint:
     kind: component
@@ -721,7 +731,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   concept.biopeia-what-it-is:
     kind: concept
@@ -806,6 +816,8 @@ units:
       - component.organism-actuator-evidence
       - component.organism-causal-evidence
       - mechanism.organism-cognitive-checkpoint
+      - mechanism.organism-sense-to-checkpoint-transition
+      - component.organism-transition-and-continuation
       - component.organism-cognitive-graph
       - component.organism-competence-development
       - component.organism-execution-binding
@@ -844,6 +856,8 @@ units:
       - component.organism-causal-evidence
       - component.organism-causal-provenance-log
       - mechanism.organism-cognitive-checkpoint
+      - mechanism.organism-sense-to-checkpoint-transition
+      - component.organism-transition-and-continuation
       - component.organism-cognitive-graph
       - component.organism-competence-development
       - component.organism-execution-binding
@@ -904,6 +918,52 @@ units:
       - component.organism-identity-checkpoint
       - component.organism-cognitive-graph
 
+  concept.biopeia-capability-maturity:
+    kind: concept
+    title: Capability maturity from documented evidence
+    status: CURRENT
+    owner_domain: world
+    participating_domains: [organism, embodiment, environment, modality, observation, lab]
+    canonical_docs:
+      - explanation/biopeia/capability-maturity.md
+    depends_on:
+      - concept.biopeia-one-step-across-the-domains
+      - concept.biopeia-research-hypotheses
+      - concept.organism-life-across-mechanisms
+      - concept.modality-current-state
+      - mechanism.organism-action-path
+      - mechanism.organism-cognitive-checkpoint
+      - mechanism.organism-sense-to-checkpoint-transition
+      - mechanism.physical-causal-step
+      - component.embodiment-articulated-body
+      - component.embodiment-physical-state
+      - component.environment-dynamic-state
+      - component.environment-finite-resource
+      - component.environment-static-scene
+      - component.environment-procedural-genesis
+      - component.organism-genome
+      - component.organism-actuator-evidence
+      - component.organism-causal-evidence
+      - component.organism-competence-development
+      - component.organism-execution-binding
+      - component.organism-executive-outcome-ledger
+      - component.organism-prospective-deliberation
+      - component.world-durable-runtime
+      - mechanism.world-recovery
+      - component.observation-semantic-claim-model
+      - component.observation-plane
+      - component.lab-operator-material-transfer
+    review:
+      status: RECORDED
+      basis:
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
+        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
+
   component.embodiment-articulated-body:
     kind: component
     title: Articulated body specification, active morphology and joint state
@@ -936,7 +996,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
+        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   mechanism.embodiment-physical-projection:
@@ -990,6 +1050,8 @@ units:
       - environment:src/environment/dynamic_state.py
     tests:
       - environment:tests/test_dynamic_state.py
+      - environment:tests/test_restoration.py
+      - world:tests/integration/test_environment_dynamic_adoption_restore.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -1001,7 +1063,8 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
+        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
 
   component.organism-competence-development:
     kind: component
@@ -1031,7 +1094,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-causal-evidence:
     kind: component
@@ -1061,7 +1124,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-execution-binding:
     kind: component
@@ -1088,7 +1151,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-prospective-deliberation:
     kind: component
@@ -1119,7 +1182,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
 
   component.organism-genome:
     kind: component
@@ -1309,7 +1372,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3cc0f319f4ac00a631685aae0999134b6d64007f
+        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
         world: a8d07fd791da76365aa74080eef1e82b11a599fd
 
   component.organism-cognitive-graph:
