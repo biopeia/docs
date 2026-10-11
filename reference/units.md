@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-53 units, 10 cross-domain contracts, 120 findings.
+53 units, 9 cross-domain contracts, 120 findings.
 
 ## World
 
