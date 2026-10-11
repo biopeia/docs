@@ -1,5 +1,12 @@
 # The body interoception transducer
 
+> **Historical component.** Lab removed this unsupported TARGET implementation
+> in `81af15b8795243d304f064bda421c6ec5d8ab991`. The description below is
+> retained as provenance for the earlier Biopeia extraction; it is not current
+> Lab behavior. TARGET direction remains ADR-0094/ADR-0099: Modality owns
+> transduction rules and Embodiment owns episode-local transducer
+> state/calibration.
+
 Reviewed against `lab` at commit `4d5ff706b8329ddf25e1852ad53cbde5285d2851`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
