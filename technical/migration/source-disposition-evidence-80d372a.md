@@ -176,3 +176,60 @@ The 17 modules of the legacy `symbiont.host` package implement host-resident dis
 | `symbiont/src/symbiont/host/sources.py` | `10caaf11bdc5b5b3e1f421ebccadd79dfaae17b1` | `DROP` |
 
 Target comparison revision: `biopeia/docs@215325d`. No Biopeia repository contains this package. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
+
+## Additional source-test evidence: experimental integrity and smoke suites
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+These 47 test and harness blobs exercise the historical monolithic 5-domain layout, internal runtime bindings, tick contexts, and smoke launcher of Symbiont. They are disposed as historical monorepo tests with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `tests/README.md` | `9952e1ce94c427da4c404659b378918d20e813df` | `DROP` |
+| `tests/__init__.py` | `fc6e791f05b91bc229627ce24bef2aac26b69b89` | `DROP` |
+| `tests/layout.py` | `d0df9a961f3bc80eafba6fff5d2592917d4d4438` | `DROP` |
+| `tests/smoke/README.md` | `0a0b674960334b1d3139ce685a9b5ad5aabd71ce` | `DROP` |
+| `tests/smoke/test_ecosystem_launcher.py` | `11f0af0408f0c7d3455e7661cd0816a63b37371b` | `DROP` |
+| `tests/experimental_integrity/README.md` | `9f48ca28c111743aa600b3a0587640b5ff4aaad2` | `DROP` |
+| `tests/experimental_integrity/test_action_domain_checkpoint.py` | `77ff9ea56cc10647590546b5f86775c25cddfa8f` | `DROP` |
+| `tests/experimental_integrity/test_action_embodiment_binding.py` | `885611b1d8c400121ad5af66a84464fa8a8a43de` | `DROP` |
+| `tests/experimental_integrity/test_actuator_evidence_authority.py` | `66de85982a27949729fd274ce80bf9bfff489441` | `DROP` |
+| `tests/experimental_integrity/test_architecture_convergence.py` | `4f477576f0fa2a4ad76f9bb9333702c377d786e7` | `DROP` |
+| `tests/experimental_integrity/test_browser_render_boundary.py` | `c2b5f0b87a8ac0f40b4966a940eb14ba0f9b47dd` | `DROP` |
+| `tests/experimental_integrity/test_canonical_organism_profile.py` | `7584d0230cd006fa245ba746c9f35fd1d205248c` | `DROP` |
+| `tests/experimental_integrity/test_cognition_domain_boundary.py` | `c4e61e4ba5d654792dcbbc225947df39320f3bfe` | `DROP` |
+| `tests/experimental_integrity/test_cognitive_atlas_boundary.py` | `74a4a046fdf5802d844a425e4aaadfea0b6f1b63` | `DROP` |
+| `tests/experimental_integrity/test_cognitive_cycle_v1.py` | `68a576c8cbf4e56eb0cbd88c457aa67f0387001e` | `DROP` |
+| `tests/experimental_integrity/test_development_domain_boundary.py` | `c93b07e3a5473c60b7927deda7fafc38164a0d48` | `DROP` |
+| `tests/experimental_integrity/test_domain_tick_context.py` | `9b555843f22900addfd8bed6441b6b0f7bddca40` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_domain_boundary.py` | `0e6b23aa7a7fc24ee920dc3b7c10f89d92e421c0` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_inheritance_integrity.py` | `a708ab8021d4962d773c379009fb7eb7406bc7b1` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_v2_architecture.py` | `067bf1cb1871cabe4404ebb07dd4105d986f6974` | `DROP` |
+| `tests/experimental_integrity/test_environment_placement.py` | `623950ae82d4a7416166f9ac0f83ba06fd22df04` | `DROP` |
+| `tests/experimental_integrity/test_epistemic_domain_boundary.py` | `cfa6f28a22023815991ecce1fdbde8537c772925` | `DROP` |
+| `tests/experimental_integrity/test_executive_authority.py` | `64a4474020c62c8d88cb1db6a617bafba720551d` | `DROP` |
+| `tests/experimental_integrity/test_five_domain_architecture.py` | `9ae5d4f4eba6e776eb80edeb68134f600f8bbd35` | `DROP` |
+| `tests/experimental_integrity/test_generative_cognition_boundary.py` | `43a8234e59e0316d1f37af32ae5a5987db7b2ef5` | `DROP` |
+| `tests/experimental_integrity/test_ground_truth_boundary.py` | `0fe2c62381c669d4b07755cccb933991f52a6230` | `DROP` |
+| `tests/experimental_integrity/test_lab_sensorimotor_boundary.py` | `255413f663705e4cc9986ace559c05a63661b081` | `DROP` |
+| `tests/experimental_integrity/test_lifecycle_domain_boundary.py` | `c2789c9af4d60ffd88b4158c7ab72cfb5c6d3fde` | `DROP` |
+| `tests/experimental_integrity/test_lifecycle_ownership.py` | `ff8c8a74e8000348c413604e3d556ad60c3f4b7f` | `DROP` |
+| `tests/experimental_integrity/test_live_delta_boundary.py` | `9db84e932d505a91687489bce6b4e0f6aa19042e` | `DROP` |
+| `tests/experimental_integrity/test_longitudinal_contract_declaration.py` | `f4ec32aff0c32bfe12922eacbeb08a6becdc8de9` | `DROP` |
+| `tests/experimental_integrity/test_memory_domain_boundary.py` | `20e37dc11361f980790644df52cf0025b9dd95d0` | `DROP` |
+| `tests/experimental_integrity/test_no_legacy_motor_aliases.py` | `e290598566e9839284ab74fce8a180e67c89167b` | `DROP` |
+| `tests/experimental_integrity/test_observatory_passive_boundary.py` | `740abf0494b1a67a07e27f43b1fb5479dea9860c` | `DROP` |
+| `tests/experimental_integrity/test_p8_reprofile_contract.py` | `41cd335242ebb3c1935fe1ef9b7a91a6dadf1d0f` | `DROP` |
+| `tests/experimental_integrity/test_perception_domain_boundary.py` | `6dbdda3d394f801346c73d7c0172c83008754760` | `DROP` |
+| `tests/experimental_integrity/test_prospective_agency_boundary.py` | `f5b2dd38682569a3fab971150ff1ca0eb253a34b` | `DROP` |
+| `tests/experimental_integrity/test_rate_decoupling_boundary.py` | `eac3960d79ce7c082af194f4f8610bcbebe9e2e1` | `DROP` |
+| `tests/experimental_integrity/test_regulation_domain_boundary.py` | `2e1ac5ca6161a40c59b3be99ec8072997cb657ab` | `DROP` |
+| `tests/experimental_integrity/test_revision_authority_boundaries.py` | `ed9606c4195486103cb0fb78b42b6bd05fc4bd8d` | `DROP` |
+| `tests/experimental_integrity/test_runtime_domain_boundaries.py` | `9135f4d812eb49f76623b29e008f20f57262b40e` | `DROP` |
+| `tests/experimental_integrity/test_runtime_import_boundary.py` | `01107fa7d037981a73c2d0c6dad1dc89c03b41b5` | `DROP` |
+| `tests/experimental_integrity/test_runtime_v2_dependency_boundaries.py` | `1b7d6b861a613b59e6ed25bdb76efcdb744a8b3c` | `DROP` |
+| `tests/experimental_integrity/test_runtime_v2_orchestration.py` | `4b0f1168374c77703e496b276a8f80b01f0a810d` | `DROP` |
+| `tests/experimental_integrity/test_sensorimotor_v2_authority.py` | `8d0e9b86351f0611135c8d9b62147f137f9f03bc` | `DROP` |
+| `tests/experimental_integrity/test_single_motor_authority.py` | `3e0e2097aa83188be1f68341b79a558341ff3eb7` | `DROP` |
+| `tests/experimental_integrity/test_tick_context_boundary.py` | `f06d8f4479970ce3edfa3378a8f389fc935d6a03` | `DROP` |
+
+Target comparison revision: `biopeia/docs@03536d7`. No Biopeia repository contains these legacy test modules or test harness. This records `DROP` as TARGET tests only; it neither deletes source history nor alters target runtime behavior.
