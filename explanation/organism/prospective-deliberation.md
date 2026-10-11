@@ -1,6 +1,6 @@
 # Prospective deliberation and the outcome-value ledger
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
+Reviewed against `organism` at commit `3e6c222f6be3ff916af40fb3e07754e9584f1379`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -193,10 +193,9 @@ accepted (`test_checkpoint_roundtrip_preserves_statistics_and_context`,
 `test_restore_rejects_global_checkpoint_over_capacity_without_truncation`).
 
 The policy, the budget and the organism identifier are not exported; the
-caller supplies them again. A module
-(`organism:src/organism/agency/checkpoint.py`) lists what is and is not
-persisted and defines a schema version constant that the class does not use;
-the class writes the number 1 itself.
+caller supplies them again. The class uses `PROSPECTIVE_AGENCY_SCHEMA_VERSION`
+(version 1) defined in `organism:src/organism/agency/checkpoint.py` to tag and
+strictly validate its exported state.
 
 No checkpoint in the repository includes the export (search of
 `organism:src/organism/checkpoint.py` and
@@ -241,7 +240,7 @@ conformance.
 | Equal predictions give no selection; a tie on utility is not broken under the default margin | Code and the ad hoc run |
 | The table of reasons | The ad hoc run, and tests for some rows |
 | Export and strict restore | Code and tests |
-| The schema constant is unused; the policy and budget are not exported | Code and the ad hoc run |
+| The schema constant is strictly checked; the policy and budget are not exported | Code and tests in `organism:tests/source_unit/agency/test_prospective.py` |
 | Nothing calls the deliberation, records a value or consumes the result | Search of the seven repositories at `origin/main`, 2026-10-09 |
 | Whose state this is, and that cognition may be undeveloped or suspended | Accepted decisions ADR-0092, ADR-0095 and ADR-0105; statements of intent |
 
