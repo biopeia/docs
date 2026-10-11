@@ -91,17 +91,24 @@ The disposition below concerns direct transfer of each historical source artifac
 ## Additional source-test evidence: repository governance tooling
 
 Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
-The Git tree at that revision identifies these exact test blobs. They exercise the source monorepo's `scripts/governance/ci_plan.py`, generated PR-summary tooling, and cross-member version synchronization. They are disposed as source tests, not copied or ported as TARGET tests.
+The Git tree at that revision identifies these exact test blobs. They exercise the source monorepo's governance harness, agent context bounds, CI planning, domain coverage heuristics, publication classification, PR-summary tooling, and cross-member version synchronization. They are disposed as source tests, not copied or ported as TARGET tests.
 
 | Source path | Source blob SHA-1 | Disposition |
 |---|---|---|
+| `tests/governance/README.md` | `b8da9954fb8b5d30eb8cb0c7ebab0da37eb7e008` | `DROP` |
+| `tests/governance/test_agent_context.py` | `33da135a102fb0ae642ae6c65fac7ca13682209f` | `DROP` |
+| `tests/governance/test_agent_governance.py` | `d92df6a4ecac58346b743039801ea38e05b668a6` | `DROP` |
+| `tests/governance/test_candidate_publication.py` | `41c213c233a253eb267699fad8382eacc5bb56ce` | `DROP` |
 | `tests/governance/test_ci_plan.py` | `4964d256ff10537bda52301e3d26d308490e6a23` | `DROP` |
+| `tests/governance/test_domain_coverage.py` | `7c742ee92a2b4ce615ed7f0972d14cbfae2da464` | `DROP` |
 | `tests/governance/test_pr_summary.py` | `7ea6a5d32563491198cd1cfbcaa77b9a534c428e` | `DROP` |
+| `tests/governance/test_publish_classification.py` | `015809b063f1fd4ad05244256f09e5676910dabf` | `DROP` |
+| `tests/governance/test_test_impact.py` | `3456c1b20b99138d74b02efa6fc931018dd8b178` | `DROP` |
 | `tests/governance/test_version_sync.py` | `d36f56b1556b107073cc67bb52b44c81a1edfcc9` | `DROP` |
 
-TARGET comparison was checked against `biopeia/.github@671b13855d48ea9ec5a81044f05b416ea2cbfd24` and `biopeia/.github-private@010ef3c748689aa369016d2c9a95a87a1f207837`. The public repository contains repo-native reusable workflows; the private repository contains the separately ratified agent work/review contracts. Neither tree contains the source test modules or the tested source monorepo planner, PR-summary script, or cross-member version-sync utility. This supports `DROP` for these three source test files only; it does not assess every governance test, claim that Biopeia has no future governance needs, or replace testing of the current TARGET contracts.
+TARGET comparison was checked against `biopeia/.github@671b13855d48ea9ec5a81044f05b416ea2cbfd24` and `biopeia/.github-private@010ef3c748689aa369016d2c9a95a87a1f207837`. The public repository contains repo-native reusable workflows; the private repository contains the separately ratified agent work/review contracts. Neither tree contains these source test modules or the tested source monorepo harness. This supports `DROP` for these source test files only; it does not claim that Biopeia has no future governance needs, or replace testing of the current TARGET contracts.
 
-This is a **MIGRATION_CLOSURE ledger disposition** for the three source test paths. It creates no **POST_MIGRATION** implementation task: a future change to Biopeia CI, PR summaries, or project versioning would need its own current TARGET requirement and issue. It does not close the broader test-inventory or migration-reconciliation findings in `docs#63`.
+This is a **MIGRATION_CLOSURE ledger disposition** for the `tests/governance/` test paths. It creates no **POST_MIGRATION** implementation task: any future change to Biopeia CI, PR summaries, or project versioning would need its own current TARGET requirement and issue. It does not close the broader test-inventory or migration-reconciliation findings in `docs#63`.
 
 ## Additional source-test evidence: one-time removal of a prohibited source directory
 
