@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-53 units, 10 cross-domain contracts, 120 findings.
+53 units, 9 cross-domain contracts, 120 findings.
 
 ## World
 
@@ -364,7 +364,7 @@ restates it so that the answers about one unit can be read in one place.
 | Explained in | [explanation/embodiment/somatic-state.md](../explanation/embodiment/somatic-state.md) |
 | Implemented in | `embodiment:src/embodiment/physiology.py`, `embodiment:src/embodiment/metabolism.py`, `embodiment:src/embodiment/physiology_config.py`, `embodiment:src/embodiment/intake.py`, `embodiment:src/embodiment/checkpoint.py` |
 | State | owner embodiment, family embodiment_local; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: reset, reproduction: not_inherited |
-| Cross-domain contracts | Operator material transfer (shared_type); Body interoception (shared_type) |
+| Cross-domain contracts | Operator material transfer (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py`, `embodiment:tests/test_checkpoint.py` |
 | Reviewed at | lab@6aa3e530ff08, embodiment@6114f3d9bcc0, environment@0a9f4fbb1922, observation@be82907d1d67, world@a8d07fd791da (RECORDED) |
@@ -808,7 +808,6 @@ restates it so that the answers about one unit can be read in one place.
 | Owned by | modality; also involves world, organism |
 | Explained in | [explanation/modality/current-state.md](../explanation/modality/current-state.md) |
 | Implemented in | `modality:src/modality/scalar_field.py` |
-| Cross-domain contracts | Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
 | Reviewed at | modality@79b779152d4b, world@a4d04928a82f, organism@3e6c222f6be3, embodiment@b5714f985d0a, environment@caa885a11ec0, observation@6aac3c766848, lab@273c41207332 (RECORDED) |
@@ -913,23 +912,20 @@ restates it so that the answers about one unit can be read in one place.
 | Reviewed at | lab@c73f5b4321bf (RECORDED) |
 | Known findings | F-0064 implementation finding ([issue](https://github.com/biopeia/lab/issues/34)); F-0066 implementation finding (open) |
 
-### Body interoception transducer
+### Historical Lab body interoception transducer
 
-`component.lab-body-interoception-transducer` · component · CURRENT
+`component.lab-body-interoception-transducer` · component · HISTORICAL
 
 | | |
 |---|---|
 | Identifier | `LAB-INT` |
 | Responsible for | the permutation that assigns four body-state sources to four caller-named slots |
 | Must not | assign labels, valence or action meaning to the values; change the body state it reads or own any physiology; claim scientific validity |
-| Owned by | lab; also involves embodiment |
+| Owned by | lab; also involves embodiment, modality |
 | Explained in | [explanation/lab/body-interoception-transducer.md](../explanation/lab/body-interoception-transducer.md) |
-| Implemented in | `lab:src/lab/apparatus/interoception.py` |
 | State | owner lab, family infrastructure |
-| Cross-domain contracts | Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md) |
-| Tests | `lab:tests/unit/test_interoception.py` |
-| Reviewed at | lab@4d5ff706b832 (RECORDED) |
+| Reviewed at | lab@81af15b87952 (SUPERSEDED) |
 | Known findings | F-0067 contract gap (open); F-0068 documentation inconsistency (open) |
 
 ### Candidate research hypotheses

@@ -222,33 +222,6 @@ contracts:
       - explanation/observation/inherited-projection.md
       - explanation/lab/operator-material-transfer.md
 
-  contract.body-interoception:
-    title: Body interoception
-    summary: >
-      Lab's interoception transducer reads Embodiment-owned body state and
-      emits opaque receptor signals. Nothing consumes those signals in any
-      repository, and the transducer keeps a permutation in Lab although the
-      decision on Modality assigns episode transducer state to Embodiment.
-    agreement: shared_type
-    parties:
-      - unit: component.lab-body-interoception-transducer
-        role: reads body state and emits opaque signals
-      - unit: component.embodiment-somatic-state
-        role: owns the body state read
-      - unit: concept.modality-current-state
-        role: the decided home of transduction rules, empty today
-    governed_by:
-      - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
-      - docs:technical/adr/ADR-0099-modality-contract-library.md
-    evidence:
-      - lab:tests/unit/test_interoception.py
-    findings:
-      - F-0056
-      - F-0067
-    documented_in:
-      - explanation/lab/body-interoception-transducer.md
-      - explanation/modality/current-state.md
-
   contract.body-physical-input:
     title: Body physical input to a solver
     summary: >

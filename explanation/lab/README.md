@@ -22,14 +22,13 @@ Explanatory documents of the Lab domain (apparatus).
 |---|---|---|---|
 | [operator-material-transfer.md](operator-material-transfer.md) | `component.lab-operator-material-transfer` | CURRENT | RECORDED |
 | [study-utilities.md](study-utilities.md) | `component.lab-study-utilities` | CURRENT | RECORDED |
-| [body-interoception-transducer.md](body-interoception-transducer.md) | `component.lab-body-interoception-transducer` | CURRENT | RECORDED |
+| [body-interoception-transducer.md](body-interoception-transducer.md) | `component.lab-body-interoception-transducer` | HISTORICAL | SUPERSEDED |
 
 ## Related domains
 
 - Owner checkpoint validation: with embodiment, environment, world
 - Operator material transfer: with embodiment, environment, world
 - Telemetry through the inherited projection: with observation
-- Body interoception: with embodiment, modality
 
 ## Designs
 

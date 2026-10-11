@@ -22,7 +22,7 @@ Explanatory documents of the Modality domain (capability).
 
 ## Related domains
 
-- Body interoception: with embodiment, lab
+No cross-domain contract registered for these units.
 
 ## Designs
 

@@ -35,7 +35,6 @@ Explanatory documents of the Embodiment domain (semantic-authority).
 - Correlation of a physical step: with environment, world
 - Motor command from Organism to Embodiment: with organism
 - Operator material transfer: with environment, lab, world
-- Body interoception: with lab, modality
 - Body physical input to a solver: with world
 - Frame and unit conventions between body and scene: with environment
 
