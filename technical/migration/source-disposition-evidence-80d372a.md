@@ -114,3 +114,14 @@ Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`
 This test asserts two completed source-corpus cleanup facts: the historical `docs/_internal/` directory is absent, and a source-only `SOURCES.md` no longer names that removed directory. It has no target test destination: neither assertion specifies a Biopeia contract, and the historical Symbiont documentation and directory are not part of the Biopeia target corpus. This records `DROP` as a TARGET test only; it neither deletes source history nor claims that Biopeia has no future documentation-integrity needs. Any new Biopeia documentation invariant must be specified and tested against current Biopeia requirements rather than copied from this cleanup test.
 
 Target comparison revision: `biopeia/docs@27ab5aa` (the Docs `main` base reviewed for this bounded row). This row is a source-test disposition only; it does not close other source-test rows or any part of the `docs#63` umbrella beyond this exact file.
+
+## Additional source-document evidence: historical roadmap log
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+The exact source identity and direct-transfer disposition are:
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `docs/history/roadmap-log.md` | `89119d9cca76db450a8f88a5509ed17a87ecc607` | `DROP` |
+
+The source file identifies itself as a historical Symbiont roadmap log containing completed milestones, merge-sequence history, and per-patch tracking. The corresponding path is absent from Biopeia Docs at comparison revision `2c414f7d546075f961046fc5cc9ac2b67ea46514`. This supports `DROP` as a direct source-file transfer only: the historical source remains preserved in Symbiont, and this row does not determine whether Biopeia may later need a separately reconstructed explanation. It does not reconcile other rows or close the broader `docs#63` issue.
