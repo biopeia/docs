@@ -125,3 +125,20 @@ The exact source identity and direct-transfer disposition are:
 | `docs/history/roadmap-log.md` | `89119d9cca76db450a8f88a5509ed17a87ecc607` | `DROP` |
 
 The source file identifies itself as a historical Symbiont roadmap log containing completed milestones, merge-sequence history, and per-patch tracking. The corresponding path is absent from Biopeia Docs at comparison revision `9611f882571a2116026dfa872875dffc9b65cd86`. This supports `DROP` as a direct source-file transfer only: the historical source remains preserved in Symbiont, and this row does not determine whether Biopeia may later need a separately reconstructed explanation. It does not reconcile other rows or close the broader `docs#63` issue.
+
+## Additional source-tooling evidence: repository governance scripts
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+The Git tree at that revision identifies these exact governance tooling blobs. They implement the source monorepo's CI test selection, release publishing, version sync, classification, and PR summary scripts. They are disposed as historical monorepo tooling with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `scripts/governance/__init__.py` | `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` | `DROP` |
+| `scripts/governance/ci_plan.py` | `d05c01013a139b6a6144f6d88712b849d4a5ab81` | `DROP` |
+| `scripts/governance/classify.py` | `b2a4430e857597f0b8db5f7ee868c899f3def9b2` | `DROP` |
+| `scripts/governance/pr_summary.py` | `b487ef58cde2bff0705d1db26ad1b9959f7b9c5d` | `DROP` |
+| `scripts/governance/publish.py` | `c2c4966edd6742725035674b1b346633d2509d1d` | `DROP` |
+| `scripts/governance/test_impact.py` | `5ef6a452c4b6190c307084fc4bb61ea16feecae9` | `DROP` |
+| `scripts/governance/version.py` | `256cacedf4e33499418d21b3e5b4386ed563d96a` | `DROP` |
+
+Target comparison revision: `biopeia/docs@24cbff8`. None of these source scripts are present in Biopeia target repositories. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
