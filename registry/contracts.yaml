@@ -241,7 +241,7 @@ contracts:
       - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
       - docs:technical/adr/ADR-0099-modality-contract-library.md
     evidence:
-      - lab:tests/unit/test_interoception.py
+      - lab:tests/unit/test_migration_interoception_disposition.py
     findings:
       - F-0056
       - F-0067

@@ -1,10 +1,13 @@
 # The body interoception transducer
 
-Reviewed against `lab` at commit `4d5ff706b8329ddf25e1852ad53cbde5285d2851`.
+Reviewed against `lab` at commit `81af15b8795243d304f064bda421c6ec5d8ab991`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 The body state it was tried against is Embodiment's, at
 `embodiment` `a5129f03aa4b024e33d332f917b9235afe97959c`.
+
+> [!NOTE]
+> **Historical Disposition:** At commit `81af15b8795243d304f064bda421c6ec5d8ab991`, Lab explicitly dropped this unsupported opaque interoception transducer from TARGET code and tests (see `lab:MIGRATION.md` and `lab:tests/unit/test_migration_interoception_disposition.py`). This document is retained for historical traceability under finding F-0067.
 
 ## What it is
 

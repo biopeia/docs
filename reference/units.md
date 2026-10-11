@@ -915,7 +915,7 @@ restates it so that the answers about one unit can be read in one place.
 
 ### Body interoception transducer
 
-`component.lab-body-interoception-transducer` · component · CURRENT
+`component.lab-body-interoception-transducer` · component · HISTORICAL
 
 | | |
 |---|---|
@@ -924,12 +924,11 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | assign labels, valence or action meaning to the values; change the body state it reads or own any physiology; claim scientific validity |
 | Owned by | lab; also involves embodiment |
 | Explained in | [explanation/lab/body-interoception-transducer.md](../explanation/lab/body-interoception-transducer.md) |
-| Implemented in | `lab:src/lab/apparatus/interoception.py` |
 | State | owner lab, family infrastructure |
 | Cross-domain contracts | Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md) |
-| Tests | `lab:tests/unit/test_interoception.py` |
-| Reviewed at | lab@4d5ff706b832 (RECORDED) |
+| Tests | `lab:tests/unit/test_migration_interoception_disposition.py` |
+| Reviewed at | lab@81af15b87952 (RECORDED) |
 | Known findings | F-0067 contract gap (open); F-0068 documentation inconsistency (open) |
 
 ### Candidate research hypotheses

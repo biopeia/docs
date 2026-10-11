@@ -542,24 +542,22 @@ units:
   component.lab-body-interoception-transducer:
     kind: component
     title: Body interoception transducer
-    status: CURRENT
+    status: HISTORICAL
     owner_domain: lab
     participating_domains:
       - embodiment
     component_id: LAB-INT
     canonical_docs:
       - explanation/lab/body-interoception-transducer.md
-    implementation:
-      - lab:src/lab/apparatus/interoception.py
     tests:
-      - lab:tests/unit/test_interoception.py
+      - lab:tests/unit/test_migration_interoception_disposition.py
     adrs:
       - docs:technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md
       - docs:technical/adr/ADR-0099-modality-contract-library.md
     review:
       status: RECORDED
       basis:
-        lab: 4d5ff706b8329ddf25e1852ad53cbde5285d2851
+        lab: 81af15b8795243d304f064bda421c6ec5d8ab991
 
   component.observation-semantic-claim-model:
     kind: component
