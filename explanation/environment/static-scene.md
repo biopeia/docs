@@ -1,7 +1,7 @@
 # The static scene and its owner
 
-Reviewed against `environment` at commit `0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41` (main on
-2026-10-10); first written against `f97ec22`. Everything below describes the
+Reviewed against `environment` at commit `caa885a11ec0170717bb4b71d271ab171807197e` (main on
+2026-10-11); first written against `f97ec22`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 

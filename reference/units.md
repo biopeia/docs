@@ -564,7 +564,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path`, `component.organism-competence-development` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/agency/test_prospective.py`, `organism:tests/source_unit/agency/test_policy.py`, `organism:tests/source_unit/agency/test_value.py` |
-| Reviewed at | organism@ba0011797a6a (RECORDED) |
+| Reviewed at | organism@3e6c222f6be3 (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0104 implementation finding (open); F-0105 evidence gap (open) |
 
 ### Genome, expression and germline record
@@ -811,7 +811,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Body interoception (shared_type) |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | modality@79b779152d4b, world@95f5064c6b06, organism@ba0011797a6a, embodiment@597cc4a09f4a, environment@caa885a11ec0, observation@6aac3c766848, lab@29e25d85e796 (RECORDED) |
+| Reviewed at | modality@79b779152d4b, world@a4d04928a82f, organism@3e6c222f6be3, embodiment@b5714f985d0a, environment@caa885a11ec0, observation@6aac3c766848, lab@273c41207332 (RECORDED) |
 | Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation

@@ -1,12 +1,12 @@
 # Modality: a narrow transduction contract, not a sensory system
 
 Reviewed against `modality` at `79b779152d4bff2ab4191dc6601c8f1640e4cae3`,
-`world` at `95f5064c6b06bd66bb58a72110b066afe4ca70b0`,
-`organism` at `ba0011797a6a3b4d48c7731651e50560c4043f18`,
-`embodiment` at `597cc4a09f4a5c94095b17ad0f2ba510df6d02c3`,
+`world` at `a4d04928a82fb0f53f6a1ca7e6362686d4c894d5`,
+`organism` at `3e6c222f6be3ff916af40fb3e07754e9584f1379`,
+`embodiment` at `b5714f985d0aa970d3a412a7d29e43fa0bcb89d6`,
 `environment` at `caa885a11ec0170717bb4b71d271ab171807197e`,
 `observation` at `6aac3c76684834722440f53c9d8604ac4c16b138`, and
-`lab` at `29e25d85e796d96a3f2e830fd870a2f74e8e2266`.
+`lab` at `273c41207332ef7c7de02de625253d03d642a200`.
 
 ## The short answer
 
