@@ -22,7 +22,6 @@ Explanatory documents of the Modality domain (capability).
 
 ## Related domains
 
-- Body interoception: with embodiment, lab
 
 ## Designs
 
