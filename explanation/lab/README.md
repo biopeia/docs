@@ -29,7 +29,6 @@ Explanatory documents of the Lab domain (apparatus).
 - Owner checkpoint validation: with embodiment, environment, world
 - Operator material transfer: with embodiment, environment, world
 - Telemetry through the inherited projection: with observation
-- Body interoception: with embodiment, modality
 
 ## Designs
 
