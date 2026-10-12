@@ -28,7 +28,9 @@ implementation Issues before changing live configuration.
 
 The scope includes all Biopeia repositories, including private repositories:
 `organism`, `embodiment`, `environment`, `world`, `modality`, `observation`,
-`lab`, `docs`, `.github`, `.github-private`, and `biopeia-workspace`. Domain
+`lab`, `docs`, `.github`, `.github-private`, and `workspace` (the GitHub
+repository `biopeia/workspace`; its local integration checkout is named
+`biopeia-workspace`). Domain
 repositories remain independently owned; `.github` owns public reusable
 workflow implementations, `.github-private` owns private-only workflows, and
 Docs owns this cross-repository design and its derived tracking records.
@@ -86,7 +88,7 @@ The rollout must re-inventory default branches before changing them.
 | `docs` | Common triage, PR checks, Project intake, `ci.yml`, `publication.yml` | CI includes scheduled and manual validation; publication also handles `docs-v*` tags. Both workflows lack explicit top-level permissions. Publication must remain independent of ordinary CI semantics. |
 | `.github` | `auto-issue-triage.yml`, `auto-pr-checks.yml`, `project-1-auto-add-issue.yml` | Reusable workflows use `workflow_call`; permissions are declared. Project intake pins `actions/create-github-app-token` to a full commit SHA. |
 | `.github-private` | Private triage, PR checks, Project intake reusable workflows; `ci.yml` | Reusable workflows use `workflow_call`; CI declares `contents: read`. Duplicated public/private workflow responsibilities need an explicit ownership rule. Private ruleset/protection state was not independently readable in the audit. |
-| `biopeia-workspace` | `ci.yml`, `compatibility-pins.yml`, `public-head-smoke.yml` | Workspace-tooling CI, manually dispatched pin verification, and PR/manual provenance smoke test. No domain semantic integration authority. |
+| `workspace` | `ci.yml`, `compatibility-pins.yml`, `public-head-smoke.yml` | Workspace-tooling CI, manually dispatched pin verification, and PR/manual provenance smoke test. No domain semantic integration authority. |
 
 Observed patterns from this snapshot:
 
@@ -251,7 +253,7 @@ baseline and preserve each row's domain-specific test semantics.
 | `docs` | `registry`, `cross-repository`, `publication` | Explicit permissions per job; keep scheduled/dispatch validation and tag publication distinct; avoid granting publication write permissions to PR CI. |
 | `.github` | `validate-pr-contract` and reusable triage/intake behavior | Add CI validating reusable workflow syntax/contracts and safe reusable-workflow changes; keep each caller's permission boundary explicit. |
 | `.github-private` | private CI and private intake/triage wrappers | Explicit least privilege; test workflows from authorized private consumers; document unavailable ruleset/protection settings and access constraints. |
-| `biopeia-workspace` | tooling checks, compatibility pin verification, public-head provenance smoke test | Explicit least privilege; maintain separation from semantic/domain acceptance; make manual-only workflows' inputs and evidence clear. |
+| `workspace` | tooling checks, compatibility pin verification, public-head provenance smoke test | Explicit least privilege; maintain separation from semantic/domain acceptance; make manual-only workflows' inputs and evidence clear. |
 
 Every tracked workflow must have an inventory row in the implementation
 tracking artifact containing: path, purpose, event/triggers, `GITHUB_TOKEN`
