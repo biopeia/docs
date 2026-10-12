@@ -1,32 +1,36 @@
 # Migration End-to-End Acceptance Report
 
-**Status:** CANDIDATE — not a migration-closure report  
-**Evidence date:** 2026-10-12  
-**Scope:** bounded two-run TARGET sensorimotor causal cycle  
+**Status:** INTEGRATED ACCEPTANCE EVIDENCE — not a migration-closure report
+
+**Evidence date:** 2026-10-12
+
+**Scope:** bounded two-run TARGET sensorimotor causal cycle
+
 **Tracking:** [world#86](https://github.com/biopeia/world/issues/86), [.github-private#42](https://github.com/biopeia/.github-private/issues/42)
 
 ## Decision and scope
 
-This report records a reproducible candidate run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. An independent adversarial review of the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and its run evidence returned **CONFIRMED**, limited to the candidate-evidence claims (see the review record on [docs#137](https://github.com/biopeia/docs/pull/137#issuecomment-6118303207)). This revision records that outcome; this updated report revision still requires exact-revision review. This is not final migration acceptance: the exact World and supporting-domain revisions used by the run remain on open pull requests. Re-run the acceptance test against integrated revisions and update this report before treating it as integrated acceptance evidence.
+This report records a reproducible integrated run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. The supporting World, Organism, and Embodiment pull requests have been merged. The run was executed from the integrated World main tree and resolved its cross-domain dependencies to the exact integrated main merge commits listed below. Candidate trees and their integrated merge trees were checked to be identical for the reviewed PR heads. The prior candidate-only independent review remains historical evidence; this integrated report revision still requires its own exact-revision adversarial review. This is not the final Migration Closure Report.
 
 The run exercises actual Biopeia TARGET owner APIs and World production composition. The test launches and inspects the run; it does not supply the missing causal composition. No Symbiont runtime, compatibility bridge, workspace-owned semantic behavior, environmental labels, reward, goal, or physiology model is used.
 
-## Repository revisions and review state
+## Repository revisions and integration state
 
-| Repository | Revision used | Publication state at evidence date |
-|---|---|---|
-| `biopeia/world` | `349bfa63557c4e00e478ea7b2d32b944f1897331` | PR [#114](https://github.com/biopeia/world/pull/114), OPEN |
-| `biopeia/organism` | `b2e00f06a0862613a8ce29c844606eb37407f751` | PR [#130](https://github.com/biopeia/organism/pull/130), OPEN |
-| `biopeia/embodiment` | `bff1bf16c2b812822364a94146ec9349292753ac` | PR [#61](https://github.com/biopeia/embodiment/pull/61), OPEN |
-| `biopeia/environment` | `b71d5566c3a73774a088a41a7b99a03954e43a53` | pinned candidate revision |
-| `biopeia/modality` | `79b779152d4bff2ab4191dc6601c8f1640e4cae3` | pinned candidate revision |
-| `biopeia/observation` | `ef6321d2bab43b883238cdcf0ce33c08321d595c` | pinned candidate revision |
+| Repository | Integrated revision used | Source / verification | State |
+|---|---|---|---|
+| `biopeia/world` | `4be4deee6da1574f06b7153fea5f6e19710a1419` | PR #114 merge commit; acceptance test and production composition are in this tree | Merged to `main` |
+| `biopeia/organism` | `85802019d08fb6a7a4ed6f0e4d3f4b3bb97a933b` | PR #130 merge commit; tree equals reviewed head `b2e00f06a0862613a8ce29c844606eb37407f751` | Merged to `main` |
+| `biopeia/embodiment` | `a925c2f2f2694048e4ced4c00874dcfd2331bebe` | PR #61 merge commit; tree equals reviewed head `bff1bf16c2b812822364a94146ec9349292753ac` | Merged to `main` |
+| `biopeia/environment` | `b71d5566c3a73774a088a41a7b99a03954e43a53` | current `origin/main` | Integrated `main` |
+| `biopeia/modality` | `79b779152d4bff2ab4191dc6601c8f1640e4cae3` | current `origin/main` | Integrated `main` |
+| `biopeia/observation` | `ef6321d2bab43b883238cdcf0ce33c08321d595c` | current `origin/main` | Integrated `main` |
+| `biopeia/docs` | `327bad6ee9c205f896dd40b5fff76e22ba4fe371` | report base before this integrated-evidence update | Integrated `main`; this report update is a new candidate |
 
-The World integration and runtime dependency extras explicitly pin these commits. PR merge state is a separate fact from this candidate-run evidence; no merge or integrated-main claim is made here.
+The runtime evidence does not depend on a workspace test harness. A disposable World worktree was created at `4be4deee...`; only its temporary dependency resolution was changed to point at the integrated Organism and Embodiment merge SHAs, then `uv lock` resolved those exact commits. No temporary dependency-pin edit is part of the repository diff. Environment, Modality, and Observation pins already matched their integrated main SHAs. The resolved runtime versions were World `0.1.0`, Organism `0.1.0`, Embodiment `0.1.0a1`, Environment `0.1.0`, Modality `0.1.0`, Observation `0.1.0`, MuJoCo `3.14.0`.
 
 ## Reproduction
 
-From the `biopeia/world` candidate checkout, with the pinned integration dependencies available:
+From a clean disposable worktree at World `4be4deee6da1574f06b7153fea5f6e19710a1419`, resolve the integration extra to the exact integrated commits above and run:
 
 ```bash
 uv run --extra integration pytest -q tests/integration/test_end_to_end_causal_cycle_acceptance.py
@@ -35,10 +39,12 @@ uv run --extra integration pytest -q tests/integration/test_end_to_end_causal_cy
 Result on 2026-10-12:
 
 ```text
-1 passed in 0.45s
+1 passed in 1.36s
 ```
 
-The acceptance test executes `_run` twice from the same declared initial state into separate persistence roots, compares causal identities, command values, adopted joint state, and Observation claims, then performs a same-process restore and second committed step in both runs. The test is non-skipping and fails if the TARGET integration imports or composition are unavailable.
+The test is non-skipping and executes `_run` twice from the same declared initial state into separate persistence roots. Each run commits tick 1, restores the World and owner checkpoints in-process, and continues to tick 2. It compares causal identities, sensory and command values, adopted joint state, and Observation claims across both runs. The integrated run used CPython `3.14.3`, `uv`, and MuJoCo `3.14.0`.
+
+The disposable validation worktree contained only temporary resolution changes to `pyproject.toml` and `uv.lock` to install the integrated Organism and Embodiment merge commit SHAs rather than their pre-merge candidate refs. The tested World source tree and all domain source trees were the integrated SHAs in the table. The tracked World checkout was not modified.
 
 ## Scenario configuration
 
@@ -57,7 +63,7 @@ The acceptance test executes `_run` twice from the same declared initial state i
 
 ## Evidence for the ten required segments
 
-| # | Required segment | Candidate evidence | Scope limit |
+| # | Required segment | Integrated-run evidence | Scope limit |
 |---|---|---|---|
 | 1 | Environment owns external state | The run uses `StaticEnvironmentOwner` plus `IdentifiedFiniteScalarField`, each with stable identity, declared revision, frame and owner checkpoint. | The scalar field is static for this fixture; this does not establish a general Environment dynamics model. |
 | 2 | Modality performs real transduction | The Environment field is sampled at an Embodiment-owned `EmbodimentReceptor` and passed through `DimensionlessScalarFieldIdentityV1`; the produced input is `0.25` on `channel.opaque.scalar-v1`. | Identity transduction is only justified for the same dimensionless quantity/range; it proves no richer sensory model. |
@@ -80,7 +86,7 @@ The two delivered claims per committed cut are a body-pose projection and a fini
 
 ## Independent review and limitations
 
-An independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. A separate exact-report/run review under BAW-004 was **CONFIRMED** for the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and candidate evidence: the reviewer inspected World#114 at `349bfa63557c4e00e478ea7b2d32b944f1897331`, reproduced the acceptance test in a clean temporary clone (`1 passed`), and matched the recorded tick-1/tick-2 numeric outputs. No material discrepancy was found. This updated report revision requires its own exact-revision check; neither review promotes open candidate commits to integrated revisions or establishes migration closure. The final integrated run and its exact report revision also require review.
+The earlier independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. A separate exact-report/run review under BAW-004 was **CONFIRMED** for the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and candidate evidence: the reviewer inspected World PR #114 head `349bfa63557c4e00e478ea7b2d32b944f1897331`, reproduced the candidate test in a clean temporary clone (`1 passed`), and matched the recorded tick-1/tick-2 numeric outputs. That prior review does not cover this integrated run. This report revision and integrated evidence require exact-revision independent adversarial review. Neither prior review nor this run establishes migration closure.
 
 This run does not prove:
 
@@ -92,9 +98,10 @@ This run does not prove:
 - production-scale solver performance, network Observation transport, or visualization completeness;
 - migration closure.
 
-## Required follow-up before acceptance
+## Required follow-up before migration closure
 
-1. Integrate the exact reviewed dependencies and World composition through the repository merge process.
-2. Re-run this non-skipping acceptance test against the resulting integrated revisions and update all SHAs and output evidence.
-3. Obtain and record an independent adversarial review of the exact report revision and its evidence.
-4. Continue to satisfy the separate checkpoint/continuation and migration-closure criteria; this causal-cycle report does not close them.
+1. Obtain and record an independent adversarial review of this exact integrated report revision and its run evidence.
+2. Complete the separate checkpoint/continuation criteria, including the still-open Organism continuation/checkpoint umbrella.
+3. Produce and independently review the final Migration Closure Report against every closure criterion.
+
+This report demonstrates the end-to-end causal-cycle criterion only. It does not close the migration by itself.
