@@ -57,6 +57,31 @@ does not acquire domain or scientific authority.
    templates and automation where they fit safely. Add new board fields,
    states or reconciler logic only when a demonstrated need justifies them.
 
+## 2.1 Unified topic-first and design-first lifecycle
+
+Topic-first intake and design-first execution are stages of one procedure, not
+competing alternatives. Every new concern starts with a traceable owning Issue
+that records its purpose, question or objective, initial scope, owner, affected
+domain/repository, known constraints and next decision or evidence needed. For
+lightweight work, that Issue may contain the complete specification; a separate
+design document is not required merely to create a topic record.
+
+Triage then determines the applicable work class, risk, authority, uncertainty
+and impact. The Issue may proceed directly to bounded work when existing
+contracts and policy fully govern it. Otherwise, it may produce research or a
+separate design. Research and protocol preparation may precede design
+acceptance within their authorized limits; they do not authorize experiments,
+protected changes or implementation beyond those limits. Governed
+implementation starts only after the required design and decision are accepted.
+
+A coordinating parent Issue is required when independently deliverable child
+work, cross-repository responsibilities or dependencies need integration. It is
+not required as ceremony for every standalone correction or investigation.
+When a parent is used, each executable or research slice is a related subissue
+in its owning repository, and closure includes the parent's own integration
+acceptance. This refines the proposed Topic-first model in `.github-private#41`
+without creating a second universal parent-issue requirement.
+
 ## 3. Proportionate procedure depth
 
 Procedure depth is not a new Biopeia governance class. It is selected from the
@@ -287,15 +312,21 @@ contracted work is complete, not that every hypothesis is confirmed.
 This design alone changes no live setting. Introduce the policy in reversible
 stages:
 
-1. **Ratify the design and governing decision.** Because this changes
-   cross-domain governance, the proposed path is a constitutional ADR accepted
-   by the competent Architecture Owner; the competent authority confirms the
-   classification and decision path before ratification. Use DNs only for
-   material local/reversible decisions that actually arise.
-2. **Derive work from the accepted impact map.** Create one coordinating
-   Project #1 Issue in the governance-owning repository and linked subissues
-   for the independently verifiable work below. Confirm exact owners and repo
-   requirements when the Issues are created.
+1. **Ratify the design and governing decision.** The competent authority
+   confirms the work class from the actual protected impact and identifies the
+   ratification authority under existing policy; cross-domain scope alone does
+   not make the change `CONSTITUTIONAL`. The proposed decision record is an ADR
+   because it establishes a durable shared procedure; the ADR records the
+   confirmed class, authority and rationale. If review finds that the procedure
+   changes a protected invariant or authority boundary, apply the corresponding
+   constitutional gate. Use DNs only for material local/reversible decisions
+   that actually arise.
+2. **Derive work from the accepted impact map.** Create owning-repository
+   Issues for authorized implementation slices and add each to Project #1. Use
+   one coordinating parent with linked subissues when independent deliverables,
+   cross-repository responsibilities or dependencies require integration; do
+   not create a parent solely to satisfy a universal formality. Confirm exact
+   owners and repository requirements when the Issues are created.
 3. **Implement templates and minimum checks.** Start with frontmatter and
    relation validation, template adoption, and documented entry/exit semantics.
    Do not build a general-purpose governance platform before it is needed.
