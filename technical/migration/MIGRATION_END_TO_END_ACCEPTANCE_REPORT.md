@@ -71,7 +71,7 @@ The test is non-skipping and executes `_run` twice from the same declared initia
 | 5 | Production path constructs a complete motor command | The production composition uses stable actuator IDs and Embodiment-owned differential binding; both channels are present. No final command is injected by the test. | This fixture tests a bounded one-joint actuator surface, not arbitrary morphologies. |
 | 6 | World performs physical step | `run_scalar_sensorimotor_cycle_and_publish` creates `PhysicalStepContext` from World tick and invokes the configured articulated MuJoCo adapter. | Solver configuration is small and deterministic; no performance or production-scale claim. |
 | 7 | Owners validate/adopt their state | Embodiment adopts the candidate body state; Environment validates its accepted physical-step correlation; owner checkpoint payloads are written and validated before World commit. | The body root is fixed at the receptor origin. The post-step sample therefore uses a stable source receptor location; moving-root sampling is not established. |
-| 8 | World commits coherent causal cut | The two-run test commits ticks `1` and `2`, with explicit World ID, commit IDs, step IDs, owner references and causal correlations. | Tick `2` follows same-process restore; not a fresh-process/bootstrap recovery test. |
+| 8 | World commits coherent causal cut | The two-run comparison commits ticks `1` and `2`, with explicit World ID, commit IDs, step IDs, owner references and causal correlations. A separate test in the same acceptance file restores committed state in a fresh process, advances to tick `2`, and compares against uninterrupted continuation. | The fresh-process test starts from a committed runtime fixture; it does not establish full World genesis/bootstrap recovery or universal crash/power-loss guarantees. |
 | 9 | Observation receives actual post-commit publication | The World composition publishes owner-backed `body_pose` and `finite_scalar_field` claims after commit. Delivery sequences and committed-cut references are asserted; claim lineage refers to owner checkpoint hashes. | The test uses an in-process Observation plane; it does not test network transport, durable delivery, replay or UI rendering. |
 | 10 | One run is traceable end to end | The acceptance test retains results for sensory input, action proposal/command, physical outcome, committed cuts, checkpoint references and Observation messages; repeated runs compare these values. | No external scientific evidence admission is implied. |
 
@@ -93,7 +93,7 @@ This run does not prove:
 - resource semantics, goals, rewards, locomotion, or behavioral success;
 - physiological validity or scientific calibration;
 - moving-root receptor projection correctness;
-- fresh-process restart, full bootstrap recovery, universal crash/power-loss resistance, or arbitrary replay;
+- full World genesis/bootstrap recovery, universal crash/power-loss resistance, or arbitrary replay (fresh-process restore-and-continue is covered by a separate test in the cited acceptance suite);
 - production-scale solver performance, network Observation transport, or visualization completeness;
 - migration closure.
 
