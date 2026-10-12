@@ -15,6 +15,15 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
+  design.cross-domain.design-first-work-and-governance-procedure-v1:
+    title: "Design-First Work and Governance Procedure v1"
+    path: technical/design/governance/design-first-work-and-governance-procedure-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
   design.runtime.biopeia-physical-step-integration-v1:
     title: "Biopeia Physical-Step and Causal-Commit Integration v1"
     path: technical/design/runtime/biopeia-physical-step-integration-v1.md
