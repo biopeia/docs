@@ -103,7 +103,7 @@ This run does not prove:
 
 ## Required follow-up before migration closure
 
-1. Complete the separate checkpoint/continuation criteria, including the still-open Organism continuation/checkpoint umbrella.
+1. The bounded portable-continuation/checkpoint gate is complete for the accepted scalar sensorimotor profile (Organism #34, reconciled on current `main`). Broader Organism #41/#45 capabilities remain open as `POST_MIGRATION`; this report does not claim universal continuation. Reopen them if the accepted profile expands or closure evidence shows required state omitted/defaulted.
 2. Produce and independently review the final Migration Closure Report against every closure criterion.
 
 This report demonstrates the end-to-end causal-cycle criterion only. It does not close the migration by itself.
