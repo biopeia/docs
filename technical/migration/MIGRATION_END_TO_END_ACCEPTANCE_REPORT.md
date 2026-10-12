@@ -6,7 +6,7 @@
 
 **Scope:** bounded two-run TARGET sensorimotor causal cycle
 
-**Tracking:** [world#86](https://github.com/biopeia/world/issues/86), [.github-private#42](https://github.com/biopeia/.github-private/issues/42)
+**Tracking:** [world#86](https://github.com/biopeia/world/issues/86), [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)
 
 ## Decision and scope
 
