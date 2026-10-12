@@ -20,6 +20,12 @@ the registry is authoritative for its status. It does not itself change live
 GitHub settings, authorize implementation, or approve any repository's current
 configuration.
 
+This document-only proposal has low direct implementation risk. That must not
+be used to classify the later settings and workflow rollout: implementation
+has distinct risks involving permissions, credentials, repository access,
+required checks and Dependabot execution. Assess those risks in the derived
+implementation Issues before changing live configuration.
+
 The scope includes all Biopeia repositories, including private repositories:
 `organism`, `embodiment`, `environment`, `world`, `modality`, `observation`,
 `lab`, `docs`, `.github`, `.github-private`, and `biopeia-workspace`. Domain
@@ -100,9 +106,12 @@ Observed patterns from this snapshot:
   disabled. This design does not propose changing those settings absent a
   concrete maintenance problem.
 
-The snapshot is not a substitute for an implementation-time API audit. Names
-of required checks can change; those names and exact branch rules must be read
-from current GitHub state immediately before rollout.
+The snapshot is a preliminary diagnosis, not an exhaustive, versioned
+inventory of effective settings. It does not yet establish each required
+check's exact name, producing job, triggering event, provider/source, or
+ruleset requirement. Those facts, including merge-queue use, must be recorded
+per repository from current GitHub state before rollout. Names of required
+checks can change; exact branch rules must be read immediately before rollout.
 
 ## 4. Proposed normalization policy
 
@@ -112,7 +121,7 @@ from current GitHub state immediately before rollout.
 | --- | --- | --- |
 | Default branch | Protect `main` from force-push and deletion; require PR-based delivery for code/workflow changes. | Existing repository-specific required checks remain distinct and may differ. |
 | Approval count | Keep required human approvals at zero while Biopeia is a one-person project. | Add independent review only when team size/risk or a specific authority policy justifies it. CI and branch protection still apply. |
-| Required checks | Require the repository's stable, meaningful CI and PR-contract checks; no check should be required if its trigger can leave a PR permanently pending. | Required check names and domain-specific suites vary by repository. Cross-repository tests stay where their contracts are owned. |
+| Required checks | Require the repository's stable, meaningful CI and PR-contract checks; no check should be required if its trigger can leave a PR permanently pending. Record each required check's exact name, producing job, event, provider/source, and ruleset setting. | Required check names and domain-specific suites vary by repository. Cross-repository tests stay where their contracts are owned. |
 | Conversations | Require review conversations to be resolved before merge. | None proposed. |
 | Merged branch deletion | Enable automatic deletion of head branches after PR merge in all 11 repositories. | If a release/integration branch is intentionally long-lived, document the exception and protect that branch explicitly; feature branches are not exceptions. |
 | Merge methods | Retain current merge/squash/rebase choices. | Narrow only if actual history/release practice demonstrates a need. |
@@ -132,12 +141,13 @@ Normalize safe behavior, not file count:
    checks. The workspace may validate workspace-owned tooling only; it must
    not become semantic authority for domain integration.
 2. Use public reusable workflows from `biopeia/.github` for common behavior
-   intended for public consumers. Use `.github-private` only for private
-   operations. A public repository must not depend on a private reusable
-   workflow unless repository visibility/access is explicitly demonstrated,
-   intentionally approved and tested from a clean consumer context. Prefer
-   moving genuinely common, non-secret logic into `.github` and keeping
-   private wiring/secrets in private wrappers.
+   intended for public consumers. A public repository must never call a
+   private reusable workflow: GitHub's access model permits public callers to
+   use public workflows only. Put common non-secret logic in `.github`; run
+   sensitive coordination through a separate mechanism with its own explicit
+   authorization boundary, not as a private-workflow dependency of a public
+   caller. Private repositories may call public or authorized private reusable
+   workflows. [GitHub: reusable workflow access rules](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations#access-to-reusable-workflows)
 3. Keep reusable workflows on immutable full commit SHAs. Human-readable
    comments may identify the corresponding tag/release, but tags are not the
    pin. Dependabot should propose pin updates; review provenance and diff
@@ -147,7 +157,11 @@ Normalize safe behavior, not file count:
    only when they preserve the required check behavior. Do not add path filters
    to required checks unless a separate always-present gate ensures GitHub
    receives a definitive result. Keep schedules/manual runs for their
-   additional purpose, not as substitutes for PR validation.
+   additional purpose, not as substitutes for PR validation. If a repository
+   has an active merge queue and a workflow produces a required check, that
+   workflow must also handle `merge_group` and validate the candidate merge
+   group; do not impose this trigger where no merge queue is used. [GitHub:
+   required checks and merge queues](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#merge_group)
 5. Keep publication/release workflows separate from ordinary CI when they
    require tags, credentials, or different authority. Grant publication
    permissions only to the publishing job and only for the publishing event.
@@ -161,7 +175,10 @@ Normalize safe behavior, not file count:
    GitHub App token with only the installed permissions needed to add the
    issue to Project #1; publishing gets only the contents/deployment/package
    permission actually used. Unspecified permissions are not an acceptable
-   implicit default.
+   implicit default. Permissions passed to a reusable workflow chain may stay
+   the same or become more restrictive, but must never increase at a nested
+   call. Include this property in workflow validation. [GitHub: nested workflow
+   permissions](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations#access-and-permissions-for-nested-workflows)
 8. Use concurrency cancellation for superseded PR CI runs where safe; do not
    cancel publication, release, deployment, or evidence-producing runs whose
    completion is meaningful.
@@ -191,6 +208,18 @@ Adopt a small checked-in `.github/dependabot.yml` policy for every repository:
   merely to make files identical. GitHub currently documents `uv` support in
   its Dependabot options reference; confirm behavior in a test PR before
   standardizing it. [Dependabot options reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
+- Separate external dependencies (packages, Actions and tools) from internal
+  Biopeia domain dependencies and pins. Dependabot must not be treated as an
+  authority to promote internal domain revisions: retain the workspace/Lab pin
+  and compatibility-contract process, and validate internal pin changes
+  against the relevant cross-repository checks. For applicable Python
+  repositories, validate an actual `uv` dependency and lockfile update PR.
+- CI for Dependabot-authored PRs must pass required checks with the default
+  read-only `GITHUB_TOKEN` and without ordinary Actions secrets. Separate
+  unprivileged code validation from any privileged triage or Project
+  coordination job; grant credentials only to the latter when required, and
+  verify the applicable Dependabot-secret behavior. [GitHub: Dependabot on
+  Actions](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions)
 - Group compatible patch/minor updates to limit PR noise, but keep major
   upgrades and security updates independently reviewable unless a repository
   has evidence supporting broader grouping. Set a small open-PR limit (default
@@ -217,7 +246,7 @@ baseline and preserve each row's domain-specific test semantics.
 | `environment` | `test`; `Build and test distributions` | Same as `embodiment`; preserve environment-specific tests. |
 | `world` | `package`; `integration` | Explicit permissions; scope push to `main`; retain separate integration check and do not conflate packaging with integration acceptance. |
 | `modality` | `test` | Explicit permissions; scope push to `main`; keep modality contract tests local. |
-| `observation` | `test-and-build` | Explicit permissions; resolve public-to-private reusable workflow dependency; retain only the workflows that have a clear public/private owner. |
+| `observation` | `test-and-build` | Explicit permissions; remove its public-to-private reusable workflow dependency; keep public calls on `.github` and move sensitive coordination behind a separately authorized mechanism. |
 | `lab` | `unit-tests`, `build-and-install`, `cross-repository-integration` | Explicit permissions; scope push to `main`; preserve Lab's integration responsibility and evidence boundaries. |
 | `docs` | `registry`, `cross-repository`, `publication` | Explicit permissions per job; keep scheduled/dispatch validation and tag publication distinct; avoid granting publication write permissions to PR CI. |
 | `.github` | `validate-pr-contract` and reusable triage/intake behavior | Add CI validating reusable workflow syntax/contracts and safe reusable-workflow changes; keep each caller's permission boundary explicit. |
@@ -227,17 +256,29 @@ baseline and preserve each row's domain-specific test semantics.
 Every tracked workflow must have an inventory row in the implementation
 tracking artifact containing: path, purpose, event/triggers, `GITHUB_TOKEN`
 permissions, external actions/reusable calls and pin type, secrets, required
-check names, owner, and a disposition (`keep`, `normalize`, `replace`,
-`remove`). This catches dormant or specialized workflows that a common-file
-template would otherwise miss.
+check names, producing job, triggering event, provider/source and the exact
+ruleset requirement for each check, owner, and a disposition (`keep`,
+`normalize`, `replace`, `remove`). Record whether a merge queue is enabled.
+This catches dormant or specialized workflows that a common-file template
+would otherwise miss. A manually dispatched run does not satisfy a required
+PR check; validate the check's eligible event source and the current PR SHA.
+[GitHub: troubleshooting required status checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks)
+
+Automatic deletion of a merged remote head branch is independent of local
+branch/worktree cleanup. It never authorizes deleting a local branch, worktree,
+evidence, or in-progress work; those remain subject to the workspace's explicit
+worktree-cleanup policy.
 
 ## 6. Rollout and acceptance
 
 Implementation proceeds in small PRs after the design is accepted:
 
-1. Re-fetch configuration and workflow inventory for all 11 repositories;
-   capture default branch and exact source revisions. Confirm which private
-   settings and security features are observable/available.
+1. Re-fetch effective configuration and workflow inventory for all 11
+   repositories; capture default branch and exact source revisions. For each
+   required check record its name, producing job, event, provider/source and
+   ruleset requirement; establish merge-queue use. Confirm which private
+   settings and security features are observable/available. Treat the current
+   design snapshot as preliminary until this inventory is complete.
 2. Add testable configuration/templates first (Dependabot files and workflow
    conventions), then update repositories in bounded groups. Grouping must
    follow independent verification and access boundaries, not a goal of one
@@ -247,9 +288,17 @@ Implementation proceeds in small PRs after the design is accepted:
    PR is inappropriate.
 4. Update workflow permissions/triggers and reusable references while
    preserving required check names or updating branch rules in the same
-   change. Exercise public and private reusable callers.
-5. Enable and validate Dependabot updates ecosystem by ecosystem. Inspect the
-   resulting manifests/lockfiles and CI before accepting update PRs.
+   change. Exercise public and private reusable callers; verify nested
+   permissions never increase, and test `merge_group` for required checks in
+   repositories with merge queues.
+5. Enable and validate Dependabot updates ecosystem by ecosystem. Exercise a
+   real `uv` manifest/lockfile update where applicable, distinguish action
+   version updates from immutable-SHA pin updates, and verify Dependabot PR CI
+   with read-only token permissions and no ordinary Actions secrets. Inspect
+   resulting manifests/lockfiles and CI before accepting update PRs. Track
+   security alerts, security-fix PRs and any exception separately from routine
+   version-update configuration. Internal Biopeia pin updates must retain
+   workspace/Lab compatibility validation.
 6. Reconcile Project #1 only after each repository's configured state and
    workflow runs have been checked; close the coordinating Issue only after
    all child work, integration checks, and documented exceptions are
@@ -267,7 +316,16 @@ The rollout acceptance checklist is:
 - Workflow token permissions are explicit and least-privilege; action and
   reusable-workflow refs meet the selected immutable pin policy.
 - Required checks remain effective on PR updates and do not remain pending
-  because of trigger/path-filter behavior.
+  because of trigger/path-filter behavior; their exact producer, event,
+  provider/source and ruleset requirement are recorded. A manually dispatched
+  workflow is not accepted as evidence that a required PR check is satisfied.
+- Where merge queues are enabled, every required Actions check reports on
+  `merge_group`; no such requirement is added to repositories without a queue.
+- Dependabot update PRs pass required code checks with default read-only token
+  permissions and no ordinary Actions secrets. Privileged coordination is
+  isolated and tested separately.
+- Reusable workflow permission scopes do not increase along any nested call
+  chain; public callers use public reusable workflows only.
 - Public/private caller boundaries and private branch protection limitations
   have been tested or precisely recorded.
 - No implementation is represented as complete solely because configuration
@@ -285,10 +343,13 @@ reveals friction or check-name instability, adjust before broad rollout.
 | Updating shared reusable workflows breaks several callers | Immutable SHA pins make changes explicit; update shared workflow and callers through traced Issues/PRs; keep a rollback path. |
 | Tightened permissions break an action | Audit every `GITHUB_TOKEN` use and job boundary; grant only the missing permission at the narrowest scope and record why. |
 | Required check names or events change, blocking merges | Read current ruleset requirements before edits and test `opened`, `synchronize`, `reopened` and ready-for-review behavior. |
-| Public code calls a private workflow that consumers cannot access | Verify using a clean, least-privileged consumer context; migrate shared behavior to public `.github` or retain private calls only in private repositories. |
+| Public code calls a private workflow that consumers cannot access | Prohibit the dependency; migrate common logic to public `.github` and keep sensitive coordination on a separately authorized path. |
+| Dependabot CI depends on write permissions or ordinary Actions secrets | Keep code validation unprivileged; isolate coordination actions and verify Dependabot-triggered behavior with read-only token permissions. |
+| Internal domain pins are updated without cross-repository compatibility evidence | Keep internal Biopeia pin promotion under the workspace/Lab compatibility process; Dependabot updates external packages and Actions but does not authorize internal revision promotion. |
 | Private plans/settings cannot provide equivalent protection | State the capability gap, do not claim parity, and select a proportionate compensating control. |
 | Too many Dependabot PRs burden one maintainer | Weekly cadence, compatible patch/minor grouping, modest PR limit; tune based on observed backlog rather than blanket auto-merge. |
 | Branch cleanup removes an intentionally persistent branch | Only merged PR head branches are auto-deleted; protect documented long-lived branches and verify behavior. |
+| Remote branch deletion is confused with local worktree cleanup | Treat remote auto-delete and local branch/worktree/evidence retention as independent operations; follow workspace cleanup policy before local deletion. |
 
 The main alternative is to centralize every workflow in `.github`. Rejected:
 it would blur domain ownership, make failures harder to attribute and couple
@@ -300,5 +361,9 @@ keeping validation semantics at the repository that owns them.
 - Tracking Issue: [`biopeia/docs#143`](https://github.com/biopeia/docs/issues/143)
 - Governance anchor: [ADR-0111 — Design-First Work and Governance Procedure](../../adr/ADR-0111-design-first-work-and-governance-procedure.md)
 - Current delivery tracking: [Biopeia Project #1](https://github.com/orgs/biopeia/projects/1)
-- No ADR is proposed yet: create one only if acceptance establishes durable
-  cross-repository rules that require decision authority beyond this design.
+- ADR-0111 supplies the design-first process; it does not implicitly authorize
+  these controls. Before acceptance, map every proposed durable cross-repository
+  rule to existing policy and identify its acceptance authority. Explicitly
+  decide whether uncovered durable rules require an ADR, a Decision Note, or
+  another existing governed record; do not create one automatically or leave
+  the ratification path implicit.
