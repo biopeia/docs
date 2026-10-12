@@ -69,12 +69,27 @@ they are protected equivalently.
 
 ## 3. Current-state snapshot and evidence limits
 
-The inventory below is a live GitHub repository/workflow snapshot collected
-for Issue `biopeia/docs#143` on 2026-10-12. It records workflow files visible
-on the inspected default branches, not proof that every workflow's latest run
-passed. A GitHub-generated Dependabot dependency-graph workflow may appear in
-the UI; it is not a tracked YAML file and is not counted as a source workflow.
-The rollout must re-inventory default branches before changing them.
+The current exhaustive read-only baseline is the [Biopeia Repository Settings
+and GitHub Actions Inventory — 2026-10-13](../../inventory/repository-settings-and-actions-2026-10-13.md),
+prepared for [Docs #152](https://github.com/biopeia/docs/issues/152) and linked
+to the implementation tracker [Docs #151](https://github.com/biopeia/docs/issues/151).
+It records all eleven in-scope repositories, their inspected default-branch
+revisions, every tracked workflow file, available required-check producers,
+repository settings, branch rules and evidence limits. It supersedes the
+preliminary 2026-10-12 snapshot retained below for historical context.
+
+The inventory is a dated baseline, not proof that every workflow's latest run
+passed or that mutable GitHub settings remain unchanged. Re-read the affected
+repository's current configuration immediately before each implementation.
+GitHub-generated dependency-graph workflows are not tracked YAML source files
+and are excluded from the count of 43 tracked workflows.
+
+### Historical preliminary snapshot (2026-10-12; superseded)
+
+The following table and notes preserve the initial diagnostic collected for
+Docs #143. They are not the current configuration baseline; use the linked
+2026-10-13 inventory for current SHAs, exact workflow details, check producers,
+settings observations, and access limitations.
 
 | Repository | Tracked workflow files and responsibility | Current notable differences / review points |
 | --- | --- | --- |
@@ -108,12 +123,13 @@ Observed patterns from this snapshot:
   disabled. This design does not propose changing those settings absent a
   concrete maintenance problem.
 
-The snapshot is a preliminary diagnosis, not an exhaustive, versioned
-inventory of effective settings. It does not yet establish each required
-check's exact name, producing job, triggering event, provider/source, or
-ruleset requirement. Those facts, including merge-queue use, must be recorded
-per repository from current GitHub state before rollout. Names of required
-checks can change; exact branch rules must be read immediately before rollout.
+At the time of this historical snapshot, the exact required-check mapping and
+workflow catalog had not yet been recorded. Those gaps are addressed in the
+linked 2026-10-13 inventory to the extent exposed by GitHub. Private ruleset
+and protection details remain unknown where the API returned an access/plan
+error; they must be verified through an authorized route before implementing
+changes in those repositories. Required checks and branch rules are mutable
+and must still be re-read immediately before rollout.
 
 ## 4. Proposed normalization policy
 

@@ -138,4 +138,6 @@ appendices:
 # Documents under explanation/ that this publication deliberately leaves out,
 # each with its reason. A document that is neither a chapter nor listed here
 # fails the build: nothing is dropped silently.
-excluded: []
+excluded:
+  - path: technical/inventory/repository-settings-and-actions-2026-10-13.md
+    reason: "Dated operational governance inventory supporting the repository-settings design; not a Biopeia architecture chapter."
