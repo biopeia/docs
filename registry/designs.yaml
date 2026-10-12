@@ -15,6 +15,15 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
+  design.cross-domain.longitudinal-continuity-and-reembodiment-v1:
+    title: "Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1"
+    path: technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, world, modality, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
   design.cross-domain.repository-settings-and-actions-workflow-normalization-v1:
     title: "Repository Settings and GitHub Actions Workflow Normalization v1"
     path: technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md
