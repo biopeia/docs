@@ -8,5 +8,5 @@ Decision records and design documents. Recording one here does not accept it.
 
 ## Contents
 
-- [Decision records](adr/README.md): 38 records
+- [Decision records](adr/README.md): 39 records
 - [Designs](design/README.md): 5 designs

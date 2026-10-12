@@ -44,6 +44,7 @@ records and were not copied; they describe the historical system.
 | [ADR-0108](ADR-0108-reproduction-and-causal-entropy.md) | Reproduction and causal entropy | ACCEPTED | AD-0034 |
 | [ADR-0109](ADR-0109-population-capacity.md) | Population capacity | ACCEPTED | AD-0035 |
 | [ADR-0110](ADR-0110-repository-consequence-and-dependency-direction.md) | Repository consequence and dependency direction | ACCEPTED | AD-0036 |
+| [ADR-0111](ADR-0111-design-first-work-and-governance-procedure.md) | Design-First Work and Governance Procedure | PROPOSED — awaiting owner decision | biopeia/.github-private#43 |
 
 `ADR-0075` to `ADR-0110` transcribe the architecture decisions `AD-0001` to
 `AD-0036` of the architecture audit, one record each, in source order. Their
