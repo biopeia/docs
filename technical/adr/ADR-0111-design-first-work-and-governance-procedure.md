@@ -12,21 +12,21 @@ document_version: 1
 
 ## Status
 
-- **Status:** PROPOSED — awaiting explicit Architecture/Repository Owner decision.
-- **Work class:** `ORDINARY` (proposed; see rationale below).
-- **Operational risk:** `MEDIUM` (proposed; governance-enforcement impact requires independent review where applicable).
+- **Status:** ACCEPTED — adopted by the Architecture/Repository Owner on 2026-10-12.
+- **Work class:** `ORDINARY`.
+- **Operational risk:** `MEDIUM` (governance-enforcement impact requires independent review where applicable).
 - **Decision authority:** Architecture/Repository Owner for the shared operational workflow. A constitutional approval gate applies only if the decision is changed to alter a protected constitutional invariant or authority boundary.
-- **Decision requested:** Accept, revise or reject this ADR and its linked design. This proposal is not a decision, ratification, implementation authorization or experiment authorization.
+- **Decision:** Adopt the Design-First Work and Governance Procedure v1, subject to the limits recorded here. This ratification authorizes implementation planning within the design boundary; it does not itself authorize experiments, domain-contract changes or deployment.
 
 ## Context
 
 Biopeia already has a ratified execution contract, risk-proportional review policy, repository ownership rules and Project #1 operating procedure. The Topic-first proposal in [`.github-private#41`](https://github.com/biopeia/.github-private/issues/41) and the Design-first design in [Docs design PR #131](https://github.com/biopeia/docs/pull/131) identified complementary concerns but risked reading as two competing procedures.
 
-The design was revised in [Docs PR #132](https://github.com/biopeia/docs/pull/132), merged as `c79be2dc42eeb1e85fa197634fc2c992a89cb918`. The revision makes topic intake and design-first execution stages of one lifecycle, and clarifies that cross-domain scope alone does not establish a constitutional classification. The design remains proposed in the Docs registry.
+The design was revised in [Docs PR #132](https://github.com/biopeia/docs/pull/132), merged as `c79be2dc42eeb1e85fa197634fc2c992a89cb918`. The revision makes topic intake and design-first execution stages of one lifecycle, and clarifies that cross-domain scope alone does not establish a constitutional classification. The design is recorded as approved in the canonical registry by this ADR.
 
 Current normative sources distinguish class from operational risk; reserve constitutional decisions to the Architecture Owner; and require competent-authority decisions to be explicit rather than inferred from review, labels, CI or Project state. This ADR proposes to adopt a shared procedure without changing those authorities or domain semantics.
 
-## Decision proposed
+## Decision
 
 Adopt the [Design-First Work and Governance Procedure v1](../design/governance/design-first-work-and-governance-procedure-v1.md) as Biopeia's shared operational procedure, subject to the limits in this ADR.
 
@@ -39,24 +39,24 @@ The procedure establishes that:
 5. Designs describe proposals and impacts; ADRs record durable decisions; DNs record material local/reversible decisions; Issues define and coordinate work; PRs carry repository-scoped changes and evidence; scientific records retain evidence and scientific disposition.
 6. Technical, integration and scientific acceptance remain distinct. CI, review, merge, Project status and closure do not imply a scientific conclusion or acceptance of a larger deliverable.
 7. Project #1 remains an operational coordination view. Its workflow, status, closure and archive behavior must be assessed against existing live settings before any changes; this ADR changes no live setting.
-8. Markdown artifacts created for this procedure use the proposed common frontmatter defined in the linked design and eventual templates. Their lifecycle authorities remain in their designated canonical sources.
+8. Markdown artifacts created for this procedure use the common frontmatter defined in the linked design and eventual templates. Their lifecycle authorities remain in their designated canonical sources.
 9. Emergencies may use the bounded response and follow-up path in the design; they do not waive constitutional restrictions, scientific authorization, repository protections or review/merge gates.
 
 ## Classification and authority rationale
 
-### Proposed work class: `ORDINARY`
+### Work class: `ORDINARY`
 
-The proposed procedure governs work coordination and evidence/decision traceability within existing authority boundaries. It does not change domain ownership, scientific interpretation, protected `FROZEN` evidence, experiment authorization, or constitutional invariants. Under the existing Agent Work Contract, those effects would require a stronger class and their designated authority. Cross-domain scope, by itself, is not sufficient to classify this proposal as `CONSTITUTIONAL`.
+The procedure governs work coordination and evidence/decision traceability within existing authority boundaries. It does not change domain ownership, scientific interpretation, protected `FROZEN` evidence, experiment authorization, or constitutional invariants. Under the existing Agent Work Contract, those effects would require a stronger class and their designated authority. Cross-domain scope, by itself, is not sufficient to classify this proposal as `CONSTITUTIONAL`.
 
 If the owner determines that the adopted text changes a protected invariant or authority boundary, the affected decision must be reclassified and the constitutional approval gate applied; this ADR cannot override that requirement.
 
-### Proposed operational risk: `MEDIUM`
+### Operational risk: `MEDIUM`
 
 A shared procedure can materially affect governance enforcement once adopted and implemented. The ratified risk policy therefore calls for independent review when a candidate materially affects governance enforcement. This ADR changes no enforcement setting or code; implementation candidates must be assessed against their exact diffs and reviewed under that policy before merge when its threshold is met. Risk does not change the work class or transfer decision authority.
 
-### Proposed decision authority
+### Decision authority
 
-The existing shared Agent Work Contract is ratified by the Architecture/Repository Owner, and the Topic-first proposal requires approval by the responsible human. Accordingly, this proposal requests an explicit Architecture/Repository Owner decision on adoption of the shared operational procedure. That request does not claim authority to change any domain-owned contract or scientific policy; any such change requires its own competent authority.
+The existing shared Agent Work Contract is ratified by the Architecture/Repository Owner, and the Topic-first proposal requires approval by the responsible human. Accordingly, the Architecture/Repository Owner accepted the shared operational procedure through this ADR. That request does not claim authority to change any domain-owned contract or scientific policy; any such change requires its own competent authority.
 
 ## Alternatives considered
 
@@ -66,9 +66,9 @@ The existing shared Agent Work Contract is ratified by the Architecture/Reposito
 - **Merge Topic-first and Design-first into one undifferentiated artifact:** rejected. Their functions remain distinct: an Issue is the universal intake/execution record; a design is a separate proposal when scope, alternatives or impact warrant one.
 - **Implement automation or change Project #1 before ratification:** rejected. Automation and live settings require separate, scoped Issues, verification and authorization after a decision.
 
-## Consequences if accepted
+## Consequences
 
-- The linked design's document status may be updated to `approved` only with a reference to this accepted ADR; implementation status and architecture scope remain separate registry fields.
+- The linked design is `approved` with this ADR as its decision reference; implementation status and architecture scope remain separate registry fields.
 - Implementation work must be derived from the design impact map into owning-repository Issues and added to Project #1. Use a parent only where integration needs it; split independently verifiable parts into linked subissues.
 - The initial implementation should prioritize templates, frontmatter/relation validation and clearly documented state semantics. Project automation should be changed only after live settings and representative cases are tested.
 - A pilot should include lightweight, cross-domain and scientific work without blocking work already underway. A seven-day review Issue should be created at adoption to measure overhead, decision latency, traceability gaps, automation errors and review delays.
@@ -76,7 +76,11 @@ The existing shared Agent Work Contract is ratified by the Architecture/Reposito
 
 ## Decision record
 
-No decision has been recorded yet. The Architecture/Repository Owner must record one of `ACCEPTED`, `REVISE` or `REJECTED`, its rationale and date here through a reviewed update. Until then, this ADR and the linked design remain proposals, and implementation remains unauthorized.
+- **Outcome:** ACCEPTED
+- **Authority:** Architecture/Repository Owner (`alessbarb`)
+- **Date:** 2026-10-12
+- **Record:** This ADR was merged in [Docs PR #133](https://github.com/biopeia/docs/pull/133) at `cbabb52f64aa19d084ebdc369fcd66907f0d4f0e`; the owner confirmed its approval and merge.
+- **Limits:** Adoption authorizes planning and implementation work only through scoped, traced Issues and applicable repository controls. It does not itself authorize experiments, changes to protected contracts/invariants, scientific conclusions or deployment.
 
 ## References
 

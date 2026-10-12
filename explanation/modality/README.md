@@ -26,7 +26,7 @@ No cross-domain contract registered for these units.
 
 ## Designs
 
-- [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
 
 ## Decision records

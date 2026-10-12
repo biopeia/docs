@@ -20,9 +20,12 @@ designs:
     path: technical/design/governance/design-first-work-and-governance-procedure-v1.md
     domain: cross-domain
     participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
-    document_status: proposed
+    document_status: approved
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
+    decision:
+      reference: "technical/adr/ADR-0111-design-first-work-and-governance-procedure.md"
+      date: "2026-10-12"
 
   design.runtime.biopeia-physical-step-integration-v1:
     title: "Biopeia Physical-Step and Causal-Commit Integration v1"
