@@ -85,7 +85,11 @@ The two delivered claims per committed cut are a body-pose projection and a fini
 
 ## Independent review and limitations
 
-The earlier independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. A separate exact-report/run review under BAW-004 was **CONFIRMED** for the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and candidate evidence: the reviewer inspected World PR #114 head `349bfa63557c4e00e478ea7b2d32b944f1897331`, reproduced the candidate test in a clean temporary clone (`1 passed`), and matched the recorded tick-1/tick-2 numeric outputs. That prior review does not cover this integrated run. This report revision and integrated evidence require exact-revision independent adversarial review. Neither prior review nor this run establishes migration closure.
+The earlier independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. A separate exact-report/run review under BAW-004 was **CONFIRMED** for the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and candidate evidence: the reviewer inspected World PR #114 head `349bfa63557c4e00e478ea7b2d32b944f1897331`, reproduced the candidate test in a clean temporary clone (`1 passed`), and matched the recorded tick-1/tick-2 numeric outputs. That prior review did not cover the integrated run.
+
+The integrated report/run was independently reviewed under BAW-004 with outcome **CONFIRMED** at Docs PR #138 exact head `8fcf0da435fb3e8e120adf4897f27bbc31ab95a2`; the review record states that the reviewer checked the integrated repository revisions, reproduced the World acceptance test in a disposable clone (`1 passed`), and ran the Docs suite (`192 passed`). The subsequent report revision at Docs PR #140 exact head `ddfe31c9e0f4ddd13310858e1756a3489532c9a0` was also recorded as **CONFIRMED** for its bounded recovery-wording and traceability update; it merged as `0f14a46e8f83fb5c7084f7633c8657d2b770a636`. The outcome records are in the owner-posted status comments on [PR #138](https://github.com/biopeia/docs/pull/138#issuecomment-6120410858), [PR #140](https://github.com/biopeia/docs/pull/140#issuecomment-6131027290), and the migration tracking issue [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42); these comments document the review outcomes and do not constitute GitHub review objects.
+
+This wording records the review outcome for the report revisions above; it does not imply that any later material change has been reviewed. Neither prior review nor this run establishes migration closure.
 
 This run does not prove:
 
@@ -99,8 +103,7 @@ This run does not prove:
 
 ## Required follow-up before migration closure
 
-1. Obtain and record an independent adversarial review of this exact integrated report revision and its run evidence.
-2. Complete the separate checkpoint/continuation criteria, including the still-open Organism continuation/checkpoint umbrella.
-3. Produce and independently review the final Migration Closure Report against every closure criterion.
+1. Complete the separate checkpoint/continuation criteria, including the still-open Organism continuation/checkpoint umbrella.
+2. Produce and independently review the final Migration Closure Report against every closure criterion.
 
 This report demonstrates the end-to-end causal-cycle criterion only. It does not close the migration by itself.
