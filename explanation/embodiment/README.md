@@ -41,7 +41,7 @@ Explanatory documents of the Embodiment domain (semantic-authority).
 ## Designs
 
 - [Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1](../../technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
-- [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Biopeia Physical-Step and Causal-Commit Integration v1](../../technical/design/runtime/biopeia-physical-step-integration-v1.md): document approved, implementation partial, scope TARGET
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
