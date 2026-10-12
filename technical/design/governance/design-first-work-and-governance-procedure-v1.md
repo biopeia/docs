@@ -18,13 +18,7 @@ universal in scope but not uniform in ceremony: every work item is traceable;
 the amount of design, decision recording and review depends on its governance
 class, impact, risk and reversibility.
 
-This is a **proposed design**, not an accepted policy or implementation
-authorization. Its document state is held only in the design registry. Until
-the required decision and implementation changes are accepted, existing
-repository, scientific, frozen-artifact, constitutional, review and Project
-policies remain in force. This design does not itself change live Project #1
-fields or automations, grant experiment authorization, modify domain contracts,
-or authorize a scientific conclusion.
+This is an **accepted design** under [ADR-0111](../../adr/ADR-0111-design-first-work-and-governance-procedure.md). Its document state is held in the design registry. Acceptance authorizes planning and implementation only through scoped Issues and applicable repository controls; it does not itself change live Project #1 fields or automations, grant experiment authorization, modify domain contracts, or authorize a scientific conclusion. Existing repository, scientific, frozen-artifact, constitutional and review policies remain in force.
 
 The procedure applies to `organism`, `embodiment`, `environment`, `world`,
 `modality`, `observation`, `lab`, and the shared documentation and governance
