@@ -141,6 +141,8 @@ def render(docs_root: Path = ROOT) -> dict[str, str]:
             "## Contents", "",
             f"- {link('technical/adr/README.md', 'Decision records')}: {len(records)} records",
             f"- {link('technical/design/README.md', 'Designs')}: {len(reg['designs'])} designs", "",
+            f"- {link('technical/decision-notes/README.md', 'Decision Notes')}: local and reversible decisions",
+            f"- {link('technical/templates/procedure/design.md', 'Procedure templates')}: design, ADR, and DN", "",
         ]
 
     page("technical/README.md", "Technical documentation", [technical])
