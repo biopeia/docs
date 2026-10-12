@@ -12,17 +12,15 @@ document_version: 1
 
 ## Status and authority
 
-- **Status:** PROPOSED — not ratified; no operational effect.
-- **Work class:** `ORDINARY`, subject to owner confirmation during disposition.
+- **Status:** ACCEPTED — adopted by the Architecture/Repository Owner on 2026-10-13. This acceptance authorizes implementation planning, not live configuration changes.
+- **Work class:** `ORDINARY`.
 - **Operational risk:** `MEDIUM` for the later implementation; this record is
   documentation-only.
 - **Decision authority:** Biopeia Architecture/Repository Owner for the shared
   operational baseline. Repository-owned contracts and any protected domain,
   scientific, frozen or constitutional authority remain with their existing
   competent owners.
-- **Disposition requested:** accept this ADR and its referenced design, request
-  specific revisions, or reject them. Review, CI, merge, Issue state and Project
-  state do not constitute that disposition.
+- **Disposition:** Accepted on 2026-10-13 and recorded in [Docs Issue #145](https://github.com/biopeia/docs/issues/145#issuecomment-6134380656). Review, CI, merge, Issue state and Project state alone do not constitute a disposition.
 
 ## Context
 
@@ -42,17 +40,14 @@ not ratified and is narrower in scope. Existing repository-specific rules,
 including `.github`'s review path, remain authoritative within their stated
 scope and must not be silently replaced by a common baseline.
 
-The main unresolved governance question is whether the shared rules in the
-design are durable policy requiring explicit owner ratification, rather than
-merely a set of local implementation choices. This ADR proposes a narrow
-normative layer; it does not repeat repository-by-repository implementation
-details.
+The owner has determined that the shared rules in the design form a durable,
+proportionate operational baseline. This ADR records that normative decision;
+it does not repeat repository-by-repository implementation details.
 
-## Proposed decision — pending owner disposition
+## Decision
 
-If accepted, adopt the referenced design as Biopeia's common operational
-baseline for repository settings and GitHub Actions, subject to these
-boundaries:
+Adopt the referenced design as Biopeia's common operational baseline for
+repository settings and GitHub Actions, subject to these boundaries:
 
 1. Apply common safety and maintenance principles across all eleven in-scope
    repositories, including private repositories, while preserving repository-
@@ -74,7 +69,7 @@ boundaries:
    required Actions checks must validate its candidate integration event.
 6. Treat the design's implementation inventory and rollout as a separate
    phase. No live setting, workflow, branch rule, secret, credential, or
-   Dependabot configuration changes are authorized by this proposed ADR.
+   Dependabot configuration changes are authorized by this ADR.
    Implementation requires scoped Issues, exact-revision evidence, and the
    approvals and repository access applicable to each change.
 
@@ -90,24 +85,21 @@ verification; inability to inspect a setting is not evidence of compliance.
   integration of the proposal, not acceptance of new durable policy.
 - **Use ADR-0111 as blanket authority:** rejected. ADR-0111 governs process and
   explicitly does not implicitly authorize unrelated controls.
-- **Use only a Decision Note:** not selected for this proposal. The design spans
-  eleven repositories and establishes durable shared rules for workflow
-  permissions, branch handling, dependency automation and merge checks. If the
-  owner determines that the resulting rules are only reversible operational
-  defaults and not durable policy, this record should be replaced with a
-  bounded DN before acceptance.
+- **Use only a Decision Note:** rejected. The accepted baseline spans eleven
+  repositories and establishes durable shared rules for workflow permissions,
+  branch handling, dependency automation and merge checks; an ADR is the
+  appropriate decision record.
 - **Apply identical workflow files and required checks everywhere:** rejected.
   Repository responsibilities and contracts differ; normalization concerns
   safe defaults and explicit evidence, not uniform job graphs.
 - **Change live configuration before ratification:** rejected. The design
   separates proposal, decision and implementation.
 
-## Consequences if accepted
+## Consequences
 
-- The referenced design may be changed to `approved` in the canonical design
-  registry with this ADR as its decision reference. Until then it remains
-  `proposed`.
-- A parent implementation Issue and independently verifiable subissues should
+- The referenced design is recorded as `approved` in the canonical design
+  registry with this ADR as its decision reference.
+- A parent implementation Issue and independently verifiable subissues must
   be derived from the accepted impact matrix and tracked in Biopeia Project #1.
   The implementation should start with a verified current-state inventory,
   then proceed in small repository groups, including private repositories.
