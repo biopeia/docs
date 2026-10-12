@@ -6,11 +6,11 @@
 
 **Scope:** bounded two-run TARGET sensorimotor causal cycle
 
-**Tracking:** [world#86](https://github.com/biopeia/world/issues/86), [.github-private#42](https://github.com/biopeia/.github-private/issues/42)
+**Tracking:** [world#86](https://github.com/biopeia/world/issues/86), [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)
 
 ## Decision and scope
 
-This report records a reproducible integrated run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. The supporting World, Organism, and Embodiment pull requests have been merged. The run was executed from the integrated World main tree and resolved its cross-domain dependencies to the exact integrated main merge commits listed below. Candidate trees and their integrated merge trees were checked to be identical for the reviewed PR heads. The prior candidate-only independent review remains historical evidence; this integrated report revision still requires its own exact-revision adversarial review. This is not the final Migration Closure Report.
+This report records a reproducible integrated run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. The run was executed from World `main` at `e231fa38c92360161847b71e7abd617a5c8691f0`, after merge of PR #126, with cross-domain dependencies pinned to the exact integrated `main` revisions listed below. The earlier candidate tree and integrated World `main` tree were verified identical. The prior candidate-only independent review remains historical evidence; this integrated report revision still requires its own exact-revision adversarial review. This is not the final Migration Closure Report.
 
 The run exercises actual Biopeia TARGET owner APIs and World production composition. The test launches and inspects the run; it does not supply the missing causal composition. No Symbiont runtime, compatibility bridge, workspace-owned semantic behavior, environmental labels, reward, goal, or physiology model is used.
 
@@ -18,33 +18,32 @@ The run exercises actual Biopeia TARGET owner APIs and World production composit
 
 | Repository | Integrated revision used | Source / verification | State |
 |---|---|---|---|
-| `biopeia/world` | `4be4deee6da1574f06b7153fea5f6e19710a1419` | PR #114 merge commit; acceptance test and production composition are in this tree | Merged to `main` |
-| `biopeia/organism` | `85802019d08fb6a7a4ed6f0e4d3f4b3bb97a933b` | PR #130 merge commit; tree equals reviewed head `b2e00f06a0862613a8ce29c844606eb37407f751` | Merged to `main` |
+| `biopeia/world` | `e231fa38c92360161847b71e7abd617a5c8691f0` | Current `main`; includes PR #114 acceptance composition and PR #126 current Organism dependency pin | Merged to `main` |
+| `biopeia/organism` | `3674cc787c65d7b6f68709c204c05c1e90fac70e` | Current `main`, including the merged continuation/applicability work | Merged to `main` |
 | `biopeia/embodiment` | `a925c2f2f2694048e4ced4c00874dcfd2331bebe` | PR #61 merge commit; tree equals reviewed head `bff1bf16c2b812822364a94146ec9349292753ac` | Merged to `main` |
 | `biopeia/environment` | `b71d5566c3a73774a088a41a7b99a03954e43a53` | current `origin/main` | Integrated `main` |
 | `biopeia/modality` | `79b779152d4bff2ab4191dc6601c8f1640e4cae3` | current `origin/main` | Integrated `main` |
 | `biopeia/observation` | `ef6321d2bab43b883238cdcf0ce33c08321d595c` | current `origin/main` | Integrated `main` |
-| `biopeia/docs` | `327bad6ee9c205f896dd40b5fff76e22ba4fe371` | report base before this integrated-evidence update | Integrated `main`; this report update is a new candidate |
+| `biopeia/docs` | `4c8f7a515b8f3dcd76c5472a5ca17c3aeb450029` | `main` base before this current-main evidence update | Integrated `main`; this report update is a new candidate |
 
-The runtime evidence does not depend on a workspace test harness. A disposable World worktree was created at `4be4deee...`; only its temporary dependency resolution was changed to point at the integrated Organism and Embodiment merge SHAs, then `uv lock` resolved those exact commits. No temporary dependency-pin edit is part of the repository diff. Environment, Modality, and Observation pins already matched their integrated main SHAs. The resolved runtime versions were World `0.1.0`, Organism `0.1.0`, Embodiment `0.1.0a1`, Environment `0.1.0`, Modality `0.1.0`, Observation `0.1.0`, MuJoCo `3.14.0`.
+The runtime evidence does not depend on a workspace test harness or temporary dependency edits. A disposable worktree was created directly at World `main` SHA `e231fa38...`; `uv sync --locked --extra integration` installed the versions pinned by the committed `pyproject.toml` and `uv.lock`. The resolved runtime versions were World `0.1.0`, Organism `0.1.0`, Embodiment `0.1.0a1`, Environment `0.1.0`, Modality `0.1.0`, Observation `0.1.0`, MuJoCo `3.14.0`.
 
 ## Reproduction
 
-From a clean disposable worktree at World `4be4deee6da1574f06b7153fea5f6e19710a1419`, resolve the integration extra to the exact integrated commits above and run:
+From a clean disposable worktree at World `e231fa38c92360161847b71e7abd617a5c8691f0`, install the locked integration dependencies and run:
 
 ```bash
-uv run --extra integration pytest -q tests/integration/test_end_to_end_causal_cycle_acceptance.py
+uv sync --locked --extra integration
+uv run --extra integration python -m pytest -q tests/integration/test_end_to_end_causal_cycle_acceptance.py
 ```
 
 Result on 2026-10-12:
 
 ```text
-1 passed in 1.36s
+9 passed in 2.03s
 ```
 
-The test is non-skipping and executes `_run` twice from the same declared initial state into separate persistence roots. Each run commits tick 1, restores the World and owner checkpoints in-process, and continues to tick 2. It compares causal identities, sensory and command values, adopted joint state, and Observation claims across both runs. The integrated run used CPython `3.14.3`, `uv`, and MuJoCo `3.14.0`.
-
-The disposable validation worktree contained only temporary resolution changes to `pyproject.toml` and `uv.lock` to install the integrated Organism and Embodiment merge commit SHAs rather than their pre-merge candidate refs. The tested World source tree and all domain source trees were the integrated SHAs in the table. The tracked World checkout was not modified.
+The test is non-skipping and executes `_run` twice from the same declared initial state into separate persistence roots. Each run commits tick 1, restores the World and owner checkpoints in-process, and continues to tick 2. It compares causal identities, sensory and command values, adopted joint state, and Observation claims across both runs. The integrated run used CPython `3.14.3`, `uv`, and MuJoCo `3.14.0`. From the same exact World `main` checkout, the complete integration suite passed **52 tests**, the complete World suite passed **115 tests**, `uv lock --check`, `uv build`, and `git diff --check` passed.
 
 ## Scenario configuration
 
@@ -72,7 +71,7 @@ The disposable validation worktree contained only temporary resolution changes t
 | 5 | Production path constructs a complete motor command | The production composition uses stable actuator IDs and Embodiment-owned differential binding; both channels are present. No final command is injected by the test. | This fixture tests a bounded one-joint actuator surface, not arbitrary morphologies. |
 | 6 | World performs physical step | `run_scalar_sensorimotor_cycle_and_publish` creates `PhysicalStepContext` from World tick and invokes the configured articulated MuJoCo adapter. | Solver configuration is small and deterministic; no performance or production-scale claim. |
 | 7 | Owners validate/adopt their state | Embodiment adopts the candidate body state; Environment validates its accepted physical-step correlation; owner checkpoint payloads are written and validated before World commit. | The body root is fixed at the receptor origin. The post-step sample therefore uses a stable source receptor location; moving-root sampling is not established. |
-| 8 | World commits coherent causal cut | The two-run test commits ticks `1` and `2`, with explicit World ID, commit IDs, step IDs, owner references and causal correlations. | Tick `2` follows same-process restore; not a fresh-process/bootstrap recovery test. |
+| 8 | World commits coherent causal cut | The two-run comparison commits ticks `1` and `2`, with explicit World ID, commit IDs, step IDs, owner references and causal correlations. A separate test in the same acceptance file restores committed state in a fresh process, advances to tick `2`, and compares against uninterrupted continuation. | The fresh-process test starts from a committed runtime fixture; it does not establish full World genesis/bootstrap recovery or universal crash/power-loss guarantees. |
 | 9 | Observation receives actual post-commit publication | The World composition publishes owner-backed `body_pose` and `finite_scalar_field` claims after commit. Delivery sequences and committed-cut references are asserted; claim lineage refers to owner checkpoint hashes. | The test uses an in-process Observation plane; it does not test network transport, durable delivery, replay or UI rendering. |
 | 10 | One run is traceable end to end | The acceptance test retains results for sensory input, action proposal/command, physical outcome, committed cuts, checkpoint references and Observation messages; repeated runs compare these values. | No external scientific evidence admission is implied. |
 
@@ -94,7 +93,7 @@ This run does not prove:
 - resource semantics, goals, rewards, locomotion, or behavioral success;
 - physiological validity or scientific calibration;
 - moving-root receptor projection correctness;
-- fresh-process restart, full bootstrap recovery, universal crash/power-loss resistance, or arbitrary replay;
+- full World genesis/bootstrap recovery, universal crash/power-loss resistance, or arbitrary replay (fresh-process restore-and-continue is covered by a separate test in the cited acceptance suite);
 - production-scale solver performance, network Observation transport, or visualization completeness;
 - migration closure.
 
