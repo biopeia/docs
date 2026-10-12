@@ -7,7 +7,7 @@
 
 ## Decision and scope
 
-This report records a reproducible candidate run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. It is not yet final acceptance: the exact World and supporting-domain revisions used by the run are still on open pull requests, and the required independent adversarial review of this report and run evidence has not been completed. Re-run the acceptance test against integrated revisions and update this report before treating it as accepted evidence.
+This report records a reproducible candidate run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. An independent adversarial review of the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and its run evidence returned **CONFIRMED**, limited to the candidate-evidence claims (see the review record on [docs#137](https://github.com/biopeia/docs/pull/137#issuecomment-6118303207)). This revision records that outcome; this updated report revision still requires exact-revision review. This is not final migration acceptance: the exact World and supporting-domain revisions used by the run remain on open pull requests. Re-run the acceptance test against integrated revisions and update this report before treating it as integrated acceptance evidence.
 
 The run exercises actual Biopeia TARGET owner APIs and World production composition. The test launches and inspects the run; it does not supply the missing causal composition. No Symbiont runtime, compatibility bridge, workspace-owned semantic behavior, environmental labels, reward, goal, or physiology model is used.
 
@@ -80,7 +80,7 @@ The two delivered claims per committed cut are a body-pose projection and a fini
 
 ## Independent review and limitations
 
-An independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. The exact report/run evidence still requires the mandatory adversarial review under BAW-004 before this can become accepted migration evidence.
+An independent review of the bounded World composition was **BOUNDED**: it confirmed that a concrete Organism-owned exploration composer is invoked through the production World composition, while explicitly not confirming action-conditioning, learning, or scientific effectiveness. A separate exact-report/run review under BAW-004 was **CONFIRMED** for the prior report revision `77c51bef7ff2818e4cc2432557ad3f4a28cd948a` and candidate evidence: the reviewer inspected World#114 at `349bfa63557c4e00e478ea7b2d32b944f1897331`, reproduced the acceptance test in a clean temporary clone (`1 passed`), and matched the recorded tick-1/tick-2 numeric outputs. No material discrepancy was found. This updated report revision requires its own exact-revision check; neither review promotes open candidate commits to integrated revisions or establishes migration closure. The final integrated run and its exact report revision also require review.
 
 This run does not prove:
 
