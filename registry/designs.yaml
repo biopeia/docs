@@ -15,6 +15,15 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
+  design.cross-domain.repository-settings-and-actions-workflow-normalization-v1:
+    title: "Repository Settings and GitHub Actions Workflow Normalization v1"
+    path: technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
   design.cross-domain.design-first-work-and-governance-procedure-v1:
     title: "Design-First Work and Governance Procedure v1"
     path: technical/design/governance/design-first-work-and-governance-procedure-v1.md

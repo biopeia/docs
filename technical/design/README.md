@@ -11,6 +11,7 @@ states are independent, and an approved design is never, by that fact, an implem
 
 | Design | Domain | Document | Implementation | Architecture scope |
 |---|---|---|---|---|
+| [Repository Settings and GitHub Actions Workflow Normalization v1](governance/repository-settings-and-actions-workflow-normalization-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Design-First Work and Governance Procedure v1](governance/design-first-work-and-governance-procedure-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |
 | [Biopeia Physical-Step and Causal-Commit Integration v1](runtime/biopeia-physical-step-integration-v1.md) | world | approved | partial | TARGET |
 | [Observation Semantic Model v1](observability/observation-semantic-model-v1.md) | observation | approved | partial | TARGET |
