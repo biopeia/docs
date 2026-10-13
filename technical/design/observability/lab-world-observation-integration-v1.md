@@ -34,7 +34,7 @@ Focused evidence paths at those revisions:
 
 - `world:src/world/observation_publication.py`, `world:tests/test_observation_publication.py`.
 - `observation:src/observation/plane.py`, `observation:src/observation/semantic.py`, `observation:src/observation/environment.py`, `observation:src/observation/embodiment.py`, and their focused tests `tests/test_plane.py`, `tests/test_environment_observation.py`, `tests/test_embodiment_observation.py`.
-- `environment:src/environment/physical.py` and `environment:tests/test_physical_projection.py`.
+- `environment:src/environment/identified_resource.py` and `environment:tests/test_identified_resource.py` for the finite scalar-field observation projection.
 - `embodiment:src/embodiment/observation.py`, `embodiment:src/embodiment/observation_family.py`, and `embodiment:tests/test_body_pose_observation_projection.py`.
 - `lab:src/lab/interventions/material_transfer.py` and `lab:tests/integration/test_material_transfer_intervention.py`.
 - `organism` and `modality` were searched at the pinned revisions for Observation publication/adapters; no production semantic-family adapter for these domains was established by this audit. This is a bounded search result, not a claim that no related capability exists anywhere.
@@ -157,7 +157,7 @@ world:       tests/test_observation_publication.py
 observation: tests/test_plane.py
              tests/test_environment_observation.py
              tests/test_embodiment_observation.py
-environment: tests/test_physical_projection.py
+environment: tests/test_identified_resource.py
 embodiment:  tests/test_body_pose_observation_projection.py
 lab:         tests/integration/test_material_transfer_intervention.py
 ```
