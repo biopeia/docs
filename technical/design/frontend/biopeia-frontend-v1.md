@@ -331,6 +331,82 @@ successful fetch/delivery, reconnect/retry state and current error. It must
 not expose tokens or secrets. A disconnected view must clearly mark cached
 content as stale and preserve the timestamp/revision it came from.
 
+### 6.9 Three presentation modes over one source
+
+The application has three user-facing modes, not three data authorities or
+independent applications. They use the same authorized Observation source,
+identity rules and view-model boundary, while exposing different levels of
+detail:
+
+| Mode | Primary question | Default presentation |
+|---|---|---|
+| **Observatory** | What has been published about this World/run? | Spatial overview, published presences, Environment summary, latest committed cut and publication health. It is understandable without knowing internal contract vocabulary. |
+| **Inspector** | What does this selected body, claim or transition actually say? | Selected subject/claim details, owner and revision, domain time, units/frame, availability, explicit links and source provenance. |
+| **Scientific Trace** | What evidence and delivery path support this displayed relation? | Claim-level provenance, epistemic basis, source cut, explicit lineage/correlation, delivery sequence/gaps and replay limits. |
+
+Mode changes only presentation density and navigation context. A user can
+move from an Observatory selection to its Inspector details and then to the
+Scientific Trace without changing the selected source identity. The UI must
+not upgrade a correlation into causation or a claim into scientific evidence
+as the user moves between modes.
+
+### 6.10 Low-fidelity layout and navigation
+
+The following wireframes define information hierarchy, not visual tokens or
+final styling. The persistent shell exposes source/delivery health separately
+from the selected causal cut. All panels link to the same source-backed
+selection.
+
+```text
+OBSERVATORY — /worlds/{world_id}/runs/{run_id}
+┌──────────────────────────────────────────────────────────────────────┐
+│ Biopeia  World … / Run …       Cut: committed N   Delivery: delayed  │
+├─────────────────┬───────────────────────────────────┬────────────────┤
+│ Observatory     │                                   │ Published      │
+│ Inspector       │   Spatial view / textual fallback│ subjects       │
+│ Scientific Trace│   (selected committed cut)        │ + availability │
+│                 │                                   │                │
+├─────────────────┴───────────────────────────────────┴────────────────┤
+│ Recent committed cuts and publication events                         │
+└──────────────────────────────────────────────────────────────────────┘
+
+INSPECTOR — /claims/{claim_id}
+┌──────────────────────────────────────────────────────────────────────┐
+│ Claim …  Family/revision …      Source: available / delivery: gap     │
+├───────────────────────────────────┬──────────────────────────────────┤
+│ Value (unit/frame)                │ Subject / authority / producer   │
+│ Epistemic basis / availability    │ Domain time / revision           │
+├───────────────────────────────────┴──────────────────────────────────┤
+│ Provenance and explicit cross-domain links                           │
+└──────────────────────────────────────────────────────────────────────┘
+
+SCIENTIFIC TRACE — /worlds/{world_id}/trace
+┌──────────────────────────────────────────────────────────────────────┐
+│ Selected committed cut …       delivery continuity: gap detected    │
+├──────────────────────────────────────────────────────────────────────┤
+│ Claim A ── explicit relation ── Claim B ── no published link ── Claim C│
+├──────────────────────────────────────────────────────────────────────┤
+│ Source refs | epistemic status | revisions | replay boundary          │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+Navigation is limited to source-backed contexts: World/run browser,
+Observatory overview, spatial inspection, timeline, Inspector and Scientific
+Trace. A selected cut/claim remains visible in the breadcrumb and URL when a
+deep link is supported by the source identity contract. No UI affordance may
+suggest starting, pausing, changing or intervening in a World.
+
+### 6.11 Interpretive restraint
+
+Visual richness does not increase evidentiary strength. A rendered pose shows
+only that a pose claim was published under the displayed authority,
+revision, frame and epistemic basis. It does not demonstrate learning,
+intention, competence, causal attribution, biological validity or scientific
+success. Animation, labels, color, camera emphasis and summaries must not
+imply any of those properties unless the source contract explicitly supports
+that exact claim. In particular, body movement is not proof of learning or
+intent.
+
 ## 7. Application architecture
 
 Recommended separation inside `biopeia/frontend`:
@@ -360,6 +436,53 @@ V1 must support finite CPU/memory limits: bounded in-memory rendering window,
 virtualized lists for large retained histories, explicit query ranges and
 cleanup of renderer resources. These are frontend implementation controls,
 not retention policy for Observation or World.
+
+### Minimum consumable Observation contract (gate, not a schema)
+
+The frontend must not be designed against guessed or fixture-only payloads.
+Before a screen consumes a family, that family must have an approved
+semantic-family contract and an actual supported Observation publication /
+query contract. This section states required information, not a record,
+envelope, endpoint or transport design.
+
+At minimum the approved contracts used by a screen must make the following
+distinctions available, either directly or through stable references:
+
+| Required distinction | Why the frontend needs it |
+|---|---|
+| Family identity and semantic revision | Refuse unknown meanings; do not infer meaning from a transport version. |
+| Typed, issuer-scoped claim and subject identity | Prevent subject identity from being confused with claim or message identity. |
+| Primary authority, producer/asserter and epistemic basis | Present who owns the meaning separately from who emitted a representation and how it is known. |
+| Domain time/revision, including relevant morphology/environment revision | Prevent host time or a newer delivery from silently changing source validity. |
+| Availability/completeness and units/reference frame when applicable | Distinguish absent, unknown, partial, stale and uninterpretable values. |
+| Provenance/lineage and explicit cross-domain links | Render relationships only when a source reference supports them. |
+| Coherence scope and committed World-cut reference when claimed | Avoid calling a composite view an atomic snapshot. |
+| Delivery ordering scope, stable delivery identity/sequence, duplication and gap semantics | Detect delivery discontinuity independently of source state. |
+| Query/subscription completeness, resume/replay boundary and access scope | Tell the user what was requested, what was delivered and what is authorized. |
+
+These requirements derive from the approved Observation Semantic Model v1;
+they do not authorize a concrete schema or transport. If a needed distinction
+is absent, the corresponding screen or interpretation remains unavailable
+and the gap is reported. The frontend must not repair the source contract by
+joining on timestamps, inventing identifiers or interpreting opaque values.
+
+### Causal state and delivery state are orthogonal
+
+Every live view keeps at least two independent status dimensions:
+
+1. **Source/causal status:** authority-backed source value, domain time and
+   revision, availability, and whether a World cut is committed.
+2. **Delivery status:** connection, last received delivery identity/sequence,
+   ordering scope, gap/resume state, completeness and collection time.
+
+For example, a known committed cut may remain the latest confirmed source
+state while its delivery is delayed or has a gap. Conversely, a healthy
+connection does not prove that a complete or current source snapshot was
+delivered. The shell and claim views must display both dimensions and must
+not replace source availability with connection health. Cached content is
+labelled with its original source revision and separately marked stale for
+delivery purposes; a delivery failure never rewrites the source claim as
+`UNKNOWN`.
 
 ## 8. Security, privacy and operational requirements
 
@@ -417,6 +540,32 @@ system specification covering:
 Do not copy Symbiont's visual tokens or represent aesthetic familiarity as
 Biopeia's design authority. No component implementation should begin while
 this required visual specification is absent.
+
+### Provisional performance budgets
+
+The following are **engineering targets for a first benchmark**, not
+constitutional guarantees or claims about current Observation throughput.
+They must be measured on a documented reference device/browser and a
+versioned representative synthetic dataset before implementation acceptance.
+If the benchmark shows a target is not appropriate, revise it with the
+measurement and trade-off recorded rather than hiding overload or dropping
+source history.
+
+| Workload | Initial target |
+|---|---|
+| Shell and non-3D run overview usable after warm-cache navigation | p95 ≤ 2.5 s on the documented reference profile |
+| Local UI response (selection, filtering loaded data, drawer open) | p95 ≤ 100 ms, excluding network/source query time |
+| Spatial presentation | ≥ 30 frames/s at p95 on the reference scene, with explicit non-WebGL/list fallback |
+| Live update rendering | Batch/coalesce presentation refreshes; do not render more than 10 UI refreshes/s per view by default. Do not discard received source claims merely to meet this rendering budget; retain source/delivery identities and expose overload or truncation. |
+| In-memory history | Default to a bounded 10,000-row window per active timeline; query older ranges explicitly and release evicted view models/resources |
+| Overload behavior | Surface lag, gap, truncation or unsupported scale; never silently claim complete delivery after local dropping |
+
+The first benchmark must state device/browser/viewport, cache state, scene
+complexity (entities, geometry and update rate), publication rate, history
+length, concurrent claims and measurement method. It must report p50/p95,
+memory, dropped/coalesced presentation updates and fallback behavior. These
+targets constrain presentation work only; they do not change Observation
+retention, delivery guarantees or causal runtime performance requirements.
 
 ## 11. Testing and acceptance
 
