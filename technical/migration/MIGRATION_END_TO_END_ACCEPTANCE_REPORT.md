@@ -10,7 +10,7 @@
 
 ## Decision and scope
 
-This report records a reproducible integrated run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. The run was executed from World `main` at `e231fa38c92360161847b71e7abd617a5c8691f0`, after merge of PR #126, with cross-domain dependencies pinned to the exact integrated `main` revisions listed below. The earlier candidate tree and integrated World `main` tree were verified identical. The prior candidate-only independent review remains historical evidence; this integrated report revision still requires its own exact-revision adversarial review. This is not the final Migration Closure Report.
+This report records a reproducible integrated run of the production World-owned composition for a bounded scalar-sensing and articulated-body scenario. The run was executed from World `main` at `e231fa38c92360161847b71e7abd617a5c8691f0`, after merge of PR #126, with cross-domain dependencies pinned to the exact integrated `main` revisions listed below. The earlier candidate tree and integrated World `main` tree were verified identical. The integrated report/run was independently reviewed under BAW-004 with outcome `CONFIRMED` for Docs PR #138 exact head, and the later bounded recovery-wording update was also reviewed `CONFIRMED` at Docs PR #140 exact head; details and scope limits are recorded below. This is not the final Migration Closure Report.
 
 The run exercises actual Biopeia TARGET owner APIs and World production composition. The test launches and inspects the run; it does not supply the missing causal composition. No Symbiont runtime, compatibility bridge, workspace-owned semantic behavior, environmental labels, reward, goal, or physiology model is used.
 
