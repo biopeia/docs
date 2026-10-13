@@ -2,7 +2,7 @@
 
 **Assessment status:** `NOT CLOSED — closure criteria remain unmet`
 
-**Assessment date:** 2026-10-13  
+**Assessment date:** 2026-10-13 (GitHub snapshot at approximately 01:56 UTC)
 **Scope:** Biopeia migration closure readiness  
 **Tracking:** [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)  
 **Evidence base:** current Biopeia `main` revisions listed below; workspace objective and handoff identified below
@@ -33,15 +33,15 @@ The independent repository revision snapshot and check-run observations were rea
 |---|---|
 | `biopeia/organism` | `0ddadac6d51ab39aeee909cb423a911b069b11dc` |
 | `biopeia/embodiment` | `56e9a34a6a778a298493dabca9d15b0912066803` |
-| `biopeia/environment` | `52b9bf942c12e9bd061485563a1311b00fe32154` |
+| `biopeia/environment` | `d7041c89aeb5c429e6e1bb4af0058085749d0e70` |
 | `biopeia/world` | `faab636ee7751ff65b2785bdf87597b4b1f5be5d` |
 | `biopeia/modality` | `93a4c3a4ea71dcf65269ce730aab736238fd3ea7` |
 | `biopeia/observation` | `1456df093e4ac28032d956e4df30957f0bf87cec` |
-| `biopeia/lab` | `324ff9283ad5d736c54e789408dea63458c03b2b` |
-| `biopeia/docs` (assessment base) | `0204ab9e102f5d775bc3b23ef2d0f416140ab990` |
+| `biopeia/lab` | `f44576edb59ab7f312fa53b562bc6a268cc83d6a` |
+| `biopeia/docs` (assessment base) | `e69e4ed57e4eb23d70b149b5da76fc52dd117dfb` |
 | `biopeia/.github-private` | `8c4b0803796481f5fd3588261a083873f1f03415` |
 
-This assessment was refreshed from Docs `main` at the listed assessment base. It incorporates Lab PR #111 (`lab/src/lab/experience/safety.py`) and PR #112 (`lab/src/lab/integration/integrated_habitat.py`), each resolving one source row as a bounded `DROP` from TARGET code only. Both are narrow row dispositions; Lab #78 remains open with unresolved rows. Neither makes a scientific-validity or capability-necessity claim. Repository revisions, issue states and check runs were queried from GitHub on 2026-10-13 at approximately 01:39 UTC. Any later repository or issue changes require revalidation before this report can support a closure decision.
+This assessment was refreshed from Docs `main` at the listed assessment base. It incorporates Lab PR #111 (`lab/src/lab/experience/safety.py`), PR #112 (`lab/src/lab/integration/integrated_habitat.py`), and PR #113 (`lab/src/lab/integration/organism/canonical.py`), each resolving one source row as a bounded `DROP` from TARGET code only. PR #113 merged at `f44576edb59ab7f312fa53b562bc6a268cc83d6a` from reviewed candidate `792264a1e48c6fbe45cfe8452541a6a577e0bece`; its exact-head checks passed and independent review was `CONFIRMED` for that row only. These are narrow row dispositions; Lab #78 remains open with unresolved rows. None makes a scientific-validity or capability-necessity claim. Repository revisions, issue states and check runs were queried from GitHub on 2026-10-13 at approximately 01:56 UTC. Any later repository or issue changes require revalidation before this report can support a closure decision.
 
 ## 3. Closure-gate assessment
 
@@ -52,13 +52,13 @@ This assessment was refreshed from Docs `main` at the listed assessment base. It
 | Bounded continuation/checkpoint gate for the accepted E2E profile | `PASS, bounded` | `.github-private#42` records Organism #34 closed for the accepted profile. This does not establish universal Organism continuation. |
 | Scientific custody of the 477 historical Lab artifacts | `PASS, bounded` | Lab #23 is closed for the custody classifications. Custody classification does not assert scientific validity, method equivalence, or admissibility. |
 | Remaining Lab protocol dispositions | `OPEN` | Lab #77 remains open. Its current scope identifies 68 individual protocol units requiring disposition review; the issue requires per-protocol disposition or an explicitly bounded child issue. These are not represented as completed reviews or final dispositions here. |
-| Remaining Lab `SPLIT` source rows | `OPEN` | Lab #78 remains open for symbol-level resolution. Lab PR #111 (`85b0e5cdc0776025f9ad62da23edcf2064e62eb3`) resolves only `lab/src/lab/experience/safety.py` (pinned blob `6d8b084b3e212ad76d56a418e75dec4982180a8e`) as `DROP` from TARGET code. Lab PR #112 (`324ff9283ad5d736c54e789408dea63458c03b2b`) resolves only `lab/src/lab/integration/integrated_habitat.py` (pinned blob `20b8de5348f05930cffc583efced5d72a3105ac7`) as `DROP` from TARGET code. Each row has bounded independent review; neither resolves the remaining checklist or makes a scientific-validity/capability-necessity claim. |
+| Remaining Lab `SPLIT` source rows | `OPEN` | Lab #78 remains open for symbol-level resolution. Lab PR #111 (`85b0e5cdc0776025f9ad62da23edcf2064e62eb3`) resolves only `lab/src/lab/experience/safety.py` (pinned blob `6d8b084b3e212ad76d56a418e75dec4982180a8e`) as `DROP` from TARGET code. Lab PR #112 (`324ff9283ad5d736c54e789408dea63458c03b2b`) resolves only `lab/src/lab/integration/integrated_habitat.py` (pinned blob `20b8de5348f05930cffc583efced5d72a3105ac7`) as `DROP` from TARGET code. Lab PR #113 (`f44576edb59ab7f312fa53b562bc6a268cc83d6a`; reviewed head `792264a1e48c6fbe45cfe8452541a6a577e0bece`) resolves only `lab/src/lab/integration/organism/canonical.py` (pinned blob `9b2e8ee25199a9b1a69cb822c695257d1fbf9b2c`) as `DROP` from TARGET code. Each row has bounded independent review; none resolves the remaining checklist or makes a scientific-validity/capability-necessity claim. |
 | Lab aggregate disposition reconciliation | `OPEN` | Lab #45 remains open to ensure each remaining `DEFER` and `SPLIT` is actionable and reconciled. Its umbrella is not satisfied by closing individual slices. |
 | Cross-repository source-disposition gaps/conflicts | `OPEN` | Docs #63 remains open. Its acceptance criteria require one authoritative disposition per source item/group, resolution of audit-listed conflicts and gaps, treatment of tests/tooling/configuration, and validation against pinned source/current Biopeia revisions. The 2026-10-10 audit totals are initial findings, not current verified totals. |
 | Broader Organism continuation and actuation checkpoint scope | `POST_MIGRATION FOLLOW-UP` | Organism #41 and #45 remain open and labeled `POST_MIGRATION`. The accepted bounded profile is not claimed to cover unexercised capabilities; reopen the closure assessment if its accepted profile depends on them or reveals omitted required state. |
 | World journal scale/retention | `POST_MIGRATION FOLLOW-UP` | World #32 remains open and is explicitly non-blocking for the bounded E2E acceptance run. No production-scale or arbitrary-history guarantee is claimed. |
 | Lab Workbench visualization consumer | `POST_MIGRATION FOLLOW-UP` | Lab #63 remains open. Observation post-commit publication is demonstrated in-process; this report does not claim a complete visualization/UI consumer. |
-| CI on current domain `main` revisions | `PASS WITH EXCEPTION, observed` | Check runs were queried for the listed current `main` revisions on 2026-10-13 at approximately 01:39 UTC. Test/build/integration checks on Organism, Embodiment, Environment, World, Modality, Observation and Lab concluded `success`. World also has a failed `Dependabot` check on this revision (run [38332918651](https://github.com/biopeia/world/actions/runs/38332918651)); this maintenance workflow is separate from World’s successful package/integration checks and is not described as green. Docs `registry`, `publication`, and `cross-repository` concluded `success`, while Docs `release` concluded `skipped`. `.github-private` `test` concluded `success`. This is a point-in-time check observation; it does not substitute for migration acceptance or review. |
+| CI on current domain `main` revisions | `PASS WITH EXCEPTIONS, observed` | Check runs were queried for the listed current `main` revisions on 2026-10-13 at approximately 01:56 UTC. Test/build/integration checks on Organism, Embodiment, Environment, World, Modality, Observation and Lab concluded `success`. Environment had two Dependabot runs still `in_progress`; its `.github/dependabot.yml`, `test`, and distribution checks concluded `success`. World also has a failed `Dependabot` check (run [38332918651](https://github.com/biopeia/world/actions/runs/38332918651)); its package and integration checks succeeded. Docs `registry`, `publication`, and `cross-repository` concluded `success`, while Docs `release` concluded `skipped`. `.github-private` `test` concluded `success`. These are point-in-time observations; they do not substitute for migration acceptance or review. |
 | Independent adversarial review | `REQUIRED FOR CLOSURE` | The exact current report revision must receive the mandatory HIGH-risk adversarial review before any closure attestation. The review outcome must be recorded on the tracking Issue/PR; review of a prior report candidate is not a substitute. |
 
 ## 4. End-to-end acceptance evidence and limits
