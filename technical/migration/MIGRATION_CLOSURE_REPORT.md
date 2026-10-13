@@ -36,12 +36,12 @@ The independent repository revision snapshot and check-run observations were rea
 | `biopeia/environment` | `52b9bf942c12e9bd061485563a1311b00fe32154` |
 | `biopeia/world` | `e7b3dd99174ceda6b0ca7209be01e965f2fe02b5` |
 | `biopeia/modality` | `93a4c3a4ea71dcf65269ce730aab736238fd3ea7` |
-| `biopeia/observation` | `c0e66d844ebd25f54c75b2bf9b0b10b81ad34ee9` |
-| `biopeia/lab` | `85b0e5cdc0776025f9ad62da23edcf2064e62eb3` |
+| `biopeia/observation` | `1456df093e4ac28032d956e4df30957f0bf87cec` |
+| `biopeia/lab` | `7d07e25929ff0fb6e13c30c38e6d040d61f91e5a` |
 | `biopeia/docs` (assessment base) | `15ef5c2fa2973aea6b719377b59a89660b7e5275` |
 | `biopeia/.github-private` | `cf87b80d076a17f231698e0ab38e0b0b4269788f` |
 
-The report refresh was prepared from Docs `main` at the listed assessment base. It incorporates Lab PR #111, which resolves one pinned `SPLIT` source row as a bounded `DROP` of the historical TARGET implementation only. Lab #78 remains open with unresolved rows; this slice does not make any scientific-validity or capability-necessity claim. Any later repository or issue changes require revalidation before this report can support a closure decision.
+The report refresh was prepared from Docs `main` at the listed assessment base. It incorporates Lab PR #111, which resolves one pinned `SPLIT` source row as a bounded `DROP` of the historical TARGET implementation only. Lab #78 remains open with unresolved rows; this slice does not make any scientific-validity or capability-necessity claim. The Observation and Lab revisions were refreshed after their main branches advanced; all listed source revisions and available checks were queried again from GitHub on 2026-10-13 at approximately 01:20 UTC. Any later repository or issue changes require revalidation before this report can support a closure decision.
 
 ## 3. Closure-gate assessment
 
@@ -58,8 +58,8 @@ The report refresh was prepared from Docs `main` at the listed assessment base. 
 | Broader Organism continuation and actuation checkpoint scope | `POST_MIGRATION FOLLOW-UP` | Organism #41 and #45 remain open and labeled `POST_MIGRATION`. The accepted bounded profile is not claimed to cover unexercised capabilities; reopen the closure assessment if its accepted profile depends on them or reveals omitted required state. |
 | World journal scale/retention | `POST_MIGRATION FOLLOW-UP` | World #32 remains open and is explicitly non-blocking for the bounded E2E acceptance run. No production-scale or arbitrary-history guarantee is claimed. |
 | Lab Workbench visualization consumer | `POST_MIGRATION FOLLOW-UP` | Lab #63 remains open. Observation post-commit publication is demonstrated in-process; this report does not claim a complete visualization/UI consumer. |
-| CI on current domain `main` revisions | `PASS, observed` | Check runs were queried for the listed current `main` revisions on 2026-10-13. Core test/build/integration checks available on each repo were successful. Docs `registry`, `publication`, and `cross-repository` checks were successful; Docs `release` concluded `skipped` and is not represented as a passing release. This is a point-in-time CI observation, not a substitute for migration acceptance or review. |
-| Independent adversarial review of this exact report revision | `PENDING` | A review of the previous candidate returned `BOUNDED`: it confirmed only the `NOT CLOSED` conclusion and required refreshing the repository snapshot and clarifying the Lab #77 wording. This revision applies those corrections; it still requires exact-revision review before reliance. |
+| CI on current domain `main` revisions | `PASS, observed` | Check runs were queried for the listed current `main` revisions on 2026-10-13 at approximately 01:20 UTC. Available test/build/integration checks on Organism, Embodiment, Environment, World, Modality, Observation and Lab concluded `success`; Docs `registry`, `publication`, and `cross-repository` concluded `success`, while Docs `release` concluded `skipped` and is not represented as a passing release. `.github-private` exposed no check runs for its listed revision. This is a point-in-time CI observation, not a substitute for migration acceptance or review. |
+| Independent adversarial review of this exact report revision | `PENDING` | The previous candidate review returned `BOUNDED`: it supported `NOT CLOSED`, but noted that Observation and Lab had advanced after the report snapshot. This revision refreshes both revisions and their available check runs. The exact current candidate still requires adversarial review before reliance. |
 
 ## 4. End-to-end acceptance evidence and limits
 
