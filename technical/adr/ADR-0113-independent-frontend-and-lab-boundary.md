@@ -39,6 +39,16 @@ This decision would **partially supersede ADR-0102 for Biopeia TARGET only**, an
 6. World and domain owners retain their existing authority over causal state, domain state, identity, meaning and publication. The frontend must preserve the source authority and provenance required by the applicable Observation family.
 7. This decision does not select or approve a wire schema, API, transport, authentication model, deployment topology, data-retention policy or supported Observation family. Those require evidence-backed, separately reviewed contracts and decisions.
 
+### Lab-specific tooling boundary
+
+Classify a human-facing capability by the work it performs, not by its visual form, technology, repository path or data source:
+
+- **Lab-specific scientific tooling** is integral to carrying out or evaluating a Lab-owned scientific operation. It may configure or execute an authorized protocol/run, operate scientific apparatus, validate protocol-specific measurements, admit/custody evidence, or analyze study-scoped results. Lab may own such tooling, including embedded plots or 3D views, when those views are part of that bounded scientific workflow.
+- **General-purpose frontend presentation** displays authorized Observation publications for human inspection across ordinary runtime or multiple scientific contexts. It does not itself execute a protocol, operate apparatus, admit evidence, or perform study-specific analysis. The proposed independent frontend owns this presentation application and its shared UI; it does not acquire the domain or scientific authority of the displayed data.
+- A capability that combines both responsibilities must be split at the operation boundary: Lab owns the scientific operation and any apparatus-specific interface necessary to perform it; the frontend owns reusable presentation of authorized publications. A shared appearance, shared charting component, or common data source does not transfer ownership.
+
+If a future capability cannot be classified by these criteria, its owner must be resolved explicitly before implementation; repository placement or visual similarity is not a default ownership rule.
+
 The historical text and provenance of ADR-0102 remain unchanged. Its remaining accepted responsibilities continue to apply. The ADR index and design register should record the partial supersession only after explicit acceptance.
 
 ## Alternatives considered
