@@ -157,9 +157,11 @@ performance. See the [React versions page](https://react.dev/versions),
 - No frontend-owned database or event broker.
 - No GraphQL/REST/WebSocket/SSE choice until Observation's approved delivery
   and query contracts require it.
-- No design-system package or visual token system in this proposal. The
-  implementation must establish/accessibly document a frontend design system
-  before styling, without borrowing Symbiont UI tokens as Biopeia authority.
+- No design-system package or final visual token system is selected here. A
+  [proposed visual design companion](biopeia-frontend-visual-design-v1.md)
+  supplies candidate tokens and static mockups for review; it is not ratified
+  and does not authorize component styling or implementation. Do not borrow
+  Symbiont UI tokens as Biopeia authority.
 - No authentication provider, deployment vendor or public/private access
   posture is selected; those depend on the deployment threat model and data
   classification.
@@ -688,6 +690,11 @@ constitutional process before implementation.
 A frontend can make published state inspectable. It cannot by itself prove
 causal correctness, complete publication, learning, efficacy, scientific
 validity or successful migration closure.
+
+## Companion specifications
+
+- [Functional, interaction and UX specification](biopeia-frontend-ux-spec-v1.md)
+- [Visual design specification and concept mockups](biopeia-frontend-visual-design-v1.md)
 
 ## References
 
