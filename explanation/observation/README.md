@@ -31,6 +31,7 @@ Explanatory documents of the Observation domain (capability).
 
 ## Designs
 
+- [Biopeia Human-Facing Visualization v1](../../technical/design/lab/biopeia-human-facing-visualization-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Observation Semantic Model v1](../../technical/design/observability/observation-semantic-model-v1.md): document approved, implementation partial, scope TARGET

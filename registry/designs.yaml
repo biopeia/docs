@@ -15,6 +15,15 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
+  design.lab.biopeia-human-facing-visualization-v1:
+    title: "Biopeia Human-Facing Visualization v1"
+    path: technical/design/lab/biopeia-human-facing-visualization-v1.md
+    domain: lab
+    participating_domains: [organism, embodiment, environment, world, modality, observation]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
   design.cross-domain.longitudinal-continuity-and-reembodiment-v1:
     title: "Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1"
     path: technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md
