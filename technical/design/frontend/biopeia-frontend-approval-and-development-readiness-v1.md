@@ -37,11 +37,13 @@ All documents remain proposed until their designated lifecycle authority records
 | Gate | Required evidence | Competent authority | Current status |
 |---|---|---|---|
 | A. Responsibility allocation | Explicit accept/reject disposition of proposed ADR-0113; partial ADR-0102 scope stated; Lab responsibilities preserved | Architecture Owner; tracked by [Docs #166](https://github.com/biopeia/docs/issues/166) | OPEN — human constitutional decision |
-| B. Design consistency | Independent review of architecture, UX, visual design and exact candidate revision; findings resolved or bounded | Docs design owner and reviewer under BAW-004; constitutional authority remains separate | IN REVIEW — PR #165 is open; current exact HEAD must be rechecked |
+| B. Design consistency | Independent review of architecture, UX, visual design and exact candidate revision; findings resolved or bounded | Docs design owner and reviewer under BAW-004; constitutional authority remains separate | BOUNDED — independent adversarial review of PR #165 candidate `3c4f20ff4f98d0b61bfdc77e6e81b68d9e559a02`; no material contradiction within Proposed-design scope. |
 | C. Observation feasibility | Re-inspected, exact-revision inventory of actual family, publication, query/delivery, replay, identity, access and World-cut verification contracts; unsupported paths explicitly excluded | Observation owner for its contracts; World/domain owners for their publication/adoption claims | OPEN — snapshot is not an approved client contract |
 | D. Lab scope reconciliation | Lab #63 separated into any Lab-owned scientific-apparatus requirement and any frontend-owned presentation requirement; no work/evidence lost | Lab owner; tracked by [Lab #63](https://github.com/biopeia/lab/issues/63) | OPEN — depends on Gate A |
 
 The package can reach **Design Review Complete** only when Gates A and B are resolved and the remaining C/D questions are either bounded as explicit blockers to implementation or assigned to a competent owner with a linked issue and closure trigger. Design Review Complete does not imply implementation readiness.
+
+The [independent review record](https://github.com/biopeia/docs/pull/165#issuecomment-6142822054) documents the bounded outcome. It is not a formal GitHub approval, constitutional acceptance, or implementation authorization.
 
 ## 4. Source-backed Observation baseline
 
