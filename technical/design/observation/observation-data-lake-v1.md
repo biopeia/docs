@@ -11,9 +11,9 @@ decision_reference: ADR-0100
 
 # Biopeia Observation — Passive Observational Data Lake v1
 
-**Lifecycle:** Proposed — not ratified  
-**Scope:** Observation; producer domains World, Organism, Embodiment, Environment and Modality; Lab as a read-only consumer and separate evidence custodian; Frontend as a future read-only consumer  
-**Normative basis:** ADR-0078, ADR-0095, ADR-0099, ADR-0100, ADR-0110; approved Observation Semantic Model v1 and Observation Architecture for Biopeia v1  
+**Lifecycle:** Proposed — not ratified
+**Scope:** Observation; producer domains World, Organism, Embodiment, Environment and Modality; Lab as a read-only consumer and separate evidence custodian; Frontend as a future read-only consumer
+**Normative basis:** ADR-0078, ADR-0095, ADR-0099, ADR-0100, ADR-0110; approved Observation Semantic Model v1 and Observation Architecture for Biopeia v1
 **Implementation authorization:** None. This document selects no store, schema, API, transport, deployment or security mechanism.
 
 ## 1. Purpose and decision boundary
@@ -155,11 +155,81 @@ was healthy.
 
 Owner-committed World correlation, owner publication identity, Observation
 capture identity, transport/delivery identity and consumer query identity are
-separate concepts. Duplicate delivery may occur. A later contract must define
-deduplication/idempotency scope and conflict behavior; this design does not
-select a global exactly-once guarantee. If two records conflict for the same
-owner identity/revision, the archive must preserve the conflict and surface it,
-not choose a winner by arrival time.
+separate concepts. Duplicate delivery may occur. The proposed
+deduplication/idempotency and conflict semantics are specified in §5.1 for
+owner review; they do not select a global exactly-once guarantee. If two
+records conflict for the same owner identity/revision, the archive must
+preserve the conflict and surface it, not choose a winner by arrival time.
+
+### 5.1 Proposed logical identity, integrity and lifecycle rules
+
+The following rules are a proposed logical contract for owner review. They do
+not define schema fields, identifier encoding, a digest algorithm, a storage
+engine, or an API. They are not approved implementation requirements until
+the competent owners accept or amend them.
+
+**Identity and deduplication.** Keep these identities distinct:
+
+- semantic claim identity and its owner-defined revision;
+- owner publication identity, if the publishing contract supplies one;
+- Observation capture-attempt/receipt identity;
+- delivery, query, or derived-view identity.
+
+Deduplicate retries only when the owner publication contract supplies the same
+stable publication identity within its declared scope. Do not deduplicate
+merely because payloads compare equal: two distinct publications may
+legitimately carry equal values. A repeated publication identity with the
+same verified content is a duplicate capture of one logical source
+publication, while its separate capture attempts may remain auditable. The
+same identity with different content, owner revision, or provenance is a
+conflict: preserve both received forms and the conflict evidence, mark the
+logical record unresolved, and do not select a winner by arrival order or
+silently overwrite an accepted original. If an owner contract provides no
+stable publication identity, exact retry deduplication is not guaranteed and
+the limitation must be exposed; Observation must not invent an owner identity.
+
+**Integrity.** Once a source publication is accepted, its original logical
+content and provenance are immutable. The archive design must bind an
+integrity check to the exact accepted representation and verify it on
+retrieval and recovery. The integrity mechanism and canonical representation
+remain implementation decisions. A matching digest establishes content
+integrity only; it does not establish semantic truth, source completeness,
+scientific validity, or owner authority. A correction is a separately
+identified owner publication/revision, never an in-place edit to history.
+
+**Retention and deletion.** Retention is explicit policy, not incidental
+storage cleanup. Each retained class must have an accountable policy owner,
+scope, trigger, and declared expiry or preservation condition before
+implementation. Until such policy is accepted, no automatic age-based
+expiration or garbage collection of accepted originals is authorized. A
+retention decision for the operational archive does not admit, retain, or
+delete Lab scientific evidence; Lab's evidence policy remains independent
+under ADR-0100. A deletion request must be authorized and recorded separately
+from source correction. Logical suppression/tombstoning and physical erasure
+are distinct outcomes; legal hold blocks any deletion it covers. The design
+must report which outcome occurred and its scope. No consumer may infer source
+absence from an access-denied, suppressed, expired, or unavailable record.
+Physical erasure obligations, including replicas/backups and legal exceptions,
+require competent legal/security/operations disposition before implementation.
+
+**Recovery.** Recovery must verify retained originals before exposing them,
+rebuild derived indexes/views from verified originals, and report any missing,
+corrupt, conflicting, or unavailable interval as a gap. Recovery may not
+silently repair or invent source claims, infer completeness from a healthy
+index, or re-execute a World/owner transition. An Observation capture retry,
+where authorized, refers to the already committed owner publication/cut and
+must remain distinct from a causal transition retry. A recovered archive
+must identify its verified recovery point and any gaps; it must not claim
+complete history unless the relevant owner publication contract proves that
+bounded claim. The durable mechanism and recovery-point guarantees remain
+open.
+
+These proposed rules require explicit disposition by the Observation Owner
+for archive identity, capture conflicts, integrity and recovery, and by the
+Lab Owner for the separation from evidence retention/admission. Architecture
+Owner disposition remains required for the constitutional archive boundary
+and any policy that changes ADR-0100. Security/legal/operations authorities
+must decide physical-erasure and hold obligations where applicable.
 
 ## 6. Time, ordering, replay and revisions
 
@@ -368,7 +438,7 @@ implemented.
 |---|---|---|
 | A. Constitutional boundary | Decide whether a durable operational archive is permitted under Observation, distinct from Lab evidence custody | Architecture Owner |
 | B. Exact-source readiness | Approve exact revisions, owner publication paths, supported family/read capabilities and exclusions | Observation Owner with source-domain owners |
-| C. Data/lifecycle contract | Define completeness, identity, time, gaps, revisions, immutability, retention and recovery semantics without conflating evidence admission | Architecture/Observation owners as applicable |
+| C. Data/lifecycle contract | Accept or amend the proposed logical identity/deduplication, integrity, retention/deletion and recovery rules in §5.1; define completeness, time, gaps and revisions without conflating evidence admission | Observation Owner; Lab Owner for evidence separation; Architecture Owner where ADR-0100 changes; Security/legal/operations for erasure/hold obligations |
 | D. Security and operations | Threat model, access scopes, security/operations owner, local/shared deployment profiles | Competent Security/Operations authority; Docs #167 |
 | E. Contract and implementation design | Select record, persistence, query and delivery mechanisms only after A-D; derive bounded owner issues | Relevant domain owners and reviewers |
 | F. Implementation authorization | Explicit separate Owner start instruction, after all applicable readiness gates | Architecture Owner |
@@ -396,7 +466,10 @@ browser-accessible current support;
 constitutional change;
 8. identifies security/operations dependencies without choosing a mechanism;
 9. grants no implementation, experiment, deployment, schema, API, transport or
-storage authorization.
+storage authorization;
+10. makes the proposed §5.1 lifecycle rules reviewable as logical semantics
+while clearly leaving owner acceptance, implementation mechanisms, and
+constitutional/security/legal dispositions open.
 
 ## 14. References and related work
 
