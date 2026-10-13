@@ -91,7 +91,7 @@ The local profile and shared profile are not interchangeable deployment configur
 
 Required constraints for an accepted Profile L:
 
-- Bind the development server to loopback only; refuse or visibly warn on wildcard/LAN binding. Do not rely on a UI banner as enforcement.
+- Bind the development server to loopback only; fail startup if the effective bind address is wildcard, LAN-reachable, or otherwise not loopback. A warning or UI banner is not sufficient. Any tunnel, reverse proxy, or remote source moves the use case outside Profile L and requires the applicable shared-access review.
 - No hosted deployment, public ingress, shared account, remote administration, tunneling, or production dataset is part of this profile.
 - No credential, API key, token, private endpoint, or secret is committed, embedded in a static bundle, URL, example, or localStorage.
 - No cross-origin remote source is usable until a separate source owner approves its access contract and the exact origin/access mechanism is reviewed.
@@ -145,7 +145,7 @@ The UI must treat access status as an observation about the consumer request, no
 |---|---|---|
 | No supported consumer/read contract | State that the capability is not established; provide no fabricated data | Direct file/database access or mock success |
 | Explicit denied/forbidden scope | Show access denied at the declared scope; do not reveal hidden resource details | Treat as empty World/run or silently broaden scope |
-| Expired/revoked session | Stop new reads, mark prior view stale, clear sensitive in-memory state as required by the accepted policy, offer reauthentication only if supported | Retry forever, continue to label old data current, store a refresh token in browser storage |
+| Expired/revoked session or access scope | Immediately stop new reads and remove all data in the revoked scope from the active view and application-managed in-memory caches; clear persisted copies if any were explicitly authorized; offer reauthentication only if supported | Leave revoked data visible as stale, continue reads, retry forever, store a refresh token in browser storage, or claim secure physical memory erasure |
 | Partial authorization | Identify which visible scopes/capabilities are available and which are denied where the service contract permits; never infer inaccessible records are absent | Merge partial data into an apparently complete scene/list |
 | Network failure/disconnection | Preserve last known data only as visibly stale and tied to source cut/revision; show delivery failure separately | Advance causal time or imply source unavailable |
 | Malformed/unknown contract revision | Reject incompatible interpretation and show unsupported/error; preserve diagnostics without sensitive payload | Best-effort reinterpret unknown fields or fallback to historical format |
@@ -166,7 +166,7 @@ An implementation may begin only for the capability slices whose exact source an
 
 ## 9. Privacy, retention and export
 
-- Default to no durable browser storage of claims or credentials. An accepted profile may authorize caching only after data classification, scope isolation, expiry, invalidation and clear-on-logout behavior are defined.
+- Default to no durable browser storage of claims or credentials. An accepted profile may authorize caching only after data classification, scope isolation, expiry, invalidation and clear-on-logout behavior are defined. On revocation or scope loss, the fail-closed default is to hide and remove affected claims from application-managed views and caches before any reauthentication flow; this does not claim that JavaScript can securely erase physical memory or browser-managed copies.
 - Do not place credentials, secrets or sensitive claim payloads in URLs, analytics, crash reports or client error messages.
 - Export is disabled by default until a source contract identifies what may be exported, whether the output includes provenance/limitations, and what handling is required. Any enabled export must preserve the source identity, epistemic kind, availability, domain time/revision and provenance needed for correct interpretation.
 - The interface must distinguish browser display/download from Lab evidence admission. Export does not make an artifact scientific evidence and does not transfer custody to Frontend.
@@ -181,6 +181,7 @@ Before accepting Profile L:
 - exercise hostile markup, unsafe schemes, malformed/oversized payloads, unavailable source and denied scope;
 - prove source/publication and delivery failure states remain distinct;
 - verify session/cache clearing behavior for the exact local data classification and access mechanism;
+- verify the effective listener rejects every non-loopback bind, and that revocation immediately removes the affected scope from visible/application-managed state without claiming physical-memory erasure;
 - record exact repository revisions, commands and limitations.
 
 Before accepting Profile S:
