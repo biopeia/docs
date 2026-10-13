@@ -21,6 +21,7 @@ states are independent, and an approved design is never, by that fact, an implem
 | [Design-First Work and Governance Procedure v1](governance/design-first-work-and-governance-procedure-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |
 | [Biopeia Physical-Step and Causal-Commit Integration v1](runtime/biopeia-physical-step-integration-v1.md) | world | approved | partial | TARGET |
 | [Observation Semantic Model v1](observability/observation-semantic-model-v1.md) | observation | approved | partial | TARGET |
+| [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](observability/lab-world-observation-integration-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Observation Architecture v1 — Target Design](observability/observation-architecture-target-design-v1.md) | observation | superseded | not_applicable | HISTORICAL |
 | [Observation Architecture for Biopeia v1](observation/observation-architecture-biopeia-v1.md) | observation | approved | partial | TARGET |
 | [Biopeia Observation — Passive Observational Data Lake v1](observation/observation-data-lake-v1.md) | observation | proposed | not_evaluated | UNRESOLVED |
