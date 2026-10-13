@@ -33,6 +33,10 @@ Explanatory documents of the Lab domain (apparatus).
 ## Designs
 
 - [Biopeia Frontend v1 — Security and Deployment Boundary](../../technical/design/frontend/biopeia-frontend-security-and-deployment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Biopeia Frontend v1 — Independent Visualization Application](../../technical/design/frontend/biopeia-frontend-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Functional, Interaction and UX Specification](../../technical/design/frontend/biopeia-frontend-ux-spec-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Visual Design Specification](../../technical/design/frontend/biopeia-frontend-visual-design-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Approval and Development Readiness Plan](../../technical/design/frontend/biopeia-frontend-approval-and-development-readiness-v1.md): document approved, implementation not_evaluated, scope TARGET
 - [Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1](../../technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
