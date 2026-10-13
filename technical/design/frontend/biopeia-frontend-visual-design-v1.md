@@ -5,7 +5,7 @@ document_type: design
 owner: biopeia-project-owner
 created: 2026-10-13
 language: en
-document_version: 1
+document_version: 2
 updated: 2026-10-13
 parent_design: design.cross-domain.biopeia-frontend-v1
 ---
@@ -16,12 +16,12 @@ parent_design: design.cross-domain.biopeia-frontend-v1
 
 ## 1. Purpose and scope
 
-This companion turns the product directions in the [functional and UX specification](biopeia-frontend-ux-spec-v1.md) into a concrete visual proposal for the two screens that establish the v1 visual language:
+This companion turns the product directions in the [functional and UX specification](biopeia-frontend-ux-spec-v1.md) into a concrete visual proposal for all seven peer-level screens. The first two establish the spatial visual language:
 
 - **World Overview** — spatially led summary with source status and owner projections always visible.
 - **Spatial Explorer** — dedicated spatial inspection surface with a truthful unavailable state when compatible published geometry is absent.
 
-The proposal also defines a compact token palette, typography roles, responsive composition, interaction states and visual acceptance criteria. It is a design artifact only: no frontend component, asset pipeline, Observation model, renderer, or screen behavior is implemented here.
+The proposal also defines a compact token palette, typography roles, responsive composition, interaction states, a spatial-fidelity matrix and visual acceptance criteria. It is a design artifact only: no frontend component, asset pipeline, Observation model, renderer, or screen behavior is implemented here.
 
 The seven screens remain equal peers in navigation. These first two receive design priority, not greater authority or navigation rank.
 
@@ -90,7 +90,7 @@ Camera controls are visually secondary, keyboard accessible and presentation-onl
 
 ## 4. Static concept mockups
 
-The included mockups show the two priority screens in light and dark themes:
+The included mockups show the initial two spatially led screens in light and dark themes:
 
 - [World Overview — light and dark concept](assets/world-overview-visual-concepts.svg)
 - [Spatial Explorer — light and dark concept](assets/spatial-explorer-visual-concepts.svg)
@@ -98,6 +98,42 @@ The included mockups show the two priority screens in light and dark themes:
 Each artboard is watermarked **SYNTHETIC DESIGN PREVIEW · NOT DATA**. All content in those illustrations is explanatory placeholder copy. The dashed abstract marks are decorative layout scaffolding and do not represent terrain, bodies, receptors, poses or environmental fields. The visible “not connected” and “unavailable” messages illustrate the truthful no-publication state, not current system status.
 
 The diagrams are intentionally static. They do not imply an implemented frontend or approved spatial contract. Their purpose is to review hierarchy, density, theme treatment and empty-state behavior before components are authorized.
+
+
+### 4.1 Remaining five screen concepts
+
+The five screens below now have matching composition guidance. They are intentionally lower-fidelity than World Overview and Spatial Explorer, but each specifies its information hierarchy, a populated synthetic preview, a no-context/error state and its behavior in both proposed themes. “Synthetic preview” means layout-only content, not a proposed Observation record, schema or claim. Every concept asset must carry a persistent synthetic watermark and must never be bundled as production data.
+
+| Screen | Populated synthetic preview composition | No-context / failure composition | Light/dark treatment |
+|---|---|---|---|
+| Worlds & Runs | Search and filter controls above a list of clearly synthetic context cards; each card shows placeholder identity slots, source-status slot and last-publication slot, not realistic measurements. | Keep list frame, replace cards with a plain explanation tied to source-defined status; show no fabricated sample contexts. | Same layout and ordering; token inversion only, with status labels/icons retained. |
+| Causal Timeline | Two visually separate horizontal lanes: causal-cut order and Observation delivery sequence. Synthetic markers are labeled “illustrative”; gaps are not bridged. | Preserve lane labels and explain unavailable causal-order contract or absent context; do not substitute wall clock. | Contrasting line patterns and text labels in both themes; never rely on hue to separate tracks. |
+| Sensorimotor Trace | A small graph with neutral nodes “Claim A/B/C”; only one explicitly synthetic asserted-link example, with its provenance affordance visible. | Show nodes only when real source claims exist; otherwise an explanatory no-context panel with no dangling or inferred edge. | Same topology/line style; asserted vs no-link distinctions include text and solid/dashed patterns. |
+| Claim Inspector | Two-column source metadata/value layout with synthetic field labels and explicit absent-value treatment; one route to provenance. | Keep headings and provenance sections; show “not provided” only where the source reports absence, otherwise “not loaded/unknown” as appropriate. | Maintain reading order and contrast; code/identity text remains selectable and non-color-coded. |
+| Connection & Access | Read-only diagnostic groups for source configuration, principal/scope, last successful delivery and retry state; synthetic values are labels, not URLs/tokens. | Separate not configured, denied, unavailable and disconnected states only when the source/security contract distinguishes them. | Caution states pair icon+text; no endpoint secrets, access tokens or sensitive principal data in either theme. |
+
+The synthetic companion concept sheet is [five-screen concepts — light and dark](assets/five-screen-visual-concepts.svg). The [populated spatial preview](assets/populated-spatial-preview-synthetic.svg) supports review of the spatial composition in both themes. Every mark is explicitly synthetic placeholder geometry, not a source observation; labels state that authority, frame, units and revision are unspecified. These visuals do not claim that the corresponding feature, family, endpoint, authentication flow or delivery state currently exists.
+
+### 4.2 Populated spatial preview and source fidelity
+
+The existing two spatial sheets primarily illustrate truthful unavailable states. To review the requested immersive direction without implying live Biopeia data, World Overview and Spatial Explorer also require a populated **synthetic design preview** variant. It may depict abstract placeholder geometry and clearly marked sample labels solely to evaluate camera framing, selection, density and panel balance. The watermark must remain visible at all viewport sizes. The visual may not use actual Organism names, plausible physiological values, scientific labels such as “resource/food”, or source-like IDs that could be mistaken for real publications. It is not implementation evidence and cannot satisfy any migration or scientific acceptance criterion.
+
+#### Spatial representation and fidelity matrix
+
+| Visual element | Permitted basis | Required label/context | Prohibited treatment |
+|---|---|---|---|
+| Published pose | Compatible Embodiment pose claim, matching body/episode/morphology revision and declared reference frame | Claim link, authority, frame, unit/scale where defined, revision and cut/coherence status | Interpolating between samples or implying unsampled motion. |
+| Published geometry | Explicit geometry claim from an approved family, identity-bound to the selected subject and compatible revision | Geometry fidelity/source status and revision; distinguish measured/authoritative from schematic if contract says so | Stock model, guessed dimensions, inferred limbs or geometry copied from another body. |
+| Schematic geometry | Only when an approved family explicitly authorizes a schematic representation | Persistent “schematic” label and source claim | Presenting schematic topology as physical surface or measurement. |
+| Terrain/environment geometry | Explicit Environment-owned geometry publication with frame/revision and units | Environment authority, frame, revision, availability and coherence | Generating terrain to fill gaps or treating a scalar field as visible terrain. |
+| Coordinate axes/grid | Only a declared frame, origin, orientation and scale; grid itself is a presentation aid | Frame name and scale semantics; mark grid as presentation overlay | Universal/global axes without source support, or grid marks that look like measured geometry. |
+| Lighting/background | Presentation-only, fixed and neutral | No scientific label required; keep separate from scene layer in design | Lighting/shadow as evidence of material, temperature, depth or contact. |
+| Selection/highlight | Frontend selection state over an identity already provided by source | “Selected” UI state; exact source identity in details | Glow, scale, animation, or color implying force, salience, health or cognition. |
+| Occlusion/depth | Renderer presentation of explicitly supplied geometry only | Provide an equivalent list/table and selected-item navigation | Hiding a source claim without an accessible route or implying unseen subjects do not exist. |
+| Morphology change | New source revision or explicit incompatibility status | Identify old/new revision separately; reset or preserve camera only as UI behavior | Morphing between revisions as if a continuous biological transition occurred. |
+| Missing/conflicting spatial data | Source-defined availability/conflict status | Explain exactly which claim/frame/revision is missing or incompatible | Placeholder body/terrain, silently dropping an incompatible claim, or implying absence. |
+
+All spatial content must carry a source-to-render trace. A Three.js object identifier is an implementation-local handle only and never becomes domain identity. Display transforms must be reversible or explicitly documented as presentation-only; they cannot rewrite the source frame. If two claims use incompatible frames/revisions, show separate views or a clear incompatibility state rather than silently transforming one.
 
 ## 5. Component and state language
 
@@ -127,9 +163,17 @@ Selection changes only the view. `Follow newest delivered committed cut` (if sup
 
 Target remains WCAG 2.2 AA, with contrast and accessibility testing as specified in the UX companion. The proposed palette is not a substitute for testing rendered combinations, hover/focus states, charts or WebGL overlays.
 
-## 7. Design acceptance checklist
+## 7. Design review and implementation acceptance
 
-This design may progress to review when all can be demonstrated in a later prototype (after implementation authorization):
+### 7.1 Design Review Complete (documentation-only)
+
+This milestone can be accepted without a running application when the seven screen concepts and no-context states are documented, the synthetic examples are unmistakably marked, the spatial-fidelity matrix is reviewed, the candidate visual system covers both themes, accessibility and source-contract limitations are explicit, and required design/independent/constitutional reviews are recorded. Acceptance records must distinguish unresolved ADR-0102 and Observation prerequisites. Completing this design review does not authorize implementation.
+
+### 7.2 Implementation Acceptance (later, after authorization)
+
+This requires the competent architecture decision, approved Observation client contracts and access/security model, real owner-verified publication, implementation of only supported screen capabilities, and exact-revision accessibility, security, performance and functional evidence. A static concept or green documentation CI cannot satisfy implementation acceptance.
+
+The following checklist applies only to a later prototype after implementation authorization:
 
 1. Both themes preserve legibility and status distinctions without color-only meaning.
 2. World Overview exposes selected context, publication health and source traceability before decorative content.

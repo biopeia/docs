@@ -5,7 +5,7 @@ document_type: design
 owner: biopeia-project-owner
 created: 2026-10-13
 language: en
-document_version: 2
+document_version: 3
 updated: 2026-10-13
 parent_design: design.cross-domain.biopeia-frontend-v1
 ---
@@ -319,7 +319,7 @@ All times, values and references in these strings are **illustrative copy exampl
 ### 8.1 Desktop Overview (concept; not implementation)
 
 ```text
-┌ BIOPEIA ─ Observatory | Inspector | Scientific Trace ─ Source: connected ┐
+┌ BIOPEIA ─ Worlds & Runs · World Overview · Spatial Explorer · ...       ┐
 │ World [authorized selector]  Run [authorized selector]   Cut [selected]   │
 │ INTEGRITY: committed source cut / [coverage] / [delivery freshness]       │
 ├──────────────────────────────────────┬────────────────────────────────────┤
@@ -456,6 +456,53 @@ Target **WCAG 2.2 AA**. In particular ensure accessible focus visibility and no 
 For each existing approved Observation contract, record: contract owner and approval reference; transport access path; authentication principal/scope; publisher/issuer identity; supported semantic families/revisions; type/subject identity; claim vs envelope identity; availability/epistemic basis; revision/time and ordering scope; committed-cut relation/coherence; frame/units; correlation and provenance links; retention/query/replay semantics; sequence/gap semantics; limits and rate constraints; data classification and redaction; error semantics and compatibility policy.
 
 This inventory is a **mapping task**, not authorization to invent fields, transports or fallback schema. `World`, `run`, `Presence`, `Body`, `Claim` references in this proposal remain conceptual until approved contract encodings are identified.
+
+### 12.1.1 Current source-backed contract status (discovery snapshot)
+
+This is a source inspection, not approval of an integration contract. It was checked against `biopeia/observation` `origin/main` at `1456df093e4ac28032d956e4df30957f0bf87cec` on 2026-10-13. Recheck the exact revision and obtain owner approval before implementation. “Confirmed” means code/documentation exists at that revision; it does not mean a frontend-consumable API or World publication path is approved.
+
+| Capability or family | Source evidence at pinned revision | Status for frontend | Permitted design use / limitation |
+|---|---|---|---|
+| Semantic claim model | `src/observation/semantic.py`; README describes a transport-independent model | CONFIRMED, in-process model | Preserve conceptual fields in UX; no wire encoding or browser decoder is established. |
+| Bounded Observation plane | `src/observation/plane.py`; README documents current materialization, fan-out, in-memory replay and explicit rebase | CONFIRMED, one process/plane instance | May inform delivery-state concepts. No persistence, cross-restart resume, network, query service or UI path is established. |
+| Environment finite scalar field mapping | `src/observation/environment.py`, family `biopeia.environment.finite-scalar-field` revision `1` | CONFIRMED mapping; PARTIAL publication readiness | Environment-owned scalar projection can be represented in the passive model. It is not a receptor signal and the adapter alone does not prove owner adoption or World commit. |
+| Embodiment BodyPose mapping | `src/observation/embodiment.py`, family `embodiment.body_pose` revision `v1` | CONFIRMED mapping; PARTIAL publication readiness | Body/episode/morphology, frame, metric position and quaternion are validated by the mapper. The mapper explicitly does not prove a committed World cut. |
+| World-verified committed-cut publication | Observation README requires independent World-side verification; no approved public publication/query boundary was identified in this inspection | PENDING / NOT ESTABLISHED | Do not label a claim committed or depict a coherent World cut based only on owner projection correlation. |
+| Environment → Embodiment receptor → Modality → Organism signal family | No stable family/record at this Observation revision was identified for the complete path | NOT ESTABLISHED | Do not design a live sensorimotor visualization as an available production capability. UX remains conceptual. |
+| Historical `ObservedFrame` and `runtime_tick_events` | README explicitly identifies these as transitional/inherited, not stable Biopeia semantic-family contracts | EXCLUDED | Must not be used as a frontend integration contract or compatibility fallback. |
+| Browser-accessible delivery, authentication, query, replay across restart | README and `plane.py` exclude wire/network/UI; plane state is in-memory | NOT SUPPORTED at this revision | No endpoint, auth model, URL, token, durable replay or cross-process behavior may be invented here. |
+
+The current source therefore supports design discovery and bounded in-process mappings, but **does not establish an end-to-end frontend-readable Observation contract**. The contract-to-screen map below is intentionally a readiness matrix, not an API specification.
+
+| Screen | Source-backed capability required | Current readiness | Safe behavior before contract exists |
+|---|---|---|---|
+| Worlds & Runs | Authorized context discovery and identifiers | NOT ESTABLISHED | Show a documented unavailable/setup state in prototype only; no fabricated run list in production. |
+| World Overview | World-verified committed cut plus compatible owner projections | NOT ESTABLISHED | Show unsupported/unavailable status; owner projections alone cannot imply a committed World. |
+| Spatial Explorer | Compatible geometry/pose families, frame and scale linked to a verified cut | PARTIAL inputs only | Show claims/table if an approved source path exists; otherwise no scene. |
+| Causal Timeline | Stable committed-cut identity/order plus delivery ordering | PARTIAL in-process delivery sequence only | Keep causal order and delivery order separate; no cross-process timeline claim. |
+| Sensorimotor Trace | Explicitly asserted action/signal correlation and lineage | NOT ESTABLISHED | Display no inferred edges; no claim that action caused sensory change. |
+| Claim Inspector | Approved family and source claim references accessible to client | PARTIAL model only | Design information hierarchy; do not claim browser access or stable public envelope. |
+| Connection & Access | Approved client delivery and authentication/authorization contract | NOT ESTABLISHED | Explain that source access design is pending; never collect or persist credentials in a mock. |
+
+### 12.1.2 Context prerequisites and no-context behavior
+
+Every screen remains reachable without a selected World/run/claim. Opening a destination must not fabricate a default context or scene. The following table defines the truthful behavior for absent context; copy is illustrative and requires content review.
+
+| Screen | Missing context | Display | Permitted next action | Prohibited implication/action |
+|---|---|---|---|---|
+| Worlds & Runs | No authorized source or no discoverable contexts | Distinguish “source not configured”, “no accessible contexts returned”, and “discovery unavailable” only if the source contract distinguishes them | Open Connection & Access; retry a permitted read | Do not show sample or synthetic runs as real. |
+| World Overview | No selected World/run/cut | “Select an authorized context to view published state”; no scene | Navigate to Worlds & Runs | Do not call it an empty World or infer absence. |
+| Spatial Explorer | No compatible geometry/pose claim or no selected cut | State which prerequisite is missing/unsupported; provide semantic list only when source data exists | Select a published context or open Claim Inspector | Do not render stock geometry, axes, body silhouettes or motion. |
+| Causal Timeline | No selected World/run or no committed-cut contract | Explain that a context or causal-order contract is required | Select context; inspect Connection & Access | Do not substitute delivery sequence or wall-clock timestamps as causal ordering. |
+| Sensorimotor Trace | No selected subject/cut or no explicit correlation claim | Explain that no source-asserted relation is available in this context | Select a source-backed claim/context | Do not draw inferred edges or imply failed sensing. |
+| Claim Inspector | No claim selected/linked | Prompt to select a published claim; metadata fields remain absent, not blank-valued | Return to source-backed list or follow an authorized link | Do not create placeholder claims or use guessed IDs. |
+| Connection & Access | No endpoint/principal configured | State configuration/access prerequisite without exposing secret fields | Read-only setup guidance approved by deployment policy | Do not imply authenticated/authorized state or ask for secrets in an unapproved client. |
+
+### 12.1.3 Design review and implementation acceptance are separate gates
+
+**Design Review Complete** is a documentation-only milestone. It may be reached when the seven-screen information architecture is consistent; all screen and no-context states are specified; visual concepts are clearly synthetic; the contract readiness matrix records exact source evidence and unsupported areas; accessibility, security and performance questions are bounded; and required independent/design/constitutional reviews are recorded. It does not require executable code, a working endpoint, or implementation authorization. Unresolved constitutional allocation and unavailable Observation paths remain explicit blockers to implementation.
+
+**Implementation Acceptance** is a separate later gate. It requires competent authorization for the frontend boundary, approved client-consumable Observation contracts and access model, a real World-verified publication path, exact-revision integration evidence, acceptance tests for all implemented states, security/accessibility/performance validation, and independent review where risk policy requires it. A design review cannot satisfy this gate; green CI cannot create missing contracts or authority.
 
 ### 12.2 Adapter rules
 

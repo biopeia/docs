@@ -5,7 +5,7 @@ document_type: design
 owner: biopeia-project-owner
 created: 2026-10-13
 language: en
-document_version: 1
+document_version: 2
 ---
 
 # Biopeia Frontend v1 — Independent Visualization Application
@@ -333,46 +333,40 @@ successful fetch/delivery, reconnect/retry state and current error. It must
 not expose tokens or secrets. A disconnected view must clearly mark cached
 content as stale and preserve the timestamp/revision it came from.
 
-### 6.9 Three presentation modes over one source
+### 6.9 Information depth across the seven screens
 
-The application has three user-facing modes, not three data authorities or
-independent applications. They use the same authorized Observation source,
-identity rules and view-model boundary, while exposing different levels of
-detail:
-
-| Mode | Primary question | Default presentation |
-|---|---|---|
-| **Observatory** | What has been published about this World/run? | Spatial overview, published presences, Environment summary, latest committed cut and publication health. It is understandable without knowing internal contract vocabulary. |
-| **Inspector** | What does this selected body, claim or transition actually say? | Selected subject/claim details, owner and revision, domain time, units/frame, availability, explicit links and source provenance. |
-| **Scientific Trace** | What evidence and delivery path support this displayed relation? | Claim-level provenance, epistemic basis, source cut, explicit lineage/correlation, delivery sequence/gaps and replay limits. |
-
-Mode changes only presentation density and navigation context. A user can
-move from an Observatory selection to its Inspector details and then to the
-Scientific Trace without changing the selected source identity. The UI must
-not upgrade a correlation into causation or a claim into scientific evidence
-as the user moves between modes.
+Observatory, Inspector and Scientific Trace are descriptive labels for
+increasing information depth, not user-facing modes, navigation groups,
+workspaces, menus or routes. The only first-level destinations are the seven
+peer screens defined in the UX specification. Within any screen, a user may
+drill from a readable summary to a subject/claim inspection and then to the
+source-backed provenance available for that same selection. This changes
+information density only; it does not change source identity, authority or
+epistemic status. No navigation transition may upgrade correlation into
+causation or a claim into scientific evidence.
 
 ### 6.10 Low-fidelity layout and navigation
 
 The following wireframes define information hierarchy, not visual tokens or
 final styling. The persistent shell exposes source/delivery health separately
 from the selected causal cut. All panels link to the same source-backed
-selection.
+selection. The navigation illustration uses the seven peer-level screen
+destinations only.
 
 ```text
 OBSERVATORY — /worlds/{world_id}/runs/{run_id}
 ┌──────────────────────────────────────────────────────────────────────┐
 │ Biopeia  World … / Run …       Cut: committed N   Delivery: delayed  │
 ├─────────────────┬───────────────────────────────────┬────────────────┤
-│ Observatory     │                                   │ Published      │
-│ Inspector       │   Spatial view / textual fallback│ subjects       │
-│ Scientific Trace│   (selected committed cut)        │ + availability │
+│ Worlds & Runs   │                                   │ Published      │
+│ World Overview  │   Spatial view / textual fallback│ subjects       │
+│ Spatial Explorer│   (selected committed cut)        │ + availability │
 │                 │                                   │                │
 ├─────────────────┴───────────────────────────────────┴────────────────┤
-│ Recent committed cuts and publication events                         │
+│ Causal Timeline · Sensorimotor Trace · Claim Inspector · Access        │
 └──────────────────────────────────────────────────────────────────────┘
 
-INSPECTOR — /claims/{claim_id}
+CLAIM INSPECTOR — /claims/{claim_id}
 ┌──────────────────────────────────────────────────────────────────────┐
 │ Claim …  Family/revision …      Source: available / delivery: gap     │
 ├───────────────────────────────────┬──────────────────────────────────┤
@@ -382,7 +376,7 @@ INSPECTOR — /claims/{claim_id}
 │ Provenance and explicit cross-domain links                           │
 └──────────────────────────────────────────────────────────────────────┘
 
-SCIENTIFIC TRACE — /worlds/{world_id}/trace
+CAUSAL TIMELINE / SENSORIMOTOR TRACE — source-backed routes only
 ┌──────────────────────────────────────────────────────────────────────┐
 │ Selected committed cut …       delivery continuity: gap detected    │
 ├──────────────────────────────────────────────────────────────────────┤
@@ -392,10 +386,11 @@ SCIENTIFIC TRACE — /worlds/{world_id}/trace
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-Navigation is limited to source-backed contexts: World/run browser,
-Observatory overview, spatial inspection, timeline, Inspector and Scientific
-Trace. A selected cut/claim remains visible in the breadcrumb and URL when a
-deep link is supported by the source identity contract. No UI affordance may
+Navigation consists only of the seven peer-level screens: Worlds & Runs,
+World Overview, Spatial Explorer, Causal Timeline, Sensorimotor Trace, Claim
+Inspector, and Connection & Access. A selected cut/claim remains visible in
+the breadcrumb and URL only when a deep link is supported by the source
+identity contract. No UI affordance may
 suggest starting, pausing, changing or intervening in a World.
 
 ### 6.11 Interpretive restraint
