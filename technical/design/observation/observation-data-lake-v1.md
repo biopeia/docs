@@ -209,6 +209,12 @@ from source correction. Logical suppression/tombstoning and physical erasure
 are distinct outcomes; legal hold blocks any deletion it covers. The design
 must report which outcome occurred and its scope. No consumer may infer source
 absence from an access-denied, suppressed, expired, or unavailable record.
+This proposal does not assign authority to approve logical suppression or
+tombstoning, and does not presume that Observation may override an originating
+domain's semantic authority or Lab's evidence-custody obligations. The
+competent authorizer, grounds, scope, review path, and effects on retained
+originals and cross-referenced evidence remain an explicit owner decision
+required before implementation.
 Physical erasure obligations, including replicas/backups and legal exceptions,
 require competent legal/security/operations disposition before implementation.
 
@@ -226,10 +232,13 @@ open.
 
 These proposed rules require explicit disposition by the Observation Owner
 for archive identity, capture conflicts, integrity and recovery, and by the
-Lab Owner for the separation from evidence retention/admission. Architecture
-Owner disposition remains required for the constitutional archive boundary
-and any policy that changes ADR-0100. Security/legal/operations authorities
-must decide physical-erasure and hold obligations where applicable.
+Lab Owner for the separation from evidence retention/admission. The competent
+authority for logical suppression/tombstoning and its effects on source-owner
+records and Lab-held evidence remains unresolved and must be identified and
+recorded before implementation. Architecture Owner disposition remains
+required for the constitutional archive boundary and any policy that changes
+ADR-0100. Security/legal/operations authorities must decide physical-erasure
+and hold obligations where applicable.
 
 ## 6. Time, ordering, replay and revisions
 
@@ -438,7 +447,7 @@ implemented.
 |---|---|---|
 | A. Constitutional boundary | Decide whether a durable operational archive is permitted under Observation, distinct from Lab evidence custody | Architecture Owner |
 | B. Exact-source readiness | Approve exact revisions, owner publication paths, supported family/read capabilities and exclusions | Observation Owner with source-domain owners |
-| C. Data/lifecycle contract | Accept or amend the proposed logical identity/deduplication, integrity, retention/deletion and recovery rules in §5.1; define completeness, time, gaps and revisions without conflating evidence admission | Observation Owner; Lab Owner for evidence separation; Architecture Owner where ADR-0100 changes; Security/legal/operations for erasure/hold obligations |
+| C. Data/lifecycle contract | Accept or amend the proposed logical identity/deduplication, integrity, retention/deletion and recovery rules in §5.1; explicitly identify who may authorize logical suppression/tombstoning and its effects on source-owner records and Lab-held evidence; define completeness, time, gaps and revisions without conflating evidence admission | Observation Owner; Lab Owner for evidence separation; competent authority for suppression/tombstoning to be identified; Architecture Owner where ADR-0100 changes; Security/legal/operations for erasure/hold obligations |
 | D. Security and operations | Threat model, access scopes, security/operations owner, local/shared deployment profiles | Competent Security/Operations authority; Docs #167 |
 | E. Contract and implementation design | Select record, persistence, query and delivery mechanisms only after A-D; derive bounded owner issues | Relevant domain owners and reviewers |
 | F. Implementation authorization | Explicit separate Owner start instruction, after all applicable readiness gates | Architecture Owner |
