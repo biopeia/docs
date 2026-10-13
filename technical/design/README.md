@@ -11,6 +11,7 @@ states are independent, and an approved design is never, by that fact, an implem
 
 | Design | Domain | Document | Implementation | Architecture scope |
 |---|---|---|---|---|
+| [Biopeia Frontend v1 — Security and Deployment Boundary](frontend/biopeia-frontend-security-and-deployment-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1](runtime/longitudinal-continuity-and-reembodiment-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Repository Settings and GitHub Actions Workflow Normalization v1](governance/repository-settings-and-actions-workflow-normalization-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |
 | [Design-First Work and Governance Procedure v1](governance/design-first-work-and-governance-procedure-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |

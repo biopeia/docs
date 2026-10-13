@@ -9,7 +9,7 @@ Decision records and design documents. Recording one here does not accept it.
 ## Contents
 
 - [Decision records](adr/README.md): 40 records
-- [Designs](design/README.md): 7 designs
+- [Designs](design/README.md): 8 designs
 
 - [Decision Notes](decision-notes/README.md): local and reversible decisions
 - [Procedure templates](templates/procedure/design.md): design, ADR, and DN
