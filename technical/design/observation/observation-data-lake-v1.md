@@ -290,6 +290,28 @@ the table. Commands are reproducible starting points, not test results: no
 source test suite was run for this documentation change, and cross-repository
 tests may require the repository's documented integration installation.
 
+The following symbol crosswalk records the bounded implementation surface
+found at those revisions. “Implemented” means the named local mechanism exists;
+it does not mean the durable archive, general consumer contract, or end-to-end
+capability is complete. The source packages remain authoritative for their
+export status and contracts.
+
+| Owner / capability | Verified implementation surface | Readiness for durable Observation consumers | Explicit limit |
+|---|---|---|---|
+| Observation plane | `ObservationPlane.publish`, `current`, `current_messages`, and `open_stream`; owner projection helpers for finite scalar field and body pose | `PARTIAL` — bounded in-process publication/replay exists | No durable cross-process history, browser/network contract, general query API, or authentication contract established |
+| World publication | `publish_committed_owner_observations` and `run_scalar_sensorimotor_cycle_and_publish` | `PARTIAL` — production producer path publishes after owner adoption and committed World cut | Does not provide archive storage, consumer query, or delivery guarantees beyond the bounded in-process plane |
+| Environment source | `IdentifiedFiniteResource.project_observation` | `PARTIAL` — stable resource identity and owner projection exist | Projection alone does not establish World commit or Observation retention |
+| Embodiment source | `BodyPoseObservationProjection` and its owner projection path | `PARTIAL` — body/episode/morphology-bound pose projection exists | Projection is not a commit receipt and does not establish consumer delivery |
+| Modality | `DimensionlessScalarFieldIdentityV1.transduce` | `IMPLEMENTED` for the narrow stateless scalar transduction | Not an Observation publisher or source-completeness contract |
+| Organism | `advance_organism_from_sense_signals` | `PARTIAL` — opaque sensory input can enter the canonical Organism transition | This path does not establish an Observation publication API for Organism-owned claims |
+| Lab | `InterventionRequest` and the specific material-transfer operation | `PARTIAL` — a bounded intervention request/operation exists | `InterventionRequest` is descriptive, not authorization; no general Observation read consumer or general operation-dispatch contract established |
+
+This crosswalk is a source inspection, not an API approval. In particular,
+`PARTIAL` and `IMPLEMENTED` above are capability-local labels only; neither
+permits a frontend or Lab consumer to bypass an authorized Observation read
+boundary. No durable archive, public browser API, transport, storage mechanism,
+or authorization policy is implied by the named symbols.
+
 | Repository / bounded question | Relevant existing test paths | Command from repository root | What it can establish; what it cannot |
 |---|---|---|---|
 | Observation: in-process plane and owner projections | `tests/test_plane.py`; `tests/test_environment_observation.py`; `tests/test_embodiment_observation.py` | `uv run --extra test pytest tests/test_plane.py tests/test_environment_observation.py tests/test_embodiment_observation.py` | Plane/projection behavior at this revision; not durable retention, browser access, or source completeness |
