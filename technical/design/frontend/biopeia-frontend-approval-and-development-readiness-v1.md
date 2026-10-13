@@ -58,6 +58,7 @@ No application implementation begins until all applicable gates below have evide
 - ADR-0113 is explicitly accepted or an alternative decision is recorded.
 - The design register records the decision and lifecycle; ADR-0102 is indexed with its precise disposition without rewriting history.
 - Lab #63 and Docs #164/PR #165 are reconciled to the accepted boundary.
+- Classify Lab-specific scientific tooling versus general frontend presentation using ADR-0113's operation-based criteria; split mixed capabilities by operation and account for existing Lab work/evidence before re-scope.
 - Architecture Owner authorizes implementation planning for the approved target boundary.
 - Repository owner, release owner and security/operations responsibility for `biopeia/frontend` are named before repository creation or external deployment.
 
