@@ -10,15 +10,15 @@ document_version: 1
 
 # Biopeia Frontend v1 — Approval and Development Readiness Plan
 
-**Lifecycle:** Proposed; not ratified. `registry/designs.yaml` is authoritative.
-**Purpose:** Define the evidence and competent-authority gates for formal design approval and later implementation.
-**Implementation authorization:** Not granted.
+**Lifecycle:** Approved by the Architecture Owner on 2026-10-13. `registry/designs.yaml` is authoritative.
+**Purpose:** Record the accepted design decision and define the remaining evidence and competent-authority gates before implementation may start.
+**Implementation authorization:** Prospectively authorized but deferred. Development must not start now; a separate Owner start instruction and completion of the readiness gates below are required.
 
 ## 1. Purpose and boundary
 
-This plan completes the review package for the proposed independent Biopeia frontend. It makes explicit what can be approved now as a design, what requires a constitutional decision, and what must be established before code or deployment work begins.
+This plan records the approved independent Biopeia frontend design and makes explicit the remaining requirements before any code or deployment work begins. The Architecture Owner accepted ADR-0113 and approved the design on 2026-10-13, while prospectively authorizing implementation but deferring its start.
 
-The plan does not itself ratify the independent frontend, amend ADR-0102, establish an Observation API/schema/transport, authorize experiments or runtime control, create a repository, or approve deployment. Its statuses are readiness tracking, not authority.
+The plan records the Architecture Owner's acceptance of ADR-0113 and approval of the design package. It does not establish an Observation API/schema/transport, authorize experiments or runtime control, create a repository, approve deployment, or waive the remaining readiness gates. Its readiness statuses do not replace the authority of the owners named below.
 
 ## 2. Approval package
 
@@ -27,24 +27,24 @@ The formal review package consists of:
 1. [Independent visualization application design](biopeia-frontend-v1.md) — architecture, boundaries, phases and explicit exclusions.
 2. [Functional, interaction and UX specification](biopeia-frontend-ux-spec-v1.md) — seven peer-level screens, interactions, states and source-backed readiness snapshot.
 3. [Visual design specification](biopeia-frontend-visual-design-v1.md) — visual language and clearly identified synthetic concepts.
-4. [Proposed ADR-0113](../../adr/ADR-0113-independent-frontend-and-lab-boundary.md) — adoption-ready constitutional text for the unresolved ADR-0102 presentation allocation.
+4. [Accepted ADR-0113](../../adr/ADR-0113-independent-frontend-and-lab-boundary.md) — constitutional decision partially superseding ADR-0102 for the general-purpose Biopeia TARGET frontend allocation.
 5. This readiness plan — separates design approval from implementation authorization and assigns subsequent evidence to competent owners.
 
-All documents remain proposed until their designated lifecycle authority records otherwise. No PR merge, CI result, review count or Project field substitutes for constitutional acceptance.
+The architecture, UX, visual-design and readiness documents are approved in `registry/designs.yaml`; ADR-0113 is accepted. The package remains subject to the implementation-start gates below. PR merge, CI results, review count or Project fields do not replace the named authorities' approval of their respective contracts.
 
 ## 3. Formal design approval gates
 
 | Gate | Required evidence | Competent authority | Current status |
 |---|---|---|---|
-| A. Responsibility allocation | Explicit accept/reject disposition of proposed ADR-0113; partial ADR-0102 scope stated; Lab responsibilities preserved | Architecture Owner; tracked by [Docs #166](https://github.com/biopeia/docs/issues/166) | OPEN — human constitutional decision |
-| B. Design consistency | Independent review of architecture, UX, visual design and exact candidate revision; findings resolved or bounded | Docs design owner and reviewer under BAW-004; constitutional authority remains separate | BOUNDED — independent adversarial review of the design claims at PR #165 candidate `b34c39b77af7be7387fba8f3e54a9b56e6c2cb19`; see [the exact-head review record](https://github.com/biopeia/docs/pull/165#issuecomment-6143323876). This is not formal GitHub approval or constitutional acceptance. |
+| A. Responsibility allocation | Explicit accept/reject disposition of proposed ADR-0113; partial ADR-0102 scope stated; Lab responsibilities preserved | Architecture Owner; tracked by [Docs #166](https://github.com/biopeia/docs/issues/166) | **RESOLVED — ACCEPTED** by the Architecture Owner on 2026-10-13; see [decision record](https://github.com/biopeia/docs/issues/166#issuecomment-6144222674) and accepted ADR-0113. |
+| B. Design consistency | Independent review of architecture, UX, visual design and exact candidate revision; findings resolved or bounded | Docs design owner and reviewer under BAW-004; constitutional authority remains separate | BOUNDED — independent adversarial review of the design claims at PR #165 candidate `b34c39b77af7be7387fba8f3e54a9b56e6c2cb19`; the later delta to `e641b90b4c1c9c5ccd710e9aee925ad2c67efcbc` was confirmed non-material in [the exact-head update](https://github.com/biopeia/docs/pull/165#issuecomment-6143396043). The review record is not itself a GitHub approval or authority decision. |
 | C. Observation feasibility | Re-inspected, exact-revision inventory of actual family, publication, query/delivery, replay, identity, access and World-cut verification contracts; unsupported paths explicitly excluded | Observation owner for its contracts; World/domain owners for their publication/adoption claims | OPEN — tracked by [Observation #37](https://github.com/biopeia/observation/issues/37); the pinned snapshot is not an approved client contract |
-| D. Lab scope reconciliation | Lab #63 separated into any Lab-owned scientific-apparatus requirement and any frontend-owned presentation requirement; no work/evidence lost | Lab owner; tracked by [Lab #63](https://github.com/biopeia/lab/issues/63) | OPEN — depends on Gate A |
-| E. Security and deployment design | Threat model and explicit local/shared/production boundaries, access assumptions, security/operations ownership, exclusions and follow-up gates | Docs design owner and competent security/operations authority; tracked by [Docs #167](https://github.com/biopeia/docs/issues/167) | OPEN — design task exists; no deployment or implementation is authorized |
+| D. Lab scope reconciliation | Lab #63 separated into any Lab-owned scientific-apparatus requirement and any frontend-owned presentation requirement; no work/evidence lost | Lab owner; tracked by [Lab #63](https://github.com/biopeia/lab/issues/63) | OPEN — requires Lab-owner reconciliation under accepted ADR-0113 |
+| E. Security and deployment design | Threat model and explicit local/shared/production boundaries, access assumptions, security/operations ownership, exclusions and follow-up gates | Docs design owner and competent security/operations authority; tracked by [Docs #167](https://github.com/biopeia/docs/issues/167) | OPEN — design task exists; no deployment or start of implementation is authorized |
 
-The package can reach **Design Review Complete** only when Gates A and B are resolved and the remaining C/D/E questions are either bounded as explicit blockers to implementation or assigned to a competent owner with a linked issue and closure trigger. Design Review Complete does not imply implementation readiness.
+The Architecture Owner approved the design package on 2026-10-13 after the bounded independent review. Gate A is resolved. Gates C, D and E remain implementation-start blockers and must be closed or explicitly bounded by their competent owners. The user authorized implementation prospectively but explicitly deferred its start; this plan does not grant permission to begin development now.
 
-Earlier independent reviews of candidates `3c4f20ff4f98d0b61bfdc77e6e81b68d9e559a02` and `ae1784f1b15c9a9208587f0788259f031aba3343` remain historical records. The current bounded review is recorded against `b34c39b77af7be7387fba8f3e54a9b56e6c2cb19` in [PR comment #6143323876](https://github.com/biopeia/docs/pull/165#issuecomment-6143323876). These are review findings, not formal GitHub approval, constitutional acceptance, or implementation authorization.
+Earlier independent reviews of candidates `3c4f20ff4f98d0b61bfdc77e6e81b68d9e559a02` and `ae1784f1b15c9a9208587f0788259f031aba3343` remain historical records. The bounded review is recorded against `b34c39b77af7be7387fba8f3e54a9b56e6c2cb19` in [PR comment #6143323876](https://github.com/biopeia/docs/pull/165#issuecomment-6143323876), and the later exact-head delta is recorded in [PR comment #6143396043](https://github.com/biopeia/docs/pull/165#issuecomment-6143396043). The review is separate from the Architecture Owner's acceptance and prospective implementation authorization recorded in [Docs #166](https://github.com/biopeia/docs/issues/166#issuecomment-6144222674).
 
 ## 4. Source-backed Observation baseline
 
@@ -54,7 +54,7 @@ These are inspection results at a pinned revision, not permanent claims about cu
 
 ## 5. Implementation authorization gates
 
-No application implementation begins until all applicable gates below have evidence and competent approval:
+The Architecture Owner prospectively authorized implementation but explicitly deferred its start. No application implementation begins until all applicable gates below have evidence and competent approval **and** the Owner gives a separate start instruction:
 
 ### 5.1 Constitutional and repository gate
 
@@ -62,7 +62,7 @@ No application implementation begins until all applicable gates below have evide
 - The design register records the decision and lifecycle; ADR-0102 is indexed with its precise disposition without rewriting history.
 - Lab #63 and Docs #164/PR #165 are reconciled to the accepted boundary.
 - Classify Lab-specific scientific tooling versus general frontend presentation using ADR-0113's operation-based criteria; split mixed capabilities by operation and account for existing Lab work/evidence before re-scope.
-- Architecture Owner authorizes implementation planning for the approved target boundary.
+- Architecture Owner has authorized the target boundary for future implementation; start remains deferred and requires a separate explicit instruction.
 - Repository owner, release owner and security/operations responsibility for `biopeia/frontend` are named before repository creation or external deployment.
 
 ### 5.2 Observation and domain-contract gate
@@ -115,24 +115,24 @@ Any child issue must state the exact missing evidence/decision, accountable owne
 
 ## 7. Decision and status transitions
 
-1. **Proposed design:** current state. Documentation and review may continue; no implementation authority follows.
-2. **Constitutional decision accepted:** the application responsibility boundary is settled. This does not automatically approve the design or authorize code.
-3. **Design Review Complete:** architecture/UX/visual proposal has exact-revision review and bounded feasibility/security questions. This authorizes issue planning only, unless a separate explicit decision says otherwise.
-4. **Implementation authorized:** competent owner approves the scoped implementation plan after required contracts and security decisions exist.
-5. **Implementation accepted:** each implemented feature passes its own technical and integration acceptance. Release/deployment remains separate.
+1. **Design proposed:** superseded for this package by the Owner's design approval recorded 2026-10-13.
+2. **Constitutional decision accepted:** ADR-0113 is accepted; its partial supersession of ADR-0102 is limited to the general-purpose Biopeia TARGET frontend allocation.
+3. **Design approved:** the Architecture Owner approved the design package after bounded independent adversarial review. This does not imply that consumer contracts or the security/deployment target are ready.
+4. **Implementation prospectively authorized, start deferred:** authorization exists, but no work may begin until Gates C, D and E and the applicable provisions in 5.1–5.5 are evidenced/approved and a separate explicit Owner start instruction is issued.
+5. **Implementation accepted:** each implemented feature passes its own technical and integration acceptance. Release/deployment remains separate and requires its own authorization.
 
 Lifecycle updates belong in the canonical design register and decision records. Project #1 is coordination only.
 
 ## 8. Out of scope
 
-This plan does not approve the frontend architecture, freeze React/TypeScript/Vite/Three.js as required technology, approve the visual identity, choose API/schema/transport/authentication/deployment, create or modify a frontend repository, authorize runtime controls, authorize experimental execution, accept evidence, claim browser access exists, or establish causal replay. No legacy Symbiont code or backward compatibility is permitted or required.
+This plan does not select an Observation API/schema/transport/authentication/deployment, create or modify a frontend repository, authorize runtime controls, authorize experimental execution, accept evidence, claim browser access exists, or establish causal replay. The approved design's technology and visual details remain recommendations where explicitly labeled as such; they are not substitutes for the contracts and operational decisions in the readiness gates. No legacy Symbiont code or backward compatibility is permitted or required.
 
 ## References
 
 - [Biopeia Frontend v1 architecture design](biopeia-frontend-v1.md)
 - [Biopeia Frontend v1 UX specification](biopeia-frontend-ux-spec-v1.md)
 - [Biopeia Frontend v1 visual design](biopeia-frontend-visual-design-v1.md)
-- [Proposed ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../adr/ADR-0113-independent-frontend-and-lab-boundary.md)
+- [Accepted ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../adr/ADR-0113-independent-frontend-and-lab-boundary.md)
 - [ADR-0078 — Observation is causally passive](../../adr/ADR-0078-observation-is-causally-passive.md)
 - [ADR-0100 — Observation capability and evidence custody](../../adr/ADR-0100-observation-capability-and-evidence-custody.md)
 - [ADR-0101 — Operator Control](../../adr/ADR-0101-operator-control.md)

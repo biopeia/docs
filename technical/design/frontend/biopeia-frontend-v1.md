@@ -10,16 +10,15 @@ document_version: 3
 
 # Biopeia Frontend v1 — Independent Visualization Application
 
-**Lifecycle:** Proposed; not ratified. The design register is authoritative
-for lifecycle and implementation status.
+**Lifecycle:** Approved by the Architecture Owner on 2026-10-13; the design register is authoritative for lifecycle and implementation status.
 **Owner direction:** Design a complete human-facing frontend as an independent
 Biopeia repository/application, separate from Lab.
-**Proposed repository:** `biopeia/frontend` (repository name only; not a new
+**Target repository:** `biopeia/frontend` (repository name only; not a new
 semantic authority).
 **Related work:** [Docs #164](https://github.com/biopeia/docs/issues/164),
 [Lab #63](https://github.com/biopeia/lab/issues/63), and the Biopeia migration
 end-to-end acceptance work.
-**Implementation authorization:** Not granted by this proposal.
+**Implementation authorization:** Prospectively granted but deferred. Do not begin development until the readiness gates are satisfied and the Architecture Owner issues a separate start instruction.
 
 ## 1. Purpose and status of the direction
 
@@ -29,15 +28,13 @@ covers repository boundary, recommended technology, information architecture,
 screens, data flow, security, accessibility, deployment concerns, testing and
 incremental delivery.
 
-The owner has directed that the frontend be independent rather than placed in
-Lab. This is a target allocation direction for this design. It conflicts with
-the currently accepted [ADR-0102 — Lab](../../adr/ADR-0102-lab.md), which
-assigns Workbench/UI to Lab. That conflict must be reconciled through an
-explicit derived constitutional ADR (or an explicit amendment to ADR-0102)
-before this design can be ratified or implementation begins. This document
-does not silently amend ADR-0102. Until that decision is recorded, the
-standalone repository is a proposed application boundary, not an established
-architecture fact.
+The Architecture Owner accepted the independent frontend boundary through
+[ADR-0113](../../adr/ADR-0113-independent-frontend-and-lab-boundary.md), which
+partially supersedes [ADR-0102 — Lab](../../adr/ADR-0102-lab.md) for the
+general-purpose Biopeia TARGET presentation application only. ADR-0102's
+historical text remains unchanged and its other accepted responsibilities
+remain in force. This document records the approved boundary; it does not
+silently amend or rewrite ADR-0102.
 
 The frontend is a **presentation application**, not a new causal or semantic
 authority. Its independence means it has its own source, release and
@@ -150,7 +147,7 @@ performance. See the [React versions page](https://react.dev/versions),
 [Vite guide](https://vite.dev/guide/), and
 [Three.js WebGLRenderer docs](https://threejs.org/docs/pages/WebGLRenderer.html).
 
-### 4.1 Technology explicitly not selected
+### 4.1 Technology not frozen by this design
 
 - No WebGPU-only renderer, game engine, digital-twin platform or 3D asset
   pipeline.
@@ -158,9 +155,10 @@ performance. See the [React versions page](https://react.dev/versions),
 - No GraphQL/REST/WebSocket/SSE choice until Observation's approved delivery
   and query contracts require it.
 - No design-system package or final visual token system is selected here. A
-  [proposed visual design companion](biopeia-frontend-visual-design-v1.md)
-  supplies candidate tokens and static mockups for review; it is not ratified
-  and does not authorize component styling or implementation. Do not borrow
+  [approved visual design companion](biopeia-frontend-visual-design-v1.md)
+  supplies static mockups and candidate tokens; the design is approved, but
+  explicitly candidate visual tokens remain recommendations and do not
+  authorize component styling or implementation. Do not borrow
   Symbiont UI tokens as Biopeia authority.
 - No authentication provider, deployment vendor or public/private access
   posture is selected; those depend on the deployment threat model and data
@@ -523,9 +521,10 @@ remain useful without GPU/WebGL support.
 
 ## 10. Visual design system
 
-This proposal defines information hierarchy and behavior, not final brand
-styling. Before UI implementation, create a small frontend-owned design
-system specification covering:
+The approved visual companion provides a candidate information hierarchy,
+behavior and token direction, not a frozen brand system. Before UI
+implementation, confirm the implementation-ready design-system decisions in
+the frontend-owned design specification, covering:
 
 - semantic status colors with non-color labels;
 - typography and density for data-heavy inspection;
@@ -535,8 +534,10 @@ system specification covering:
 - chart/3D annotation conventions and data-vs-presentation distinction.
 
 Do not copy Symbiont's visual tokens or represent aesthetic familiarity as
-Biopeia's design authority. No component implementation should begin while
-this required visual specification is absent.
+Biopeia's design authority. Candidate values in the approved companion remain
+recommendations until the remaining accessibility and visual-system readiness
+checks are completed; no component styling starts before those checks and the
+separate Owner start instruction.
 
 ### Provisional performance budgets
 
@@ -655,32 +656,34 @@ after auth/privacy decisions and operations ownership are ratified.
 - **Game engine / WebGPU-only renderer:** deferred; unnecessary to prove the
   first truthful visualization and carries support/performance costs.
 
-## 14. Decisions still required before ratification/implementation
+## 14. Remaining implementation-readiness decisions
 
-1. Explicit constitutional disposition of ADR-0102's Workbench/UI allocation.
-2. Final repository name and ownership/release responsibility (proposed
-   `biopeia/frontend`).
-3. Actual Observation read/query/stream/replay contracts and supported family
+1. Repository/release ownership and final operational setup for the approved
+   independent frontend boundary (target repository name: `biopeia/frontend`).
+2. Actual Observation read/query/delivery/replay contracts and supported family
    revisions.
-4. Production authentication/authorization, data classification, deployment
+3. Authentication/authorization, data classification and deployment
    topology and operational ownership.
-5. Frontend visual-system specification and approval.
-6. Whether to expose local-run selection/launch controls; excluded from v1
+4. Implementation-ready visual-system details, accessibility verification and
+   performance thresholds for the target environment.
+5. Whether to expose local-run selection/launch controls; excluded from v1
    until separately authorized.
-7. Whether saved views/export are required; excluded by default.
+6. Whether saved views/export are required; excluded by default.
 
-These are concrete gates. They do not prevent finishing this design proposal,
-but they prevent its ratification or production implementation where they
-would require authority or security assumptions.
+The constitutional boundary and design package are approved. These remaining
+items gate the start of implementation, together with the readiness plan and
+the Architecture Owner's separate start instruction. Excluded capabilities
+remain out of scope unless separately authorized.
 
 ## 15. Governance and scope of claims
 
-This document is a proposed design, not an implementation authorization. It
-does not amend ADR-0102, authorize a new semantic authority, define an
-Observation schema or transport, admit scientific evidence, authorize runtime
-control, or claim that a frontend currently exists. Acceptance of the
-independent-repository direction must be recorded by the competent
-constitutional process before implementation.
+This is an approved design and prospective implementation authorization with
+the start explicitly deferred. ADR-0113 records the partial TARGET amendment
+to ADR-0102. This document does not authorize a new semantic authority, define
+an Observation schema or transport, admit scientific evidence, authorize
+runtime control, or claim that a frontend currently exists. Implementation may
+start only after the readiness plan's gates are satisfied and the Architecture
+Owner issues a separate start instruction.
 
 A frontend can make published state inspectable. It cannot by itself prove
 causal correctness, complete publication, learning, efficacy, scientific
@@ -692,7 +695,7 @@ validity or successful migration closure.
 - [Visual design specification and concept mockups](biopeia-frontend-visual-design-v1.md)
 - [Approval and development readiness plan](biopeia-frontend-approval-and-development-readiness-v1.md)
 
-The readiness plan is a Proposed companion. It records gates and follow-up
+The readiness plan is an approved companion. It records gates and follow-up
 ownership; it does not authorize implementation or change this design's
 status.
 

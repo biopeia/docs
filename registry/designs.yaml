@@ -20,36 +20,48 @@ designs:
     path: technical/design/frontend/biopeia-frontend-v1.md
     domain: cross-domain
     participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
-    document_status: proposed
+    document_status: approved
     implementation_status: not_evaluated
-    architecture_scope: UNRESOLVED
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
 
   design.cross-domain.biopeia-frontend-ux-spec-v1:
     title: "Biopeia Frontend v1 — Functional, Interaction and UX Specification"
     path: technical/design/frontend/biopeia-frontend-ux-spec-v1.md
     domain: cross-domain
     participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
-    document_status: proposed
+    document_status: approved
     implementation_status: not_evaluated
-    architecture_scope: UNRESOLVED
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
 
   design.cross-domain.biopeia-frontend-visual-design-v1:
     title: "Biopeia Frontend v1 — Visual Design Specification"
     path: technical/design/frontend/biopeia-frontend-visual-design-v1.md
     domain: cross-domain
     participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
-    document_status: proposed
+    document_status: approved
     implementation_status: not_evaluated
-    architecture_scope: UNRESOLVED
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
 
   design.cross-domain.biopeia-frontend-approval-and-development-readiness-v1:
     title: "Biopeia Frontend v1 — Approval and Development Readiness Plan"
     path: technical/design/frontend/biopeia-frontend-approval-and-development-readiness-v1.md
     domain: cross-domain
     participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
-    document_status: proposed
+    document_status: approved
     implementation_status: not_evaluated
-    architecture_scope: UNRESOLVED
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
 
   design.cross-domain.longitudinal-continuity-and-reembodiment-v1:
     title: "Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1"

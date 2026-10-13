@@ -12,7 +12,7 @@ parent_design: design.cross-domain.biopeia-frontend-v1
 
 # Biopeia Frontend v1 — Functional, Interaction and UX Specification
 
-> **Status:** Proposed companion specification, not ratified. This document refines product design but does not amend ADR-0102, create Observation contracts, authorize a frontend repository, define a causal API, or grant implementation authorization. All source data in production must come through approved, read-only Observation publication/query paths.
+> **Status:** Approved companion specification (Architecture Owner, 2026-10-13). This document refines the approved product design; it does not create Observation contracts, authorize a particular client API, or establish deployment/access decisions. Implementation is authorized prospectively but must not start until the readiness gates are satisfied and a separate Owner start instruction is given. All source data in production must come through approved, read-only Observation publication/query paths.
 
 ## 1. Product definition
 
@@ -50,7 +50,7 @@ The initial visual experience prioritizes **World and spatial presentation**, bu
 
 ### 1.5 Product directions adopted on 2026-10-13
 
-These are **owner-approved product design directions**, not constitutional ratification, contract approval, security approval, repository creation or implementation authorization:
+These are **owner-approved product design directions**. Their approval does not itself approve Observation contracts, security/access, repository creation or deployment. Implementation is prospectively authorized but its start is deferred under the readiness plan:
 
 - **Navigation:** seven peer-level screens, without three-workspace grouping.
 - **First-use emphasis:** World and spatial visualization lead the experience, with source integrity continuously visible.
@@ -500,7 +500,7 @@ Every screen remains reachable without a selected World/run/claim. Opening a des
 
 ### 12.1.3 Design review and implementation acceptance are separate gates
 
-**Design Review Complete** is a documentation-only milestone. It may be reached when the seven-screen information architecture is consistent; all screen and no-context states are specified; visual concepts are clearly synthetic; the contract readiness matrix records exact source evidence and unsupported areas; accessibility, security and performance questions are bounded; and required independent/design/constitutional reviews are recorded. It does not require executable code, a working endpoint, or implementation authorization. Unresolved constitutional allocation and unavailable Observation paths remain explicit blockers to implementation.
+**Design Review Complete** is a documentation-only milestone. For this package, the Architecture Owner approved the design on 2026-10-13 after bounded independent review. It does not require executable code or a working endpoint. Unavailable Observation paths, unresolved access/security choices and other readiness gates remain explicit blockers to starting implementation.
 
 **Implementation Acceptance** is a separate later gate. It requires competent authorization for the frontend boundary, approved client-consumable Observation contracts and access model, a real World-verified publication path, exact-revision integration evidence, acceptance tests for all implemented states, security/accessibility/performance validation, and independent review where risk policy requires it. A design review cannot satisfy this gate; green CI cannot create missing contracts or authority.
 
@@ -567,20 +567,20 @@ Controlled fixtures are valid for **unit/component/UX negative tests** and story
 
 ### Phase 0A — Constitutional and semantic prerequisites (blocking)
 
-- **FE-GOV-01** ADR: reconcile ADR-0102 Workbench/UI allocation, assign separate frontend presentation application, preserve Lab authority.
-- **FE-GOV-02** Re-scope Lab #63 as actual Lab scientific requirement and move presentation acceptance to frontend tracker; no loss of existing work.
+- **FE-GOV-01** Completed: ADR-0113 accepted; ADR-0102 is partially superseded for the general TARGET frontend allocation; Lab authority is preserved.
+- **FE-GOV-02** Reconcile Lab #63 as actual Lab scientific requirement and move general presentation acceptance to frontend tracking; no loss of existing work.
 - **FE-CON-01** Observation interface inventory with exact source owner, approved family/revision/transport, scope and negative semantics.
 - **FE-SEC-01** Auth, data classification and deployment threat-model decision (local development vs production).
 - **FE-UX-01** Approve information architecture, visual-system specification and screen states.
 
-### Phase 0B — Design validation (non-causal, no runtime implementation authorization)
+### Phase 0B — Design validation (completed for approved design; no runtime execution)
 
 - **FE-UX-02** Low/high-fidelity wireframes for seven screens, desktop/narrow and populated/error/stale variants.
 - **FE-UX-03** Usability walkthrough: UC-01, UC-03, UC-05, UC-06, UC-09; document confusing labels.
 - **FE-UX-04** Accessibility test plan and design-token contrast review.
 - **FE-ARCH-01** UI read adapter mapping proposal from discovered real contracts (no invented transport/schema).
 
-### Phase 1 — Shell and authorized discovery (requires implementation authorization)
+### Phase 1 — Shell and authorized discovery (start deferred; readiness gates plus separate Owner start instruction required)
 
 - **FE-IMP-01** Independent repo/CI and locked toolchain.
 - **FE-IMP-02** Shell/router/context/connection, readonly authenticated integration.
@@ -607,12 +607,12 @@ Controlled fixtures are valid for **unit/component/UX negative tests** and story
 
 Issues should have parent links, owning repository, governance class, explicit blocking relationship, phase, priority, definition-of-done and evidence reference in Biopeia Project. Do not create duplicate canonical scientific records in frontend.
 
-## 16. Decision register for ratification
+## 16. Decision and readiness register
 
 | ID | Decision | Recommendation | Blocking |
 |---|---|---|---|
-| D-01 | ADR-0102 vs standalone frontend | Derived constitutional ADR, explicitly remove or narrow Lab Workbench/UI allocation | Yes |
-| D-02 | Final repository | `biopeia/frontend`; presentation owner and independent release | Yes |
+| D-01 | ADR-0102 vs standalone frontend | Resolved by accepted ADR-0113: independent general-purpose TARGET frontend; ADR-0102 is partially superseded only for this allocation | No — decision accepted |
+| D-02 | Repository and operational ownership | Approved independent application boundary; target name `biopeia/frontend` remains provisional until repository/release owners and operational setup are assigned | Yes for repository creation/start |
 | D-03 | Observation interfaces | Adopt only actual approved contracts after inventory | Yes |
 | D-04 | Source/discovery/replay availability | Feature-gate per real contract; never invent source semantics | Yes for applicable feature |
 | D-05 | Auth/scope/data classification | Separate reviewed local and production models | Yes for production |
@@ -623,12 +623,12 @@ Issues should have parent links, owning repository, governance class, explicit b
 | D-10 | Performance budgets | Approve test data, hardware and thresholds before release | Yes for release |
 | D-11 | App-level run launch | Excluded in v1; future control-authority proposal | No (explicitly excluded) |
 | D-12 | Full comparative analytics | Deferred; display-only two-source comparison conditional | No |
-| D-13 | Top-level information architecture | Owner direction adopted: seven peer-level screens; no three-workspace grouping | Yes for UX sign-off |
-| D-14 | First-use hierarchy | Owner direction adopted: spatial/World-first with permanent source health and provenance access; fallback truthful | Yes for UX sign-off |
+| D-13 | Top-level information architecture | Owner-approved: seven peer-level screens; no three-workspace grouping | No — design approved |
+| D-14 | First-use hierarchy | Owner-approved: spatial/World-first with permanent source health and provenance access; truthful fallback | No — design approved |
 
 ## 17. Definition of ready for implementation
 
-All checked: constitutional decision accepted; frontend repo owner named; Observation contract inventory signed off; every first-phase feature has real supported source path; threat model and access decision completed for target environment; UX screen/wireframe state catalogue accepted; visual tokens and accessibility review approved; acceptance tests mapped to issues; integration plan does not bypass World→Observation; no conflict with UC-0001. Until then, design/UX discovery may proceed but causal integration and production implementation are not authorized by this proposal.
+Implementation-start checklist: constitutional decision accepted; frontend repo and release owners named; Observation contract inventory signed off; every first-phase feature has a real supported source path; threat model and access decision completed for the target environment; UX screen/state catalogue accepted; visual-token decisions needed for implementation and accessibility review approved; acceptance tests mapped to issues; integration plan does not bypass World→Observation; no conflict with UC-0001. Until all applicable checks are satisfied and the Architecture Owner gives a separate start instruction, do not begin implementation. This approved specification does not authorize deployment.
 
 ## 18. Definition of done for frontend v1
 

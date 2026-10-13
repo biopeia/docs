@@ -12,7 +12,7 @@ parent_design: design.cross-domain.biopeia-frontend-v1
 
 # Biopeia Frontend v1 — Visual Design Specification
 
-> **Status:** Proposed visual direction, not ratified. This specification supports review of the product design; it does not resolve ADR-0102, approve Observation contracts, authorize a frontend repository or grant implementation authorization. The SVGs are static concept mockups with synthetic design content, not Biopeia observations or a running application.
+> **Status:** Approved visual-design specification (Architecture Owner, 2026-10-13). The SVGs are static concept mockups with synthetic design content, not Biopeia observations or a running application. Candidate color values remain recommendations, not frozen brand tokens. Implementation is prospectively authorized but deferred until the readiness gates are satisfied and a separate Owner start instruction is given.
 
 ## 1. Purpose and scope
 

@@ -11,10 +11,10 @@ states are independent, and an approved design is never, by that fact, an implem
 
 | Design | Domain | Document | Implementation | Architecture scope |
 |---|---|---|---|---|
-| [Biopeia Frontend v1 — Independent Visualization Application](frontend/biopeia-frontend-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
-| [Biopeia Frontend v1 — Functional, Interaction and UX Specification](frontend/biopeia-frontend-ux-spec-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
-| [Biopeia Frontend v1 — Visual Design Specification](frontend/biopeia-frontend-visual-design-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
-| [Biopeia Frontend v1 — Approval and Development Readiness Plan](frontend/biopeia-frontend-approval-and-development-readiness-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
+| [Biopeia Frontend v1 — Independent Visualization Application](frontend/biopeia-frontend-v1.md) | cross-domain | approved | not_evaluated | TARGET |
+| [Biopeia Frontend v1 — Functional, Interaction and UX Specification](frontend/biopeia-frontend-ux-spec-v1.md) | cross-domain | approved | not_evaluated | TARGET |
+| [Biopeia Frontend v1 — Visual Design Specification](frontend/biopeia-frontend-visual-design-v1.md) | cross-domain | approved | not_evaluated | TARGET |
+| [Biopeia Frontend v1 — Approval and Development Readiness Plan](frontend/biopeia-frontend-approval-and-development-readiness-v1.md) | cross-domain | approved | not_evaluated | TARGET |
 | [Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1](runtime/longitudinal-continuity-and-reembodiment-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Repository Settings and GitHub Actions Workflow Normalization v1](governance/repository-settings-and-actions-workflow-normalization-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |
 | [Design-First Work and Governance Procedure v1](governance/design-first-work-and-governance-procedure-v1.md) | cross-domain | approved | not_evaluated | UNRESOLVED |

@@ -35,7 +35,7 @@ records and were not copied; they describe the historical system.
 | [ADR-0099](ADR-0099-modality-contract-library.md) | Modality contract/library | ACCEPTED | AD-0025 |
 | [ADR-0100](ADR-0100-observation-capability-and-evidence-custody.md) | Observation capability and evidence custody | ACCEPTED | AD-0026 |
 | [ADR-0101](ADR-0101-operator-control.md) | Operator Control | ACCEPTED | AD-0027 |
-| [ADR-0102](ADR-0102-lab.md) | Lab | ACCEPTED | AD-0028 |
+| [ADR-0102](ADR-0102-lab.md) | Lab | PARTIALLY SUPERSEDED for Biopeia TARGET by ADR-0113 (general-purpose frontend allocation only); remaining decision ACCEPTED | AD-0028 |
 | [ADR-0103](ADR-0103-portable-organism-state.md) | Portable Organism state | ACCEPTED | AD-0029 |
 | [ADR-0104](ADR-0104-body-schema-and-competence.md) | Body schema and competence | ACCEPTED | AD-0030 |
 | [ADR-0105](ADR-0105-cognition-structure.md) | Cognition structure | ACCEPTED | AD-0031 |
@@ -46,7 +46,7 @@ records and were not copied; they describe the historical system.
 | [ADR-0110](ADR-0110-repository-consequence-and-dependency-direction.md) | Repository consequence and dependency direction | ACCEPTED | AD-0036 |
 | [ADR-0111](ADR-0111-design-first-work-and-governance-procedure.md) | Design-First Work and Governance Procedure | ACCEPTED — owner decision recorded 2026-10-12 | biopeia/.github-private#43 |
 | [ADR-0112](ADR-0112-repository-settings-and-actions-baseline.md) | Repository Settings and GitHub Actions Baseline | PROPOSED — owner disposition pending | biopeia/docs#145 |
-| [ADR-0113](ADR-0113-independent-frontend-and-lab-boundary.md) | Independent Frontend and Lab Presentation Boundary | PROPOSED — constitutional decision pending | biopeia/docs#166 |
+| [ADR-0113](ADR-0113-independent-frontend-and-lab-boundary.md) | Independent Frontend and Lab Presentation Boundary | ACCEPTED — Architecture Owner, 2026-10-13 | biopeia/docs#166 |
 
 `ADR-0075` to `ADR-0110` transcribe the architecture decisions `AD-0001` to
 `AD-0036` of the architecture audit, one record each, in source order. Their
