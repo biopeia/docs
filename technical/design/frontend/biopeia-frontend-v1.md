@@ -5,7 +5,7 @@ document_type: design
 owner: biopeia-project-owner
 created: 2026-10-13
 language: en
-document_version: 2
+document_version: 3
 ---
 
 # Biopeia Frontend v1 — Independent Visualization Application
@@ -690,6 +690,11 @@ validity or successful migration closure.
 
 - [Functional, interaction and UX specification](biopeia-frontend-ux-spec-v1.md)
 - [Visual design specification and concept mockups](biopeia-frontend-visual-design-v1.md)
+- [Approval and development readiness plan](biopeia-frontend-approval-and-development-readiness-v1.md)
+
+The readiness plan is a Proposed companion. It records gates and follow-up
+ownership; it does not authorize implementation or change this design's
+status.
 
 ## References
 

@@ -46,6 +46,7 @@ records and were not copied; they describe the historical system.
 | [ADR-0110](ADR-0110-repository-consequence-and-dependency-direction.md) | Repository consequence and dependency direction | ACCEPTED | AD-0036 |
 | [ADR-0111](ADR-0111-design-first-work-and-governance-procedure.md) | Design-First Work and Governance Procedure | ACCEPTED — owner decision recorded 2026-10-12 | biopeia/.github-private#43 |
 | [ADR-0112](ADR-0112-repository-settings-and-actions-baseline.md) | Repository Settings and GitHub Actions Baseline | PROPOSED — owner disposition pending | biopeia/docs#145 |
+| [ADR-0113](ADR-0113-independent-frontend-and-lab-boundary.md) | Independent Frontend and Lab Presentation Boundary | PROPOSED — constitutional decision pending | biopeia/docs#166 |
 
 `ADR-0075` to `ADR-0110` transcribe the architecture decisions `AD-0001` to
 `AD-0036` of the architecture audit, one record each, in source order. Their
