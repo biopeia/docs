@@ -27,7 +27,7 @@ The workspace records used for this assessment are:
 
 The audit file is a workspace-local assessment artifact, not the canonical disposition ledger. Its reported counts are historical audit findings and are not asserted here as current reconciled totals. The objective requires final dispositions and source provenance; the canonical current owner ledgers and their linked issues govern item-level status.
 
-The independent repository revision snapshot was read from GitHub `main` on 2026-10-13:
+The independent repository revision snapshot and check-run observations were read from GitHub `main` on 2026-10-13:
 
 | Repository | Revision |
 |---|---|
@@ -35,13 +35,13 @@ The independent repository revision snapshot was read from GitHub `main` on 2026
 | `biopeia/embodiment` | `56e9a34a6a778a298493dabca9d15b0912066803` |
 | `biopeia/environment` | `52b9bf942c12e9bd061485563a1311b00fe32154` |
 | `biopeia/world` | `e7b3dd99174ceda6b0ca7209be01e965f2fe02b5` |
-| `biopeia/modality` | `8d72982d9621480ce659533ac7c4c2254e6f28f6` |
-| `biopeia/observation` | `8a0a9fcfcefa2287800674fed89f4d029cf5d4f5` |
-| `biopeia/lab` | `b5c82653f85272898085a137619f594f8768fa97` |
-| `biopeia/docs` (assessment base) | `0934ee490935f1976dd76f7059202c451450c0bb` |
-| `biopeia/.github-private` | `94cd11565bccfade874c4c2b5c1ed4fe7a1a69db` |
+| `biopeia/modality` | `93a4c3a4ea71dcf65269ce730aab736238fd3ea7` |
+| `biopeia/observation` | `c0e66d844ebd25f54c75b2bf9b0b10b81ad34ee9` |
+| `biopeia/lab` | `85b0e5cdc0776025f9ad62da23edcf2064e62eb3` |
+| `biopeia/docs` (assessment base) | `15ef5c2fa2973aea6b719377b59a89660b7e5275` |
+| `biopeia/.github-private` | `cf87b80d076a17f231698e0ab38e0b0b4269788f` |
 
-The report was prepared from Docs `main` at the listed assessment base. Any later repository or issue changes require revalidation before this report can support a closure decision.
+The report refresh was prepared from Docs `main` at the listed assessment base. It incorporates Lab PR #111, which resolves one pinned `SPLIT` source row as a bounded `DROP` of the historical TARGET implementation only. Lab #78 remains open with unresolved rows; this slice does not make any scientific-validity or capability-necessity claim. Any later repository or issue changes require revalidation before this report can support a closure decision.
 
 ## 3. Closure-gate assessment
 
@@ -52,13 +52,13 @@ The report was prepared from Docs `main` at the listed assessment base. Any late
 | Bounded continuation/checkpoint gate for the accepted E2E profile | `PASS, bounded` | `.github-private#42` records Organism #34 closed for the accepted profile. This does not establish universal Organism continuation. |
 | Scientific custody of the 477 historical Lab artifacts | `PASS, bounded` | Lab #23 is closed for the custody classifications. Custody classification does not assert scientific validity, method equivalence, or admissibility. |
 | Remaining Lab protocol dispositions | `OPEN` | Lab #77 remains open. Its current scope identifies 68 individual protocol units requiring disposition review; the issue requires per-protocol disposition or an explicitly bounded child issue. These are not represented as completed reviews or final dispositions here. |
-| Remaining Lab `SPLIT` source rows | `OPEN` | Lab #78 remains open for symbol-level resolution. The issue history records bounded rows being resolved, but the remaining checklist is not complete. This report does not infer completion from the number of merged slices. |
+| Remaining Lab `SPLIT` source rows | `OPEN` | Lab #78 remains open for symbol-level resolution. Lab PR #111 (`85b0e5cdc0776025f9ad62da23edcf2064e62eb3`) resolves only `lab/src/lab/experience/safety.py` (pinned blob `6d8b084b3e212ad76d56a418e75dec4982180a8e`) as `DROP` from TARGET code, with exact-candidate independent review `CONFIRMED` within that narrow scope. The remaining checklist is not complete; this report does not infer completion from the number of merged slices. |
 | Lab aggregate disposition reconciliation | `OPEN` | Lab #45 remains open to ensure each remaining `DEFER` and `SPLIT` is actionable and reconciled. Its umbrella is not satisfied by closing individual slices. |
 | Cross-repository source-disposition gaps/conflicts | `OPEN` | Docs #63 remains open. Its acceptance criteria require one authoritative disposition per source item/group, resolution of audit-listed conflicts and gaps, treatment of tests/tooling/configuration, and validation against pinned source/current Biopeia revisions. The 2026-10-10 audit totals are initial findings, not current verified totals. |
 | Broader Organism continuation and actuation checkpoint scope | `POST_MIGRATION FOLLOW-UP` | Organism #41 and #45 remain open and labeled `POST_MIGRATION`. The accepted bounded profile is not claimed to cover unexercised capabilities; reopen the closure assessment if its accepted profile depends on them or reveals omitted required state. |
 | World journal scale/retention | `POST_MIGRATION FOLLOW-UP` | World #32 remains open and is explicitly non-blocking for the bounded E2E acceptance run. No production-scale or arbitrary-history guarantee is claimed. |
 | Lab Workbench visualization consumer | `POST_MIGRATION FOLLOW-UP` | Lab #63 remains open. Observation post-commit publication is demonstrated in-process; this report does not claim a complete visualization/UI consumer. |
-| CI on current domain `main` revisions | `PASS, observed` | On the revisions above, required core checks were successful for all seven domains and Docs (unit/build/integration/publication/registry as configured). The Docs `release` workflow concluded `skipped`; it is not represented as a passing release. This is a point-in-time CI observation, not a substitute for migration acceptance or review. |
+| CI on current domain `main` revisions | `PASS, observed` | Check runs were queried for the listed current `main` revisions on 2026-10-13. Core test/build/integration checks available on each repo were successful. Docs `registry`, `publication`, and `cross-repository` checks were successful; Docs `release` concluded `skipped` and is not represented as a passing release. This is a point-in-time CI observation, not a substitute for migration acceptance or review. |
 | Independent adversarial review of this exact report revision | `PENDING` | A review of the previous candidate returned `BOUNDED`: it confirmed only the `NOT CLOSED` conclusion and required refreshing the repository snapshot and clarifying the Lab #77 wording. This revision applies those corrections; it still requires exact-revision review before reliance. |
 
 ## 4. End-to-end acceptance evidence and limits
