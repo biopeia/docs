@@ -32,6 +32,7 @@ Explanatory documents of the Lab domain (apparatus).
 
 ## Designs
 
+- [Biopeia Frontend v1 — Security and Deployment Boundary](../../technical/design/frontend/biopeia-frontend-security-and-deployment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Biopeia Frontend v1 — Independent Visualization Application](../../technical/design/frontend/biopeia-frontend-v1.md): document approved, implementation not_evaluated, scope TARGET
 - [Biopeia Frontend v1 — Functional, Interaction and UX Specification](../../technical/design/frontend/biopeia-frontend-ux-spec-v1.md): document approved, implementation not_evaluated, scope TARGET
 - [Biopeia Frontend v1 — Visual Design Specification](../../technical/design/frontend/biopeia-frontend-visual-design-v1.md): document approved, implementation not_evaluated, scope TARGET

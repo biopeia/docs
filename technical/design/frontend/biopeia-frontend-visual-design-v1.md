@@ -167,7 +167,7 @@ Target remains WCAG 2.2 AA, with contrast and accessibility testing as specified
 
 ### 7.1 Design Review Complete (documentation-only)
 
-This milestone can be accepted without a running application when the seven screen concepts and no-context states are documented, the synthetic examples are unmistakably marked, the spatial-fidelity matrix is reviewed, the candidate visual system covers both themes, accessibility and source-contract limitations are explicit, and required design/independent/constitutional reviews are recorded. Acceptance records must distinguish unresolved ADR-0102 and Observation prerequisites. Completing this design review does not authorize implementation.
+This milestone can be accepted without a running application when the seven screen concepts and no-context states are documented, the synthetic examples are unmistakably marked, the spatial-fidelity matrix is reviewed, the candidate visual system covers both themes, accessibility and source-contract limitations are explicit, and required design/independent/constitutional reviews are recorded. Acceptance records must distinguish the accepted ADR-0113 disposition of ADR-0102 from unresolved Observation prerequisites. Completing this design review does not authorize implementation start or deployment.
 
 ### 7.2 Implementation Acceptance (later, after authorization)
 
@@ -190,9 +190,8 @@ These are design-review criteria, not evidence that an application exists or pas
 
 The following remain unresolved and are not decided by this companion:
 
-- constitutional placement of a standalone frontend versus ADR-0102;
 - actual Observation query/publication contracts and identity encodings;
-- final Biopeia brand assets and whether the proposed palette is accepted;
+- final Biopeia brand assets and approval of implementation-specific visual tokens;
 - security model for local development versus multi-user deployment;
 - numerical performance budgets based on representative real publication data;
 - final responsive breakpoint values and typography licensing/package.

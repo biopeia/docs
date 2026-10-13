@@ -11,6 +11,7 @@ states are independent, and an approved design is never, by that fact, an implem
 
 | Design | Domain | Document | Implementation | Architecture scope |
 |---|---|---|---|---|
+| [Biopeia Frontend v1 — Security and Deployment Boundary](frontend/biopeia-frontend-security-and-deployment-v1.md) | cross-domain | proposed | not_evaluated | UNRESOLVED |
 | [Biopeia Frontend v1 — Independent Visualization Application](frontend/biopeia-frontend-v1.md) | cross-domain | approved | not_evaluated | TARGET |
 | [Biopeia Frontend v1 — Functional, Interaction and UX Specification](frontend/biopeia-frontend-ux-spec-v1.md) | cross-domain | approved | not_evaluated | TARGET |
 | [Biopeia Frontend v1 — Visual Design Specification](frontend/biopeia-frontend-visual-design-v1.md) | cross-domain | approved | not_evaluated | TARGET |

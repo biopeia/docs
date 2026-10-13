@@ -568,10 +568,10 @@ Controlled fixtures are valid for **unit/component/UX negative tests** and story
 ### Phase 0A — Constitutional and semantic prerequisites (blocking)
 
 - **FE-GOV-01** Completed: ADR-0113 accepted; ADR-0102 is partially superseded for the general TARGET frontend allocation; Lab authority is preserved.
-- **FE-GOV-02** Reconcile Lab #63 as actual Lab scientific requirement and move general presentation acceptance to frontend tracking; no loss of existing work.
+- **FE-GOV-02** Completed: Lab #63 was closed as not planned for the superseded general-presentation work; Lab retains scientific apparatus and evidence custody. No scientific work or evidence was transferred or discarded.
 - **FE-CON-01** Observation interface inventory with exact source owner, approved family/revision/transport, scope and negative semantics.
 - **FE-SEC-01** Auth, data classification and deployment threat-model decision (local development vs production).
-- **FE-UX-01** Approve information architecture, visual-system specification and screen states.
+- **FE-UX-01** Completed: Architecture Owner approved the information architecture, visual-design specification and screen/state catalogue; implementation-specific token and accessibility checks remain separate acceptance work.
 
 ### Phase 0B — Design validation (completed for approved design; no runtime execution)
 
@@ -640,8 +640,8 @@ Seven defined screens available to the extent the approved source contracts supp
 - ADR-0078: Observation causally passive.
 - ADR-0100: Observation and evidence custody.
 - ADR-0101: Operator Control.
-- ADR-0102: Lab (allocation conflict to reconcile).
+- ADR-0102: Lab (partially superseded for general-purpose Biopeia TARGET frontend allocation by accepted ADR-0113; history retained).
 - Docs #164: https://github.com/biopeia/docs/issues/164
-- Lab #63: https://github.com/biopeia/lab/issues/63
+- Lab #63: https://github.com/biopeia/lab/issues/63 (closed as not planned for superseded general-presentation work)
 - W3C WCAG 2.2: https://www.w3.org/TR/WCAG22/
 - W3C WCAG 2.2 new success criteria: https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/
