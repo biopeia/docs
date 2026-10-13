@@ -39,6 +39,7 @@ Explanatory documents of the Observation domain (capability).
 - [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Observation Semantic Model v1](../../technical/design/observability/observation-semantic-model-v1.md): document approved, implementation partial, scope TARGET
+- [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](../../technical/design/observability/lab-world-observation-integration-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Observation Architecture v1 — Target Design](../../technical/design/observability/observation-architecture-target-design-v1.md): document superseded, implementation not_applicable, scope HISTORICAL
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
 

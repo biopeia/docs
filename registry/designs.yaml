@@ -262,6 +262,15 @@ designs:
       not automatically become one, which agrees with ADR-0095 and ADR-0099
       and differs from the list in that target design.
 
+  design.cross-domain.lab-world-observation-integration-v1:
+    title: "Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries"
+    path: technical/design/observability/lab-world-observation-integration-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
   design.observability.observation-architecture-target-design-v1:
     title: "Observation Architecture v1 — Target Design"
     path: technical/design/observability/observation-architecture-target-design-v1.md
