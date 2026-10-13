@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="690" viewBox="0 0 1880 690">
+<rect width="1880" height="690" fill="#e8ecea"/>
+<text x="34" y="30" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#243c3c">SPATIAL — PROPOSED VISUAL DESIGN / DARK + LIGHT</text>
+<text x="34" y="63" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#425a57">LIGHT THEME</text>
+<g transform="translate(24,70)"><svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
+<rect width="900" height="620" rx="14" fill="#edf1ee"/>
+<rect x="0" y="0" width="900" height="52" rx="14" fill="#fbfcfa"/>
+<path d="M0 52H900" stroke="#d5dfda"/>
+<circle cx="25" cy="26" r="10" fill="#147a70"/>
+<path d="M20 26h10M25 21v10" stroke="#edf1ee" stroke-width="1.5"/>
+<text x="44" y="31" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#172d2d" text-anchor="start" >BIOPEIA</text>
+<text x="164" y="31" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="600" fill="#5d7370" text-anchor="start" >OBSERVATION VIEWER  /  DESIGN CONCEPT</text>
+<rect x="740" y="12" width="145" height="28" rx="8" fill="#f3f6f3"/>
+<circle cx="755" cy="26" r="4" fill="#b47132"/>
+<text x="765" y="30" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="700" fill="#172d2d" text-anchor="start" >SYNTHETIC PREVIEW</text>
+<rect x="0" y="52" width="166" height="568" fill="#f8faf8"/>
+<path d="M166 52V620" stroke="#d5dfda"/>
+<text x="20" y="82" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="700" fill="#5d7370" text-anchor="start" >OBSERVATION</text>
+<circle cx="25" cy="107" r="3" fill="#5d7370"/>
+<text x="37" y="112" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >Worlds &amp; Runs</text>
+<circle cx="25" cy="149" r="3" fill="#5d7370"/>
+<text x="37" y="154" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >World Overview</text>
+<rect x="10" y="178" width="146" height="34" rx="7" fill="#dbe9e3"/>
+<circle cx="25" cy="191" r="3" fill="#147a70"/>
+<text x="37" y="196" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#172d2d" text-anchor="start" >Spatial Explorer</text>
+<circle cx="25" cy="233" r="3" fill="#5d7370"/>
+<text x="37" y="238" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >Causal Timeline</text>
+<circle cx="25" cy="275" r="3" fill="#5d7370"/>
+<text x="37" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >Sensorimotor Trace</text>
+<circle cx="25" cy="317" r="3" fill="#5d7370"/>
+<text x="37" y="322" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >Claim Inspector</text>
+<circle cx="25" cy="359" r="3" fill="#5d7370"/>
+<text x="37" y="364" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#5d7370" text-anchor="start" >Connection &amp; Access</text>
+<text x="18" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >SOURCE STATUS</text>
+<rect x="12" y="444" width="142" height="66" rx="8" fill="#f3f6f3"/>
+<circle cx="25" cy="461" r="4" fill="#b47132"/>
+<text x="36" y="465" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="600" fill="#172d2d" text-anchor="start" >No source connected</text>
+<text x="22" y="484" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="400" fill="#5d7370" text-anchor="start" >Mockup only · no live claims</text>
+<text x="186" y="82" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="17" font-weight="720" fill="#172d2d" text-anchor="start" >SPATIAL EXPLORER</text>
+<text x="186" y="101" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#5d7370" text-anchor="start" >World context is illustrative; no TARGET publication is connected.</text>
+<rect x="186" y="115" width="696" height="48" rx="9" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="200" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >WORLD</text>
+<text x="200" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#172d2d" text-anchor="start" >Not selected</text>
+<text x="364" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >RUN</text>
+<text x="364" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#172d2d" text-anchor="start" >No run context</text>
+<text x="542" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >CAUSAL CUT</text>
+<text x="542" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#172d2d" text-anchor="start" >Unavailable</text>
+<text x="726" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >DELIVERY</text>
+<text x="726" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#b47132" text-anchor="start" >Disconnected</text>
+<rect x="186" y="177" width="696" height="330" rx="10" fill="#e5eeea" stroke="#d5dfda"/>
+<text x="202" y="201" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >SCENE CANVAS</text>
+<text x="866" y="201" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#b47132" text-anchor="end" >NO GEOMETRY SOURCE</text>
+<rect x="364" y="255" width="340" height="155" rx="12" fill="#fbfcfa" stroke="#d5dfda"/>
+<circle cx="534" cy="289" r="16" fill="#dbe9e3"/>
+<text x="534" y="294" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" fill="#147a70" text-anchor="middle" >i</text>
+<text x="534" y="329" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="650" fill="#172d2d" text-anchor="middle" >No compatible spatial claims</text>
+<text x="534" y="351" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#5d7370" text-anchor="middle" >The selected Observation scope does not provide</text>
+<text x="534" y="367" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#5d7370" text-anchor="middle" >geometry, frame and revision required for 3D.</text>
+<text x="534" y="393" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="650" fill="#147a70" text-anchor="middle" >Inspect available claims instead</text>
+<text x="534.0" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#5d7370" text-anchor="middle" >No mesh, pose, axis or terrain is synthesized.</text>
+<text x="534.0" y="477" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#5d7370" text-anchor="middle" >Text/table inspection remains available without WebGL.</text>
+<rect x="186" y="520" width="696" height="76" rx="9" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="200" y="540" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#5d7370" text-anchor="start" >PUBLICATION HISTORY</text>
+<text x="200" y="562" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#172d2d" text-anchor="start" >No retained publication available</text>
+<text x="200" y="580" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="400" fill="#5d7370" text-anchor="start" >Timeline and replay require an approved source contract.</text>
+<rect x="726" y="534" width="138" height="28" rx="7" fill="#f3f6f3"/>
+<text x="795" y="552" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#147a70" text-anchor="middle" >INSPECT SOURCE  →</text>
+</svg></g>
+<text x="970" y="63" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#425a57">DARK THEME</text>
+<g transform="translate(960,70)"><svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
+<rect width="900" height="620" rx="14" fill="#0e191b"/>
+<rect x="0" y="0" width="900" height="52" rx="14" fill="#152427"/>
+<path d="M0 52H900" stroke="#304548"/>
+<circle cx="25" cy="26" r="10" fill="#72cabb"/>
+<path d="M20 26h10M25 21v10" stroke="#0e191b" stroke-width="1.5"/>
+<text x="44" y="31" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#e5efec" text-anchor="start" >BIOPEIA</text>
+<text x="164" y="31" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="600" fill="#9eb3ae" text-anchor="start" >OBSERVATION VIEWER  /  DESIGN CONCEPT</text>
+<rect x="740" y="12" width="145" height="28" rx="8" fill="#1b2d30"/>
+<circle cx="755" cy="26" r="4" fill="#e0a45e"/>
+<text x="765" y="30" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="700" fill="#e5efec" text-anchor="start" >SYNTHETIC PREVIEW</text>
+<rect x="0" y="52" width="166" height="568" fill="#111e20"/>
+<path d="M166 52V620" stroke="#304548"/>
+<text x="20" y="82" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="700" fill="#9eb3ae" text-anchor="start" >OBSERVATION</text>
+<circle cx="25" cy="107" r="3" fill="#9eb3ae"/>
+<text x="37" y="112" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >Worlds &amp; Runs</text>
+<circle cx="25" cy="149" r="3" fill="#9eb3ae"/>
+<text x="37" y="154" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >World Overview</text>
+<rect x="10" y="178" width="146" height="34" rx="7" fill="#203b3a"/>
+<circle cx="25" cy="191" r="3" fill="#72cabb"/>
+<text x="37" y="196" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#e5efec" text-anchor="start" >Spatial Explorer</text>
+<circle cx="25" cy="233" r="3" fill="#9eb3ae"/>
+<text x="37" y="238" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >Causal Timeline</text>
+<circle cx="25" cy="275" r="3" fill="#9eb3ae"/>
+<text x="37" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >Sensorimotor Trace</text>
+<circle cx="25" cy="317" r="3" fill="#9eb3ae"/>
+<text x="37" y="322" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >Claim Inspector</text>
+<circle cx="25" cy="359" r="3" fill="#9eb3ae"/>
+<text x="37" y="364" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="450" fill="#9eb3ae" text-anchor="start" >Connection &amp; Access</text>
+<text x="18" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >SOURCE STATUS</text>
+<rect x="12" y="444" width="142" height="66" rx="8" fill="#1b2d30"/>
+<circle cx="25" cy="461" r="4" fill="#e0a45e"/>
+<text x="36" y="465" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="600" fill="#e5efec" text-anchor="start" >No source connected</text>
+<text x="22" y="484" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="400" fill="#9eb3ae" text-anchor="start" >Mockup only · no live claims</text>
+<text x="186" y="82" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="17" font-weight="720" fill="#e5efec" text-anchor="start" >SPATIAL EXPLORER</text>
+<text x="186" y="101" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#9eb3ae" text-anchor="start" >World context is illustrative; no TARGET publication is connected.</text>
+<rect x="186" y="115" width="696" height="48" rx="9" fill="#152427" stroke="#304548"/>
+<text x="200" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >WORLD</text>
+<text x="200" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#e5efec" text-anchor="start" >Not selected</text>
+<text x="364" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >RUN</text>
+<text x="364" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#e5efec" text-anchor="start" >No run context</text>
+<text x="542" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >CAUSAL CUT</text>
+<text x="542" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#e5efec" text-anchor="start" >Unavailable</text>
+<text x="726" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >DELIVERY</text>
+<text x="726" y="152" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="650" fill="#e0a45e" text-anchor="start" >Disconnected</text>
+<rect x="186" y="177" width="696" height="330" rx="10" fill="#15282b" stroke="#304548"/>
+<text x="202" y="201" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >SCENE CANVAS</text>
+<text x="866" y="201" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#e0a45e" text-anchor="end" >NO GEOMETRY SOURCE</text>
+<rect x="364" y="255" width="340" height="155" rx="12" fill="#152427" stroke="#304548"/>
+<circle cx="534" cy="289" r="16" fill="#203b3a"/>
+<text x="534" y="294" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" fill="#72cabb" text-anchor="middle" >i</text>
+<text x="534" y="329" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="650" fill="#e5efec" text-anchor="middle" >No compatible spatial claims</text>
+<text x="534" y="351" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#9eb3ae" text-anchor="middle" >The selected Observation scope does not provide</text>
+<text x="534" y="367" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#9eb3ae" text-anchor="middle" >geometry, frame and revision required for 3D.</text>
+<text x="534" y="393" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="650" fill="#72cabb" text-anchor="middle" >Inspect available claims instead</text>
+<text x="534.0" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#9eb3ae" text-anchor="middle" >No mesh, pose, axis or terrain is synthesized.</text>
+<text x="534.0" y="477" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="9" font-weight="400" fill="#9eb3ae" text-anchor="middle" >Text/table inspection remains available without WebGL.</text>
+<rect x="186" y="520" width="696" height="76" rx="9" fill="#152427" stroke="#304548"/>
+<text x="200" y="540" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#9eb3ae" text-anchor="start" >PUBLICATION HISTORY</text>
+<text x="200" y="562" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#e5efec" text-anchor="start" >No retained publication available</text>
+<text x="200" y="580" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="400" fill="#9eb3ae" text-anchor="start" >Timeline and replay require an approved source contract.</text>
+<rect x="726" y="534" width="138" height="28" rx="7" fill="#1b2d30"/>
+<text x="795" y="552" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" fill="#72cabb" text-anchor="middle" >INSPECT SOURCE  →</text>
+</svg></g>
+</svg>

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="1240" viewBox="0 0 1880 1240">
+<rect width="1880" height="1240" fill="#e8ecea"/>
+<text x="30" y="36" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#243c3c">SPATIAL SCREENS — POPULATED SYNTHETIC PREVIEW · NOT DATA</text>
+<rect x="30" y="62" width="880" height="540" rx="14" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="52" y="92" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#5d7370">LIGHT THEME · WORLD OVERVIEW · SYNTHETIC DESIGN PREVIEW</text>
+<rect x="48" y="106" width="844" height="48" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="64" y="135" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">Biopeia · World context: [synthetic preview] · Cut: [illustrative]</text>
+<rect x="48" y="168" width="585" height="360" rx="10" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="66" y="194" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SPATIAL CANVAS · ABSTRACT PLACEHOLDER GEOMETRY</text>
+<path d="M84 474 L585 474 M84 229 L84 474" stroke="#d5dfda" stroke-dasharray="5 7"/>
+<circle cx="220" cy="332" r="34" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="220" y="336" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P1</text>
+<circle cx="360" cy="397" r="24" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="360" y="401" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P2</text>
+<circle cx="496" cy="297" r="42" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="496" y="301" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P3</text>
+<text x="350" y="509" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Placeholder marks are not bodies, terrain, measurements, or published coordinates.</text>
+<rect x="648" y="168" width="244" height="360" rx="10" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="666" y="196" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / SELECTION</text>
+<text x="666" y="228" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Selected placeholder P1</text>
+<text x="666" y="255" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Authority: not specified</text>
+<text x="666" y="277" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Frame: not specified</text>
+<text x="666" y="299" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Units: not specified</text>
+<text x="666" y="321" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Revision: not specified</text>
+<rect x="666" y="352" width="208" height="48" rx="6" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="678" y="372" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">SYNTHETIC LAYOUT ONLY</text>
+<text x="678" y="388" font-family="system-ui,sans-serif" font-size="9" fill="#5d7370">No source claim behind this mark.</text>
+<g transform="translate(468,353) rotate(-24)"><text text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#147a70" opacity="0.60">SYNTHETIC · NOT DATA</text></g>
+<rect x="970" y="62" width="880" height="540" rx="14" fill="#0e191b" stroke="#304548"/>
+<text x="992" y="92" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9eb3ae">DARK THEME · WORLD OVERVIEW · SYNTHETIC DESIGN PREVIEW</text>
+<rect x="988" y="106" width="844" height="48" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1004" y="135" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">Biopeia · World context: [synthetic preview] · Cut: [illustrative]</text>
+<rect x="988" y="168" width="585" height="360" rx="10" fill="#152427" stroke="#304548"/>
+<text x="1006" y="194" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SPATIAL CANVAS · ABSTRACT PLACEHOLDER GEOMETRY</text>
+<path d="M1024 474 L1525 474 M1024 229 L1024 474" stroke="#304548" stroke-dasharray="5 7"/>
+<circle cx="1160" cy="332" r="34" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1160" y="336" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P1</text>
+<circle cx="1300" cy="397" r="24" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1300" y="401" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P2</text>
+<circle cx="1436" cy="297" r="42" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1436" y="301" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P3</text>
+<text x="1290" y="509" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Placeholder marks are not bodies, terrain, measurements, or published coordinates.</text>
+<rect x="1588" y="168" width="244" height="360" rx="10" fill="#152427" stroke="#304548"/>
+<text x="1606" y="196" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / SELECTION</text>
+<text x="1606" y="228" font-family="system-ui,sans-serif" font-size="12" fill="#e5efec">Selected placeholder P1</text>
+<text x="1606" y="255" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Authority: not specified</text>
+<text x="1606" y="277" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Frame: not specified</text>
+<text x="1606" y="299" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Units: not specified</text>
+<text x="1606" y="321" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Revision: not specified</text>
+<rect x="1606" y="352" width="208" height="48" rx="6" fill="#0e191b" stroke="#304548"/>
+<text x="1618" y="372" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">SYNTHETIC LAYOUT ONLY</text>
+<text x="1618" y="388" font-family="system-ui,sans-serif" font-size="9" fill="#9eb3ae">No source claim behind this mark.</text>
+<g transform="translate(1408,353) rotate(-24)"><text text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#72cabb" opacity="0.60">SYNTHETIC · NOT DATA</text></g>
+<rect x="30" y="642" width="880" height="540" rx="14" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="52" y="672" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#5d7370">LIGHT THEME · SPATIAL EXPLORER · SYNTHETIC DESIGN PREVIEW</text>
+<rect x="48" y="686" width="844" height="48" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="64" y="715" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">Biopeia · World context: [synthetic preview] · Cut: [illustrative]</text>
+<rect x="48" y="748" width="585" height="360" rx="10" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="66" y="774" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SPATIAL CANVAS · ABSTRACT PLACEHOLDER GEOMETRY</text>
+<path d="M84 1054 L585 1054 M84 809 L84 1054" stroke="#d5dfda" stroke-dasharray="5 7"/>
+<circle cx="220" cy="912" r="34" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="220" y="916" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P1</text>
+<circle cx="360" cy="977" r="24" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="360" y="981" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P2</text>
+<circle cx="496" cy="877" r="42" fill="#147a70" fill-opacity="0.18" stroke="#147a70" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="496" y="881" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">P3</text>
+<text x="350" y="1089" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Placeholder marks are not bodies, terrain, measurements, or published coordinates.</text>
+<rect x="648" y="748" width="244" height="360" rx="10" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="666" y="776" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / SELECTION</text>
+<text x="666" y="808" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Selected placeholder P1</text>
+<text x="666" y="835" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Authority: not specified</text>
+<text x="666" y="857" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Frame: not specified</text>
+<text x="666" y="879" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Units: not specified</text>
+<text x="666" y="901" font-family="system-ui,sans-serif" font-size="10" fill="#5d7370">Revision: not specified</text>
+<rect x="666" y="932" width="208" height="48" rx="6" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="678" y="952" font-family="system-ui,sans-serif" font-size="10" fill="#172d2d">SYNTHETIC LAYOUT ONLY</text>
+<text x="678" y="968" font-family="system-ui,sans-serif" font-size="9" fill="#5d7370">No source claim behind this mark.</text>
+<g transform="translate(468,933) rotate(-24)"><text text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#147a70" opacity="0.60">SYNTHETIC · NOT DATA</text></g>
+<rect x="970" y="642" width="880" height="540" rx="14" fill="#0e191b" stroke="#304548"/>
+<text x="992" y="672" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9eb3ae">DARK THEME · SPATIAL EXPLORER · SYNTHETIC DESIGN PREVIEW</text>
+<rect x="988" y="686" width="844" height="48" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1004" y="715" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">Biopeia · World context: [synthetic preview] · Cut: [illustrative]</text>
+<rect x="988" y="748" width="585" height="360" rx="10" fill="#152427" stroke="#304548"/>
+<text x="1006" y="774" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SPATIAL CANVAS · ABSTRACT PLACEHOLDER GEOMETRY</text>
+<path d="M1024 1054 L1525 1054 M1024 809 L1024 1054" stroke="#304548" stroke-dasharray="5 7"/>
+<circle cx="1160" cy="912" r="34" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1160" y="916" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P1</text>
+<circle cx="1300" cy="977" r="24" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1300" y="981" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P2</text>
+<circle cx="1436" cy="877" r="42" fill="#72cabb" fill-opacity="0.18" stroke="#72cabb" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1436" y="881" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">P3</text>
+<text x="1290" y="1089" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Placeholder marks are not bodies, terrain, measurements, or published coordinates.</text>
+<rect x="1588" y="748" width="244" height="360" rx="10" fill="#152427" stroke="#304548"/>
+<text x="1606" y="776" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / SELECTION</text>
+<text x="1606" y="808" font-family="system-ui,sans-serif" font-size="12" fill="#e5efec">Selected placeholder P1</text>
+<text x="1606" y="835" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Authority: not specified</text>
+<text x="1606" y="857" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Frame: not specified</text>
+<text x="1606" y="879" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Units: not specified</text>
+<text x="1606" y="901" font-family="system-ui,sans-serif" font-size="10" fill="#9eb3ae">Revision: not specified</text>
+<rect x="1606" y="932" width="208" height="48" rx="6" fill="#0e191b" stroke="#304548"/>
+<text x="1618" y="952" font-family="system-ui,sans-serif" font-size="10" fill="#e5efec">SYNTHETIC LAYOUT ONLY</text>
+<text x="1618" y="968" font-family="system-ui,sans-serif" font-size="9" fill="#9eb3ae">No source claim behind this mark.</text>
+<g transform="translate(1408,933) rotate(-24)"><text text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#72cabb" opacity="0.60">SYNTHETIC · NOT DATA</text></g>
+</svg>

@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="2210" viewBox="0 0 1560 2210">
+<rect width="1560" height="2210" fill="#e8ecea"/>
+<text x="40" y="42" font-family="system-ui,sans-serif" font-size="24" font-weight="700" fill="#243c3c">BIOPEIA FRONTEND — FIVE SCREEN CONCEPTS</text>
+<text x="40" y="72" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#82501f">SYNTHETIC DESIGN PREVIEW · NOT DATA · NO CURRENT SOURCE CAPABILITY IMPLIED</text>
+<text x="40" y="122" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#243c3c">WORLDS &amp; RUNS</text>
+<rect x="40" y="138" width="720" height="354" rx="12" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="58" y="160" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">LIGHT THEME · POPULATED SYNTHETIC</text>
+<rect x="54" y="172" width="692" height="40" rx="6" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="198" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">WORLDS &amp; RUNS</text>
+<rect x="54" y="222" width="692" height="184" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<rect x="70" y="244" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="262" r="6" fill="#147a70"/>
+<text x="106" y="266" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Filter bar · synthetic context cards · access status</text>
+<rect x="70" y="292" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="310" r="6" fill="#147a70"/>
+<text x="106" y="314" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="70" y="340" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="358" r="6" fill="#147a70"/>
+<text x="106" y="362" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="54" y="418" width="692" height="54" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="440" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / AVAILABILITY</text>
+<text x="68" y="459" font-family="system-ui,sans-serif" font-size="11" fill="#172d2d">Illustrative only · not an Observation payload</text>
+<g transform="translate(750,315) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#82501f" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<rect x="790" y="138" width="720" height="354" rx="12" fill="#0e191b" stroke="#304548"/>
+<text x="808" y="160" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">DARK THEME · NO-CONTEXT / ERROR</text>
+<rect x="804" y="172" width="692" height="40" rx="6" fill="#152427" stroke="#304548"/>
+<text x="818" y="198" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">WORLDS &amp; RUNS</text>
+<rect x="804" y="222" width="692" height="184" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1150" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#e0a45e">No contexts returned · no fabricated list</text>
+<text x="1150" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#9eb3ae">No sample record is displayed as a real publication.</text>
+<rect x="804" y="418" width="692" height="54" rx="8" fill="#152427" stroke="#304548"/>
+<text x="818" y="440" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / AVAILABILITY</text>
+<text x="818" y="459" font-family="system-ui,sans-serif" font-size="11" fill="#e5efec">State is contract-dependent; no inference</text>
+<g transform="translate(1500,315) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e0a45e" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<text x="40" y="542" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#243c3c">CAUSAL TIMELINE</text>
+<rect x="40" y="558" width="720" height="354" rx="12" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="58" y="580" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">LIGHT THEME · POPULATED SYNTHETIC</text>
+<rect x="54" y="592" width="692" height="40" rx="6" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="618" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">CAUSAL TIMELINE</text>
+<rect x="54" y="642" width="692" height="184" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<rect x="70" y="664" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="682" r="6" fill="#147a70"/>
+<text x="106" y="686" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Causal-cut lane separated from delivery-sequence lane</text>
+<rect x="70" y="712" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="730" r="6" fill="#147a70"/>
+<text x="106" y="734" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="70" y="760" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="778" r="6" fill="#147a70"/>
+<text x="106" y="782" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="54" y="838" width="692" height="54" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="860" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / AVAILABILITY</text>
+<text x="68" y="879" font-family="system-ui,sans-serif" font-size="11" fill="#172d2d">Illustrative only · not an Observation payload</text>
+<g transform="translate(750,735) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#82501f" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<rect x="790" y="558" width="720" height="354" rx="12" fill="#0e191b" stroke="#304548"/>
+<text x="808" y="580" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">DARK THEME · NO-CONTEXT / ERROR</text>
+<rect x="804" y="592" width="692" height="40" rx="6" fill="#152427" stroke="#304548"/>
+<text x="818" y="618" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">CAUSAL TIMELINE</text>
+<rect x="804" y="642" width="692" height="184" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1150" y="716" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#e0a45e">No causal-order contract · delivery not substituted</text>
+<text x="1150" y="742" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#9eb3ae">No sample record is displayed as a real publication.</text>
+<rect x="804" y="838" width="692" height="54" rx="8" fill="#152427" stroke="#304548"/>
+<text x="818" y="860" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / AVAILABILITY</text>
+<text x="818" y="879" font-family="system-ui,sans-serif" font-size="11" fill="#e5efec">State is contract-dependent; no inference</text>
+<g transform="translate(1500,735) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e0a45e" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<text x="40" y="962" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#243c3c">SENSORIMOTOR TRACE</text>
+<rect x="40" y="978" width="720" height="354" rx="12" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="58" y="1000" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">LIGHT THEME · POPULATED SYNTHETIC</text>
+<rect x="54" y="1012" width="692" height="40" rx="6" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="1038" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">SENSORIMOTOR TRACE</text>
+<rect x="54" y="1062" width="692" height="184" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<rect x="70" y="1084" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1102" r="6" fill="#147a70"/>
+<text x="106" y="1106" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Claim A · explicit synthetic relation · Claim B</text>
+<rect x="70" y="1132" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1150" r="6" fill="#147a70"/>
+<text x="106" y="1154" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="70" y="1180" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1198" r="6" fill="#147a70"/>
+<text x="106" y="1202" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="54" y="1258" width="692" height="54" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="1280" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / AVAILABILITY</text>
+<text x="68" y="1299" font-family="system-ui,sans-serif" font-size="11" fill="#172d2d">Illustrative only · not an Observation payload</text>
+<g transform="translate(750,1155) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#82501f" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<rect x="790" y="978" width="720" height="354" rx="12" fill="#0e191b" stroke="#304548"/>
+<text x="808" y="1000" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">DARK THEME · NO-CONTEXT / ERROR</text>
+<rect x="804" y="1012" width="692" height="40" rx="6" fill="#152427" stroke="#304548"/>
+<text x="818" y="1038" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">SENSORIMOTOR TRACE</text>
+<rect x="804" y="1062" width="692" height="184" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1150" y="1136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#e0a45e">No asserted relation · no inferred edge</text>
+<text x="1150" y="1162" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#9eb3ae">No sample record is displayed as a real publication.</text>
+<rect x="804" y="1258" width="692" height="54" rx="8" fill="#152427" stroke="#304548"/>
+<text x="818" y="1280" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / AVAILABILITY</text>
+<text x="818" y="1299" font-family="system-ui,sans-serif" font-size="11" fill="#e5efec">State is contract-dependent; no inference</text>
+<g transform="translate(1500,1155) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e0a45e" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<text x="40" y="1382" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#243c3c">CLAIM INSPECTOR</text>
+<rect x="40" y="1398" width="720" height="354" rx="12" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="58" y="1420" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">LIGHT THEME · POPULATED SYNTHETIC</text>
+<rect x="54" y="1432" width="692" height="40" rx="6" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="1458" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">CLAIM INSPECTOR</text>
+<rect x="54" y="1482" width="692" height="184" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<rect x="70" y="1504" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1522" r="6" fill="#147a70"/>
+<text x="106" y="1526" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Claim detail · authority · domain revision · provenance</text>
+<rect x="70" y="1552" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1570" r="6" fill="#147a70"/>
+<text x="106" y="1574" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="70" y="1600" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1618" r="6" fill="#147a70"/>
+<text x="106" y="1622" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="54" y="1678" width="692" height="54" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="1700" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / AVAILABILITY</text>
+<text x="68" y="1719" font-family="system-ui,sans-serif" font-size="11" fill="#172d2d">Illustrative only · not an Observation payload</text>
+<g transform="translate(750,1575) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#82501f" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<rect x="790" y="1398" width="720" height="354" rx="12" fill="#0e191b" stroke="#304548"/>
+<text x="808" y="1420" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">DARK THEME · NO-CONTEXT / ERROR</text>
+<rect x="804" y="1432" width="692" height="40" rx="6" fill="#152427" stroke="#304548"/>
+<text x="818" y="1458" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">CLAIM INSPECTOR</text>
+<rect x="804" y="1482" width="692" height="184" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1150" y="1556" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#e0a45e">No claim selected · values absent, not zero</text>
+<text x="1150" y="1582" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#9eb3ae">No sample record is displayed as a real publication.</text>
+<rect x="804" y="1678" width="692" height="54" rx="8" fill="#152427" stroke="#304548"/>
+<text x="818" y="1700" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / AVAILABILITY</text>
+<text x="818" y="1719" font-family="system-ui,sans-serif" font-size="11" fill="#e5efec">State is contract-dependent; no inference</text>
+<g transform="translate(1500,1575) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e0a45e" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<text x="40" y="1802" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#243c3c">CONNECTION &amp; ACCESS</text>
+<rect x="40" y="1818" width="720" height="354" rx="12" fill="#edf1ee" stroke="#d5dfda"/>
+<text x="58" y="1840" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">LIGHT THEME · POPULATED SYNTHETIC</text>
+<rect x="54" y="1852" width="692" height="40" rx="6" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="1878" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#172d2d">CONNECTION &amp; ACCESS</text>
+<rect x="54" y="1902" width="692" height="184" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<rect x="70" y="1924" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1942" r="6" fill="#147a70"/>
+<text x="106" y="1946" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Source configuration · principal scope · delivery status</text>
+<rect x="70" y="1972" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="1990" r="6" fill="#147a70"/>
+<text x="106" y="1994" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="70" y="2020" width="660" height="36" rx="5" fill="#edf1ee" stroke="#d5dfda"/>
+<circle cx="88" cy="2038" r="6" fill="#147a70"/>
+<text x="106" y="2042" font-family="system-ui,sans-serif" font-size="12" fill="#172d2d">Illustrative placeholder · source fields not defined</text>
+<rect x="54" y="2098" width="692" height="54" rx="8" fill="#fbfcfa" stroke="#d5dfda"/>
+<text x="68" y="2120" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#5d7370">SOURCE / AVAILABILITY</text>
+<text x="68" y="2139" font-family="system-ui,sans-serif" font-size="11" fill="#172d2d">Illustrative only · not an Observation payload</text>
+<g transform="translate(750,1995) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#82501f" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+<rect x="790" y="1818" width="720" height="354" rx="12" fill="#0e191b" stroke="#304548"/>
+<text x="808" y="1840" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">DARK THEME · NO-CONTEXT / ERROR</text>
+<rect x="804" y="1852" width="692" height="40" rx="6" fill="#152427" stroke="#304548"/>
+<text x="818" y="1878" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e5efec">CONNECTION &amp; ACCESS</text>
+<rect x="804" y="1902" width="692" height="184" rx="8" fill="#152427" stroke="#304548"/>
+<text x="1150" y="1976" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#e0a45e">Not configured / denied / disconnected remain distinct</text>
+<text x="1150" y="2002" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#9eb3ae">No sample record is displayed as a real publication.</text>
+<rect x="804" y="2098" width="692" height="54" rx="8" fill="#152427" stroke="#304548"/>
+<text x="818" y="2120" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9eb3ae">SOURCE / AVAILABILITY</text>
+<text x="818" y="2139" font-family="system-ui,sans-serif" font-size="11" fill="#e5efec">State is contract-dependent; no inference</text>
+<g transform="translate(1500,1995) rotate(-18)"><text text-anchor="end" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#e0a45e" opacity="0.8">SYNTHETIC · NOT DATA</text></g>
+</svg>
