@@ -46,6 +46,7 @@ Explanatory documents of the Environment domain (semantic-authority).
 - [Biopeia Physical-Step and Causal-Commit Integration v1](../../technical/design/runtime/biopeia-physical-step-integration-v1.md): document approved, implementation partial, scope TARGET
 - [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](../../technical/design/observability/lab-world-observation-integration-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
+- [Biopeia Observation — Passive Observational Data Lake v1](../../technical/design/observation/observation-data-lake-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 
 ## Decision records
 
