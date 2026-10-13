@@ -280,14 +280,30 @@ authentication, or a general query contract. World has a production causal
 composition that publishes after owner adoption and World commit; the
 associated integration tests exercise repeat/restore/continue behavior. This
 demonstrates a bounded producer-side publication path, not durable archive
-completeness or frontend access. Lab has durable World-mediated intervention
+completeness or consumer access. Lab has durable World-mediated intervention
 and evidence paths, but its current use of a transitional projection is not a
 TARGET archive/read contract and must not be expanded as one.
 
-The exact test paths and commands must be refreshed by the accountable owners
-before implementation planning. This design records inspected source and
-existing tests; no tests were run as part of this document change. The snapshot
-does not claim the current revisions remain the latest heads.
+The following is a source-level test map for the narrow capabilities described
+above. Paths were resolved in each repository tree at the exact revisions in
+the table. Commands are reproducible starting points, not test results: no
+source test suite was run for this documentation change, and cross-repository
+tests may require the repository's documented integration installation.
+
+| Repository / bounded question | Relevant existing test paths | Command from repository root | What it can establish; what it cannot |
+|---|---|---|---|
+| Observation: in-process plane and owner projections | `tests/test_plane.py`; `tests/test_environment_observation.py`; `tests/test_embodiment_observation.py` | `uv run --extra test pytest tests/test_plane.py tests/test_environment_observation.py tests/test_embodiment_observation.py` | Plane/projection behavior at this revision; not durable retention, browser access, or source completeness |
+| World: committed owner publication and end-to-end causal composition | `tests/test_observation_publication.py`; `tests/integration/observation/test_world_post_commit_owner_publication.py`; `tests/integration/test_end_to_end_causal_cycle_acceptance.py` | `uv run --extra integration pytest tests/test_observation_publication.py tests/integration/observation/test_world_post_commit_owner_publication.py tests/integration/test_end_to_end_causal_cycle_acceptance.py` | World-side post-commit publication and composed causal path; not an archive or consumer query/read contract |
+| Environment: identified resource and physical projection | `tests/test_identified_resource.py`; `tests/test_environment_physical_projection.py`; `tests/test_restoration.py` | `uv run pytest tests/test_identified_resource.py tests/test_environment_physical_projection.py tests/test_restoration.py` | Environment-owned resource/projection/restoration behavior; not Observation capture or cross-domain delivery |
+| Embodiment: body-pose publication inputs | `tests/test_body_pose_observation_projection.py`; `tests/test_physics3d_observation_contract.py` | `uv run --extra dev pytest tests/test_body_pose_observation_projection.py tests/test_physics3d_observation_contract.py` | Embodiment projection contracts; not browser-readable consumer delivery |
+| Modality: scalar-field transduction | `tests/test_scalar_field.py` | `uv run --extra test pytest tests/test_scalar_field.py` | Current scalar transduction contract; not source publication completeness or a cross-repository consumer API |
+| Organism: sensory input and accepted transition | `tests/source_unit/cognition/test_sense_input.py`; `tests/source_unit/cognition/test_owner_transition.py`; `tests/source_unit/actuation/test_sensorimotor.py` | `uv run --extra dev pytest tests/source_unit/cognition/test_sense_input.py tests/source_unit/cognition/test_owner_transition.py tests/source_unit/actuation/test_sensorimotor.py` | Organism-side input/transition/action behavior; not Observation storage or transport |
+| Lab: current migration boundaries around Observation | `tests/unit/test_migration_observation_facade_disposition.py`; `tests/unit/test_migration_integrated_habitat_runtime_disposition.py` | `uv run --extra dev pytest tests/unit/test_migration_observation_facade_disposition.py tests/unit/test_migration_integrated_habitat_runtime_disposition.py` | Recorded migration dispositions; not a general Lab read consumer or authorized operation-dispatch contract |
+
+These commands are not asserted to have been executed successfully. Before
+implementation planning, accountable owners must run relevant checks against
+the exact approved revisions and document cross-repository dependency setup.
+This snapshot does not claim the listed revisions remain the latest heads.
 
 ## 11. ADR impact assessment and alternatives
 
