@@ -605,14 +605,18 @@ end-to-end causal-cycle criterion remains independent.
 
 ### Phase 0 — authority and contract reconciliation (blocking)
 
-1. Record a derived constitutional decision reconciling independent frontend
-   placement with ADR-0102.
-2. Reconcile Lab #63: it must not describe Lab Workbench as the frontend
-   target; separate any remaining Lab scientific-app requirements from the
-   standalone presentation app.
+1. **Completed:** ADR-0113 was accepted, partially superseding ADR-0102 only for
+   the general-purpose Biopeia TARGET frontend allocation. Lab retains its
+   scientific-apparatus and evidence responsibilities.
+2. **Completed:** Lab #63's superseded general-presentation work was closed as
+   not planned; no Lab scientific work or evidence was transferred or discarded.
 3. Identify actual Observation publication/query/replay contracts and data
    scopes; do not create schemas here.
-4. Approve the frontend visual-system and security/deployment specifications.
+4. **Completed for design only:** the Architecture Owner approved the frontend
+   design package and prospectively authorized implementation, with start
+   explicitly deferred. Implementation-specific visual tokens/accessibility
+   acceptance and competent security/operations approval remain separate gates;
+   no security/deployment target is accepted and implementation has not begun.
 
 ### Phase 1 — application shell and truthful data states
 

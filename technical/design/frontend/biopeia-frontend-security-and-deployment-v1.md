@@ -13,7 +13,7 @@ document_version: 1
 **Lifecycle:** Proposed; `registry/designs.yaml` is authoritative.
 **Decision status:** Not ratified. This document records a recommendation and unresolved competent-owner dispositions.
 **Implementation authorization:** Prospective authorization exists but is deferred. This document does not authorize implementation or deployment.
-**Related work:** [Docs #164](https://github.com/biopeia/docs/issues/164), [Docs #167](https://github.com/biopeia/docs/issues/167), [Docs #166](https://github.com/biopeia/docs/issues/166), [Observation #37](https://github.com/biopeia/observation/issues/37), [Lab #63](https://github.com/biopeia/lab/issues/63), [Docs PR #165](https://github.com/biopeia/docs/pull/165).
+**Related work:** [Docs #164](https://github.com/biopeia/docs/issues/164), [Docs #167](https://github.com/biopeia/docs/issues/167), [Docs #166](https://github.com/biopeia/docs/issues/166), [Observation #37](https://github.com/biopeia/observation/issues/37), [Lab #63](https://github.com/biopeia/lab/issues/63), [merged Docs PR #165](https://github.com/biopeia/docs/pull/165).
 
 ## 1. Purpose and limits
 
@@ -212,10 +212,10 @@ The available decision record does not establish a competent security or operati
 | Follow-up | Owner | Dependency | Closure trigger |
 |---|---|---|---|
 | Exact-current Observation read/access inventory | Observation owner; World/domain owners for their assertions | Observation #37 | Exact revisions and owner-approved supported/excluded capabilities; no inferred browser path |
-| Lab/Frontend responsibility reconciliation | Lab owner | Lab #63 and accepted ADR-0113 | Lab-only apparatus needs and frontend presentation needs separated without lost work/evidence |
+| Lab/Frontend responsibility reconciliation | Lab owner | Lab #63 and accepted ADR-0113 | **Resolved:** Lab #63 is closed as not planned for superseded general-presentation work; Lab-only apparatus and evidence responsibilities remain intact. |
 | Security/operations authority appointment and Profile L disposition | Biopeia owner / Architecture Owner | This proposal | Named competent reviewer records disposition; local exposure/data-class assumptions explicitly accepted |
 | Shared/production profile | Named operations and security owners | Separate deployment design | Target service, identity, scope, data class, topology, retention and monitoring accepted; separate release authorization |
-| Frontend implementation start | Architecture Owner | Docs #164 gates C/D/E, applicable contract/UX/review gates | All relevant readiness evidence accepted and a separate explicit Owner start instruction |
+| Frontend implementation start | Architecture Owner | Docs #164 gates C/E, applicable contract/UX/review gates; implementation authorized prospectively but start deferred | All relevant readiness evidence accepted and a separate explicit Owner start instruction |
 
 This design can be reviewed as a proposal while the named owners are being identified. It may not be marked approved, and the frontend is not ready to start, until each decision required for the selected implementation target is recorded by its competent authority. Closing Docs #167 alone does not authorize implementation or deployment.
 
@@ -226,4 +226,4 @@ This design can be reviewed as a proposal while the named owners are being ident
 - [Observation #37 — Read-only consumer boundary](https://github.com/biopeia/observation/issues/37)
 - [Lab #63 — Workbench / presentation reconciliation](https://github.com/biopeia/lab/issues/63)
 - [Docs #167 — Security and deployment design](https://github.com/biopeia/docs/issues/167)
-- [Docs PR #165 — Approved design package, pending merge](https://github.com/biopeia/docs/pull/165)
+- [Merged Docs PR #165 — approved design package](https://github.com/biopeia/docs/pull/165)
