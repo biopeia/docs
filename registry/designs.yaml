@@ -15,11 +15,11 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
-  design.lab.biopeia-human-facing-visualization-v1:
-    title: "Biopeia Human-Facing Visualization v1"
-    path: technical/design/lab/biopeia-human-facing-visualization-v1.md
-    domain: lab
-    participating_domains: [organism, embodiment, environment, world, modality, observation]
+  design.cross-domain.biopeia-frontend-v1:
+    title: "Biopeia Frontend v1 — Independent Visualization Application"
+    path: technical/design/frontend/biopeia-frontend-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
     document_status: proposed
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
