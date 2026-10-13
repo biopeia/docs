@@ -23,3 +23,4 @@ states are independent, and an approved design is never, by that fact, an implem
 | [Observation Semantic Model v1](observability/observation-semantic-model-v1.md) | observation | approved | partial | TARGET |
 | [Observation Architecture v1 — Target Design](observability/observation-architecture-target-design-v1.md) | observation | superseded | not_applicable | HISTORICAL |
 | [Observation Architecture for Biopeia v1](observation/observation-architecture-biopeia-v1.md) | observation | approved | partial | TARGET |
+| [Biopeia Observation — Passive Observational Data Lake v1](observation/observation-data-lake-v1.md) | observation | proposed | not_evaluated | UNRESOLVED |

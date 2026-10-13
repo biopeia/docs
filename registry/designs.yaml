@@ -432,3 +432,17 @@ designs:
       date: the module documentation it reports as saying that Lab hosts the
       plane was corrected in observation 25b6738. The document was not
       edited.
+
+  design.observation.observational-data-lake-v1:
+    title: "Biopeia Observation — Passive Observational Data Lake v1"
+    path: technical/design/observation/observation-data-lake-v1.md
+    domain: observation
+    participating_domains: [organism, embodiment, environment, world, modality, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: >
+      Proposed conceptual design for an operational observational archive,
+      explicitly distinct from Lab scientific evidence custody. It selects no
+      storage, schema, API, transport, deployment or security mechanism and
+      recommends a derived constitutional decision before approval.

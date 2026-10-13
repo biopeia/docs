@@ -43,6 +43,7 @@ Explanatory documents of the Lab domain (apparatus).
 - [Biopeia Physical-Step and Causal-Commit Integration v1](../../technical/design/runtime/biopeia-physical-step-integration-v1.md): document approved, implementation partial, scope TARGET
 - [Observation Architecture v1 — Target Design](../../technical/design/observability/observation-architecture-target-design-v1.md): document superseded, implementation not_applicable, scope HISTORICAL
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
+- [Biopeia Observation — Passive Observational Data Lake v1](../../technical/design/observation/observation-data-lake-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 
 ## Decision records
 
