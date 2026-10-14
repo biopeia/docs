@@ -171,47 +171,51 @@ contracts:
   contract.observation-of-a-committed-cut:
     title: Observation of a committed cut
     summary: >
-      After World commits a cut, claims about World, a body and the
-      environment are built in the semantic claim model, each naming its
-      authority. No adapter from any authority to Observation exists in
-      source; the claims are constructed by a World test fixture, and nothing
-      publishes to the observation plane outside its own tests.
-    agreement: fixture_only
+      After World commits a cut, domain owners construct semantic observations
+      from exact committed owner checkpoints. World verifies cut identity and
+      delivers them to the observation plane via post-commit observation
+      publication, returning one of four explicit PhysicalStepOutcome states.
+    agreement: structural
     parties:
-      - unit: mechanism.physical-causal-step
-        role: builds the claims after the manifest is committed
+      - unit: component.world-observation-publication
+        role: verifies committed cut receipt and coordinates post-commit delivery
       - unit: component.observation-semantic-claim-model
-        role: defines the claim and its authority
+        role: defines semantic claims and observation structure
       - unit: component.observation-plane
-        role: would hold and deliver the claims; has no publisher
+        role: holds and streams observations in arrival order
     governed_by:
       - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
       - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
     evidence:
-      - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
+      - world:tests/test_observation_publication.py
+      - world:tests/integration/observation/test_world_post_commit_owner_publication.py
       - observation:tests/test_semantic_model.py
+      - observation:tests/test_committed_owner_state_adapters.py
     findings:
       - F-0044
       - F-0041
     documented_in:
-      - explanation/observation/semantic-claim-model.md
+      - explanation/world/observation-publication.md
       - explanation/observation/observation-plane.md
-      - explanation/world/physical-step.md
+      - explanation/observation/semantic-claim-model.md
 
   contract.inherited-projection-telemetry:
     title: Telemetry through the inherited projection
     summary: >
-      Lab passes a telemetry mapping to Observation's inherited projection and
-      receives presentation records. The projection is transitional by
-      decision and carries historical key names.
+      A caller passes a telemetry mapping to Observation's inherited projection
+      and receives presentation records. Lab previously called this projection
+      directly, but under ADR-0113 Lab now uses dedicated owner-state observation
+      publication and observation consumer adapters.
     agreement: shared_type
     parties:
       - unit: component.lab-operator-material-transfer
-        role: calls the projection after a committed transfer
+        role: historical caller of telemetry projection, superseded by owner observation publication
       - unit: component.observation-inherited-projection
-        role: maps the telemetry to presentation records
+        role: maps caller telemetry dictionaries to presentation records
     governed_by:
       - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
     evidence:
       - observation:tests/test_projection.py
       - lab:tests/integration/test_material_transfer_intervention.py
@@ -221,6 +225,34 @@ contracts:
     documented_in:
       - explanation/observation/inherited-projection.md
       - explanation/lab/operator-material-transfer.md
+
+  contract.operator-material-transfer-observation-publication:
+    title: Operator material transfer observation publication
+    summary: >
+      Lab publishes owner-state observations for operator material transfer
+      interventions after a committed World cut. Observations are constructed
+      strictly from committed intervention evidence records.
+    agreement: structural
+    parties:
+      - unit: component.lab-operator-material-transfer
+        role: produces intervention claim from committed transfer evidence
+      - unit: component.world-observation-publication
+        role: accepts and dispatches lab observation to the sink
+      - unit: component.observation-semantic-claim-model
+        role: validates semantic claim schema under Lab authority
+    governed_by:
+      - docs:technical/adr/ADR-0101-operator-control.md
+      - docs:technical/adr/ADR-0102-lab.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
+    evidence:
+      - lab:tests/observation_integration/test_lab_observation_publication.py
+      - lab:tests/integration/test_material_transfer_intervention.py
+    findings:
+      - F-0060
+      - F-0061
+    documented_in:
+      - explanation/lab/operator-material-transfer.md
+      - explanation/lab/observation-consumer.md
 
   contract.body-physical-input:
     title: Body physical input to a solver

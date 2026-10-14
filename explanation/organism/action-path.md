@@ -1,9 +1,10 @@
 # From an affordance to a motor command
 
 Reviewed against `organism` at commit
-`ba0011797a6a3b4d48c7731651e50560c4043f18`. The action composition is also
-exercised by a World physical-step test fixture. Statements are marked by
-what supports them: code, tests, an ad hoc run, or an accepted decision.
+`de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on 2026-10-14); first written against `ba001179`.
+The action composition is exercised by World's sensorimotor causal cycle and
+acceptance tests. Statements are marked by what supports them: code, tests, or
+an accepted decision.
 
 ## What it is
 
@@ -12,12 +13,15 @@ how much to apply on which channel. This document follows how such a value, a
 motor command, comes to exist in the Organism package, starting from the
 earliest record that something could be done at all.
 
-The package provides records and primitives, plus an explicit `ActionDomain`
-coordinator. It can materialise an admitted decision as an intent, arbitrate
-and register a commitment, issue a command through a controller, validate it
-against an actuator surface, and close the action with a supplied terminal
-outcome. It does not itself move a body: physical effects remain in
-Embodiment and a solver.
+The package provides records and primitives, plus explicit execution
+coordinators: `ActionDomain`, the canonical action pipeline
+(`organism:src/organism/actuation/pipeline.py`), and bounded motor exploration
+(`organism:src/organism/actuation/bounded_action.py::OrganismExplorationComposer`).
+It can materialise an admitted decision as an intent, arbitrate and register a
+commitment, issue a command through a controller, validate it against an
+actuator surface, and close the action with a supplied terminal outcome. It
+does not itself move a body: physical effects remain in Embodiment and a
+solver.
 
 The names of the records (affordance, intent, proposal, commitment) are taken
 from the code. They are used here as names of data structures. This document
@@ -25,12 +29,12 @@ describes the operations performed on them and does not claim that an Organism
 intends, decides or knows anything in a wider sense; nothing reviewed here
 would support such a claim.
 
-**The important boundary is now narrower than it was:** `ActionDomain` joins
-these steps within one explicit in-memory execution context, but the reviewed
-repositories do not establish that a production runtime constructs and drives
-that context. The World physical-step fixture constructs it and exercises the
-path in a test. This is tested composition, not evidence of a continuously
-running organism or a complete causal cycle.
+**Production execution context:** `ActionDomain` joins these steps within an
+explicit execution context. In production, `world:src/world/causal_cycle.py`
+and `world:src/world/organism_transition.py` construct and drive this context
+via `OrganismExplorationComposer` and `OrganismCheckpointContract`, validating
+actuator applicability and surface fingerprints across ticks and restarts
+(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
 
 ## The six steps at a glance
 

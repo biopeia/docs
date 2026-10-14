@@ -15,6 +15,7 @@ Explanatory documents of the Lab domain (apparatus).
 1. [The study utilities](study-utilities.md)
 2. [The body interoception transducer](body-interoception-transducer.md)
 3. [The operator material transfer](operator-material-transfer.md)
+4. [The Lab observation consumer](observation-consumer.md)
 
 ## Canonical documents
 
@@ -23,12 +24,14 @@ Explanatory documents of the Lab domain (apparatus).
 | [operator-material-transfer.md](operator-material-transfer.md) | `component.lab-operator-material-transfer` | CURRENT | RECORDED |
 | [study-utilities.md](study-utilities.md) | `component.lab-study-utilities` | CURRENT | RECORDED |
 | [body-interoception-transducer.md](body-interoception-transducer.md) | `component.lab-body-interoception-transducer` | HISTORICAL | SUPERSEDED |
+| [observation-consumer.md](observation-consumer.md) | `component.lab-observation-consumer` | CURRENT | RECORDED |
 
 ## Related domains
 
 - Owner checkpoint validation: with embodiment, environment, world
 - Operator material transfer: with embodiment, environment, world
 - Telemetry through the inherited projection: with observation
+- Operator material transfer observation publication: with observation, world
 
 ## Designs
 
@@ -54,6 +57,7 @@ Explanatory documents of the Lab domain (apparatus).
 - [ADR-0100 — Observation capability and evidence custody](../../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md)
 - [ADR-0101 — Operator Control](../../technical/adr/ADR-0101-operator-control.md)
 - [ADR-0102 — Lab](../../technical/adr/ADR-0102-lab.md)
+- [ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md)
 
 ## Open findings
 

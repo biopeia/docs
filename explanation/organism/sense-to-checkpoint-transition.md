@@ -1,8 +1,8 @@
 # From an opaque sense signal to an accepted step
 
-Reviewed against `organism@ba0011797a6a3b4d48c7731651e50560c4043f18`,
-`world@95f5064c6b06bd66bb58a72110b066afe4ca70b0` and
-`modality@79b779152d4bff2ab4191dc6601c8f1640e4cae3`.
+Reviewed against `organism@de16558faeba04f05eee6d2035a8f7f1e64b822b`,
+`world@e2be58700c870419a309ef3e2460b30b95c256be` and
+`modality@93a4c3a4ea71dcf65269ce730aab736238fd3ea7` (main on 2026-10-14); first written against `ba001179`.
 Everything below describes those revisions. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 Searches of the seven repositories were made on 2026-10-11.

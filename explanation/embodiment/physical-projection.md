@@ -1,8 +1,9 @@
 # What Embodiment hands to a solver: the physical projection, the body pose and its conventions
 
-Reviewed against `embodiment` at commit `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `97cb09a8`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What it is
 
@@ -239,6 +240,37 @@ fixture maps that projected value into MuJoCo's joint arrays.
 `test_procedural_spheres_are_adopted_committed_restored_and_reused` uses a
 single-box body and checks, before stepping, that the projection names the
 frame of the generated scene.
+
+## Receptors: stable attachment and sample-point projection
+
+Physical sensors attached to a body are represented by `EmbodimentReceptor`
+(`embodiment:src/embodiment/physics3d/receptor.py:30`). A receptor binds a stable
+`receptor_id` to a body, episode, morphology revision, an explicit `body_frame`, and a
+fixed metre offset `position_in_body_frame_m: tuple[float, float, float]`.
+
+At the start of a physical step, `project_receptor_sample_point` (lines 80-142) resolves
+the receptor's sample location in the world reference frame at the source cut:
+1. Validates `state` against `world_step: ReceptorWorldStepContext` (`world_id`, `body_id`,
+   `embodiment_episode_id`, `morphology_revision`, `source_causal_tick`).
+2. Rotates `position_in_body_frame_m` by the state root pose quaternion using the right-handed
+   Hamilton convention $q \cdot (r, 0) \cdot q^*$.
+3. Emits `ReceptorSamplePoint` located at $(x_{\text{root}} + r'_x, y_{\text{root}} + r'_y, z_{\text{root}} + r'_z)$
+   in `state.pose.reference_frame`.
+
+Embodiment describes sensor location and geometry only; it assigns no meaning or unit
+to environmental values sampled at that point.
+
+## BodyPose semantic family declaration
+
+The formal declaration of `embodiment.body_pose` (revision `v1`) is codified in
+`embodiment:src/embodiment/observation_family.py::embodiment_body_pose_family_v1`.
+It specifies Hamilton quaternion rotations $q \cdot (v, 0) \cdot q^*$ mapping the body
+frame into the world reference frame with position in metres and orientation as an
+`xyzw` unit quaternion.
+
+`BodyPoseObservationProjection` (`embodiment:src/embodiment/observation.py:125`)
+connects `BodyPoseSample` to World commit coordinates, morphology revision, and the
+exact SHA-256 digest of the source state checkpoint.
 
 ## Correspondence with the decisions
 

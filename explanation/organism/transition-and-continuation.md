@@ -1,7 +1,8 @@
 # The Organism transition boundary and the continuation registry
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
+2026-10-14); first written against `ba001179`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 Searches of the seven repositories were made on 2026-10-11 at the revisions
 listed under [what supports this description](#what-supports-this-description).

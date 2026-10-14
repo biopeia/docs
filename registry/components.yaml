@@ -1079,3 +1079,100 @@ components:
       - "the selected candidates"
     consumers:
       - "none in the source of any repository at the revision reviewed"
+
+  WLD-PUB:
+    coverage_unit: component.world-observation-publication
+    name: "World post-commit observation publication"
+    authority:
+      owns: "the coordination of post-commit observation publishing, verification of causal cut identity, and classification of publication outcomes"
+      may_decide:
+        - "whether a committed causal cut receipt matches the store manifest"
+        - "the classification into PhysicalStepOutcome (NOT_COMMITTED, COMMITTED_AND_PUBLISHED, COMMITTED_PUBLICATION_INCOMPLETE, COMMIT_UNKNOWN)"
+        - "that publication failures never roll back or retry committed simulation state"
+      must_not:
+        - "invent, synthesize or alter domain semantic claims"
+        - "abort or retry committed causal cuts due to downstream observer failures"
+        - "accept uncommitted or speculative owner state"
+    state:
+      owner: world
+      family: causal_history
+    causal_state:
+      durable: false
+      in_causal_cut: false
+      failed_transition_residue: "none; publication failures leave committed cuts intact and emit COMMITTED_PUBLICATION_INCOMPLETE or COMMIT_UNKNOWN"
+    inputs:
+      - "a committed causal cut receipt and manifest store"
+      - "owner observation claims produced from committed owner checkpoints"
+      - "an observation sink implementing publish"
+    outputs:
+      - "PhysicalStepPublicationResult with PhysicalStepOutcome and delivered count"
+    consumers:
+      - "World causal cycle runtimes and external observation sinks"
+
+  WLD-CYC:
+    coverage_unit: component.world-causal-cycle
+    name: "World sensorimotor causal cycle"
+    authority:
+      owns: "the synchronous execution order of the production sensorimotor loop across domains"
+      may_decide:
+        - "the order of execution: sense intake, organism deliberation, action validation, physical step, durable commit, and observation publication"
+        - "whether the cycle terminates or halts on unrecoverable step errors"
+      must_not:
+        - "bypass durable commit verification prior to publication"
+        - "modify domain-internal state machines directly"
+    state:
+      owner: world
+      family: causal_history
+    causal_state:
+      durable: false
+      in_causal_cut: false
+      failed_transition_residue: "halted loop; persistent residue determined by WLD-DRT and WLD-MAN"
+    inputs:
+      - "world durable runtime, organism runtime, environment state, and embodiment model"
+    outputs:
+      - "ordered series of committed cuts and publication outcomes"
+    consumers:
+      - "Biopeia experiment drivers and test suites"
+
+  LAB-OBS:
+    coverage_unit: component.lab-observation-consumer
+    name: "Lab observation consumer and restoration adapter"
+    authority:
+      owns: "passive consumption of observation streams for experiment monitoring and the restoration of intervention state from committed records"
+      may_decide:
+        - "whether a consumed observation matches expected experiment identifiers"
+        - "whether restoration records match the exact schema required for operator intervention replay"
+      must_not:
+        - "inject commands or interventions into active causal cycles without explicit operator authorization"
+        - "alter observation payloads or claim semantic authority over simulation domains"
+    state:
+      owner: lab
+      family: ephemeral
+    inputs:
+      - "observation stream records from the observation plane"
+      - "committed operator material transfer evidence"
+    outputs:
+      - "reconstructed intervention state and experiment metrics"
+    consumers:
+      - "Lab experiment runners and operator audit tools"
+
+  OBS-BND:
+    coverage_unit: component.observation-presentation-boundary
+    name: "Observation presentation boundary"
+    authority:
+      owns: "the fail-closed read-only interface and readiness gates between the observation plane and independent presentation consumers"
+      may_decide:
+        - "whether readiness gates (e.g. C and E) pass before exposing views"
+        - "mapping of internal stream states to the 14 client availability statuses"
+      must_not:
+        - "allow presentation components to issue simulation commands or mutate simulation state"
+        - "weaken CSP directives (connect-src 'none') or expose live execution credentials"
+    state:
+      owner: implementation-local
+      family: ephemeral
+    inputs:
+      - "passive observation events and loopback read bridge data"
+    outputs:
+      - "read-only view models for the seven frontend peer screens"
+    consumers:
+      - "independent presentation shell (frontend)"

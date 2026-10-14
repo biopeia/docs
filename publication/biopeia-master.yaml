@@ -59,6 +59,7 @@ parts:
       - explanation/organism/actuator-evidence.md
       - explanation/organism/executive-outcome-ledger.md
       - explanation/organism/cognitive-checkpoint.md
+      - explanation/organism/continuation-closure-and-reembodiment.md
       - explanation/organism/sense-to-checkpoint-transition.md
 
   - id: embodiment
@@ -89,6 +90,8 @@ parts:
       - explanation/world/durable-runtime.md
       - explanation/world/journal-snapshot-store.md
       - explanation/world/physical-step.md
+      - explanation/world/causal-cycle.md
+      - explanation/world/observation-publication.md
       - explanation/world/mujoco-step-executor.md
       - explanation/world/recovery.md
 
@@ -106,9 +109,12 @@ parts:
       - explanation/lab/study-utilities.md
       - explanation/lab/body-interoception-transducer.md
       - explanation/lab/operator-material-transfer.md
+      - explanation/lab/observation-consumer.md
 
   - id: cross-domain
     title: Cross-domain architecture
+    chapters:
+      - explanation/cross-domain/observation-presentation-boundary.md
     generated: [contracts]
 
 appendices:

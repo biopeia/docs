@@ -1,7 +1,8 @@
 # Effects, causal evidence and controllability
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
+2026-10-14); first written against `ba001179`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -116,10 +117,12 @@ other_hits   of those, rows with this effect
 ```
 
 A source is a competence, an intervention signature, or a group of signatures.
-What matters is the third number. **Other means every other retained row:
-passive windows and also the rows of every other source.** The comparison is
-therefore not between acting and not acting, but between this source and
-everything else on record.
+Following the resolution of finding F-0103, `CausalEvidenceLedger.controllability_opportunities()`
+(`organism:src/organism/actuation/evidence.py:404-477`) compares an active source exclusively
+against comparable passive (no-intervention) baseline windows in the exact same context.
+Other active interventions are excluded from the comparison baseline, preventing independent
+active sources from cancelling each other out. Rows for alternative active sources are
+accessible separately via `active_alternative_effect_opportunities()` for diagnostics.
 
 ## Controllability as computed here
 

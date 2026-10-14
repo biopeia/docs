@@ -1,7 +1,7 @@
 # Procedural genesis of a scene
 
 Reviewed against `environment` at commit
-`f97ec22272b6be1e6742770e37cd370e7d96d6bc`. Everything below describes that
+`d09e45c47fe86c23b2fc977e26938920eb9058b8` (main on 2026-10-14); first written against `f97ec222`. Everything below describes that
 revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 

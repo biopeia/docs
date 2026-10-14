@@ -1,7 +1,8 @@
 # The semantic claim model
 
-Reviewed against `observation` at commit `397c0b4691b5e460e6ebc3914f9820ff434a3661`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `observation` at commit `e37f82dc0282074874ef68911eda69c3661bf9a8` (main on
+2026-10-14); first written against `397c0b4`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
 
@@ -232,9 +233,20 @@ and adds that "Future contracts need not encode these names literally". The
 code encodes none of them: both are free tokens, except `lab_derived`.
 
 The model says that "Every physical magnitude has explicit units defined by
-its semantic family." and asks for explicit reference frames. The code has no
-field for units or frames; they can only live inside the opaque value. No
-semantic family is defined at this revision.
+its semantic family" and asks for explicit reference frames. While the core
+dataclasses (`observation:src/observation/semantic.py`) leave the payload shape open,
+Observation's domain projection adapters now define four concrete semantic families:
+
+| Qualified family | Authority | Epistemic kind | Units / Representations | Source |
+|---|---|---|---|---|
+| `embodiment.body_pose` (v1) | Embodiment | `authoritative_state` | position: `"m"`; orientation: `"unit_quaternion_xyzw"` (`"right_handed_hamilton_q_v_q_conjugate"`) | `src/observation/embodiment.py:180` |
+| `biopeia.embodiment.reserve_state_snapshot` (1) | Embodiment | `authoritative_state` | amount/capacity: `quantity_kind="model_amount"`; fraction: `unit="1"` | `src/observation/embodiment.py:62` |
+| `biopeia.environment.finite-scalar-field` (1) | Environment | `domain_derived` | value: `[0.0, 1.0]`, `unit="1"`; sample point: metres | `src/observation/environment.py:161` |
+| `biopeia.environment.resource_state_snapshot` (1) | Environment | `authoritative_state` | `remaining`: unitless finite float | `src/observation/environment.py:61` |
+
+Each family declares explicit reference frames (`reference_frame`, `body_frame`),
+typed identities (`body`, `embodiment_episode`, `environment_resource`), owner
+checkpoint digests, and correlation ticks (`world_causal_tick`).
 
 The model describes itself as "a conceptual model, not a Python type system".
 The module's own documentation says it "implements the common in-memory
