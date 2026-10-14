@@ -1,10 +1,8 @@
 # From a motor command to effector channels
 
-Reviewed against `embodiment` at commit `6f5fd9edb46c3a4557733df08149453f16bddb9f`;
-first written against `a5129f0`. Between the two, Embodiment replaced the
-structurally described actuator surface with a binding type of its own, and
-this document was rewritten for it. Everything below describes the later
-revision. Statements are marked by what
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `a5129f0`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -165,6 +163,39 @@ reviewed.
   identifier consisting of spaces was accepted. The physical state in the
   same package removes surrounding whitespace and refuses what is left
   empty.
+
+## Revision-bound joint torque projection
+
+Beyond the generic effector binding, Embodiment provides an explicit joint-torque
+command projection (`embodiment:src/embodiment/physics3d/joint_torque.py`).
+`EmbodimentJointTorqueBinding` (schema version 1) associates each actuator identifier
+with a stable morphology `joint_id` and unit axis.
+
+A `JointTorqueRequest` is projected via `project_joint_torque_command` (lines 247-280):
+- Every channel must declare quantity `"joint_torque"` and unit `"N*m"`.
+- Torque values must be finite and within `[-max_motor_torque, +max_motor_torque]`
+  of the active morphology joint spec.
+- Neutral value is strictly `0.0` N·m; saturation policy is `reject`.
+- An omitted joint produces no output channel.
+
+## Composing paired motor activations into joint torque
+
+For organisms with paired antagonistic motor channels (e.g., flexor/extensor pairs),
+Embodiment provides `compose_differential_motor_command`
+(`embodiment:src/embodiment/physics3d/differential_motor_composition.py:154`).
+
+`EmbodimentDifferentialMotorBinding` (schema version 1) binds pairs of positive and negative
+actuators to a morphology joint with a non-negative scale factor:
+$$\tau = (a_{\text{positive}} - a_{\text{negative}}) \times \tau_{\text{max}} \times \text{scale}$$
+
+Rules enforced in code:
+- Activations must lie in $[0.0, 1.0]$.
+- Both channels of a pair must be present, or both omitted. A partial pair raises `ValueError`.
+- Equal non-zero activations produce an explicit net torque of `0.0` N·m.
+- Omitted pairs produce no torque channel.
+- Resulting torque must not exceed $\tau_{\text{max}}$; no clipping occurs.
+- The emitted `JointTorqueRequest` is validated against the active `EmbodimentJointTorqueBinding`
+  before being returned.
 
 ## Correspondence with the decision on commands
 

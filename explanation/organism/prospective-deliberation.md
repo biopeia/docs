@@ -1,7 +1,8 @@
 # Prospective deliberation and the outcome-value ledger
 
-Reviewed against `organism` at commit `3e6c222f6be3ff916af40fb3e07754e9584f1379`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
+2026-10-14); first written against `3e6c222f`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -240,7 +241,7 @@ conformance.
 | Equal predictions give no selection; a tie on utility is not broken under the default margin | Code and the ad hoc run |
 | The table of reasons | The ad hoc run, and tests for some rows |
 | Export and strict restore | Code and tests |
-| The schema constant is strictly checked; the policy and budget are not exported | Code and tests in `organism:tests/source_unit/agency/test_prospective.py` |
+| The schema constant is strictly checked; policy configuration and query budget are exported in schema version 2 | Code and tests in `organism:tests/source_unit/agency/test_prospective.py` and `organism:src/organism/agency/checkpoint.py` |
 | Nothing calls the deliberation, records a value or consumes the result | Search of the seven repositories at `origin/main`, 2026-10-09 |
 | Whose state this is, and that cognition may be undeveloped or suspended | Accepted decisions ADR-0092, ADR-0095 and ADR-0105; statements of intent |
 

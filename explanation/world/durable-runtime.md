@@ -1,9 +1,9 @@
 # The durable World runtime
 
-Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run made at that revision on
-2026-10-11, or neither.
+Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be` (main on
+2026-10-14); first written against `95f5064c`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What it is
 
@@ -76,14 +76,17 @@ The order is the substance. Read from
    compares their hash with the reference, and asks that owner's contract
    whether the checkpoint is valid. Owner causal records must be structurally
    valid, uniquely identified and bound to participating owners.
-7. **Extend the journal on a copy.** To a copy of the journal World appends,
+7. **Extend the journal with delta records.** Under schema `event-journal-v3`,
+   World appends only the new delta records to `world-causal-journal-v3.jsonl`
    in this order: the tick record; a causal-cut record naming the commit, the
    participants and every owner checkpoint reference of this cut; when the
    tick changes the presence roster, a presence lifecycle record; and any
-   owner causal records. It then writes the copy as a snapshot.
+   owner causal records. Writes are serialized using `fcntl.flock` and prefix
+   verification is cached.
 8. **Publish the cut.** The manifest of the new cut is committed through the
    manifest store, which re-verifies the references. Only then do the
-   runtime's in-memory journal and manifest advance.
+   runtime's in-memory journal and manifest advance. Once committed, callers may
+   obtain a verified `CommittedWorldCut` receipt via `world.committed_cut_for()`.
 
 If anything from step 5 onward fails, the runtime latches, tries to mark the
 durable manifest as requiring recovery with a description of the failure, and

@@ -1,23 +1,10 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world@e423a04a113e6015a7eca0986d303129eebaceaa`. The
-fixtures described here import the other repositories at the revisions pinned
-in `world:pyproject.toml`, and that is where World's integration job runs
-them: `organism@8bf1eafeb2c05459e4cbaae3a377d2f1c35504c6`,
-`embodiment@badf444f8f62e91d1c5ed4a65f3fe23c6cbda6b8`,
-`environment@7166f57c4879424d269337deda52f9f9c403dbba`,
-`modality@cc74103099f63353e94e1bcdaeeada35a0b571fd` and
-`observation@be82907d1d677b2362e369d15eb1e8e964d893aa`.
-
-The heads of those repositories on 2026-10-11 are later:
-`organism@ba0011797a6a3b4d48c7731651e50560c4043f18`,
-`embodiment@597cc4a09f4a5c94095b17ad0f2ba510df6d02c3`,
-`environment@e91bb67f81f3bc15715489cf1262328934454f1b`,
-`modality@79b779152d4bff2ab4191dc6601c8f1640e4cae3` and
-`observation@6aac3c76684834722440f53c9d8604ac4c16b138`. The searches below
-were made at those heads, and the fixtures were run against them once, ad
-hoc; the result is in its own section. Statements are marked by what supports
-them: the code, a named test, that ad hoc run, or an accepted decision.
+Reviewed against `world@e2be58700c870419a309ef3e2460b30b95c256be` (main on
+2026-10-14); first written against `e423a04a`. The fixtures described here
+import the other repositories at their pinned revisions, while production
+sensorimotor execution is provided by `world:src/world/causal_cycle.py` and
+`world:src/world/physical_step_publication.py`.
 
 ## What this is about
 
@@ -28,19 +15,24 @@ authorises it, Embodiment and Environment project their state, a solver
 computes a candidate, each owner validates and adopts its own part, and World
 commits the cut.
 
-This document describes where that sequence exists in code today.
+This document describes where that sequence exists in code.
 A protocol coordinator exists in World (`world:src/world/physical_step.py::run_physical_step`),
 which issues explicit source and target causal ticks in a `PhysicalStepContext`
 inside a durable World transition, sequences owner projections, numerical solving,
 owner adoption, and checkpoint reference returns, and propagates failures to latch
 recovery. The coordinator takes its six operations as ports supplied by the
-caller. **In every place where it is called outside its unit tests, those
-ports are functions written inside an integration test fixture.**
+caller.
 
-World's source now also holds an optional function that runs one MuJoCo step,
-described in [the MuJoCo step executor](mujoco-step-executor.md). None of the
-fixtures below calls it, and it is not shaped as a solver port of the
-coordinator; that document says why.
+In historical test fixtures, those ports were supplied by integration test functions.
+At current main (`e2be5870`), World provides production implementations:
+- [The sensorimotor causal cycle](causal-cycle.md) (`world:src/world/causal_cycle.py::run_scalar_sensorimotor_cycle_and_publish`)
+  wires sensory perception, Organism cognitive proposal, articulated MuJoCo physics
+  advancement (`world:src/world/adapters/articulated_mujoco.py`), atomic owner checkpoint
+  persistence, cut commit, and post-commit adoption.
+- [Post-commit observation publication](observation-publication.md)
+  (`world:src/world/physical_step_publication.py::run_physical_step_and_publish`)
+  wraps step execution in a publication guard and classifies execution into four
+  caller-visible outcomes.
 
 The end-to-end integration sequence below is exercised through that coordinator
 in `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`,

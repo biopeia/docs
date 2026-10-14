@@ -1,8 +1,9 @@
 # The articulated body: what it is made of and where its joints are
 
-Reviewed against `embodiment` at commit `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `97cb09a8`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What it is
 
@@ -197,20 +198,35 @@ returned for one authorized step." Building one checks only that no joint
 appears twice; a candidate with a joint far outside its range can be built
 and is refused later.
 
-Adoption takes that candidate and the correlation to expect, and proceeds
-in this order:
+Adoption is invoked via `ArticulatedEmbodimentPhysicalState.adopt_candidate`
+(`embodiment:src/embodiment/physics3d/articulated_state.py:241`), consuming a
+`SolverArticulatedCandidate` and a `world_context: WorldPhysicalStepContext`.
+Embodiment derives the expected step correlation from `world_context` and requires
+`world_context.target_causal_tick == world_context.source_causal_tick + 1`.
 
-1. the candidate's joints must be exactly the descriptor's joints;
-2. the root adopts its candidate, with every check described in
+The check order is strict:
+
+1. the candidate's joints must be exactly the active morphology's declared joints;
+2. the root adopts its candidate against `world_context`, with every check described in
    [the body's physical state](physical-state.md): the correlation, the
-   World, tick, body, episode and morphology revision, the frames, the unit
+   World, tick, body, episode and morphology revision, the frames, and the unit
    quaternion;
 3. a new articulated state is built from the adopted root and the candidate's
-   joints, which is where positions outside the limits and excessive
-   velocities are refused.
+   joints, where positions outside the limits (`lower_rad`, `upper_rad`) and
+   excessive velocities (`max_velocity_rad_per_s`) raise `ValueError`.
 
 Any failure raises and produces nothing. Since every value involved is
 immutable, the state adopted from is unchanged whatever happens.
+
+### Full articulated state lineage for body pose
+
+An articulated state can project its root pose for passive observation via
+`body_pose_observation_projection()` (`articulated_state.py:214`).
+Although `BodyPoseObservationProjection` carries only the root pose sample,
+its `source_state_sha256` digest is explicitly computed from the **full articulated
+checkpoint bytes** (`self.checkpoint_digest`, line 232), not the embedded root state's
+digest (`self.root.checkpoint_digest`). This binds the published pose directly to the
+complete physical truth of root, morphology and joint positions.
 
 What the tests cover:
 

@@ -1,9 +1,9 @@
 # The World causal manifest
 
-Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run made at that revision on
-2026-10-11, or neither.
+Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be` (main on
+2026-10-14); first written against `95f5064c`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What it is
 

@@ -1,7 +1,8 @@
 # The observation plane
 
-Reviewed against `observation` at commit `be82907d1d677b2362e369d15eb1e8e964d893aa`; first written against `397c0b4`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `observation` at commit `e37f82dc0282074874ef68911eda69c3661bf9a8` (main on
+2026-10-14); first written against `397c0b4`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
 
@@ -73,6 +74,20 @@ In an ad hoc run with eight threads publishing two thousand observations
 each, the sixteen thousand sequence numbers were distinct and contiguous. No
 test exercises concurrent use.
 
+### Publication sequence, republication, and late delivery
+
+Two delivery characteristics are verified by tests (`observation:tests/test_plane.py`):
+
+1. **Republication is not deduplicated.** Publishing an identical observation
+   twice delivers two distinct messages with incremented delivery sequence
+   numbers (`test_identical_observation_republication_is_delivered_again`). The
+   plane does not suppress repeated source publications.
+2. **Arrival order governs delivery sequence.** If an observation for causal
+   tick 2 is published and followed by one for causal tick 1, the plane delivers
+   tick 2 as sequence 1 and tick 1 as sequence 2
+   (`test_late_older_domain_time_is_delivered_in_publication_sequence`). The
+   plane does not reorder messages into domain-time order.
+
 ## What current means
 
 The plane keeps one message per key. The key
@@ -108,6 +123,25 @@ not imply source absence, unavailability, or non-existence".
 
 `current()` and `current_messages()` return whatever is held, optionally for
 one family. The set carries no statement of how its members relate in time.
+
+### Adversarial boundary guarantees: not a data lake
+
+The plane is an ephemeral, bounded buffer. Boundary tests
+(`observation:tests/test_observational_boundary_adversarial.py`) enforce three limits:
+
+- **Snapshot isolation against consumer mutation:** A consumer modifying the
+  `value` mapping inside a returned message does not alter the plane's
+  retained snapshot (`test_mutating_read_projection_cannot_rewrite_plane_history`).
+- **Explicit rebase on replay eviction:** When a consumer attempts to resume
+  with a watermark that has been evicted from the bounded replay buffer, the
+  plane does not truncate or invent history; it emits `PlaneRebaseRequired`
+  with reason `replay_expired` (`test_bounded_replay_eviction_requires_rebase`).
+- **Explicit clear signaling:** Invoking `clear()` resets retained state and
+  emits `PlaneRebaseRequired` with reason `run_boundary`
+  (`test_explicit_clear_rebases_stream_without_causal_context`).
+
+The plane provides no durable storage, no cross-restart resumption, and no
+cross-owner causal cut synchronization.
 
 ## Streams
 
@@ -220,9 +254,17 @@ one. It does hand the producer's own objects to consumers, uncopied.
 The [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md)
 decides that the live plane "belongs to Observation, not to Lab", and draws
 authorities exposing their own boundaries, then "Observation adapters", then
-the plane. The plane is in the `observation` repository. No adapter exists in
-it, and none was found elsewhere; the repository's migration record says not
-to add source-domain adapters until their design gates are approved.
+the plane.
+
+At this revision, Observation defines typed domain adapters in
+`observation:src/observation/embodiment.py` and
+`observation:src/observation/environment.py`. They adapt Embodiment BodyPose
+(`embodiment.body_pose` v1), Embodiment reserve snapshots
+(`biopeia.embodiment.reserve_state_snapshot` 1), Environment scalar fields
+(`biopeia.environment.finite-scalar-field` 1), and Environment resource
+snapshots (`biopeia.environment.resource_state_snapshot` 1). The adapters
+validate structural shapes, units, reference frames, and owner checkpoint
+digests without claiming authority or establishing World commit durability.
 
 The same design says that the plane's delivery sequence "is not causal time
 and must not be presented as such", and that a set of claims presented

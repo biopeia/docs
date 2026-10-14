@@ -1,7 +1,8 @@
 # The generative resident and what a "private model" is in code
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
+2026-10-14); first written against `ba001179`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 Searches were repeated on 2026-10-11 over the source of all seven
 repositories. Since the previous review, at `organism`
@@ -268,7 +269,7 @@ intent, or a complete Organism dependency closure". In an ad hoc run at the
 reviewed revision a resident carried through two accepted steps was byte for
 byte the same before and after. Recorded in finding F-0142.
 
-## Bounded, and where it is not
+## Bounded memory and resolution of F-0074
 
 Most stores are capped: 64 targets, 128 hypotheses, 256 tracked tokens, and
 per-step limits of 64 states, 64 transitions, depth 8, 8 branches and 128
@@ -276,44 +277,21 @@ model queries (`test_workspace_is_bounded_and_rejects_reserved_operations`).
 When hypotheses are full, a finished one is discarded to make room, and if all
 are active no new one is created.
 
-Two stores have no cap, confirmed by a run of 2000 steps, each followed by a
-reconciliation. The run was made again at the reviewed revision, because the
-saved format has changed and the byte counts of the earlier run no longer
-apply: one registered model, one candidate identifier offered in online mode
-at every tick, a resolver that accepts everything.
-
-| Steps | Scheduler entries | Calibration errors | Saved state, bytes |
-|---|---|---|---|
-| 10 | 10 | 10 | 8 486 |
-| 100 | 100 | 100 | 56 987 |
-| 1000 | 1000 | 1000 | 109 563 |
-| 2000 | 2000 | 2000 | 153 720 |
-
-The scheduler keeps one entry per tick and mode it has ever allowed and never
-removes one, although only the current tick's entry can affect a decision. The
-calibration table appends one number per comparison. Both are written into
-every saved state. Recorded as finding F-0074. Restoring now checks these
-stores more closely than it did, refusing a repeated scheduler entry, a use
-count above its quota and a repeated calibration bucket
-(`test_calibration_checkpoint_rejects_duplicate_bucket_identity`; the
-scheduler checks from the code); it does not bound them.
+Following the resolution of finding F-0074:
+- The scheduler (`organism:src/organism/cognition/generative/scheduler.py:4`) prunes
+  past-tick entries in `_used`, preventing unbounded growth across ticks.
+- The calibration store (`organism:src/organism/cognition/generative/calibration.py:47-94`)
+  retains bounded sufficient statistics (`error_sum`, `comparable_count`) instead of an
+  unbounded list of individual comparison errors.
+- `GenerativeBudget` (`organism:src/organism/cognition/generative/budget.py`) implements
+  schema-validated checkpoint/restore, and `agenda_overflow_count` is persisted exactly.
 
 ## Time
 
-The step takes its tick from the caller and reads no clock. It does not
-require the tick to increase: after a step at tick 10, a step at tick 2 was
-accepted and produced an episode named for tick 2 (ad hoc run, repeated at
-the reviewed revision). That differs
-from the graph's transition, which refuses a tick that does not advance. The
-resident keeps its own counter, `generative_tick`, which counts depth steps
-and is unrelated to the caller's tick.
-
-The caller's tick is stored under the field names `started_symbiont_tick` and
-`last_symbiont_tick`, a name from the code's origin that is now part of the
-saved format. The repository's inventory of the saved format lists both as
-"a named unresolved TARGET time-semantics disposition" and says they are "not
-mapped here to `organism_step`, World time, or wall-clock time"
-(`organism:CHECKPOINT_DECODER_MATRIX.md`).
+The resident's progression is tracked by `started_organism_step` and `last_organism_step`
+(`organism:src/organism/cognition/generative/resident.py:764, 797, 856`), eliminating the
+historical symbiont tick labels. The resident keeps its own counter, `generative_tick`,
+which counts depth steps within an active expansion.
 
 ## At each lifecycle boundary
 

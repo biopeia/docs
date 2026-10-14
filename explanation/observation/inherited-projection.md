@@ -1,10 +1,10 @@
 # The inherited projection
 
-Reviewed against `observation` at commit `6aac3c76684834722440f53c9d8604ac4c16b138`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run of the module made at that
-revision on 2026-10-11, or an accepted decision. A decision is intent, not a
-result.
+Reviewed against `observation` at commit `e37f82dc0282074874ef68911eda69c3661bf9a8` (main on
+2026-10-14); first written against `6aac3c76`. Everything below describes the
+later revision. Statements are marked by what
+supports them: the code, the tests, an ad hoc run of the module, or an
+accepted decision. A decision is intent, not a result.
 
 ## What it is
 

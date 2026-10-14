@@ -1,8 +1,9 @@
 # Somatic state: what a body holds
 
-Reviewed against `embodiment` at commit `6114f3d9bcc0d5c44ecbfb6262f87f5824f92903`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `6114f3d9`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 The ad hoc runs were made at an earlier revision,
 `a5129f03aa4b024e33d332f917b9235afe97959c`, and were not repeated. Between
 the two revisions the body record and the transfer module are unchanged; the
@@ -247,10 +248,37 @@ recorded as finding F-0025; that is no longer so.
 The module calls this "a migration-stage format, not a finalized portable
 World checkpoint". One limit remains:
 
-- **It names no World and no causal tick.** The bytes say which body and
-  which episode, not when. The physical state of the same body is a
-  separate checkpoint that does name them; see
-  [the physical state](physical-state.md).
+- **It names no World and no causal tick directly.** The serialized bytes say
+  which body and which episode, not when. However, once a cut is committed,
+  Embodiment binds the reserve to that cut via `project_committed_reserve_state`
+  (below). The physical state of the same body is a separate checkpoint that
+  does name them; see [the physical state](physical-state.md).
+
+## Projecting the reserve from a committed cut
+
+While an `EmbodimentCheckpoint` in serialized form names no World or tick,
+Embodiment provides a bounded projection for passive observation once a World cut
+has been committed:
+`project_committed_reserve_state` (`embodiment:src/embodiment/checkpoint.py:63`).
+
+The projection requires the serialized `checkpoint_bytes`, an owner checkpoint reference,
+and a World committed-cut receipt (`_CommittedWorldCutReceipt`, lines 29-36). Embodiment
+verifies the correlation before emitting anything:
+
+1. The SHA-256 digest of the supplied checkpoint bytes must equal the digest in the
+   owner reference.
+2. The owner reference must be present in the committed cut's tuple of owner references.
+3. The owner reference must match schema `"embodiment-checkpoint-v2"` and the restored
+   checkpoint's `body_id` must equal `owner_identity`.
+4. The reserve values (`amount`, `capacity`, `fraction`) are extracted from the body state's
+   operational observation; the quantity kind must be the literal `"model_amount"`.
+
+The resulting `ReserveStateObservationProjection` (lines 38-61) carries the exact
+model amounts alongside the World commit context (`world_id`, `causal_tick`, `commit_id`,
+`checkpoint_id`, and `source_owner_checkpoint_sha256`). It declares semantic family
+`biopeia.embodiment.reserve_state_snapshot`, revision `1`, with asserter
+`embodiment.owner_checkpoint`. It does not invent joules or physical energy units, and
+does not bind morphology revision, which somatic checkpoints do not track.
 
 ## What crosses to the Organism, and what does not
 

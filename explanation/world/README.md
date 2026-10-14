@@ -19,8 +19,10 @@ Explanatory documents of the World domain (semantic-authority).
 5. [The durable World runtime](durable-runtime.md)
 6. [The journal snapshot store](journal-snapshot-store.md)
 7. [The physical causal step, as it exists today](physical-step.md)
-8. [The MuJoCo step executor](mujoco-step-executor.md)
-9. [World recovery](recovery.md)
+8. [The sensorimotor causal cycle](causal-cycle.md)
+9. [Post-commit observation publication and outcome classification](observation-publication.md)
+10. [The MuJoCo step executor](mujoco-step-executor.md)
+11. [World recovery](recovery.md)
 
 ## Canonical documents
 
@@ -37,6 +39,8 @@ Explanatory documents of the World domain (semantic-authority).
 | [recovery.md](recovery.md) | `mechanism.world-recovery` | CURRENT | RECORDED |
 | [physical-step.md](physical-step.md) | `mechanism.physical-causal-step` | EXPERIMENTAL | RECORDED |
 | [mujoco-step-executor.md](mujoco-step-executor.md) | `component.world-mujoco-step-executor` | EXPERIMENTAL | RECORDED |
+| [observation-publication.md](observation-publication.md) | `component.world-observation-publication` | CURRENT | RECORDED |
+| [causal-cycle.md](causal-cycle.md) | `component.world-causal-cycle` | CURRENT | RECORDED |
 
 ## Related domains
 
@@ -44,6 +48,7 @@ Explanatory documents of the World domain (semantic-authority).
 - Correlation of a physical step: with embodiment, environment
 - Operator material transfer: with embodiment, environment, lab
 - Observation of a committed cut: with observation
+- Operator material transfer observation publication: with lab, observation
 - Body physical input to a solver: with embodiment
 - Organism cognitive state in a World causal cut: with organism
 
@@ -64,6 +69,7 @@ Explanatory documents of the World domain (semantic-authority).
 ## Decision records
 
 - [ADR-0073 — Biopeia Migration Causal and Physical Contracts](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md)
+- [ADR-0078 — Observation is causally passive](../../technical/adr/ADR-0078-observation-is-causally-passive.md)
 - [ADR-0080 — World identity is authoritative, not a presentation label](../../technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md)
 - [ADR-0083 — Causal cycles have explicit commit semantics](../../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md)
 - [ADR-0084 — Single writer or explicit coordination for shared persistent state](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md)
@@ -75,6 +81,7 @@ Explanatory documents of the World domain (semantic-authority).
 - [ADR-0098 — Physical substrate and causal integration](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)
 - [ADR-0106 — Hybrid multi-owner persistence](../../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md)
 - [ADR-0107 — Journal role](../../technical/adr/ADR-0107-journal-role.md)
+- [ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md)
 
 ## Open findings
 

@@ -21,7 +21,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.world-causal-manifest:
     kind: component
@@ -45,7 +45,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.world-journal-snapshot-store:
     kind: component
@@ -67,7 +67,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.world-durable-runtime:
     kind: component
@@ -97,7 +97,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.world-in-memory-runtime:
     kind: component
@@ -121,7 +121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: e423a04a113e6015a7eca0986d303129eebaceaa
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.world-causal-transition:
     kind: mechanism
@@ -147,7 +147,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.world-genesis-and-rosters:
     kind: mechanism
@@ -171,7 +171,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.world-recovery:
     kind: mechanism
@@ -194,7 +194,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.physical-causal-step:
     kind: mechanism
@@ -231,12 +231,12 @@ units:
     review:
       status: RECORDED
       basis:
-        world: e423a04a113e6015a7eca0986d303129eebaceaa
-        organism: 8ba912a28f7297a06e9e7011e5e277991becad60
-        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
-        environment: e91bb67f81f3bc15715489cf1262328934454f1b
-        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
-        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
 
   component.world-mujoco-step-executor:
     kind: component
@@ -259,7 +259,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.environment-finite-resource:
     kind: component
@@ -286,7 +286,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
 
   component.environment-static-scene:
     kind: component
@@ -313,7 +313,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
 
   component.environment-procedural-genesis:
     kind: component
@@ -335,7 +335,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
 
   component.environment-resource-geometry:
     kind: component
@@ -359,7 +359,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: f97ec22272b6be1e6742770e37cd370e7d96d6bc
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
 
   concept.modality-current-state:
     kind: concept
@@ -386,13 +386,13 @@ units:
     review:
       status: RECORDED
       basis:
-        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
-        world: a4d04928a82fb0f53f6a1ca7e6362686d4c894d5
-        organism: 3e6c222f6be3ff916af40fb3e07754e9584f1379
-        embodiment: b5714f985d0aa970d3a412a7d29e43fa0bcb89d6
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
-        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
-        lab: 273c41207332ef7c7de02de625253d03d642a200
+        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
 
   component.embodiment-physical-state:
     kind: component
@@ -420,8 +420,8 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.embodiment-actuation-projection:
     kind: mechanism
@@ -444,7 +444,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
 
   component.embodiment-somatic-state:
     kind: component
@@ -473,11 +473,11 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 6aa3e530ff087594c1ac1332670df2caa5151b29
-        embodiment: 6114f3d9bcc0d5c44ecbfb6262f87f5824f92903
-        environment: 0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41
-        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.lab-operator-material-transfer:
     kind: component
@@ -512,11 +512,11 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
-        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
-        environment: e91bb67f81f3bc15715489cf1262328934454f1b
-        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.lab-study-utilities:
     kind: component
@@ -537,7 +537,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
 
   component.lab-body-interoception-transducer:
     kind: component
@@ -556,7 +556,7 @@ units:
     review:
       status: SUPERSEDED
       basis:
-        lab: 81af15b8795243d304f064bda421c6ec5d8ab991
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
 
   component.observation-semantic-claim-model:
     kind: component
@@ -580,8 +580,8 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 397c0b4691b5e460e6ebc3914f9820ff434a3661
-        world: c162b67e698de9b47450264402677b0165e6e20e
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.observation-plane:
     kind: component
@@ -607,7 +607,7 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: be82907d1d677b2362e369d15eb1e8e964d893aa
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
 
   component.observation-inherited-projection:
     kind: component
@@ -634,9 +634,9 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
-        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
 
   mechanism.organism-action-path:
     kind: mechanism
@@ -676,8 +676,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.organism-identity-checkpoint:
     kind: component
@@ -705,7 +705,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-executive-outcome-ledger:
     kind: component
@@ -728,7 +728,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   concept.biopeia-what-it-is:
     kind: concept
@@ -953,13 +953,13 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
-        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
-        observation: 6aac3c76684834722440f53c9d8604ac4c16b138
-        lab: 29e25d85e796d96a3f2e830fd870a2f74e8e2266
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
 
   component.embodiment-articulated-body:
     kind: component
@@ -993,8 +993,8 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 597cc4a09f4a5c94095b17ad0f2ba510df6d02c3
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.embodiment-physical-projection:
     kind: mechanism
@@ -1030,8 +1030,8 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 97cb09a82b0bc9bf4ad11f6497cce071b85efedd
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.environment-dynamic-state:
     kind: component
@@ -1060,8 +1060,8 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: caa885a11ec0170717bb4b71d271ab171807197e
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.organism-competence-development:
     kind: component
@@ -1091,7 +1091,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-causal-evidence:
     kind: component
@@ -1121,7 +1121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 8ba912a28f7297a06e9e7011e5e277991becad60
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-execution-binding:
     kind: component
@@ -1148,7 +1148,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-prospective-deliberation:
     kind: component
@@ -1179,7 +1179,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 3e6c222f6be3ff916af40fb3e07754e9584f1379
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-genome:
     kind: component
@@ -1218,7 +1218,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-experience-ledger:
     kind: component
@@ -1244,7 +1244,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-causal-provenance-log:
     kind: component
@@ -1267,7 +1267,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-capacity-and-pair-statistics:
     kind: component
@@ -1292,7 +1292,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   concept.organism-foundation-conventions:
     kind: concept
@@ -1314,7 +1314,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.embodiment-actuator-binding:
     kind: component
@@ -1337,7 +1337,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 6f5fd9edb46c3a4557733df08149453f16bddb9f
+        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
 
   component.organism-actuator-evidence:
     kind: component
@@ -1369,8 +1369,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        world: a8d07fd791da76365aa74080eef1e82b11a599fd
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.organism-cognitive-graph:
     kind: component
@@ -1411,8 +1411,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   mechanism.organism-graph-plasticity:
     kind: mechanism
@@ -1440,7 +1440,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-generative-resident:
     kind: component
@@ -1503,7 +1503,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   mechanism.organism-cognitive-checkpoint:
     kind: mechanism
@@ -1537,8 +1537,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        world: e2be58700c870419a309ef3e2460b30b95c256be
 
   component.organism-attention-allocation:
     kind: component
@@ -1558,7 +1558,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: 2f051b029018a30f10acddaedc70d2b7edd3325c
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   component.organism-transition-and-continuation:
     kind: component
@@ -1584,7 +1584,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
 
   mechanism.organism-sense-to-checkpoint-transition:
     kind: mechanism
@@ -1618,6 +1618,123 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: ba0011797a6a3b4d48c7731651e50560c4043f18
-        world: 95f5064c6b06bd66bb58a72110b066afe4ca70b0
-        modality: 79b779152d4bff2ab4191dc6601c8f1640e4cae3
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+
+  component.world-observation-publication:
+    kind: component
+    title: World post-commit observation publication
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-PUB
+    canonical_docs:
+      - explanation/world/observation-publication.md
+    implementation:
+      - world:src/world/observation_publication.py
+      - world:src/world/physical_step_publication.py
+    tests:
+      - world:tests/test_observation_publication.py
+      - world:tests/integration/observation/test_world_post_commit_owner_publication.py
+    adrs:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
+    depends_on:
+      - component.world-durable-runtime
+    review:
+      status: RECORDED
+      basis:
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+
+  component.world-causal-cycle:
+    kind: component
+    title: World sensorimotor causal cycle
+    status: CURRENT
+    owner_domain: world
+    component_id: WLD-CYC
+    canonical_docs:
+      - explanation/world/causal-cycle.md
+    implementation:
+      - world:src/world/causal_cycle.py
+    tests:
+      - world:tests/integration/test_end_to_end_causal_cycle_acceptance.py
+    adrs:
+      - docs:technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md
+      - docs:technical/adr/ADR-0098-physical-substrate-and-causal-integration.md
+    depends_on:
+      - component.world-durable-runtime
+      - mechanism.physical-causal-step
+    review:
+      status: RECORDED
+      basis:
+        world: e2be58700c870419a309ef3e2460b30b95c256be
+
+  component.lab-observation-consumer:
+    kind: component
+    title: Lab observation consumer and restoration adapter
+    status: CURRENT
+    owner_domain: lab
+    component_id: LAB-OBS
+    canonical_docs:
+      - explanation/lab/observation-consumer.md
+    implementation:
+      - lab:src/lab/observation_consumer.py
+      - lab:src/lab/interventions/material_transfer_restoration.py
+    tests:
+      - lab:tests/unit/test_observation_consumer.py
+      - lab:tests/observation_integration/test_lab_observation_publication.py
+    adrs:
+      - docs:technical/adr/ADR-0102-lab.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
+    review:
+      status: RECORDED
+      basis:
+        lab: 0baff4d0208b2f19d244078eb8576931ba524c08
+
+  concept.organism-continuation-closure-v1:
+    kind: concept
+    title: Organism continuation closure v1 and re-embodiment
+    status: CURRENT
+    owner_domain: organism
+    canonical_docs:
+      - explanation/organism/continuation-closure-and-reembodiment.md
+    implementation:
+      - organism:src/organism/continuation.py
+      - organism:src/organism/cognition/portable_checkpoint.py
+    tests:
+      - organism:tests/test_continuation.py
+      - organism:tests/source_unit/cognition/test_portable_checkpoint.py
+    adrs:
+      - docs:technical/adr/ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md
+      - docs:technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md
+      - docs:technical/adr/ADR-0103-portable-organism-state.md
+    review:
+      status: RECORDED
+      basis:
+        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+
+  component.observation-presentation-boundary:
+    kind: component
+    title: Observation plane presentation boundary
+    status: CURRENT
+    owner_domain: observation
+    component_id: OBS-BND
+    canonical_docs:
+      - explanation/cross-domain/observation-presentation-boundary.md
+    implementation:
+      - observation:src/observation/plane.py
+      - frontend:src/model.js
+      - frontend:src/views.js
+    tests:
+      - observation:tests/test_observational_boundary_adversarial.py
+      - frontend:tests/model.test.js
+      - frontend:tests/views.test.js
+    adrs:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
+    review:
+      status: RECORDED
+      basis:
+        observation: e37f82dc0282074874ef68911eda69c3661bf9a8
+        frontend: 02531dcaaf4419f5d9e11d0915486c7c758d2fe6

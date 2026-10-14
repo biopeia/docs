@@ -1,9 +1,9 @@
 # World recovery
 
-Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run made at that revision on
-2026-10-11, or neither.
+Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be` (main on
+2026-10-14); first written against `95f5064c`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What this is about
 
@@ -66,18 +66,22 @@ completed. In order:
 1. Confirm the World is in fact waiting for recovery, and that the caller is
    asking about the right World and a presence that belongs to it, or about
    no presence when the World has none.
-2. Read the journal snapshot of the previous cut and check that it agrees
+2. Truncate uncommitted journal tail bytes (`_discard_uncommitted_tail`),
+   rolling the append-only `world-causal-journal-v3.jsonl` back to the exact
+   offset of the committed cut under the manifest writer lock.
+3. Read the journal of the previous cut and check that it agrees
    with the manifest. Since the journal keeps a causal-cut record per tick,
    this includes that there is one for every tick and that the latest names
    the manifest's commit, participants and owner references.
-3. Verify the previous cut's references: the files are there, their hashes
+4. Verify the previous cut's references: the files are there, their hashes
    match, and each owner's contract accepts its checkpoint.
-4. Call the **restorer**, supplied by the caller, with the owners'
-   references. This is the only step in which any owner's state changes, and
-   World does not perform it.
-5. Ask each owner's contract to confirm the restoration, and verify the
-   references once more.
-6. Have the manifest store write an immutable receipt and republish the
+5. Call the **restorer**, supplied by the caller, passing the authoritative
+   `CheckpointReference` objects directly. This is the only step in which any
+   owner's state changes, and World does not perform it.
+6. Ask each owner's contract to confirm the restoration via
+   `verify_restoration(reference)`, enforcing restored actuator applicability
+   and kernel limits.
+7. Have the manifest store write an immutable receipt and republish the
    previous cut as committed.
 
 If step 4 fails, or step 5 cannot confirm it, the World stays waiting for

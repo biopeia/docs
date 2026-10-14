@@ -28,6 +28,7 @@ Explanatory documents of the Observation domain (capability).
 
 - Observation of a committed cut: with world
 - Telemetry through the inherited projection: with lab
+- Operator material transfer observation publication: with lab, world
 
 ## Designs
 

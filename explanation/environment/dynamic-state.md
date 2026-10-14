@@ -1,7 +1,7 @@
 # A piece of the environment that changes
 
 Reviewed against `environment` at commit
-`0a9f4fbb1922cc6ca9e7b2489cf891606ef9ee41` (main on 2026-10-10). Everything below describes that
+`d09e45c47fe86c23b2fc977e26938920eb9058b8` (main on 2026-10-14); first written against `0a9f4fbb`. Everything below describes that
 revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 

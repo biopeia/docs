@@ -32,7 +32,8 @@ Explanatory documents of the Organism domain (semantic-authority).
 18. [Evidence that an actuator does something](actuator-evidence.md)
 19. [The executive outcome ledger](executive-outcome-ledger.md)
 20. [What a cognitive checkpoint carries](cognitive-checkpoint.md)
-21. [From an opaque sense signal to an accepted step](sense-to-checkpoint-transition.md)
+21. [Organism continuation closure and re-embodiment](continuation-closure-and-reembodiment.md)
+22. [From an opaque sense signal to an accepted step](sense-to-checkpoint-transition.md)
 
 ## Canonical documents
 
@@ -59,6 +60,7 @@ Explanatory documents of the Organism domain (semantic-authority).
 | [attention-allocation.md](attention-allocation.md) | `component.organism-attention-allocation` | CURRENT | RECORDED |
 | [transition-and-continuation.md](transition-and-continuation.md) | `component.organism-transition-and-continuation` | CURRENT | RECORDED |
 | [sense-to-checkpoint-transition.md](sense-to-checkpoint-transition.md) | `mechanism.organism-sense-to-checkpoint-transition` | CURRENT | RECORDED |
+| [continuation-closure-and-reembodiment.md](continuation-closure-and-reembodiment.md) | `concept.organism-continuation-closure-v1` | CURRENT | RECORDED |
 
 ## Related domains
 
@@ -81,6 +83,7 @@ Explanatory documents of the Organism domain (semantic-authority).
 ## Decision records
 
 - [ADR-0073 — Biopeia Migration Causal and Physical Contracts](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md)
+- [ADR-0077 — Canonical re-embodiment and reduced seed transplant are distinct contracts](../../technical/adr/ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md)
 - [ADR-0081 — The canonical Organism is longitudinal](../../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md)
 - [ADR-0082 — Canonical reproduction is endogenous to life](../../technical/adr/ADR-0082-canonical-reproduction-is-endogenous-to-life.md)
 - [ADR-0087 — Organism originates ordinary reproduction](../../technical/adr/ADR-0087-organism-originates-ordinary-reproduction.md)
