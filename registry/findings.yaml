@@ -929,9 +929,12 @@ findings:
       The inherited projection coerces without telling: an integer key
       truncates 3.9 to 3 and turns a boolean into 1 or 0, not-a-number passes
       through, some values are passed through by reference, an empty joint
-      list is kept while an empty link list is dropped. Its keys keep
-      historical names, including symbiont_tick, and its frame writes
-      feeds_back false as a constant label that nothing measures.
+      list is kept while an empty link list is dropped. At this observed
+      revision, the projection also copied the historical symbiont_tick key;
+      that TARGET projection bridge was subsequently removed for Observation
+      #22 in merge commit 6aac3c76684834722440f53c9d8604ac4c16b138. The
+      frame still writes feeds_back false as a constant label that nothing
+      measures. This finding remains open for these separate defects.
     documented_in:
       - explanation/observation/inherited-projection.md
     material: false
