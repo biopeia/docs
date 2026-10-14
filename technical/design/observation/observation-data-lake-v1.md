@@ -32,11 +32,16 @@ owner-authorized claims for read-only inspection and query. Such retention does
 not admit data as evidence, validate a scientific method, establish
 completeness, or transfer claim authority to Observation.
 
-The distinction between a passive live plane and a durable archive is a
-material extension beyond the current approved design's unselected storage and
-retention. A derived constitutional decision should explicitly accept, reject,
-or bound this extension and clarify its relationship to ADR-0100 before this
-proposal is marked approved. This recommendation is not that decision.
+The Architecture Owner accepted this conceptual direction on 2026-10-13:
+Observation is the passive operational observational archive, while Lab remains
+the separate scientific-evidence custodian ([Observation #38 owner disposition](https://github.com/biopeia/observation/issues/38#issuecomment-6153128772)).
+That acceptance is bounded to the responsibility separation and target
+direction. It does not ratify this complete design or authorize a store,
+schema, API, transport, retention/deletion policy, security profile, runtime
+implementation or merge. Before this proposal can be marked approved, the
+competent authority must determine whether the accepted direction is fully
+covered by existing ADRs or needs a derived constitutional ADR; any proposed
+change to ADR-0100 still requires its own explicit disposition.
 
 ## 2. Ratified constraints
 
@@ -286,13 +291,14 @@ requires explicit recovery, retention, access and operational ownership.
 from archive availability, but introduces delivery gaps, buffering and
 operational coordination that must be declared and tested.
 
-This proposal recommends evaluating option 2 as the conceptual target because
-it directly matches the Owner's durable searchable collection requirement,
-while retaining a decoupled, failure-isolated capture path. It does **not**
-select an implementation, accept a data-loss envelope or authorize a new
-service. Option 1 alone is insufficient for durable history; option 3 may be
-selected if evidence shows it materially improves isolation without hiding
-capture gaps.
+The accepted target direction is an operational, durable and searchable
+observational archive distinct from Lab evidence custody. Option 2 is therefore
+the leading conceptual candidate for evaluation, not an approved architecture
+choice. It does **not** select an implementation, accept a data-loss envelope
+or authorize a new service. Option 1 alone cannot satisfy durable history;
+option 3 may be selected if evidence shows it materially improves isolation
+without hiding capture gaps. The choice among persistence arrangements remains
+open until the data/lifecycle, security and operational contracts are accepted.
 
 ## 8. Supported and excluded consumer use cases
 
@@ -344,30 +350,44 @@ It was inspected against the following exact Biopeia revisions:
 
 | Repository | Revision |
 |---|---|
-| `observation` | `1456df093e4ac28032d956e4df30957f0bf87cec` |
-| `world` | `940c674d077860c44f07050cb79750e517d0099e` |
-| `lab` | `4f37ce9f7f141be3e955f6f286487a358c9b8222` |
-| `environment` | `d1dc309636fc66471e755d1f691826ebf8c552fe` |
-| `embodiment` | `56e9a34a6a778a298493dabca9d15b0912066803` |
+| `observation` | `e37f82dc0282074874ef68911eda69c3661bf9a8` |
+| `world` | `e2be58700c870419a309ef3e2460b30b95c256be` |
+| `lab` | `e65fa32fce2876d784aac9bd3d9ce6715fbc2f0b` |
+| `environment` | `9d17ead3c2855990f9084deb6dd42aea1eafca98` |
+| `embodiment` | `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` |
 | `modality` | `93a4c3a4ea71dcf65269ce730aab736238fd3ea7` |
 | `organism` | `0ddadac6d51ab39aeee909cb423a911b069b11dc` |
 
-At those revisions, the bounded in-process Observation plane supports current
+At those revisions (Biopeia `main` heads inspected on 2026-10-14), the bounded
+in-process Observation plane supports current
 materialization and bounded replay with explicit rebase/expiry behavior. It
 does not establish durable cross-process history, a browser/network read path,
 authentication, or a general query contract. World has a production causal
 composition that publishes after owner adoption and World commit; the
 associated integration tests exercise repeat/restore/continue behavior. This
 demonstrates a bounded producer-side publication path, not durable archive
-completeness or consumer access. Lab has durable World-mediated intervention
-and evidence paths, but its current use of a transitional projection is not a
-TARGET archive/read contract and must not be expanded as one.
+completeness or consumer access. Lab now has a bounded post-commit material-
+transfer publication/association path tied to a committed World cut. The
+authorization gate remains `UNSUPPORTED`; the focused verification below
+confirms that the unauthorized operation is skipped, not that an experiment
+was executed. This specific publication path does not establish a general
+archive/read contract or durable retention.
 
-The following is a source-level test map for the narrow capabilities described
-above. Paths were resolved in each repository tree at the exact revisions in
-the table. Commands are reproducible starting points, not test results: no
-source test suite was run for this documentation change, and cross-repository
-tests may require the repository's documented integration installation.
+The following verification record is a bounded test run against the exact
+revisions above. It supports only the named local and integration behaviors;
+it does not establish durable archive behavior, universal source completeness,
+scientific validity, or a general consumer contract.
+
+| Repository / question | Exact command from repository root | Result on 2026-10-14 |
+|---|---|---|
+| World post-commit publication and physical causal composition | `uv run pytest tests/integration/observation/test_world_post_commit_owner_publication.py tests/integration/physical_step/test_first_biopeia_physical_causal_step.py -q` | `16 passed` |
+| Lab authorization boundary and material-transfer gate | `uv run pytest tests/integration/test_material_transfer_authorization.py tests/integration/test_operator_material_transfer.py -q` | `1 passed, 1 skipped`; the operation test is intentionally skipped because verified authorization is unsupported under Lab #330 |
+| Observation in-process plane and adversarial boundary | `uv run pytest tests/test_plane.py tests/test_observational_boundary_adversarial.py -q` | `33 passed` |
+| Lab passive Observation consumer and publication association | `uv run pytest tests/unit/test_observation_consumer.py tests/observation_integration/test_lab_observation_publication.py -q` | `21 passed` |
+
+These are focused suites, not full-repository test runs. In particular, the
+Lab skip is not a successful execution of a material-transfer experiment.
+No experiment was run for this readiness review.
 
 The following symbol crosswalk records the bounded implementation surface
 found at those revisions. “Implemented” means the named local mechanism exists;
@@ -383,7 +403,7 @@ export status and contracts.
 | Embodiment source | `BodyPoseObservationProjection` and its owner projection path | `PARTIAL` — body/episode/morphology-bound pose projection exists | Projection is not a commit receipt and does not establish consumer delivery |
 | Modality | `DimensionlessScalarFieldIdentityV1.transduce` | `IMPLEMENTED` for the narrow stateless scalar transduction | Not an Observation publisher or source-completeness contract |
 | Organism | `advance_organism_from_sense_signals` | `PARTIAL` — opaque sensory input can enter the canonical Organism transition | This path does not establish an Observation publication API for Organism-owned claims |
-| Lab | `InterventionRequest` and the specific material-transfer operation | `PARTIAL` — a bounded intervention request/operation exists | `InterventionRequest` is descriptive, not authorization; no general Observation read consumer or general operation-dispatch contract established |
+| Lab | `MaterialTransferObservationPublication`, `LabObservationAssociation`, and the specific material-transfer operation | `PARTIAL` — bounded post-commit publication can be associated with a verified committed cut | Authorization remains `UNSUPPORTED`; no experiment was executed in the cited verification; no general Observation archive/read or operation-dispatch contract established |
 
 This crosswalk is a source inspection, not an API approval. In particular,
 `PARTIAL` and `IMPLEMENTED` above are capability-local labels only; neither
@@ -401,10 +421,12 @@ or authorization policy is implied by the named symbols.
 | Organism: sensory input and accepted transition | `tests/source_unit/cognition/test_sense_input.py`; `tests/source_unit/cognition/test_owner_transition.py`; `tests/source_unit/actuation/test_sensorimotor.py` | `uv run --extra dev pytest tests/source_unit/cognition/test_sense_input.py tests/source_unit/cognition/test_owner_transition.py tests/source_unit/actuation/test_sensorimotor.py` | Organism-side input/transition/action behavior; not Observation storage or transport |
 | Lab: current migration boundaries around Observation | `tests/unit/test_migration_observation_facade_disposition.py`; `tests/unit/test_migration_integrated_habitat_runtime_disposition.py` | `uv run --extra dev pytest tests/unit/test_migration_observation_facade_disposition.py tests/unit/test_migration_integrated_habitat_runtime_disposition.py` | Recorded migration dispositions; not a general Lab read consumer or authorized operation-dispatch contract |
 
-These commands are not asserted to have been executed successfully. Before
-implementation planning, accountable owners must run relevant checks against
-the exact approved revisions and document cross-repository dependency setup.
-This snapshot does not claim the listed revisions remain the latest heads.
+The source-level test map below remains a set of additional commands for
+capability-specific review, not a claim that those additional suites ran in
+this verification pass. The revisions above are an exact snapshot, not a
+permanent pin; refresh them before any later readiness or implementation
+decision. Owners must separately approve publication/read contracts and run
+the checks required by those contracts.
 
 ## 11. ADR impact assessment and alternatives
 
@@ -415,13 +437,15 @@ approved architecture. It does not satisfy the new Owner direction for durable,
 searchable historical observations across restarts and multiple consumers.
 
 ### Alternative B — Treat an Observation archive as a separate operational
-capability while preserving Lab evidence custody
+capability while preserving Lab evidence custody (accepted direction)
 
-This can satisfy the target requirement without making Observation scientific
-custodian. It still adds durable retention/query responsibilities that the
-approved design explicitly left undecided. A derived constitutional decision
-should establish the boundary, source authority, completeness claims, and
-non-equivalence to scientific evidence before design approval.
+This is the accepted conceptual direction: it can satisfy the target
+requirement without making Observation scientific custodian. The Architecture
+Owner has not approved the detailed durable-retention/query responsibilities,
+completeness contract, policies or implementation. The next constitutional
+step is to determine whether the accepted boundary needs a derived ADR or
+clarification to ADR-0100; owners must still disposition source authority,
+completeness claims and lifecycle policies before design approval.
 
 ### Alternative C — Put durable observational history under Lab
 
@@ -433,19 +457,21 @@ apparatus. Not recommended.
 
 ### Recommendation
 
-Proceed with Alternative B only after the Architecture Owner issues a derived
-decision that explicitly authorizes an operational observational archive and
-clarifies that Lab remains the sole scientific/evidence custodian. The decision
-should ratify or amend, rather than silently reinterpret, ADR-0100 and should
-state whether durable capture is independent of causal commit. Until then,
-this document remains a proposed design and must not be marked approved or
-implemented.
+Continue developing Alternative B as the accepted target direction, while
+keeping the design Proposed. Do not ask the Architecture Owner to re-accept the
+same conceptual separation. Before design ratification, record the competent
+authority's determination of ADR impact and obtain any required derived
+constitutional decision. The contract must state whether durable capture is
+independent of causal commit without weakening World authority or implying
+atomic publication. Until the remaining domain, lifecycle, security and
+operational dispositions are complete, this document must not be marked
+approved or implemented.
 
 ## 12. Staged acceptance and follow-up gates
 
 | Gate | Required outcome | Competent disposition |
 |---|---|---|
-| A. Constitutional boundary | Decide whether a durable operational archive is permitted under Observation, distinct from Lab evidence custody | Architecture Owner |
+| A. Constitutional record / ADR impact | Treat the conceptual separation as accepted by the Architecture Owner; determine and record whether a derived constitutional ADR or ADR-0100 clarification is required for the detailed durable archive design | Architecture Owner; no re-acceptance of the same conceptual direction |
 | B. Exact-source readiness | Approve exact revisions, owner publication paths, supported family/read capabilities and exclusions | Observation Owner with source-domain owners |
 | C. Data/lifecycle contract | Accept or amend the proposed logical identity/deduplication, integrity, retention/deletion and recovery rules in §5.1; explicitly identify who may authorize logical suppression/tombstoning and its effects on source-owner records and Lab-held evidence; define completeness, time, gaps and revisions without conflating evidence admission | Observation Owner; Lab Owner for evidence separation; competent authority for suppression/tombstoning to be identified; Architecture Owner where ADR-0100 changes; Security/legal/operations for erasure/hold obligations |
 | D. Security and operations | Threat model, access scopes, security/operations owner, local/shared deployment profiles | Competent Security/Operations authority; Docs #167 |

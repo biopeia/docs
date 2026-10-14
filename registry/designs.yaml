@@ -451,7 +451,9 @@ designs:
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
     editorial_notes: >
-      Proposed conceptual design for an operational observational archive,
-      explicitly distinct from Lab scientific evidence custody. It selects no
-      storage, schema, API, transport, deployment or security mechanism and
-      recommends a derived constitutional decision before approval.
+      Proposed detailed design following the Architecture Owner's accepted
+      conceptual direction to separate the operational observational archive
+      from Lab scientific evidence custody. The design remains unratified and
+      selects no storage, schema, API, transport, deployment or security
+      mechanism. Record whether a derived constitutional ADR is required before
+      design approval; do not request re-acceptance of the same direction.
