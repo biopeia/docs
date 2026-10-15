@@ -472,7 +472,7 @@ commits behind its recorded `origin/main`; only files read explicitly with
 |---|---|---|---|
 | Embodiment | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`, `observation_contract.py`; tests `test_articulated_spec.py`, `test_articulated_state.py`, `test_physical_projection.py`, `test_body_pose_observation_projection.py`, `test_physics3d_observation_contract.py` | Owner-bound morphology contains segments, dimensions/materials, joint topology, frames and stable morphology content identity. Owner state validates root pose and joint values. The BodyPose projection is root pose only; no browser-facing segment-geometry or per-link world-transform publication contract was identified. The listed tests were inspected as existing test locations, not run as part of this revalidation. |
 | Environment | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `static_scene.py`, `physical.py`, `procedural_genesis.py`, `identified_resource.py`; tests `test_static_scene.py`, `test_physical_projection.py`, `test_environment_physical_projection.py` | Environment owns explicit static scene/frame/primitive and resource geometry values; the procedural sphere layout is narrow and deterministic. These values and solver/checkpoint uses do not by themselves establish an external visual publication contract, general scene/asset format or correlation with Embodiment. Tests were not run in this revalidation. |
-| World | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `observation_publication.py`, `durable_runtime.py`, `adapters/articulated_mujoco.py`, `m1_profile.py`, M1 profile JSON; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py`, `test_articulated_production_join.py`; [World #162](https://github.com/biopeia/world/issues/162) | World validates owner publications against an internal `CommittedWorldCut` (world identity, causal tick, commit ID and owner checkpoint references). That server-side validation does not itself expose a consumer-verifiable receipt in the current M1 Observation payloads. Separately, the M1 profile uses the Embodiment profile frame ID for the Environment scene frame (parent `world`, identity basis/origin); the adapter checks ID equality only, not frame semantics, and `m1_profile.py` constructs the scene with `objects=()`. World #162 asks its owner to decide the sufficient consumer-visible cut-association contract; no sufficiency rule is assumed here. Tests were inspected, not run in this revalidation. |
+| World | `51cea9f8975fbdea603592fa5e9c56b073a2f4d4` | `observation_publication.py`, `durable_runtime.py`, `adapters/articulated_mujoco.py`, `m1_profile.py`, M1 profile JSON; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py`, `test_articulated_production_join.py`; [World #162](https://github.com/biopeia/world/issues/162) | World validates owner publications against an internal `CommittedWorldCut` (world identity, causal tick, commit ID and owner checkpoint references). That server-side validation does not itself expose a consumer-verifiable receipt in the current M1 Observation payloads. Separately, the M1 profile uses the Embodiment profile frame ID for the Environment scene frame (parent `world`, identity basis/origin); the adapter checks ID equality only, not frame semantics, and `m1_profile.py` constructs the scene with `objects=()`. The only commit after the prior source-inspection revision `a7c8099…` changes `uv.lock`; the inspected source files are unchanged. World #162 asks its owner to decide the sufficient consumer-visible cut-association contract; no sufficiency rule is assumed here. Tests were inspected, not run in this revalidation. |
 | Observation | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `README.md`, `http_bridge.py`, `semantic.py`; tests `test_http_bridge.py`, `test_plane.py`, `test_observational_boundary_adversarial.py` | The documented browser bridge remains bounded to BodyPose v1 and finite scalar-field current projections. The in-memory plane's global delivery sequence is not domain/causal time and it is not durable history. No general geometry publication family or durable scene query was found. Tests were not run in this revalidation. |
 | Frontend | `3b158cc73e57a8175265e1d25a66eb09346679f9` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`, `src/style.css`; [PR #24](https://github.com/biopeia/frontend/pull/24) adds `tests/views.test.js` coverage | Frontend still consumes the same two bounded M1 claim families and has no 3D renderer dependency. PR #24 adds separate SVG coordinate markers for supported finite coordinates, with independent display scaling, owner identity, frame and provenance labels; it expressly does not compose claims into a scene. This is coordinate evidence presentation, not authorized physical geometry or a coherent shared World snapshot. Current-source tests/build were not rerun in this documentation revalidation. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
@@ -498,8 +498,8 @@ revalidation.
 | Browser-readable articulated geometry and segment transforms | `ABSENT` | Embodiment | Same source snapshot; no external geometry family identified | No conformance test exists in the inspected current source | Publication requires exact owner-approved contract. See Embodiment #77. |
 | Internal Environment scene/resource geometry | `EXISTING` | Environment | `d09e45c…`; `static_scene.py`, `physical.py`, `identified_resource.py` | Source and test locations inspected; not run | Existing owner geometry is not a visual publication contract. Environment #73 accepts design direction; primitive/frame scope and review remain open. |
 | Renderable active M1 Environment scene | `ABSENT` | Environment | `d09e45c…`; M1 profile has `objects=()` | Profile/source inspected; no rendered-scene test | Do not invent a floor, objects, terrain or resources. Environment #73. |
-| Confirmed World cut and owner-checkpoint validation | `EXISTING` | World | `a7c8099…`; `observation_publication.py`, `durable_runtime.py` | Test locations inspected; not run | Internal validation exists; browser-verifiable proof is not present in current M1 claims. World #162. |
-| Consumer-verifiable proof that dynamic projections share one confirmed cut | `ABSENT` | World | Same snapshot; current claims lack exposed commit identity/proof | No consumer conformance test identified | Equal tick/frame labels alone are insufficient. Candidate should reuse existing commit/checkpoint evidence; no new history store. World #162 accepts direction only. |
+| Confirmed World cut and owner-checkpoint validation | `EXISTING` | World | `51cea9f…`; `observation_publication.py`, `durable_runtime.py` | Test locations inspected; not run | Internal validation exists; browser-verifiable proof is not present in current M1 claims. World #162. |
+| Consumer-verifiable proof that dynamic projections share one confirmed cut | `ABSENT` | World | `51cea9f…`; current claims lack exposed commit identity/proof | No consumer conformance test identified | Equal tick/frame labels alone are insufficient. Candidate should reuse existing commit/checkpoint evidence; no new history store. World #162 accepts direction only. |
 | Current bounded Observation reads for BodyPose and finite scalar field | `PARTIAL` | Observation | `a8b43af…`; `README.md`, `http_bridge.py`, `semantic.py` | Bridge/boundary test locations inspected; not run | Existing current-view transport, not spatial geometry, durable history or shared-cut composition. Observation #37. |
 | Passive transport of approved spatial descriptions with provenance | `REQUIRES APPROVAL` | Observation plus publishing owners | `a8b43af…`; current allowlist/read boundary | No spatial-family conformance test identified | Exact family, bounds and provenance must be approved; no semantic joins. Observation #37. |
 | Independent 2D markers for supported M1 coordinate claims | `PARTIAL` | Frontend | `3b158cc…`; `src/views.js`, `src/style.css` | PR #24 added view tests; not rerun in this audit | Presentation markers are not a physical scene and do not establish shared coordinates. |
@@ -701,17 +701,19 @@ Environment candidate, valid empty scene:
 }
 ```
 
-The placeholder identities/digest above must be replaced by owner-produced
-values before this can be an acceptance vector. A candidate invalid value
-would change `items` to a sphere with `radius_m: -1`, duplicate an `object_id`,
-or alter the content without recomputing the digest; all must be rejected,
-not repaired by Frontend.
+The angle-bracket values above are illustrative placeholder strings, not
+valid values under an approved schema. They must be replaced by
+owner-produced values before this can be an acceptance vector. A candidate
+invalid value would change `items` to a sphere with `radius_m: -1`, duplicate
+an `object_id`, or alter the content without recomputing the digest; all must
+be rejected, not repaired by Frontend.
 
 Candidate articulated description and dynamic pose set (shape only):
 
 ```json
 {
   "body_id": "<embodiment-owner-id>",
+  "embodiment_episode_id": "<owner-episode-id>",
   "morphology_revision": "<owner-revision>",
   "render_geometry_sha256": "<digest-over-defined-render-fields>",
   "segments": [
@@ -728,12 +730,13 @@ Candidate articulated description and dynamic pose set (shape only):
 ```json
 {
   "body_id": "<same-embodiment-owner-id>",
+  "embodiment_episode_id": "<same-owner-episode-id>",
   "morphology_revision": "<same-owner-revision>",
   "render_geometry_sha256": "<same-render-digest>",
-  "frame_id": "physics3d.world",
+  "frame_id": "<owner-declared-reference-frame>",
   "length_unit": "m",
   "quaternion_order": "xyzw",
-  "physical_step_correlation": "<existing-owner-correlation>",
+  "physical_step_correlation": "<World-issued-physical-step-correlation>",
   "poses": [
     {"segment_id": "<every-required-stable-segment-id>", "position_m": [0, 0, 0], "orientation": [0, 0, 0, 1]}
   ]
@@ -763,12 +766,17 @@ Candidate World association and passive Observation carriage:
 
 ```json
 {
-  "claims": ["<unchanged-owner-claim-and-original-provenance>", "<unchanged-owner-claim-and-original-provenance>"],
-  "world_association": "<unchanged-world-authorized-value>",
-  "delivery_metadata": "<existing-observation-delivery-metadata>"
+  "claims": [
+    {"family": "<approved-source-family>", "claim": "<unchanged owner claim object with original provenance>"},
+    {"family": "<approved-source-family>", "claim": "<unchanged owner claim object with original provenance>"}
+  ],
+  "world_association": {"<opaque-key>": "<unchanged World-authorized association object>"},
+  "delivery_metadata": {"<opaque-key>": "<existing Observation delivery metadata object>"}
 }
 ```
 
+The placeholder values are schema-invalid strings used only to show an
+object-shaped opaque envelope; they do not specify the actual wire types.
 These are separate candidate values, not an Observation-created join. A
 consumer-side negative vector changes only one claim's commit/digest/reference
 while retaining the same tick: the consumer must refuse a composed scene and
@@ -827,7 +835,7 @@ registry state for this document therefore remains `proposed` /
 | Environment source code has bounded static and resource geometry values | Environment `static_scene.py`, `physical.py`, `procedural_genesis.py` at `d09e45c...` | Implemented (source observed) | Not a general visual contract or browser delivery path |
 | Embodiment source code has articulated morphology and owner-validated joint/root state | Embodiment `articulated_spec.py`, `articulated_state.py` at `d73315d...` | Implemented (source observed) | No identified UI geometry publication contract; source presence is not authorization |
 | Current Frontend consumes the two bounded M1 claim families and presents their supported coordinates as separate 2D markers, without inferring a scene | Frontend `README.md`, `package.json`, `src/model.js`, `src/views.js` and `src/style.css` at `3b158cc73e57a8175265e1d25a66eb09346679f9`; [PR #24](https://github.com/biopeia/frontend/pull/24) tests | Implemented presentation boundary | No real-browser rendering of authorized 3D geometry was run; no geometry contract or 3D renderer is currently exposed |
-| World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `a7c8099...` | Implemented (source observed) | Does not establish complete scene membership or browser support |
-| M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `a7c8099...` | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
-| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `a7c8099...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; design-base disposition [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455) | Implemented + independently reviewed gap; design direction accepted | Limited to the two currently allowlisted M1 families. Equal ticks are insufficient. Exact verifier, consumer trust path and affected-owner contract review remain open |
+| World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `51cea9f...` (source file unchanged since `a7c8099...`) | Implemented (source observed) | Does not establish complete scene membership or browser support |
+| M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `51cea9f...` (source files unchanged since `a7c8099...`) | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
+| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `51cea9f...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; design-base disposition [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455) | Implemented + independently reviewed gap; design direction accepted | Limited to the two currently allowlisted M1 families. Equal ticks are insufficient. Exact verifier, consumer trust path and affected-owner contract review remain open |
 | Domain owners accepted the spatial publication direction as design base, permitting candidate schema/vector preparation only | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6200248780), [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6200249144), [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6200249767) | Owner disposition recorded | Exact owner schemas, field bounds, publication families and implementation authorization remain open |
