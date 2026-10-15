@@ -523,18 +523,19 @@ current candidates remain proposals for their respective owners:
 
 | Domain | Candidate evidence | Status and scope |
 |---|---|---|
-| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [merged PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575` | Merged non-normative documentation candidate for bounded static scene geometry. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
-| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [merged PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Merged non-normative documentation candidate for bounded morphology and transforms. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
-| World | [World #162](https://github.com/biopeia/world/issues/162), candidate comment `6200546569` | Proposed consumer-verifiable association to an existing committed cut; no new persistence. Not owner-accepted or implemented. |
-| Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), candidate comment `6200559423` | Proposed passive carriage on the existing local boundary. No new allowlist entry, semantic join, or remote exposure is approved. |
+| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [merged PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575`; Owner approval [#6201000808](https://github.com/biopeia/environment/issues/73#issuecomment-6201000808) | Bounded static-scene geometry baseline accepted and implementation/local publication authorized. Use only actual Environment-owned geometry; no invented floor, objects, or resources. |
+| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [merged PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac`; Owner approval [#6201001211](https://github.com/biopeia/embodiment/issues/77#issuecomment-6201001211) | Bounded morphology/kinematics baseline accepted and implementation/local publication authorized. Derive transforms from authorized state; no duplicate engine or physical-limit changes. |
+| World | [World #162](https://github.com/biopeia/world/issues/162), candidate comment `6200546569`; Owner approval [#6201001585](https://github.com/biopeia/world/issues/162#issuecomment-6201001585) | Consumer-verifiable association to an existing committed cut accepted for implementation; no new persistence/history. |
+| Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), candidate comment `6200559423`; Owner approval [#6201002076](https://github.com/biopeia/observation/issues/37#issuecomment-6201002076) | Passive carriage accepted for implementation within the current local-only boundary, current bounds, and 1 MB limit. No semantic join or remote exposure. |
 
 The independent integration review found no internal contradiction in these
-candidate proposals, but explicitly did not treat them as accepted schemas or
-implementation-ready contracts. Each domain owner must approve its exact
-contract; implementation/publication remains a separate gate. A static-only
-Environment view may be staged before dynamic contracts, but must be visibly
-partial and may use only real authorized Environment data. The registry state
-remains `proposed / not_evaluated / UNRESOLVED`.
+candidate proposals. On 2026-10-15 the Owner explicitly accepted the four
+concrete proposal baselines for implementation and local publication in the
+linked issue comments above. That authorization does not accept Spatial V1 as
+complete or authorize remote exposure. A static-only Environment view may be
+implemented first, must be visibly partial, and may use only real authorized
+Environment data. The registry state remains `proposed / not_evaluated /
+UNRESOLVED` until implementation and real-browser acceptance are demonstrated.
 
 The audit found existing owner geometry sources and an M1 profile-configured
 same-frame-ID compatibility check, but no complete path that publishes compatible
@@ -620,6 +621,12 @@ implementation, publication, or the Frontend renderer. The following are
 illustrative review material, not normative contracts. Existing security/read
 limits and owner authority remain in force.
 
+**Superseding disposition (2026-10-15):** the Owner subsequently approved the
+four bounded candidate baselines for implementation and local publication in
+the comments linked above. The earlier paragraph records the prior decision
+only. Implementers may settle wire-level and test details within that scope;
+scope expansion, new authority, and remote exposure are not approved.
+
 The candidate-gap review used these local `main` revisions as its source
 snapshot (not as runtime pins): Workspace
 `4e34c97569aaa1ba5611eda3dab3923cd33dfd83`, Docs
@@ -634,8 +641,10 @@ performed for these candidate sketches.
 
 #### Candidate separation of static description, dynamic state and cut proof
 
-The candidate model has four separately owned parts. Names and encodings below
-are provisional; each owner must settle its own exact schema.
+The candidate model has four separately owned parts. The Owner approved these
+bounded candidate baselines for implementation. Implementers should finalize
+concrete field encodings in conformance with the candidates and must not expand
+their semantic scope.
 
 | Candidate part | Owner | Minimum review content | Explicit non-goal |
 |---|---|---|---|
@@ -831,22 +840,17 @@ their repositories before exact contract approval.
 
 | Repository | Candidate test responsibility | Gate before implementation |
 |---|---|---|
-| Environment | Primitive allowlist, identity uniqueness, finite values, frame/units, empty-set semantics, deterministic digest and bounded size | Environment approves exact static schema and visual/ground convention |
-| Embodiment | Topology validity, visual-local-frame convention, canonical render digest, pose completeness/validity and evidence for the transform producer | Embodiment approves exact static and dynamic schemas and source responsibility; no duplicate kinematics |
-| World | Exact-cut association, committed identity and publication-reference membership; negative same-tick/different-commit cases; rejection for missing/ambiguous references | World approves the exact consumer verification mechanism, reusing existing causal evidence |
-| Observation | Strict allowlist, passive byte-preserving or equivalently lossless carriage, provenance preservation, total/count bounds, invalid payload rejection and no cross-owner join | Observation and affected owners approve exact carried schema/bounds; existing security limits unchanged |
-| Frontend | Consume only the approved shape; no fabricated defaults, forward kinematics, implicit joins, stale-source mixing or unverified common-scene label | Contract gates pass; renderer implementation is separately authorized |
+| Environment | Primitive allowlist, identity uniqueness, finite values, frame/units, empty-set semantics, deterministic digest and bounded size | Owner approval recorded at Environment #73 comment #6201000808; implement the bounded static geometry baseline |
+| Embodiment | Topology validity, visual-local-frame convention, canonical render digest, pose completeness/validity and evidence for the transform producer | Owner approval recorded at Embodiment #77 comment #6201001211; derive transforms from authorized state, no duplicate kinematics |
+| World | Exact-cut association, committed identity and publication-reference membership; negative same-tick/different-commit cases; rejection for missing/ambiguous references | Owner approval recorded at World #162 comment #6201001585; reuse existing causal evidence |
+| Observation | Strict allowlist, passive byte-preserving or equivalently lossless carriage, provenance preservation, total/count bounds, invalid payload rejection and no cross-owner join | Owner approval recorded at Observation #37 comment #6201002076; existing local security/read limits unchanged |
+| Frontend | Consume only the approved shape; no fabricated defaults, forward kinematics, implicit joins, stale-source mixing or unverified common-scene label | Renderer implementation authorized under the Owner's overall direction, subject to approved shapes and explicit partial/coherent-scene status |
 
-These are test plans only. No new test currently proves these candidate
-contracts, no new data family has been published, and no renderer implementation
-is authorized by the design-base disposition. The exact schemas, static
-revision lifetime, frame compatibility rules (including why matching frame
-labels alone would or would not suffice), digest canonicalization, numerical
-tolerances, size/count limits, error behavior, verifier trust path and
-restore/fork semantics remain open decisions in the existing issues. These
-vectors are candidate review criteria, not normative acceptance tests. The
-equality of frame identifiers or axis labels alone must not be taken as proof
-of spatial compatibility. The
+These remain planned conformance tests; implementation and integrated evidence
+are not yet established. Implementers must resolve exact encodings, digest
+canonicalization, numerical tolerances, response bounds/error behavior and
+verifier details within the approved scope. Do not infer spatial compatibility
+from frame identifiers or axis labels alone. The
 registry state for this document therefore remains `proposed` /
 `not_evaluated` / `UNRESOLVED`.
 
@@ -859,5 +863,5 @@ registry state for this document therefore remains `proposed` /
 | Current Frontend consumes the two bounded M1 claim families and presents their supported coordinates as separate 2D markers, without inferring a scene | Frontend `README.md`, `package.json`, `src/model.js`, `src/views.js` and `src/style.css` at `3b158cc73e57a8175265e1d25a66eb09346679f9`; [PR #24](https://github.com/biopeia/frontend/pull/24) tests | Implemented presentation boundary | No real-browser rendering of authorized 3D geometry was run; no geometry contract or 3D renderer is currently exposed |
 | World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `51cea9f...` (source file unchanged since `a7c8099...`) | Implemented (source observed) | Does not establish complete scene membership or browser support |
 | M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `51cea9f...` (source files unchanged since `a7c8099...`) | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
-| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `51cea9f...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; design-base disposition [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455) | Implemented + independently reviewed gap; design direction accepted | Limited to the two currently allowlisted M1 families. Equal ticks are insufficient. Exact verifier, consumer trust path and affected-owner contract review remain open |
-| Domain owners accepted the spatial publication direction as design base, permitting candidate schema/vector preparation only | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6200248780), [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6200249144), [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6200249767) | Owner disposition recorded | Exact owner schemas, field bounds, publication families and implementation authorization remain open |
+| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `51cea9f...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; design and implementation dispositions [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455), [Owner approval](https://github.com/biopeia/world/issues/162#issuecomment-6201001585) | Implemented + independently reviewed gap; implementation authorized | Current M1 transport has only two allowlisted families; equal ticks are insufficient. Consumer verifier is approved for implementation but not yet present |
+| Owner accepted all four bounded spatial contract candidates for implementation | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6201001211), [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6201000808), [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6201001585), [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6201002076) | Owner approval recorded | Implementation, local publication, integrated physical rendering, and browser E2E remain pending; no remote exposure authorized |
