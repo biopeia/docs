@@ -40,7 +40,7 @@ import pdf  # noqa: E402
 import qa  # noqa: E402
 from docx import build_docx  # noqa: E402
 from markdown import MarkdownError  # noqa: E402
-from model import MANIFEST  # noqa: E402
+from model import DEFAULT_MANIFESTS, MANIFEST  # noqa: E402
 from style import STYLE, StyleError, font_substitutions, load_style  # noqa: E402
 from projection import ProjectionError, build_projection, projection_bytes, sha256  # noqa: E402
 from validate_registry import ROOT  # noqa: E402
@@ -148,7 +148,8 @@ def build(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--manifest", type=Path, default=MANIFEST)
+    parser.add_argument("--manifest", type=Path, default=None, help="manifest to build; defaults to all default publications")
+    parser.add_argument("--all", action="store_true", help="build all default publications")
     parser.add_argument("--output", type=Path, default=ROOT / "build" / "publication")
     parser.add_argument("--repos-root", type=Path, help="directory holding the domain checkouts")
     parser.add_argument("--no-pdf", action="store_true", help="projection only; needs no LibreOffice")
@@ -156,25 +157,57 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--release", action="store_true", help="published edition: all sources clean, or fail")
     args = parser.parse_args(argv)
 
-    try:
-        files, record = build(args.manifest, args.repos_root, not args.no_pdf, args.check, args.release)
-    except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError, StyleError) as exc:
-        print(f"Publication: FAIL\n{exc}")
-        return 1
+    manifest_targets = [args.manifest] if args.manifest else list(DEFAULT_MANIFESTS)
 
-    # The only clock in the build, and it is in no digest. SOURCE_DATE_EPOCH pins it.
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     now = datetime.datetime.fromtimestamp(int(epoch), datetime.UTC) if epoch else datetime.datetime.now(datetime.UTC)
-    record["generated_at"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
-    record["artifacts"] = {name: {"sha256": sha256(data), "bytes": len(data)} for name, data in sorted(files.items())}
-    files[MANIFEST_NAME] = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    generated_at = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    root_manifest: dict[str, Any] = {
+        "generated_at": generated_at,
+        "edition": "published" if args.release else "working",
+        "tools": {"mermaid_cli_pinned": mermaid.PINNED_VERSION},
+        "publications": {},
+    }
 
     args.output.mkdir(parents=True, exist_ok=True)
-    for name, data in files.items():
-        (args.output / name).write_bytes(data)
-        if name != MANIFEST_NAME:
-            print(f"{sha256(data)}  {name}")
-    print(f"Publication: PASS, {record['edition']} edition" + (f" ({record['pages']} pages)" if "pages" in record else " (projection only)"))
+
+    for manifest_path in manifest_targets:
+        try:
+            files, record = build(manifest_path, args.repos_root, not args.no_pdf, args.check, args.release)
+        except (ProjectionError, MarkdownError, mermaid.MermaidError, pdf.PdfError, QualityError, StyleError) as exc:
+            print(f"Publication {manifest_path.name}: FAIL\n{exc}")
+            return 1
+
+        record["generated_at"] = generated_at
+        record["artifacts"] = {name: {"sha256": sha256(data), "bytes": len(data)} for name, data in sorted(files.items())}
+        files[MANIFEST_NAME] = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+        pub_id = record["publication"]
+        pub_dir = args.output / pub_id
+        pub_dir.mkdir(parents=True, exist_ok=True)
+
+        for name, data in files.items():
+            (pub_dir / name).write_bytes(data)
+            if name != MANIFEST_NAME:
+                print(f"{sha256(data)}  {pub_id}/{name}")
+
+        print(f"Publication {pub_id}: PASS, {record['edition']} edition" + (f" ({record['pages']} pages)" if "pages" in record else " (projection only)"))
+
+        root_manifest["sources"] = record["sources"]
+        root_manifest["release"] = record.get("release", {})
+        root_manifest["revision"] = record.get("revision")
+        root_manifest["registry_digest"] = record["registry_digest"]
+        root_manifest["style"] = record["style"]
+        root_manifest["tools"].update(record.get("tools", {}))
+        root_manifest["publications"][pub_id] = {
+            "path": pub_id,
+            "manifest": manifest_path.relative_to(ROOT).as_posix() if manifest_path.is_relative_to(ROOT) else manifest_path.name,
+            "artifacts": record["artifacts"],
+            **({"pages": record["pages"]} if "pages" in record else {}),
+        }
+
+    (args.output / MANIFEST_NAME).write_text(json.dumps(root_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return 0
 
 

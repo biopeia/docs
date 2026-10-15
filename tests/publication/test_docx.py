@@ -456,7 +456,7 @@ def test_every_diagram_of_the_corpus_renders_and_renders_the_same_twice():
 
 
 def test_style_file_is_validated(tmp_path):
-    text = (ROOT / "publication" / "style.yaml").read_text(encoding="utf-8")
+    text = (ROOT / "publication" / "style" / "style.yaml").read_text(encoding="utf-8")
     bad = tmp_path / "style.yaml"
     bad.write_text(text.replace('accent: "0B4F8A"', 'accent: "blue"'), encoding="utf-8")
     with pytest.raises(StyleError, match="colours.accent"):

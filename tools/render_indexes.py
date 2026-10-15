@@ -35,7 +35,7 @@ def title_of(rel: str, docs_root: Path) -> str:
 def render(docs_root: Path = ROOT) -> dict[str, str]:
     """Every index page, keyed by its path in the repository."""
     reg = load_registry(docs_root / "registry")
-    manifest = load_manifest(docs_root / "publication" / "biopeia-master.yaml", docs_root)
+    manifest = load_manifest(docs_root / "publication" / "publications" / "biopeia-master.yaml", docs_root)
     units, findings, domains = reg["coverage"], reg["findings"], reg["schema"]["domains"]
     ordered = [rel for s in sections(manifest) for rel in s.get("chapters") or [] if rel.startswith("explanation/")]
     directories = list(dict.fromkeys(rel.split("/")[1] for rel in ordered))
@@ -120,7 +120,7 @@ def render(docs_root: Path = ROOT) -> dict[str, str]:
     def explanation(link):
         out = ["## Purpose", "", "How Biopeia works, traced to code, tests and decisions. Each directory has its own index.", ""]
         out += ["## Start here", "", link(ordered[0], title_of(ordered[0], docs_root)), ""]
-        out += ["## Reading order", "", f"The order of the main publication, set in {link('publication/biopeia-master.yaml')}.", ""]
+        out += ["## Reading order", "", f"The order of the main publication, set in {link('publication/publications/biopeia-master.yaml')}.", ""]
         number = 0
         for section in manifest["parts"]:
             chapters = [rel for rel in section.get("chapters") or [] if rel.startswith("explanation/")]

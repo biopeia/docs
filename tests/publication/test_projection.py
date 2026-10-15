@@ -9,7 +9,12 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "publication"))
 
-from model import GENERATED_SECTIONS, load_manifest, sections  # noqa: E402
+from model import (  # noqa: E402
+    GENERATED_SECTIONS,
+    TECHNICAL_REFERENCE_MANIFEST,
+    load_manifest,
+    sections,
+)
 from projection import GENERATORS, ProjectionError, build_projection, projection_bytes  # noqa: E402
 from validate_registry import load_registry  # noqa: E402
 
@@ -17,6 +22,11 @@ from validate_registry import load_registry  # noqa: E402
 @pytest.fixture(scope="module")
 def projection():
     return build_projection()
+
+
+@pytest.fixture(scope="module")
+def tech_ref_projection():
+    return build_projection(manifest_path=TECHNICAL_REFERENCE_MANIFEST)
 
 
 def chapters(projection):
@@ -51,18 +61,18 @@ def test_chapter_title_is_lifted_out_of_the_body(projection):
     assert chapter["base"] == "explanation/world"
 
 
-def test_registry_sections_reflect_the_registry(projection):
+def test_registry_sections_reflect_the_registry(tech_ref_projection):
     reg = load_registry(ROOT / "registry")
-    by_id = {c["id"]: c["markdown"] for c in chapters(projection)}
+    by_id = {c["id"]: c["markdown"] for c in chapters(tech_ref_projection)}
     for contract in reg["contracts"].values():
         assert f"## {contract['title']}" in by_id["generated-contracts"]
     for cid, component in reg["components"].items():
         assert f"### `{cid}` — " in by_id["generated-components"]
         assert f"| Unit | `{component['coverage_unit']}` |" in by_id["generated-components"]
-    assert projection["inventory"]["Components"] == len(reg["components"])
-    placed = sum(len(s.get("chapters") or []) for s in sections(load_manifest()))
-    assert projection["inventory"]["Chapters taken from documents"] == placed
-    empty = {c["id"] for c in chapters(projection) if c.get("empty")}
+    assert tech_ref_projection["inventory"]["Components"] == len(reg["components"])
+    placed = sum(len(s.get("chapters") or []) for s in sections(load_manifest(TECHNICAL_REFERENCE_MANIFEST)))
+    assert tech_ref_projection["inventory"]["Chapters taken from documents"] == placed
+    empty = {c["id"] for c in chapters(tech_ref_projection) if c.get("empty")}
     assert empty == {f"generated-{name}" for name in ("notation", "parameters", "metrics") if not reg[name]}
     for param in reg["parameters"].values():
         assert f"`{param['symbol']}`" in by_id["generated-parameters"]
@@ -96,7 +106,7 @@ def copy_sources(tmp_path: Path) -> Path:
 
 
 def build_in(root: Path):
-    return build_projection(root / "registry", root, root / "publication" / "biopeia-master.yaml")
+    return build_projection(root / "registry", root, root / "publication" / "publications" / "biopeia-master.yaml")
 
 
 def test_copy_outside_git_builds_with_unresolved_revision(tmp_path):

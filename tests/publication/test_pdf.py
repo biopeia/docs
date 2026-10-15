@@ -66,10 +66,14 @@ def test_pagination_check_reports_moved_headings():
 def test_projection_only_build_writes_no_document(tmp_path, monkeypatch):
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
     assert publish.main(["--no-pdf", "--check", "--output", str(tmp_path)]) == 0
-    assert sorted(p.name for p in tmp_path.iterdir()) == ["biopeia-master.json", "publication-manifest.json"]
+    assert (tmp_path / "biopeia-master" / "biopeia-master.json").is_file()
+    assert (tmp_path / "biopeia-technical-reference" / "biopeia-technical-reference.json").is_file()
+    assert (tmp_path / "publication-manifest.json").is_file()
     record = json.loads((tmp_path / "publication-manifest.json").read_text())
-    assert record["generated_at"] == "1970-01-01T00:00:00Z" and "pages" not in record
+    assert record["generated_at"] == "1970-01-01T00:00:00Z"
     assert record["edition"] == "working"
+    assert "biopeia-master" in record["publications"]
+    assert "biopeia-technical-reference" in record["publications"]
 
 
 def test_published_edition_refuses_unresolved_or_modified_sources(tmp_path, capsys):
@@ -96,16 +100,17 @@ def test_build_without_libreoffice_fails_closed(tmp_path, monkeypatch, capsys):
 
 @needs_renderer
 def test_full_build_has_real_page_numbers_and_a_truthful_manifest(tmp_path):
-    assert publish.main(["--check", "--output", str(tmp_path)]) == 0
-    record = json.loads((tmp_path / "publication-manifest.json").read_text())
+    assert publish.main(["--check", "--output", str(tmp_path), "--manifest", str(publish.MANIFEST)]) == 0
+    pub_dir = tmp_path / "biopeia-master"
+    record = json.loads((pub_dir / "publication-manifest.json").read_text())
     assert set(record["artifacts"]) == {"biopeia-master.json", "Biopeia-Master.docx", "Biopeia-Master.pdf"}
     for name, artifact in record["artifacts"].items():
-        data = (tmp_path / name).read_bytes()
+        data = (pub_dir / name).read_bytes()
         assert hashlib.sha256(data).hexdigest() == artifact["sha256"] and len(data) == artifact["bytes"]
     assert record["projection_digest"] == record["artifacts"]["biopeia-master.json"]["sha256"]
     assert set(record["sources"]) == {"docs", "organism", "embodiment", "environment", "world", "modality", "observation", "lab"}
 
-    rendered = (tmp_path / "Biopeia-Master.pdf").read_bytes()
+    rendered = (pub_dir / "Biopeia-Master.pdf").read_bytes()
     pages = pdf.page_texts(rendered)
     assert len(pages) == record["pages"] > 50
     start = next(i for i, page in enumerate(pages) if page.lstrip().startswith("Biopeia") and "\nContents\n" in page)
