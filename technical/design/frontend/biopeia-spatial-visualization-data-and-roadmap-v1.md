@@ -523,8 +523,8 @@ current candidates remain proposals for their respective owners:
 
 | Domain | Candidate evidence | Status and scope |
 |---|---|---|
-| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575` | Open documentation candidate for bounded static scene geometry. Not owner-accepted; no publication or implementation authorization. |
-| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Open draft documentation candidate for bounded morphology and transforms. Not owner-accepted; no publication or implementation authorization. |
+| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [merged PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575` | Merged non-normative documentation candidate for bounded static scene geometry. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
+| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [merged PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Merged non-normative documentation candidate for bounded morphology and transforms. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
 | World | [World #162](https://github.com/biopeia/world/issues/162), candidate comment `6200546569` | Proposed consumer-verifiable association to an existing committed cut; no new persistence. Not owner-accepted or implemented. |
 | Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), candidate comment `6200559423` | Proposed passive carriage on the existing local boundary. No new allowlist entry, semantic join, or remote exposure is approved. |
 
