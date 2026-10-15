@@ -220,3 +220,75 @@ decision is inferred from a merge, CI, existing fixture, or this proposal.
 - [Workspace #50 — M1.1 operational/browser evidence and M1.1/M2 boundary](https://github.com/biopeia/workspace/issues/50)
 - [ADR-0075 — authority follows semantic ownership](../../adr/ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md)
 - [ADR-0078 — Observation is causally passive](../../adr/ADR-0078-observation-is-causally-passive.md)
+
+## Current-source revalidation (2026-10-15)
+
+This section supplements, rather than overwrites, the older pinned snapshot
+above. It records a read-only reinspection against the following local remote
+tracking refs. It does not change this document's `proposed` status, approve a
+contract, or authorize implementation. The Lab primary checkout was six
+commits behind its recorded `origin/main`; only files read explicitly with
+`git show origin/main:<path>` count as current Lab evidence in this audit.
+
+| Repository | Revalidated revision | Source evidence inspected | Current finding and limit |
+|---|---|---|---|
+| Embodiment | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`, `observation_contract.py`; tests `test_articulated_spec.py`, `test_articulated_state.py`, `test_physical_projection.py`, `test_body_pose_observation_projection.py`, `test_physics3d_observation_contract.py` | Owner-bound morphology contains segments, dimensions/materials, joint topology, frames and stable morphology content identity. Owner state validates root pose and joint values. The BodyPose projection is root pose only; no browser-facing segment-geometry or per-link world-transform publication contract was identified. The listed tests were inspected as existing test locations, not run as part of this revalidation. |
+| Environment | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `static_scene.py`, `physical.py`, `procedural_genesis.py`, `identified_resource.py`; tests `test_static_scene.py`, `test_physical_projection.py`, `test_environment_physical_projection.py` | Environment owns explicit static scene/frame/primitive and resource geometry values; the procedural sphere layout is narrow and deterministic. These values and solver/checkpoint uses do not by themselves establish an external visual publication contract, general scene/asset format or correlation with Embodiment. Tests were not run in this revalidation. |
+| World | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `observation_publication.py`, `durable_runtime.py`; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py` | World verifies that each published owner observation references a checkpoint in a World-verified committed cut, has matching source lineage and names the same World and causal tick. This generic gate does not create geometry, assert scene completeness, interpret owner values, or make an arbitrary UI join acceptable. Tests were not run in this revalidation. |
+| Observation | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `README.md`, `http_bridge.py`, `semantic.py`; tests `test_http_bridge.py`, `test_plane.py`, `test_observational_boundary_adversarial.py` | The documented browser bridge remains bounded to BodyPose v1 and finite scalar-field current projections. The in-memory plane's global delivery sequence is not domain/causal time and it is not durable history. No general geometry publication family or durable scene query was found. Tests were not run in this revalidation. |
+| Frontend | `326613b74e388d3108cbafd3bab9128a35bd2246` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`; tests include `model.test.js`, `observation-client.test.js`, `observation-store.test.js` | The supported model remains the two bounded M1 claims; README explicitly denies inference of scene geometry, shared World snapshot, causal relation and organism activity. `package.json` has no 3D renderer dependency. No authorized geometry data is currently available to render; absence in the current client is not proof that a domain source cannot provide it. Tests were not run in this revalidation. |
+| Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
+| Organism | `d8ed534d48188fb2f629faaa8dd85b95063a0c2d` | `README.md` and source search for geometry/spatial publication | Organism owns longitudinal identity/private state and lifecycle, not physical body state. No spatial geometry publication was identified. This design excludes private cognition and does not infer organism activity from geometry. |
+| Lab | `90d0229655771d134236c0f2e59cb893c0dbe7c6` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
+| Docs / Workspace | Docs `eb93c8d75bf5e3778081b63f723d61363473f875`; Workspace working tree clean | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
+
+The audit found existing owner geometry sources and a generic World committed-
+cut publication gate, but no complete path that publishes compatible
+Embodiment geometry, Environment geometry and required dynamic state through
+an approved browser-readable Observation contract. A displayable scene cannot
+be reconstructed safely from BodyPose plus a scalar field. This is a finding
+about the inspected source path, not a claim that the source domains lack all
+physical geometry.
+
+### Issue and dependency disposition
+
+- [Frontend #22](https://github.com/biopeia/frontend/issues/22) is the P0
+  coordinator for revalidation and staged delivery. It operationalizes this
+  design; it is not a competing design record.
+- [Embodiment #77](https://github.com/biopeia/embodiment/issues/77) asks the
+  owner to distinguish publishable articulated geometry/state from internal
+  solver/morphology data. It is research/design only.
+- [Environment #73](https://github.com/biopeia/environment/issues/73) asks the
+  owner to disposition existing static/resource geometry for external visual
+  use. It is research/design only and does not duplicate the completed
+  genesis/checkpoint/solver-input work.
+- [Observation #37](https://github.com/biopeia/observation/issues/37) remains
+  the open consumer-read boundary inventory; no replacement issue was opened.
+- [Docs #167](https://github.com/biopeia/docs/issues/167) remains the open
+  security/deployment design gate; no deployment was attempted.
+- [Frontend #4](https://github.com/biopeia/frontend/issues/4) remains design-
+  only browser-adapter readiness, explicitly dependent on Observation #37 and
+  Docs #167.
+- World already has generic committed-cut membership/provenance verification
+  in the inspected source. No World child issue was opened: revisit only if
+  the Embodiment/Environment proposals show that their future owner claims
+  cannot be related to an exact committed cut by the current World contract.
+- Modality and Organism currently have no demonstrated spatial publication
+  role. Lab #63 is a separate Workbench consumer; historical Lab physics code
+  is not a current TARGET renderer. Neither is a justified spatial child task
+  on the current evidence.
+
+The child Issues request owner dispositions; they do not approve a new
+publication family, identity link, transport, inter-owner synchronization,
+asset delivery, or exposure of protected state. Docs #176's proposed readiness
+gates and the applicable security/read-boundary decisions remain controlling.
+
+### Evidence claim ledger for this revalidation
+
+| Claim | Evidence | Type | Limits |
+|---|---|---|---|
+| Environment source code has bounded static and resource geometry values | Environment `static_scene.py`, `physical.py`, `procedural_genesis.py` at `d09e45c...` | Implemented (source observed) | Not a general visual contract or browser delivery path |
+| Embodiment source code has articulated morphology and owner-validated joint/root state | Embodiment `articulated_spec.py`, `articulated_state.py` at `d73315d...` | Implemented (source observed) | No identified UI geometry publication contract; source presence is not authorization |
+| Current Frontend documents only two M1 claim families and no inferred scene | Frontend `README.md` and `src/model.js` at `326613b...` | Documented / implemented boundary | No real-browser test was run for a 3D renderer because no geometry contract is currently exposed |
+| World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `a7c8099...` | Implemented (source observed) | Does not establish complete scene membership or browser support |
+| New domain owner review is needed before proposing owner geometry publication | No external geometry publication family found in inspected Observation adapter; current design #176 leaves owner decisions open | Inference from inspected evidence | Requires Embodiment, Environment, Observation and competent cross-domain Owner disposition; not an approved contract |
