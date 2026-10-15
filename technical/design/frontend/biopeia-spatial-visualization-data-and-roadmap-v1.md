@@ -71,14 +71,14 @@ joint topology, URDF generation, static primitives, physical-step state or
 BodyPose does not establish compatible identity, asset lifetime, display
 geometry or cross-owner coherence for a browser scene.
 
-### Bounded owner dispositions (2026-10-15)
+### Earlier bounded owner candidate-field dispositions (2026-10-15)
 
 The Domain Owner accepted the candidate field subsets recorded in [Embodiment
 #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6197195602),
 [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6197196000),
 and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6197196506).
-These are bounded scope dispositions, not completed wire schemas or permission
-to add fields outside the candidates:
+These earlier dispositions bounded candidate fields; they were not completed
+wire schemas or permission to add fields outside the candidates:
 
 - Embodiment may author a static render-only segment/joint descriptor and a
   dynamic per-link transform projection, bound to body, episode, morphology,
@@ -96,7 +96,7 @@ to add fields outside the candidates:
   Its existing local-only GET/read limits, response cap, strict validation and
   no-history/no-cache/no-cross-owner-join boundary remain in force.
 
-### Owner direction for design work only (2026-10-15)
+### Earlier owner direction for design work only (2026-10-15)
 
 The Owner has authorized the next bounded design and contract-definition work,
 but has **not** approved implementation, publication, or a completed wire
@@ -128,11 +128,11 @@ The current design direction is deliberately narrow:
   define verification and behavior for missing, conflicting, or late claims;
   unresolved claims remain separate and cannot be called one coherent scene.
 
-This remains a proposal direction, not a choice of schema, envelope, transport,
-asset model, or implementation. Design work must first demonstrate the exact
-current-source gap and the minimum fields/relations needed, preferring a
-narrow extension over a new publication architecture. Existing UX and
-security/read-access constraints remain in force. No M2/M3 work is included.
+This recorded the earlier proposal direction, not a choice of schema, envelope,
+transport, asset model, or implementation. The later design-base dispositions
+below supersede its open question about whether this design direction may
+advance, but not its restrictions on final schemas, implementation, publication,
+UX, security/read access or M2/M3 scope.
 
 No disposition authorizes a new shared cross-owner spatial transform. The
 current source audit does, however, identify a narrower M1 configuration: the
@@ -146,7 +146,7 @@ handedness, units, origin, an actual transform, or semantic compatibility.
 This is not a consumer-visible spatial publication or a general cross-profile
 frame contract.
 
-The distinction matters: the approved candidate schemas and current generic
+The distinction matters: the previously accepted candidate field subsets and current generic
 post-commit publication join do not carry the M1 profile's frame-ID linkage
 and equality-check evidence, static descriptor revision, and dynamic per-link
 transforms together to Observation. A renderer must not claim that relation for arbitrary profiles or
@@ -248,7 +248,7 @@ At the exact source snapshot above:
 
 1. Embodiment's `ArticulatedBodySpec` contains candidate segment dimensions,
    origins and joint topology, but its complete checkpoint representation
-   also contains fields explicitly excluded from visualization. The accepted
+   also contains fields explicitly excluded from visualization. The proposed
    render subset needs a new owner-authored projection; the checkpoint must
    not be serialized or filtered by Frontend. `ArticulatedEmbodimentPhysicalState`
    contains root pose and joint position/velocity, not per-link transforms.
@@ -521,14 +521,14 @@ source domains lack all physical geometry.
   is not a current TARGET renderer. Neither is a justified spatial child task
   on the current evidence.
 
-The child Issues request owner dispositions; they do not approve a new
-publication family, identity link, transport, inter-owner synchronization,
-asset delivery, or exposure of protected state. Docs #176's proposed readiness
-gates and the applicable security/read-boundary decisions remain controlling.
-World #162 now makes the consumer-visible shared-cut proof an explicit World
-owner decision rather than an assumption that the existing server-side
-publication join is sufficient. Its independent review approved only the
-bounded framing of the issue, not a particular World disposition.
+The child Issues have recorded design-base Owner dispositions, now linked in
+the candidate-conformance section below. Those dispositions do not approve a
+new publication family, identity link, transport, inter-owner synchronization,
+asset delivery, or exposure of protected state. Exact schemas and publication
+remain subject to owner review; Docs #176 readiness gates and applicable
+security/read-boundary decisions remain controlling. World #162's disposition
+accepts the direction of a consumer-verifiable shared-cut proof but not its
+exact verification mechanism or implementation.
 
 ### Frontend coordinate-marker delta (2026-10-15)
 
@@ -549,6 +549,133 @@ transforms, no approved consumer-visible common-cut proof and no 3D renderer.
 The coordinate markers do not satisfy Spatial Visualization V1 and are not
 evidence of a shared physical coordinate system.
 
+### Owner dispositions and candidate conformance sketches (2026-10-15)
+
+The Owner accepted the architectural direction in Embodiment #77, Environment
+#73, World #162 and Observation #37 as design base. The recorded dispositions
+are [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6200248780),
+[Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6200249144),
+[World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455),
+and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6200249767).
+This acceptance permits preparation and review of candidate schemas and
+conformance vectors. It is not approval of exact fields, wire formats,
+implementation, publication, or the Frontend renderer. The following are
+illustrative review material, not normative contracts. Existing security/read
+limits and owner authority remain in force.
+
+The candidate-gap review used these local `main` revisions as its source
+snapshot (not as runtime pins): Workspace
+`4e34c97569aaa1ba5611eda3dab3923cd33dfd83`, Docs
+`0373d063ada83b08fc4343f6a8c6dc382a155283`, Frontend
+`3b158cc73e57a8175265e1d25a66eb09346679f9`, World
+`51cea9f8975fbdea603592fa5e9c56b073a2f4d4`, Observation
+`a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353`, Embodiment
+`d73315d87bbb3f2eea14e8c33812b37b59a5d72f`, and Environment
+`d09e45c40633c9b2bf927c7aec3f6326318c2ea8`. This is a documented
+source-inspection snapshot; no new integrated runtime or browser execution was
+performed for these candidate sketches.
+
+#### Candidate separation of static description, dynamic state and cut proof
+
+The candidate model has four separately owned parts. Names and encodings below
+are provisional; each owner must settle its own exact schema.
+
+| Candidate part | Owner | Minimum review content | Explicit non-goal |
+|---|---|---|---|
+| Static environment description | Environment | Environment identity/revision; declared frame and units; only source-supported primitive variants; an empty collection is valid | No generated floor, props, terrain or objects. The inspected M1 profile has `objects=()` |
+| Static articulated description | Embodiment | Morphology/body identity and revision; stable segment IDs; parent/attachment topology; explicitly defined visual primitive and local visual origin; digest over precisely the render-description fields | Do not reuse a broader physical morphology digest without proving that its inputs and stability semantics match this purpose |
+| Dynamic articulated state | Embodiment | Complete owner-produced pose set keyed by the static segment IDs; explicit reference frame, units, time/cut reference and finite translation/rotation representation | No Frontend forward kinematics and no second kinematics engine. The owner must identify and validate the producer from authorized state |
+| Cut-association evidence | World | Existing exact committed-cut identity and a verifiable association for dynamic owner state; whether a versioned static descriptor is pinned as a valid input at that cut rather than republished per cut remains an explicit design question | Do not assume a separate session ID exists. No equal-tick-only join, new persistence/history, or claim that evidence attests to semantic correctness or frame compatibility |
+
+An illustrative Environment value may contain `items: []`; that means no
+Environment primitives were published, not an empty plane or a default floor.
+If a ground plane is explicitly published, its normal, offset, frame, unit and
+orientation convention must be fully specified. The inspected source expresses
+the plane using `normal · position_m = offset_m`; the candidate contract must
+retain or deliberately replace that exact convention through Environment
+review. Sphere or box support must likewise be limited to forms actually
+owned and produced by Environment or Embodiment. Do not infer support for
+meshes, textures, materials, lights or arbitrary assets.
+
+Embodiment must settle whether a visual primitive is body-local, segment-local
+or attached through another explicit frame, and define handedness, axis
+convention, quaternion component order, normalization tolerance and digest
+canonicalization. Any dynamic pose list must be complete and unambiguous for
+the referenced static description. Existing root pose and joint scalars do
+not, on their own, prove that per-link browser poses are currently published.
+The owner must identify a source that already calculates the authorized
+transforms at the same physical state; duplicating kinematics in Frontend is
+out of scope.
+
+World's candidate proof must bind dynamic publication references to the *same
+exact confirmed cut*, rather than infer association from equal `causal_tick`.
+It should reuse existing cut/commit identity and evidence, not introduce a new
+session identifier unless one is already part of an approved source contract.
+Static geometry/morphology may be immutable or versioned across multiple cuts;
+the competent owners and World must decide how the selected revision is pinned
+and shown to be valid for the cut without requiring per-tick republishing.
+Whether an opaque reference, publication/checkpoint identity, schema revision
+or digest is exposed to a consumer is unresolved and requires owner and
+security/read-boundary review. Internal filesystem locators must not be
+exposed. The design still needs to identify who authenticates World-issued
+evidence, how a consumer distinguishes confirmed from uncertain state, and how
+restore/fork/recovery affect the binding. A digest alone must not be treated as
+proof of authenticity. Any eventual proof establishes only the exact membership
+it specifies; it does not prove geometry validity, coordinate compatibility,
+scene completeness, or scientific meaning.
+
+Observation's candidate role is bounded transport of separately identified,
+owner-approved publications with their original provenance and World evidence
+unchanged. The response remains subject to the existing configured size and
+read boundary. The current total response cap is not a per-family budget; the
+owners must derive safe per-message/count limits and demonstrate the combined
+response bound. Observation must not create a cross-owner semantic join, turn
+delivery order into causal order, repair missing data, or call the result a
+coherent scene. Frontend may assemble a joint visual presentation only after
+the approved evidence and exact frame-compatibility rules permit it.
+
+#### Candidate positive and negative conformance vectors
+
+These vectors are proposed test cases, not tests already implemented or
+executed. Owners should turn the applicable cases into executable tests in
+their repositories before exact contract approval.
+
+| Case | Candidate expectation | Responsible review |
+|---|---|---|
+| Environment explicitly publishes no primitives (`items: []`) | Valid empty publication; renderer shows no invented geometry | Environment, Frontend |
+| A supported, finite primitive has unique identity, declared dimensions, frame and unit | Accept only if that primitive and convention are included in the final Environment contract | Environment |
+| Unknown primitive kind, duplicate identity, non-finite coordinate, non-positive size, malformed frame, undeclared unit or digest mismatch | Reject; do not silently substitute geometry or defaults | Owning geometry domain |
+| Static Embodiment topology has duplicate/missing segment IDs or invalid parent links | Candidate rejection; exact invariants belong in the Embodiment schema | Embodiment |
+| Dynamic pose is missing/duplicated for a required segment, has non-finite translation, invalid quaternion, mismatched body/morphology/digest or incompatible reference frame | Candidate rejection; pose completeness/freshness rules and numeric tolerances require Embodiment decision. Do not calculate missing transforms in Frontend | Embodiment; Frontend verifies contract only |
+| Two projections have the same tick but different World/commit identity | Reject the proposed common-cut association | World |
+| Owner publication identity/revision/digest is absent, ambiguous, mismatched or not a member of the claimed cut | Reject association; preserve claims separately if existing Observation policy allows | World, Observation |
+| A required dynamic owner publication is missing, late or unavailable | Do not present a complete/coherent dynamic scene; expose available claims with separate status. Static revision lifetime/pinning must be resolved separately and is not automatically a late per-tick publication | World, Observation, Frontend |
+| Carried response exceeds approved total/count/size limits | Apply the exact owner-approved bound/error policy; the policy must prevent a truncated payload from appearing valid. Numeric limits and error behavior remain undecided | Observation |
+| Observation receives valid distinct owner claims and cut evidence | Preserve each claim and provenance independently; do not join or reinterpret them | Observation |
+
+#### Executable-test ownership and gates
+
+| Repository | Candidate test responsibility | Gate before implementation |
+|---|---|---|
+| Environment | Primitive allowlist, identity uniqueness, finite values, frame/units, empty-set semantics, deterministic digest and bounded size | Environment approves exact static schema and visual/ground convention |
+| Embodiment | Topology validity, visual-local-frame convention, canonical render digest, pose completeness/validity and evidence for the transform producer | Embodiment approves exact static and dynamic schemas and source responsibility; no duplicate kinematics |
+| World | Exact-cut association, committed identity and publication-reference membership; negative same-tick/different-commit cases; rejection for missing/ambiguous references | World approves the exact consumer verification mechanism, reusing existing causal evidence |
+| Observation | Strict allowlist, passive byte-preserving or equivalently lossless carriage, provenance preservation, total/count bounds, invalid payload rejection and no cross-owner join | Observation and affected owners approve exact carried schema/bounds; existing security limits unchanged |
+| Frontend | Consume only the approved shape; no fabricated defaults, forward kinematics, implicit joins, stale-source mixing or unverified common-scene label | Contract gates pass; renderer implementation is separately authorized |
+
+These are test plans only. No new test currently proves these candidate
+contracts, no new data family has been published, and no renderer implementation
+is authorized by the design-base disposition. The exact schemas, static
+revision lifetime, frame compatibility rules (including why matching frame
+labels alone would or would not suffice), digest canonicalization, numerical
+tolerances, size/count limits, error behavior, verifier trust path and
+restore/fork semantics remain open decisions in the existing issues. These
+vectors are candidate review criteria, not normative acceptance tests. The
+equality of frame identifiers or axis labels alone must not be taken as proof
+of spatial compatibility. The
+registry state for this document therefore remains `proposed` /
+`not_evaluated` / `UNRESOLVED`.
+
 ### Evidence claim ledger for this revalidation
 
 | Claim | Evidence | Type | Limits |
@@ -558,5 +685,5 @@ evidence of a shared physical coordinate system.
 | Current Frontend consumes the two bounded M1 claim families and presents their supported coordinates as separate 2D markers, without inferring a scene | Frontend `README.md`, `package.json`, `src/model.js`, `src/views.js` and `src/style.css` at `3b158cc73e57a8175265e1d25a66eb09346679f9`; [PR #24](https://github.com/biopeia/frontend/pull/24) tests | Implemented presentation boundary | No real-browser rendering of authorized 3D geometry was run; no geometry contract or 3D renderer is currently exposed |
 | World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `a7c8099...` | Implemented (source observed) | Does not establish complete scene membership or browser support |
 | M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `a7c8099...` | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
-| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `a7c8099...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; independently reviewed in [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6197883495) | Implemented + independently reviewed gap | Limited to the two currently allowlisted M1 families. No conclusion that matching ticks are sufficient; World owner disposition and affected-owner review remain open |
-| New domain owner review is needed before proposing owner geometry publication | No external geometry publication family found in inspected Observation adapter; current design #176 leaves owner decisions open | Inference from inspected evidence | Requires Embodiment, Environment, Observation and competent cross-domain Owner disposition; not an approved contract |
+| World validates owner publications against a committed cut, but the browser lacks a shared-cut proof in the current M1 subset | World `observation_publication.py` at `a7c8099...`; Observation `http_bridge.py` and family serializers at `a8b43af...`; design-base disposition [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455) | Implemented + independently reviewed gap; design direction accepted | Limited to the two currently allowlisted M1 families. Equal ticks are insufficient. Exact verifier, consumer trust path and affected-owner contract review remain open |
+| Domain owners accepted the spatial publication direction as design base, permitting candidate schema/vector preparation only | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6200248780), [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6200249144), [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6200249767) | Owner disposition recorded | Exact owner schemas, field bounds, publication families and implementation authorization remain open |
