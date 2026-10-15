@@ -202,7 +202,48 @@ flowchart TB
   before --> step --> after
 ```
 
-The ten steps as decided. The diagram shows the order that is required, not
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+  autonumber
+  actor Op as Operator / Lab
+  participant Env as Environment
+  participant Mod as Modality
+  participant Org as Organism
+  participant Emb as Embodiment
+  participant Wld as World (Coordinator & Store)
+  participant Phy as Physics Substrate (MuJoCo)
+  participant Obs as Observation Plane
+
+  Note over Env,Org: Slices 1-3: Sensing and Transduction
+  Emb->>Env: Project receptor coordinates (body to world frame)
+  Env->>Mod: Evaluate scalar field at receptor coordinates
+  Mod->>Org: Transduce dimensionless scalar signal (opaque input)
+  Org->>Org: Cognitive graph pass & motor exploration proposal
+
+  Note over Org,Wld: Slices 4-6: Action Projection & Physical Step
+  Org->>Emb: Emit MotorCommand (named effectors, complete groups)
+  Wld->>Emb: Request physical projection (joint limits, pose)
+  Wld->>Env: Request arena geometry & boundary context
+  Wld->>Phy: Run numerical step candidate (applied torques)
+  Phy-->>Wld: Return proposed step candidate + trajectory evidence
+
+  Note over Wld,Emb: Slices 7-8: Owner Validation & Durable Commit
+  Wld->>Emb: Validate candidate correlation (angular velocity cap)
+  Emb-->>Wld: Confirm adoption & return next body checkpoint blob
+  Wld->>Env: Validate candidate scene continuity
+  Env-->>Wld: Confirm adoption & return next arena checkpoint blob
+  Wld->>Org: Request candidate cognitive checkpoint blob
+  Org-->>Wld: Return opaque organism checkpoint blob
+  Wld->>Wld: Persist content-addressed blobs & commit manifest cut (N+1)
+
+  Note over Wld,Obs: Slices 9-10: Delivery & Evidence Custody
+  Wld->>Obs: Deliver committed cut receipt & verified owner claims
+  Obs-->>Op: Read-only stream (body pose, scalar field claims)
+  Op->>Lab: Trace run sequence from genesis to committed cut
+```
+
+The ten steps as decided. The diagrams show the order and protocol choreography that is required, not
 anything that runs.
 
 | Step, as decided | What must hold | Today |

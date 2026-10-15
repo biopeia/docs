@@ -38,16 +38,42 @@ actuator applicability and surface fingerprints across ticks and restarts
 
 ## The six steps at a glance
 
-```text
-ActionAffordance ──admit──▶ ProspectiveDecision ──copied by caller──▶ ActionIntent
-                                                                          │ id only
-ActionProposal ◀──────────────────────────────built by caller────────────┘
-      │ arbitrate
-      ▼
-ArbitrationDecision ──read by caller──▶ ActionCommitment
-                                              │ controller
-                                              ▼
-                                       ControllerFrame ──bind──▶ MotorCommand
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+flowchart LR
+  subgraph step1["1. Affordance Layer"]
+    aff["ActionAffordance<br/>(competence, effect, confidences;<br/>no actuator/motor semantics)"]
+  end
+
+  subgraph step2["2. Executive Admission"]
+    dec["ProspectiveDecision<br/>(admit_afforded_action:<br/>relevance, thresholds, history)"]
+  end
+
+  subgraph step3["3. Intent and Proposal"]
+    intent["ActionIntent<br/>(PENDING -> ACTIVE -> ended)"]
+    prop["ActionProposal<br/>(resource reservations)"]
+  end
+
+  subgraph step4["4. Arbitration"]
+    commit["ActionCommitment<br/>(single winner selected)"]
+  end
+
+  subgraph step5["5. Composition and Expansion"]
+    comp["OrganismExplorationComposer<br/>(bounded action policy,<br/>required_complete_groups neutral expansion)"]
+  end
+
+  subgraph step6["6. Surface Validation and Command"]
+    surf["ActuatorSurface Validation<br/>(channel IDs, unit ranges,<br/>morphology fingerprint)"]
+    cmd["MotorCommand<br/>(immutable command emitted<br/>to Embodiment)"]
+  end
+
+  aff -->|admit| dec
+  dec -->|materialize| intent
+  intent -->|build| prop
+  prop -->|arbitrate| commit
+  commit -->|compose| comp
+  comp -->|validate| surf
+  surf -->|issue| cmd
 ```
 
 The coordinator owns admission-to-intent consistency, arbitration and

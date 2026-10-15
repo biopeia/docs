@@ -80,6 +80,55 @@ It holds twenty-three numbers; constructing a graph reads three of them. Several
 refer to an episodic memory and a consolidation schedule that are not in this
 package.
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+flowchart LR
+  subgraph senses["Sense Layer (No incoming edges)"]
+    direction TB
+    s1["SENSE: s_0<br/>(Echoes input, tau=1.0)"]
+    s2["SENSE: s_1<br/>(Echoes input, tau=1.0)"]
+  end
+
+  subgraph hidden["Hidden and Recurrent Processing (max_nodes <= 768)"]
+    direction TB
+    c1["CONCEPT: c_0<br/>(tau, bias; max_concepts <= 192)"]
+    st1["STATE: st_0<br/>(Recurrent activation, delay=1)"]
+    p1["PREDICTOR: p_0<br/>(predicts_node_id: s_0)"]
+    g1["GATE: g_0<br/>(declared node kind)"]
+  end
+
+  subgraph readouts["Readout Layer (Consultative boundary)"]
+    direction TB
+    r1["READOUT: r_0<br/>(Feedforward projection)"]
+    r2["READOUT: r_1<br/>(Feedforward projection)"]
+  end
+
+  subgraph external["External Action Boundary (Outside Graph)"]
+    no_act["NO ACTION NODE KIND IN GRAPH<br/>(Readouts consultatively drive ActionDomain)"]
+  end
+
+  s1 -->|delay 0 or 1, weight -2 to +2| c1
+  s2 -->|delay 0 or 1, weight -2 to +2| c1
+  c1 -->|delay 1, excitatory or inhibitory| st1
+  st1 -->|delay 1, recurrent feedback| c1
+  c1 -->|gating edge: factor in 0.0 to 1.0| p1
+  st1 -->|predictive edge: weight -2 to +2| p1
+  c1 -->|feedforward edge, delay 1| r1
+  st1 -->|feedforward edge, delay 1| r2
+  r1 -.-> no_act
+  r2 -.-> no_act
+
+  classDef senseClass fill:#e1f5fe,stroke:#0288d1,stroke-width:1.5px;
+  classDef hiddenClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1.5px;
+  classDef readoutClass fill:#e8f5e9,stroke:#388e3c,stroke-width:1.5px;
+  classDef boundaryClass fill:#fff3e0,stroke:#f57c00,stroke-width:1.5px,stroke-dasharray: 4 4;
+
+  class s1,s2 senseClass;
+  class c1,st1,p1,g1 hiddenClass;
+  class r1,r2 readoutClass;
+  class no_act boundaryClass;
+```
+
 ## One pass of activation
 
 Read from `CognitiveGraph.activate` and confirmed by running it.

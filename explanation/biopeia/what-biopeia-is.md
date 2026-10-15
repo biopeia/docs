@@ -65,6 +65,48 @@ explicit, attributable request to the authority concerned, never a side
 effect of observing
 ([ADR-0101](../../technical/adr/ADR-0101-operator-control.md)).
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+flowchart TB
+  subgraph authorities["Semantic Authorities (Own state, meaning, failure)"]
+    direction TB
+    org["Organism<br/>(Longitudinal identity, private cognition, agency, portable state)"]
+    emb["Embodiment<br/>(Somatic truth, morphology, energy, damage, viability)"]
+    env["Environment<br/>(External environmental state, finite fields, spatial arena)"]
+    wld["World<br/>(Shared causality, causal time, coordination, commit, recovery)"]
+  end
+
+  subgraph capabilities["Capabilities (No private state, no semantic authority)"]
+    direction TB
+    mod["Modality<br/>(Opaque transduction between physical phenomena and signals)"]
+    obs["Observation<br/>(Causally passive read, projection, delivery, and claim transport)"]
+  end
+
+  subgraph apparatus["Scientific Apparatus"]
+    lab["Lab<br/>(Study composition, attributable intervention, evidence custody)"]
+  end
+
+  subgraph non_authoritative["Non-Authoritative Substrates and Tooling"]
+    direction TB
+    physics["Physics Substrate (MuJoCo)<br/>(Numerical computation only; proposal not authority)"]
+    op["Operator Control<br/>(Explicit attributable requests; not observation side-effects)"]
+    fe["Frontend<br/>(Passive presentation, ephemeral UI; no semantic authority)"]
+    ws["Workspace<br/>(Developer tooling, orchestration; no cross-domain authority)"]
+  end
+
+  env -->|samples| mod
+  mod -->|opaque signals| org
+  org -->|motor commands| emb
+  emb -->|projections| wld
+  env -->|projections| wld
+  wld -.->|step candidate request| physics
+  physics -.->|computed trajectory| wld
+  wld -->|durable cut receipt| obs
+  obs -->|read-only claim stream| fe
+  lab -.->|attributable intervention| wld
+  op -.->|explicit request| lab
+```
+
 ## What the decisions fix
 
 ### An Organism is one individual over time

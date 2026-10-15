@@ -121,6 +121,64 @@ Process shutdown is governed by strict signal coordination:
   uninterrupted resource release
   (`world:tests/integration/test_m1_process.py:122-163`).
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+flowchart TD
+  subgraph preflight["Fail-Closed Preflight Validation (world-m1)"]
+    direction TB
+    start["CLI Invocation: world-m1"] --> c1["1. Git tree clean? (no unstaged/untracked)"]
+    c1 -->|No| fail_preflight["Emit JSONL: preflight_failed (Exit code 2, Zero disk writes)"]
+    c1 -->|Yes| c2["2. Package version matches pyproject.toml?"]
+    c2 -->|No| fail_preflight
+    c2 -->|Yes| c3["3. Exact 40-char SHA pins? (direct_url.json: 5 repos)"]
+    c3 -->|No| fail_preflight
+    c3 -->|Yes| c4["4. MuJoCo version? (assert == 3.15.0)"]
+    c4 -->|No| fail_preflight
+    c4 -->|Yes| c5["5. Target state_root? (non-existent, valid parent)"]
+    c5 -->|No| fail_preflight
+  end
+
+  subgraph bootstrap["Runtime Construction and Genesis Bootstrap (Tick 0)"]
+    direction TB
+    mk_dirs["Create directory layout: manifest/, journal/, checkpoints/"]
+    gen_store["FileOwnerCheckpointStore.write_genesis(): checkpoints/digest[:2]/digest.blob"]
+    init_runtime["Initialize DurableWorldRuntime: Genesis cut at tick 0"]
+    start_bridge["Start LocalObservationReadBridge: 127.0.0.1:0 (origin: http://127.0.0.1:4173)"]
+    emit_ready["Emit JSONL: ready (bridge URL, run ID, genesis cut)"]
+
+    mk_dirs --> gen_store --> init_runtime --> start_bridge --> emit_ready
+  end
+
+  subgraph execution["Execution Loop and Velocity Regulation"]
+    direction TB
+    session_loop["run_scalar_sensorimotor_session (finite cycles or continuous streaming)"]
+    vel_reg["Profile v2 / operator-r3: Candidate velocity within Embodiment cap?"]
+    cycle_fail["Fail cycle & reject candidate (No qvel clipping)"]
+    cycle_commit["Durable commit cut N+1 (Emit velocity_regulation evidence)"]
+    next_cycle["Check stop_requested() between cycles"]
+
+    session_loop --> vel_reg
+    vel_reg -->|Exceeded| cycle_fail
+    vel_reg -->|Compliant| cycle_commit
+    cycle_commit --> next_cycle
+    next_cycle -->|Continue| session_loop
+  end
+
+  subgraph teardown["Protected Cooperative Teardown (#154)"]
+    direction TB
+    trap_sig["Trap SIGINT / SIGTERM: Complete in-flight cycle"]
+    inner_try["try: close session & flush state"]
+    try_finally["finally: inner try...finally: runtime.observation_bridge.close()"]
+    restore_sig["Restore original signal handlers: Exit code 0"]
+
+    trap_sig --> inner_try --> try_finally --> restore_sig
+  end
+
+  c5 -->|Yes| mk_dirs
+  emit_ready --> session_loop
+  next_cycle -->|Signal received| trap_sig
+```
+
 ## What supports this description
 
 | Claim | Support |

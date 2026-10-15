@@ -126,6 +126,18 @@ In the original analysis at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310
 | Mean loss, last 20 | 0.3201 |
 | Loss of a predictor that always outputs 0 for this signal | 0.5 × 0.8² = 0.32 |
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+xychart-beta
+    title "Huber Prediction Loss Decay Under Oja Update (PR #174 / F-0071)"
+    x-axis ["t=2", "t=10", "t=20", "t=50", "t=100", "t=150", "t=200"]
+    y-axis "Huber Loss (delta=1.0)" 0.30 --> 0.38
+    line [0.3528, 0.3460, 0.3387, 0.3270, 0.3214, 0.3203, 0.3201]
+    line [0.3200, 0.3200, 0.3200, 0.3200, 0.3200, 0.3200, 0.3200]
+```
+
+*Figure: Model Huber loss (upper decaying curve) converging toward the zero-output baseline (flat line at 0.3200) as the Hebbian weight decays from 0.05 to < 1e-3. The persistence baseline remains constant at 1.1000, far above the plot ceiling. The model never beats the zero-output baseline.*
+
 The loss falls solely because the weight shrinks toward zero. With a small positive
 weight the predictor's output is a small copy of the current signal, which is
 the opposite sign to the next one, so it is slightly worse than silence; the

@@ -48,6 +48,52 @@ Each tick of the cycle advances through seven explicit stages:
    against the verified receipt (`adopt_after_world_commit`), and World
    publishes verified owner observations to the observation plane.
 
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+stateDiagram-v2
+  [*] --> Initialized: Bootstrap (Genesis tick 0)
+
+  state Initialized {
+    direction TB
+    [*] --> IdleBetweenCycles
+    IdleBetweenCycles --> CheckStop: between-cycle boundary
+    CheckStop --> TerminatedStopped: stop_requested == true
+    CheckStop --> TerminatedCompleted: cycles == max_cycles
+    CheckStop --> Phase1_ReceptorProjection: continue run
+  }
+
+  state "Sensorimotor Causal Cycle (Tick N)" as Cycle {
+    direction TB
+    Phase1_ReceptorProjection --> Phase2_FieldSampling: project receptor coords
+    Phase2_FieldSampling --> Phase3_CognitiveProposal: evaluate scalar field
+    Phase3_CognitiveProposal --> Phase4_PhysicsStep: transduce & compose action
+    Phase4_PhysicsStep --> Phase5_BlobPersistence: compute step & check vel cap
+    Phase5_BlobPersistence --> Phase6_DurableCommit: fsync owner blobs to disk
+    Phase6_DurableCommit --> Phase7_AdoptionAndDelivery: commit cut receipt to manifest
+
+    Phase4_PhysicsStep --> PreCommitFailure: solver reject or vel cap exceeded
+    Phase5_BlobPersistence --> PreCommitFailure: disk IO or fsync error
+    Phase6_DurableCommit --> PreCommitFailure: manifest append error
+  }
+
+  state "Post-Commit Verification and Observation" as PostCommit {
+    Phase7_AdoptionAndDelivery --> StreamEmit: adopt candidate state
+    StreamEmit --> CheckStop: emit on_cycle_result callback
+    Phase7_AdoptionAndDelivery --> PublicationFailure: observation bridge error
+  }
+
+  state "Failure States and Boundary Guarantees" as Failures {
+    direction TB
+    PreCommitFailure --> RecoveryRequired: ManifestStatus.RECOVERY_REQUIRED
+    PublicationFailure --> FailedWithPreservedCut: Cut verified & preserved in manifest
+  }
+
+  TerminatedStopped --> [*]: Status STOPPED
+  TerminatedCompleted --> [*]: Status COMPLETED
+  RecoveryRequired --> [*]: Status RECOVERY_REQUIRED (last cut preserved)
+  FailedWithPreservedCut --> [*]: Status FAILED (uncertain delivery)
+```
+
 ## The owner checkpoint store and genesis persistence
 
 World stores owner checkpoints without inspecting or decoding their internal
