@@ -342,3 +342,31 @@ contracts:
     documented_in:
       - explanation/organism/cognitive-graph.md
       - explanation/organism/cognitive-checkpoint.md
+
+  contract.observation-local-read-bridge:
+    title: Loopback observation read bridge for local presentation
+    summary: >
+      World and Observation provision a loopback HTTP read bridge exposing
+      the current in-memory observation snapshot over GET /v1/current.
+      The Frontend development server proxies requests from same-origin clients
+      (/api/observation/current) upstream to the bridge, enforcing strict
+      Origin allowlisting, 1 MB payload limits, and CSP connect-src 'self'.
+    agreement: structural
+    parties:
+      - unit: component.world-observation-publication
+        role: publishes committed owner observations into the observation plane
+      - unit: component.observation-presentation-boundary
+        role: serves validated current snapshots and enforces loopback Host and Origin security
+    governed_by:
+      - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
+      - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
+      - docs:technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md
+    evidence:
+      - observation:tests/test_http_bridge.py
+      - world:tests/integration/test_m1_process.py
+      - frontend:tests/frontend-server.test.js
+      - frontend:tests/observation-client.test.js
+    documented_in:
+      - explanation/world/observation-publication.md
+      - explanation/observation/observation-plane.md
+      - explanation/cross-domain/observation-presentation-boundary.md

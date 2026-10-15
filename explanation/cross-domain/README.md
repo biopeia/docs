@@ -22,7 +22,7 @@ Explanations that cross domains. They are derived from the unit documents and ad
 
 ## Related domains
 
-No cross-domain contract registered for these units.
+- Loopback observation read bridge for local presentation: with world
 
 ## Designs
 

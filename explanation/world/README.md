@@ -21,8 +21,9 @@ Explanatory documents of the World domain (semantic-authority).
 7. [The physical causal step, as it exists today](physical-step.md)
 8. [The sensorimotor causal cycle](causal-cycle.md)
 9. [Post-commit observation publication and outcome classification](observation-publication.md)
-10. [The MuJoCo step executor](mujoco-step-executor.md)
-11. [World recovery](recovery.md)
+10. [The M1 bounded process bootstrap and operator profile](m1-process-bootstrap.md)
+11. [The MuJoCo step executor](mujoco-step-executor.md)
+12. [World recovery](recovery.md)
 
 ## Canonical documents
 
@@ -41,6 +42,7 @@ Explanatory documents of the World domain (semantic-authority).
 | [mujoco-step-executor.md](mujoco-step-executor.md) | `component.world-mujoco-step-executor` | EXPERIMENTAL | RECORDED |
 | [observation-publication.md](observation-publication.md) | `component.world-observation-publication` | CURRENT | RECORDED |
 | [causal-cycle.md](causal-cycle.md) | `component.world-causal-cycle` | CURRENT | RECORDED |
+| [m1-process-bootstrap.md](m1-process-bootstrap.md) | `component.world-m1-process-bootstrap` | CURRENT | RECORDED |
 
 ## Related domains
 
@@ -51,6 +53,7 @@ Explanatory documents of the World domain (semantic-authority).
 - Operator material transfer observation publication: with lab, observation
 - Body physical input to a solver: with embodiment
 - Organism cognitive state in a World causal cut: with organism
+- Loopback observation read bridge for local presentation: with observation
 
 ## Designs
 
@@ -81,6 +84,7 @@ Explanatory documents of the World domain (semantic-authority).
 - [ADR-0098 — Physical substrate and causal integration](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)
 - [ADR-0106 — Hybrid multi-owner persistence](../../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md)
 - [ADR-0107 — Journal role](../../technical/adr/ADR-0107-journal-role.md)
+- [ADR-0112 — Repository Settings and GitHub Actions Baseline](../../technical/adr/ADR-0112-repository-settings-and-actions-baseline.md)
 - [ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md)
 
 ## Open findings

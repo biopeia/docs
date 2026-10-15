@@ -1166,7 +1166,7 @@ components:
         - "mapping of internal stream states to the 14 client availability statuses"
       must_not:
         - "allow presentation components to issue simulation commands or mutate simulation state"
-        - "weaken CSP directives (connect-src 'none') or expose live execution credentials"
+        - "weaken CSP directives (allowing only same-origin connect-src 'self' via local proxy) or expose live execution credentials"
     state:
       owner: implementation-local
       family: ephemeral
@@ -1176,3 +1176,32 @@ components:
       - "read-only view models for the seven frontend peer screens"
     consumers:
       - "independent presentation shell (frontend)"
+
+  WLD-BST:
+    coverage_unit: component.world-m1-process-bootstrap
+    name: "World M1 process bootstrap and operator profile"
+    authority:
+      owns: "the command-line entry point, preflight validation of dependency revisions and solver environment, operator profile decoding, and cooperative process shutdown"
+      may_decide:
+        - "whether preflight checks (VCS clean state, dependency commit SHAs, MuJoCo 3.15.0, uncreated state root) permit process start"
+        - "that any preflight failure emits a JSONL failed event and exits with code 2 without creating files"
+        - "the initialization of genesis owner checkpoints at tick 0"
+        - "the sampling of cooperative stop requests between completed sensorimotor cycles"
+      must_not:
+        - "treat operator profile inputs as physical truth or simulation outcomes"
+        - "interrupt an active in-flight causal step or durable commit on stop signals"
+    state:
+      owner: world
+      family: causal_history
+    causal_state:
+      durable: true
+      in_causal_cut: true
+      failed_transition_residue: "none on preflight failure; on mid-session stop, the clean committed cut of the last completed cycle"
+    inputs:
+      - "command-line arguments: profile path, state root path, and max cycles"
+      - "operator profile JSON conforming to biopeia.world.m1.scalar-sensorimotor-profile v1"
+    outputs:
+      - "JSONL lifecycle events on stdout/stderr (ready, cycle, completed, stopped, failed)"
+      - "initialized DurableWorldRuntime, state directory, and bound LocalObservationReadBridge"
+    consumers:
+      - "simulation operators, acceptance test runners, and frontend live browser sessions"

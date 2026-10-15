@@ -92,6 +92,7 @@ parts:
       - explanation/world/physical-step.md
       - explanation/world/causal-cycle.md
       - explanation/world/observation-publication.md
+      - explanation/world/m1-process-bootstrap.md
       - explanation/world/mujoco-step-executor.md
       - explanation/world/recovery.md
 
