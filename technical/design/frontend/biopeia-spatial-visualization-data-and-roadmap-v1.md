@@ -669,6 +669,115 @@ delivery order into causal order, repair missing data, or call the result a
 coherent scene. Frontend may assemble a joint visual presentation only after
 the approved evidence and exact frame-compatibility rules permit it.
 
+#### Concrete candidate review examples (non-normative)
+
+These examples are intentionally a review aid, not JSON Schemas or wire
+contracts. Every field name and encoding remains subject to owner approval.
+The Environment example is empty because that is the truthful state of the
+inspected M1 profile; the non-empty example uses source-owned primitive/frame
+shapes only and is not a claim that M1 publishes them. Bracketed values such
+as `<world-issued-reference>` are placeholders, not valid JSON values.
+
+Environment candidate, valid empty scene:
+
+```json
+{
+  "schema_version": "candidate-1",
+  "environment_id": "<owner-id>",
+  "environment_revision": "<owner-revision>",
+  "length_unit": "m",
+  "frame": {
+    "frame_id": "<owner-frame>",
+    "parent_frame_id": "<owner-parent-frame>",
+    "origin_m": [0, 0, 0],
+    "x_axis_in_parent": [1, 0, 0],
+    "y_axis_in_parent": [0, 1, 0],
+    "z_axis_in_parent": [0, 0, 1],
+    "handedness": "RIGHT_HANDED",
+    "up_axis": "Z"
+  },
+  "items": [],
+  "render_geometry_sha256": "<digest-over-defined-render-fields>"
+}
+```
+
+The placeholder identities/digest above must be replaced by owner-produced
+values before this can be an acceptance vector. A candidate invalid value
+would change `items` to a sphere with `radius_m: -1`, duplicate an `object_id`,
+or alter the content without recomputing the digest; all must be rejected,
+not repaired by Frontend.
+
+Candidate articulated description and dynamic pose set (shape only):
+
+```json
+{
+  "body_id": "<embodiment-owner-id>",
+  "morphology_revision": "<owner-revision>",
+  "render_geometry_sha256": "<digest-over-defined-render-fields>",
+  "segments": [
+    {
+      "segment_id": "<stable-owner-segment-id>",
+      "parent_segment_id": null,
+      "primitive": {"kind": "sphere", "radius_m": "<positive-owner-value>"},
+      "primitive_frame": "<explicit-owner-local-frame>"
+    }
+  ]
+}
+```
+
+```json
+{
+  "body_id": "<same-embodiment-owner-id>",
+  "morphology_revision": "<same-owner-revision>",
+  "render_geometry_sha256": "<same-render-digest>",
+  "frame_id": "physics3d.world",
+  "length_unit": "m",
+  "quaternion_order": "xyzw",
+  "physical_step_correlation": "<existing-owner-correlation>",
+  "poses": [
+    {"segment_id": "<every-required-stable-segment-id>", "position_m": [0, 0, 0], "orientation": [0, 0, 0, 1]}
+  ]
+}
+```
+
+The numeric pose above is illustrative only and not a captured Biopeia state.
+An actual valid vector must be emitted from the authorized physical-step
+producer and validated by Embodiment. Candidate invalid variants include a
+missing or repeated segment pose, non-finite component, zero-norm quaternion,
+digest/revision mismatch, or evidence from a different physical step. No
+Frontend kinematics may fill the gap.
+
+Candidate World association and passive Observation carriage:
+
+```json
+{
+  "world_id": "<existing-world-id>",
+  "causal_tick": "<existing-confirmed-tick>",
+  "commit_id": "<existing-commit-id>",
+  "members": [
+    {"owner": "environment", "claim_id": "<claim-id>", "content_sha256": "<digest>", "owner_checkpoint_ref": "<opaque-world-authorized-ref>"},
+    {"owner": "embodiment", "claim_id": "<claim-id>", "content_sha256": "<digest>", "owner_checkpoint_ref": "<opaque-world-authorized-ref>"}
+  ]
+}
+```
+
+```json
+{
+  "claims": ["<unchanged-owner-claim-and-original-provenance>", "<unchanged-owner-claim-and-original-provenance>"],
+  "world_association": "<unchanged-world-authorized-value>",
+  "delivery_metadata": "<existing-observation-delivery-metadata>"
+}
+```
+
+These are separate candidate values, not an Observation-created join. A
+consumer-side negative vector changes only one claim's commit/digest/reference
+while retaining the same tick: the consumer must refuse a composed scene and
+retain individually labeled claims only. Whether `members` is authenticated
+by the approved existing World/Observation trust path, which exact opaque
+reference is safe to expose, and whether these values fit existing response
+limits remain unresolved domain/security decisions; do not implement these
+placeholders as a contract.
+
 #### Candidate positive and negative conformance vectors
 
 These vectors are proposed test cases, not tests already implemented or
