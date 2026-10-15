@@ -143,7 +143,37 @@ This is a cross-contract readiness test, not a second screen specification.
 The accepted #164 S03 requirements govern detailed renderer interaction,
 visual status, semantic fallback, provenance inspection and accessibility.
 
-### 3. Separate decision owners
+### 3. Renderer technology evaluation (recommendation only)
+
+For the bounded first renderer, prefer Three.js over handwritten WebGL. The
+target needs a scene graph for owner-supplied local transforms, primitive
+geometry, a separate camera, orbit/zoom/pan controls and selective updates to
+existing scene objects. Three.js already provides a WebGL 2 renderer, an
+object/transform scene graph and an `OrbitControls` addon. Raw WebGL would avoid
+the library dependency, but would require Biopeia to implement and maintain
+the scene graph, transform/matrix handling, camera controls, buffer lifecycle
+and rendering diagnostics itself. That is more application code without
+improving the authority boundary.
+
+The recommendation is deliberately small: evaluate only the `three` package
+and its `OrbitControls` addon, hosted by the existing Frontend build. Do not
+add React Three Fiber, asset loaders, remote asset URLs, post-processing,
+WebGPU, or another rendering service for the first slice. Keep the renderer
+isolated behind Spatial Explorer's presentation boundary; create static
+geometry once per descriptor revision and update only transforms when
+validated source state changes. Render in response to data/control changes
+rather than inventing animation or increasing Observation acquisition
+frequency. A hidden or unsupported WebGL 2 context must fall back to the
+accepted accessible non-3D view.
+
+This is a technology recommendation, not an implementation start decision or
+approval of any geometry/state publication contract. The browser must receive
+only owner-approved, schema-validated data before this renderer is added.
+Three.js documents its [WebGL 2 renderer](https://threejs.org/docs/pages/WebGLRenderer),
+[hierarchical scene graph](https://threejs.org/manual/pages/scenegraph.html),
+and [OrbitControls camera interaction](https://threejs.org/docs/pages/OrbitControls.html).
+
+### 4. Separate decision owners
 
 | Decision | Decision owner | Required review question |
 |---|---|---|
