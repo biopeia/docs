@@ -480,6 +480,41 @@ commits behind its recorded `origin/main`; only files read explicitly with
 | Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. The intervening revision changes migration inventory/tests, not the current renderer inventory. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
 | Docs / Workspace | Docs `eec6ed35af985b5a7935cded2049201b22dfe612`; Workspace `6e8d83cf353d2bef7addcdb293508784c0bede6c` | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
 
+### Capability status matrix
+
+Status is per capability, not per repository. `EXISTING` means an owner-side
+capability is present in the cited source; it does not imply external
+publication. `PARTIAL` means only a bounded part of the requested path exists.
+`ABSENT` means the inspected current source did not establish the capability.
+`REQUIRES APPROVAL` identifies a new boundary or authority decision, not a
+work item that may be implemented by inference. The source snapshot above is
+source-inspection evidence only; tests listed above were not run in this
+revalidation.
+
+| Capability | Status | Owner | Source / evidence | Tests | Limitation and linked decision |
+|---|---|---|---|---|---|
+| Internal articulated morphology and validated joint state | `EXISTING` | Embodiment | `d73315d…`; `physics3d/articulated_spec.py`, `articulated_state.py` | Source and test locations inspected; not run | Internal owner representation only. Embodiment #77 accepts design direction; exact geometry conventions, digest and transform production remain to be settled. |
+| Root body pose projection | `PARTIAL` | Embodiment | `d73315d…`; `physical_projection.py`, `observation_contract.py` | Projection tests inspected; not run | Root pose is not per-segment geometry or link transforms. No second kinematics engine is authorized. |
+| Browser-readable articulated geometry and segment transforms | `ABSENT` | Embodiment | Same source snapshot; no external geometry family identified | No conformance test exists in the inspected current source | Publication requires exact owner-approved contract. See Embodiment #77. |
+| Internal Environment scene/resource geometry | `EXISTING` | Environment | `d09e45c…`; `static_scene.py`, `physical.py`, `identified_resource.py` | Source and test locations inspected; not run | Existing owner geometry is not a visual publication contract. Environment #73 accepts design direction; primitive/frame scope and review remain open. |
+| Renderable active M1 Environment scene | `ABSENT` | Environment | `d09e45c…`; M1 profile has `objects=()` | Profile/source inspected; no rendered-scene test | Do not invent a floor, objects, terrain or resources. Environment #73. |
+| Confirmed World cut and owner-checkpoint validation | `EXISTING` | World | `a7c8099…`; `observation_publication.py`, `durable_runtime.py` | Test locations inspected; not run | Internal validation exists; browser-verifiable proof is not present in current M1 claims. World #162. |
+| Consumer-verifiable proof that dynamic projections share one confirmed cut | `ABSENT` | World | Same snapshot; current claims lack exposed commit identity/proof | No consumer conformance test identified | Equal tick/frame labels alone are insufficient. Candidate should reuse existing commit/checkpoint evidence; no new history store. World #162 accepts direction only. |
+| Current bounded Observation reads for BodyPose and finite scalar field | `PARTIAL` | Observation | `a8b43af…`; `README.md`, `http_bridge.py`, `semantic.py` | Bridge/boundary test locations inspected; not run | Existing current-view transport, not spatial geometry, durable history or shared-cut composition. Observation #37. |
+| Passive transport of approved spatial descriptions with provenance | `REQUIRES APPROVAL` | Observation plus publishing owners | `a8b43af…`; current allowlist/read boundary | No spatial-family conformance test identified | Exact family, bounds and provenance must be approved; no semantic joins. Observation #37. |
+| Independent 2D markers for supported M1 coordinate claims | `PARTIAL` | Frontend | `3b158cc…`; `src/views.js`, `src/style.css` | PR #24 added view tests; not rerun in this audit | Presentation markers are not a physical scene and do not establish shared coordinates. |
+| Authorized spatial 3D renderer for real owner geometry | `ABSENT` | Frontend | `3b158cc…`; `package.json`, `src/` inspection | No real-browser 3D acceptance evidence | Renderer stays blocked until owner contracts, read boundary and cut proof are approved. Frontend #22. |
+| Spatial geometry publication role | `ABSENT` | Modality | `62af4ab…`; README/source search | No relevant contract test identified | No spatial authority inferred for Modality. |
+| Spatial geometry publication role | `ABSENT` | Organism | `d8ed534…`; README/source search | No relevant contract test identified | Organism identity/private state and lifecycle remain outside physical geometry. |
+| Reusable current-target Lab renderer | `ABSENT` | Lab | `e6a084f…` (`origin/main`); current README/path check | No current-target renderer test established | Historical engine path is not present in current target main; Lab #63 is a separate consumer. |
+| Canonical design/readiness record | `EXISTING` | Docs | `0373d063…`; Docs #176 registry, Docs #164 UX | Registry validation is tracked separately from this source inspection | Keep `proposed / not_evaluated / UNRESOLVED`; design-base acceptance does not change registry readiness. |
+| Workspace runtime/browser coordination evidence | `EXISTING` | Workspace | `4e34c97…`; Workspace #50 and M1.1 artifacts | Evidence is bounded to recorded M1.1 checks | Operational evidence is not a geometry/cut contract and does not establish Spatial V1 acceptance. |
+
+The matrix records capability, not readiness or acceptance. In particular,
+`REQUIRES APPROVAL` must not be read as implementation authorization, while
+`EXISTING` owner-side geometry must not be synthesized into a browser scene
+without an approved publication and verified cut relationship.
+
 The audit found existing owner geometry sources and an M1 profile-configured
 same-frame-ID compatibility check, but no complete path that publishes compatible
 Embodiment geometry, Environment geometry and required dynamic state through
