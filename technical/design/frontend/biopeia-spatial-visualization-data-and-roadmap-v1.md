@@ -58,11 +58,11 @@ The source snapshot used for this proposal is:
 
 | Repository | Revision | Relevant implementation inspected | What it demonstrates / does not demonstrate |
 |---|---|---|---|
-| `embodiment` | `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` | `src/embodiment/physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`; `src/embodiment/observation.py` | Embodiment has owner-bound articulated morphology, joint topology/state and a BodyPose projection. This does not establish a browser-facing morphology/mesh/joint publication contract. |
+| `embodiment` | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `src/embodiment/physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`; `src/embodiment/observation.py` | Embodiment has owner-bound articulated morphology, joint topology/state and a BodyPose projection. This does not establish a browser-facing morphology/mesh/joint publication contract. Since the prior inspected revision, only migration metadata and lockfile changed. |
 | `environment` | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `src/environment/static_scene.py`, `physical.py`, `identified_resource.py` | Environment has explicit fixture-oriented static scene/frame/primitive values and resource projections. They are not a stable general scene or asset-delivery contract. |
-| `world` | `76680345941fb627764ad831deded267dc11777c` | `src/world/causal_cycle.py`, `durable_runtime.py`, `observation_publication.py` | World owns causal coordination and committed cuts, and can correlate post-commit projections. This does not prove arbitrary owner geometry is included in a verified cut. |
-| `observation` | `2f4751f53678f2210930770605844cac766b1da4` | `src/observation/semantic.py`, `embodiment.py`, `environment.py`, `http_bridge.py` | Current local/browser path is bounded to BodyPose and finite scalar-field projections. No approved geometry family or durable historical scene query was found. |
-| `frontend` | `496c05dcd062eb0833abdfb1030cfb87f6f80aa7` | Current M1 UI/read adapter | The browser displays the two supported claims and explicitly reports no authorized scene geometry. It does not reconstruct meshes from claims. |
+| `world` | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `src/world/causal_cycle.py`, `durable_runtime.py`, `observation_publication.py`, `adapters/articulated_mujoco.py` | World owns causal coordination and committed cuts, and can correlate post-commit projections. The intervening changes add/strengthen grid-v2 physical candidate selection and journal behavior; they do not authorize arbitrary owner geometry or a browser scene contract. |
+| `observation` | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `src/observation/semantic.py`, `embodiment.py`, `environment.py`, `http_bridge.py` | Current local/browser path is bounded to BodyPose and finite scalar-field projections. The intervening change only updates dependency lock entries. No approved geometry family or durable historical scene query was found. |
+| `frontend` | `326613b74e388d3108cbafd3bab9128a35bd2246` | `src/main.js`, `observation-client.js`, `observation-store.js`, `presentation-scheduler.js`, `views.js`; browser acceptance scripts | The browser displays the two supported claims and explicitly reports no authorized scene geometry. Store subscriptions and presentation updates are selective; no renderer is present and claims are not reconstructed into meshes. |
 | `docs` | `16d951c` | Accepted Frontend UX/readiness designs | Docs #164 defines spatial rendering truthfulness and screen acceptance; its contract-readiness and implementation gates remain applicable. |
 
 These are code/document inspections at the listed revisions, not owner approval
@@ -71,11 +71,51 @@ joint topology, URDF generation, static primitives, physical-step state or
 BodyPose does not establish compatible identity, asset lifetime, display
 geometry or cross-owner coherence for a browser scene.
 
+### World #156 disposition update (2026-10-15)
+
+The current-source capability matrix and issue/dependency inventory are
+recorded in the preceding **Current-source revalidation** section. This update
+adds only the subsequent World #156 owner disposition, rather than duplicating
+that matrix. A clean-current-main production/browser run is recorded in [World
+#156's evidence log](https://github.com/biopeia/world/issues/156#issuecomment-6195150220):
+it reached 1,224 confirmed commits within unchanged Embodiment position and
+velocity bounds, then stopped before the next commit because Organism produced
+no motor command. The Owner's [bounded engineering acceptance](https://github.com/biopeia/world/issues/156#issuecomment-6195474291)
+accepts grid-v2 for physical candidate safety, pre-commit rejection of
+infeasible candidates, and preservation of the last valid cut. It makes no
+claim of scientific efficacy, general solver validity or indefinite
+stability, and assigns no semantics to the later no-command termination.
+
+This update does not resolve the spatial publication gaps identified in the
+matrix. Geometry/per-link state, Environment render geometry and Observation
+carriage remain separate owner decisions. World already has a generic
+committed-cut membership/provenance gate, but neither that mechanism nor the
+grid-v2 acceptance authorizes a spatial family or a cross-owner scene claim.
+
 The actual M1.1 browser reproduction is recorded in [Workspace #50 comment
 6187298340](https://github.com/biopeia/workspace/issues/50#issuecomment-6187298340):
 World committed 271 continuous ticks; the browser observed real changing
 BodyPose/finite-scalar publications and displayed “No authorized scene
 geometry.” This is bounded M1 evidence, not 3D-rendering or humanoid evidence.
+
+### Frontend current-main presentation evidence (2026-10-15)
+
+At Frontend `326613b74e388d3108cbafd3bab9128a35bd2246`, `npm test` passed
+43/43 and `npm run build` succeeded. The tests cover selective store
+subscriptions, rejection of obsolete request completions, stale retention on
+disconnect, latest-view coalescing, and view rendering without fabricated
+geometry or cross-owner joins. The build emits the existing static read-only
+shell; no rendering dependency or 3D implementation is present.
+
+The live-browser acceptance harness in
+`scripts/acceptance-live-browser.mjs` expects the authorized M1 bridge and
+requires two distinct committed World ticks with source-lineage digests; it is
+not a spatial renderer acceptance. The available integrated browser evidence
+is the bounded M1.1 run linked above: it demonstrated real changing claim data
+and separately measured stable shell/focus/scroll behavior, but no authorized
+scene geometry. Thus these checks support current passive presentation
+readiness only; they do not satisfy Spatial Visualization V1's final browser
+criterion.
 
 ## Proposal: readiness requirements, not a contract
 
@@ -122,7 +162,37 @@ This is a cross-contract readiness test, not a second screen specification.
 The accepted #164 S03 requirements govern detailed renderer interaction,
 visual status, semantic fallback, provenance inspection and accessibility.
 
-### 3. Separate decision owners
+### 3. Renderer technology evaluation (recommendation only)
+
+For the bounded first renderer, prefer Three.js over handwritten WebGL. The
+target needs a scene graph for owner-supplied local transforms, primitive
+geometry, a separate camera, orbit/zoom/pan controls and selective updates to
+existing scene objects. Three.js already provides a WebGL 2 renderer, an
+object/transform scene graph and an `OrbitControls` addon. Raw WebGL would avoid
+the library dependency, but would require Biopeia to implement and maintain
+the scene graph, transform/matrix handling, camera controls, buffer lifecycle
+and rendering diagnostics itself. That is more application code without
+improving the authority boundary.
+
+The recommendation is deliberately small: evaluate only the `three` package
+and its `OrbitControls` addon, hosted by the existing Frontend build. Do not
+add React Three Fiber, asset loaders, remote asset URLs, post-processing,
+WebGPU, or another rendering service for the first slice. Keep the renderer
+isolated behind Spatial Explorer's presentation boundary; create static
+geometry once per descriptor revision and update only transforms when
+validated source state changes. Render in response to data/control changes
+rather than inventing animation or increasing Observation acquisition
+frequency. A hidden or unsupported WebGL 2 context must fall back to the
+accepted accessible non-3D view.
+
+This is a technology recommendation, not an implementation start decision or
+approval of any geometry/state publication contract. The browser must receive
+only owner-approved, schema-validated data before this renderer is added.
+Three.js documents its [WebGL 2 renderer](https://threejs.org/docs/pages/WebGLRenderer),
+[hierarchical scene graph](https://threejs.org/manual/pages/scenegraph.html),
+and [OrbitControls camera interaction](https://threejs.org/docs/pages/OrbitControls.html).
+
+### 4. Separate decision owners
 
 | Decision | Decision owner | Required review question |
 |---|---|---|
@@ -239,8 +309,8 @@ commits behind its recorded `origin/main`; only files read explicitly with
 | Frontend | `326613b74e388d3108cbafd3bab9128a35bd2246` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`; tests include `model.test.js`, `observation-client.test.js`, `observation-store.test.js` | The supported model remains the two bounded M1 claims; README explicitly denies inference of scene geometry, shared World snapshot, causal relation and organism activity. `package.json` has no 3D renderer dependency. No authorized geometry data is currently available to render; absence in the current client is not proof that a domain source cannot provide it. Tests were not run in this revalidation. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
 | Organism | `d8ed534d48188fb2f629faaa8dd85b95063a0c2d` | `README.md` and source search for geometry/spatial publication | Organism owns longitudinal identity/private state and lifecycle, not physical body state. No spatial geometry publication was identified. This design excludes private cognition and does not infer organism activity from geometry. |
-| Lab | `90d0229655771d134236c0f2e59cb893c0dbe7c6` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
-| Docs / Workspace | Docs `eb93c8d75bf5e3778081b63f723d61363473f875`; Workspace working tree clean | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
+| Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. The intervening revision changes migration inventory/tests, not the current renderer inventory. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
+| Docs / Workspace | Docs `4988eee30b2ee2cd152066e138fb5fd1e325359e`; Workspace working tree clean | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
 
 The audit found existing owner geometry sources and a generic World committed-
 cut publication gate, but no complete path that publishes compatible
