@@ -1743,7 +1743,7 @@ units:
       status: RECORDED
       basis:
         observation: 2f4751f53678f2210930770605844cac766b1da4
-        frontend: 622e6b864a66a3a41c1b18d2da8cb5e3474a9561
+        frontend: 622e6b8605ebe2fa1d34f710cb2f35ddd1838498
 
   component.world-m1-process-bootstrap:
     kind: component

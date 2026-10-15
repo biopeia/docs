@@ -957,7 +957,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Loopback observation read bridge for local presentation (structural) |
 | Governed by | [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md](../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md) |
 | Tests | `observation:tests/test_http_bridge.py`, `frontend:tests/observation-client.test.js`, `frontend:tests/snapshot-refresh.test.js`, `frontend:tests/frontend-server.test.js`, `frontend:tests/model.test.js`, `frontend:tests/views.test.js` |
-| Reviewed at | observation@2f4751f53678, frontend@622e6b864a66 (RECORDED) |
+| Reviewed at | observation@2f4751f53678, frontend@622e6b8605eb (RECORDED) |
 
 ## Lab
 

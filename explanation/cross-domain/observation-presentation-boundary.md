@@ -1,6 +1,6 @@
 # The human-facing presentation boundary
 
-Reviewed against `frontend` at commit `622e6b864a66a3a41c1b18d2da8cb5e3474a9561`
+Reviewed against `frontend` at commit `622e6b8605ebe2fa1d34f710cb2f35ddd1838498`
 (main on 2026-10-15). Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
