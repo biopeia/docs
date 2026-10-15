@@ -71,6 +71,48 @@ joint topology, URDF generation, static primitives, physical-step state or
 BodyPose does not establish compatible identity, asset lifetime, display
 geometry or cross-owner coherence for a browser scene.
 
+### Phase 0 current-source refresh and capability matrix
+
+Reviewed against the following exact `origin/main` revisions on 2026-10-15.
+The labels describe capability for the Spatial V1 browser objective, not the
+general health or completeness of each repository. `PARTIAL` means relevant
+owner data or a bounded neighboring mechanism exists but does not satisfy the
+browser-rendering contract. `REQUIRES APPROVAL` marks a proposed new exposure
+or cross-owner relation; it is not an implementation authorization.
+
+| Repository and revision | Capability / classification | Source evidence | Boundary and remaining gap |
+|---|---|---|---|
+| Embodiment `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `PARTIAL`; browser publication `REQUIRES APPROVAL` | [`articulated_spec.py`](https://github.com/biopeia/embodiment/blob/d73315d87bbb3f2eea14e8c33812b37b59a5d72f/src/embodiment/physics3d/articulated_spec.py), [`physical_projection.py`](https://github.com/biopeia/embodiment/blob/d73315d87bbb3f2eea14e8c33812b37b59a5d72f/src/embodiment/physics3d/physical_projection.py), [`observation.py`](https://github.com/biopeia/embodiment/blob/d73315d87bbb3f2eea14e8c33812b37b59a5d72f/src/embodiment/observation.py) | Owner-side articulated topology, morphology and physical state exist. Current approved `BodyPose` exposes root position/orientation only; it is not a segment geometry or per-link transform publication. No mesh/shape exposure follows from solver morphology. |
+| Environment `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `PARTIAL`; render projection `REQUIRES APPROVAL` | [`static_scene.py`](https://github.com/biopeia/environment/blob/d09e45c40633c9b2bf927c7aec3f6326318c2ea8/src/environment/static_scene.py), [`identified_resource.py`](https://github.com/biopeia/environment/blob/d09e45c40633c9b2bf927c7aec3f6326318c2ea8/src/environment/identified_resource.py) | Environment has owner-side ground-plane/sphere descriptors and identified resource projections, alongside the approved finite-scalar field. No browser geometry family or approval to expose solver/genesis parameters was found. |
+| World `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `PARTIAL`; cross-owner scene join `REQUIRES APPROVAL` | [`observation_publication.py`](https://github.com/biopeia/world/blob/a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad/src/world/observation_publication.py), [`durable_runtime.py`](https://github.com/biopeia/world/blob/a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad/src/world/durable_runtime.py) | World verifies each owner publication against a World-issued committed cut, owner checkpoint reference, World identity and causal tick. This generic per-claim mechanism does not itself define a complete cross-owner spatial snapshot or compatibility among geometry and dynamic claims. |
+| Observation `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `PARTIAL`; added family carriage `REQUIRES APPROVAL` | [`http_bridge.py`](https://github.com/biopeia/observation/blob/a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353/src/observation/http_bridge.py), [`embodiment.py`](https://github.com/biopeia/observation/blob/a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353/src/observation/embodiment.py), [`environment.py`](https://github.com/biopeia/observation/blob/a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353/src/observation/environment.py) | The local read bridge allowlist is exactly `embodiment.body_pose` and `environment.finite_scalar_field`, with a bounded current-view response. No geometry family, durable history, or composite-scene semantics are authorized by the transport. |
+| Frontend `326613b74e388d3108cbafd3bab9128a35bd2246` | `PARTIAL`; 3D renderer `ABSENT` | [`views.js`](https://github.com/biopeia/frontend/blob/326613b74e388d3108cbafd3bab9128a35bd2246/src/views.js), [`package.json`](https://github.com/biopeia/frontend/blob/326613b74e388d3108cbafd3bab9128a35bd2246/package.json), `tests/views.test.js` | Spatial Explorer displays the two allowed source claims and an explicit no-authorized-geometry fallback. No canvas/mesh renderer or Three.js/WebGL dependency exists in the current package. Existing passive acquisition/store/presentation separation remains reusable. |
+| Modality `62af4aba07146d5dfdc978af07bb72111112d873` | Spatial geometry `ABSENT` | [`scalar_field.py`](https://github.com/biopeia/modality/blob/62af4aba07146d5dfdc978af07bb72111112d873/src/modality/scalar_field.py) | The inspected module is stateless, fixture-specific scalar transduction and explicitly assigns no environmental or sensory semantics. It supplies no spatial geometry or transform authority. |
+| Organism `d8ed534d48188fb2f629faaa8dd85b95063a0c2d` | Spatial publication `ABSENT` in inspected contracts | [`actuation/command.py`](https://github.com/biopeia/organism/blob/d8ed534d48188fb2f629faaa8dd85b95063a0c2d/src/organism/actuation/command.py), [`actuation/evidence.py`](https://github.com/biopeia/organism/blob/d8ed534d48188fb2f629faaa8dd85b95063a0c2d/src/organism/actuation/evidence.py) | Organism has internal actuation/evidence state, including passive bodily-change evidence, but no authorized spatial-visualization publication was found in the inspected contracts. This work does not expose private cognition or equate commands with physical state. |
+| Lab `c688abb60308eba4fb9ac2301599efa67a9b0200` | Reusable renderer `ABSENT` in current source tree | [`observation_consumer.py`](https://github.com/biopeia/lab/blob/c688abb60308eba4fb9ac2301599efa67a9b0200/src/lab/observation_consumer.py) and current `src/` inventory | Lab has a passive Observation consumer and separate experiment/evidence responsibilities. The current source inventory contains no renderer/viewer implementation to reuse; historical physics3d migration/disposition tests are not a renderer or authority transfer. |
+| Docs `4988eee30b2ee2cd152066e138fb5fd1e325359e` | UX/design references `EXISTING`; spatial roadmap is a proposal | [Accepted Frontend UX design](https://github.com/biopeia/docs/blob/4988eee30b2ee2cd152066e138fb5fd1e325359e/technical/design/frontend/biopeia-frontend-ux-spec-v1.md), this design, `registry/designs.yaml` | Docs #164 supplies accepted screen truthfulness/fallback requirements; this spatial roadmap remains a proposed readiness design. Neither creates an owner publication contract. |
+| Workspace `6e8d83cf353d2bef7addcdb293508784c0bede6c` | Local `make run` / `make view` orchestration `EXISTING`; spatial renderer acceptance `ABSENT` | [`Makefile`](https://github.com/biopeia/workspace/blob/6e8d83cf353d2bef7addcdb293508784c0bede6c/Makefile), `tools/m1_operator.py` | Workspace composes local World and Frontend processes but owns neither domain semantics nor spatial rendering. The previously reported `world-m1` import failure must be tested in the operator path; a `world-m1 --help` check alone is not integrated runtime acceptance. |
+
+This is a source capability audit, not a new owner decision. It makes no new
+claim about repository-wide test status; passing tests would not establish
+publication permission or real-browser spatial rendering. The independent
+clean-current-main production/browser run recorded in [World #156's evidence
+log](https://github.com/biopeia/world/issues/156#issuecomment-6195150220)
+showed 1,224 valid physical commits within unchanged morphology bounds, then
+stopped because Organism produced no motor command. The Owner's [bounded
+acceptance](https://github.com/biopeia/world/issues/156#issuecomment-6195474291)
+accepts grid-v2 for physical candidate safety only; it assigns no semantics to
+that terminal event and does not establish continuous operation.
+
+**Phase 0 conclusion:** the first identified implementation gaps are owner-
+authorized Embodiment geometry/per-link state and Environment geometry
+publication, an Observation carriage decision for exact bounded families, and
+a World-backed cross-owner compatibility/cut relation if a joined scene is to
+be labeled coherent. These are `REQUIRES APPROVAL`, not yet approved contracts.
+Frontend implementation of a 3D renderer remains deferred until those gates
+are resolved; static isolated claims must not be visually assembled as one
+scene without explicit identity, revision, frame and cut compatibility.
+
 The actual M1.1 browser reproduction is recorded in [Workspace #50 comment
 6187298340](https://github.com/biopeia/workspace/issues/50#issuecomment-6187298340):
 World committed 271 continuous ticks; the browser observed real changing
