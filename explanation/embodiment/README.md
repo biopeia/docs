@@ -40,6 +40,7 @@ Explanatory documents of the Embodiment domain (semantic-authority).
 
 ## Designs
 
+- [Biopeia Spatial Visualization — Owner-Authorized Data Readiness and Roadmap](../../technical/design/frontend/biopeia-spatial-visualization-data-and-roadmap-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Biopeia Frontend v1 — Independent Visualization Application](../../technical/design/frontend/biopeia-frontend-v1.md): document approved, implementation not_evaluated, scope TARGET
 - [Biopeia Frontend v1 — Functional, Interaction and UX Specification](../../technical/design/frontend/biopeia-frontend-ux-spec-v1.md): document approved, implementation not_evaluated, scope TARGET
 - [Biopeia Frontend v1 — Visual Design Specification](../../technical/design/frontend/biopeia-frontend-visual-design-v1.md): document approved, implementation not_evaluated, scope TARGET
