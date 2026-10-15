@@ -1,6 +1,7 @@
 # How the cognitive graph is changed
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
+Reviewed against `organism` at commit `b674450dd6678d7a0a00a41591648511814709ba`
+(main on 2026-10-15); first written against `ba001179`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 Searches were repeated on 2026-10-11 over the source of all seven
@@ -99,22 +100,23 @@ edge, and returns the prediction errors without using them
 code of `organism:src/organism/cognition/composition.py`). Recorded as
 finding F-0142.
 
-### What the one end-to-end test shows
+### What the bounded characterization test shows
 
-One test puts these together:
-`test_a_predictor_measurably_learns_a_periodic_signal_over_many_ticks`. Its
-name makes a claim, so what it does is set out exactly.
+An earlier demonstration test was named
+`test_a_predictor_measurably_learns_a_periodic_signal_over_many_ticks`. Because
+its name claimed learning, finding F-0071 was recorded and tracked in issue
+organism#44. In organism PR #174 (commit `b674450`), that test was reframed as
+a bounded characterization:
+`test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline`, under the
+header `# --- bounded characterization; no predictive-efficacy claim ---`.
 
 The test builds a sense node, a predictor node naming it, and one edge between
 them with weight 0.05. For 200 ticks it feeds a signal alternating between
 +0.8 and −0.8, activates the graph, computes the prediction error, calls
 `update_eligibility`, and calls `apply_oja_update` with `modulation=1.0` and
-`eligible=True`. It passes if the mean loss over the last 20 errors is lower
-than over the first 20.
+`eligible=True`.
 
-The loop was reproduced and run at `organism`
-`6543188ff302a5f2dc8002c0086252d6061e5310`. `learning.py` and the test have
-not changed since (diff inspected); the run was not repeated. Result:
+In the original analysis at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`:
 
 | | Value |
 |---|---|
@@ -124,7 +126,7 @@ not changed since (diff inspected); the run was not repeated. Result:
 | Mean loss, last 20 | 0.3201 |
 | Loss of a predictor that always outputs 0 for this signal | 0.5 × 0.8² = 0.32 |
 
-The loss falls because the weight shrinks to zero. With a small positive
+The loss falls solely because the weight shrinks toward zero. With a small positive
 weight the predictor's output is a small copy of the current signal, which is
 the opposite sign to the next one, so it is slightly worse than silence; the
 Hebbian rule, seeing source and target anti-correlated, removes the weight.
@@ -132,14 +134,17 @@ The end state is a predictor that outputs approximately nothing. Predicting
 this signal would require a negative weight, and the rule's fixed point here
 is zero.
 
-What the test establishes is therefore: on an alternating signal, this loop
-drives a mis-signed weight to zero and the loss falls by about 7 per cent to
-the level of no prediction. It does not show a predictor coming to predict the
-signal. The error computed in the loop is recorded and plays no part in the
-update, and removing the call to `update_eligibility` gave the same numbers.
-For contrast, the same loop on a constant signal of 0.8 raised the weight to
-1.11 and the late loss fell to 0.004; a constant is the case a Hebbian rule
-fits. Neither run is kept as a test. Recorded as finding F-0071.
+The reframed test in PR #174 makes this boundary an explicit assertion:
+it computes `model_losses`, `zero_output_losses` (Huber loss of signal), and
+`persistence_losses` (Huber loss of signal minus previous sample). It explicitly asserts:
+- `model_average > zero_output_average`: the model loss is strictly worse than the trivial zero-output baseline.
+- `persistence_average > zero_output_average`.
+- `abs(feed.weight) < 1e-3`.
+
+Its docstring and comments confirm: *"The loop only characterizes this
+particular caller-driven update. Its output does not beat the trivial zero
+predictor on causally subsequent samples, so it is not evidence of predictive
+learning."* This resolves finding F-0071.
 
 ## Candidates kept outside the graph
 
@@ -282,7 +287,7 @@ Details are in [the cognitive checkpoint](cognitive-checkpoint.md).
 |---|---|
 | What each weight function computes | Code and tests in `organism:tests/source_unit/cognition/test_learning.py` |
 | The update does not read `eligibility`, the prediction error or `plasticity` | Code |
-| The end-to-end test's weight goes to zero and its loss to the level of no prediction; a constant signal behaves differently | Code, and one ad hoc run reproducing the test's loop at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`; the module and the test are unchanged since |
+| The alternating signal loop decays weight to zero without beating zero-output or persistence baselines | Code and test `test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline` in `organism:tests/source_unit/cognition/test_learning.py` (commit `b674450`) |
 | Shadow candidates and their thresholds | Code and tests in `test_learning.py`, `test_shadow_prediction.py` |
 | Counting, proposing, concept nodes, atomic application, edge labels | Code and tests in `test_structure.py`, `test_reversible_structure_phase1.py`, `test_insufficiency_driven_growth.py` |
 | Restraints | Code and tests in `test_metaplasticity.py`; the tie case also by a run at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, the module being unchanged since |
@@ -300,7 +305,8 @@ learns, predicts or forms concepts.
   call the structural functions.
 - Whether the prediction error is meant to enter the update as `modulation`,
   and the trace as `eligible`.
-- What a test that a signal is learned should require beyond a falling loss, for
-  example a loss below that of no prediction and of persistence.
+- What a test that a signal is learned should require beyond a falling loss;
+  for the alternating signal, issue #44 reframed the test to assert that the
+  loop does not beat zero-output or persistence baselines.
 - Whether shadow candidates are meant to be promoted into the graph, and by
   what.

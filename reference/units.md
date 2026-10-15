@@ -162,7 +162,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/unit/test_physical_step.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | world@1f35e92611ed, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@d09e45c40633, modality@93a4c3a4ea71, observation@2f4751f53678 (RECORDED) |
+| Reviewed at | world@76680345941f, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@d09e45c40633, modality@93a4c3a4ea71, observation@2f4751f53678 (RECORDED) |
 | Known findings | F-0002 implementation finding ([issue](https://github.com/biopeia/world/issues/29)); F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0160 implementation finding (open); F-0164 evidence gap (accepted) |
 
 ### MuJoCo step executor
@@ -252,7 +252,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-durable-runtime`, `mechanism.physical-causal-step` |
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md) |
 | Tests | `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
-| Reviewed at | world@1f35e92611ed (RECORDED) |
+| Reviewed at | world@76680345941f (RECORDED) |
 
 ### World M1 process bootstrap and operator profile
 
@@ -270,7 +270,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-cycle`, `component.world-observation-publication` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0112-repository-settings-and-actions-baseline.md](../technical/adr/ADR-0112-repository-settings-and-actions-baseline.md) |
 | Tests | `world:tests/integration/test_m1_process.py`, `world:tests/test_m1_profile.py` |
-| Reviewed at | world@1f35e92611ed (RECORDED) |
+| Reviewed at | world@76680345941f (RECORDED) |
 
 ## Environment
 
@@ -762,7 +762,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-cognitive-graph` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/cognition/test_learning.py`, `organism:tests/source_unit/cognition/test_shadow_prediction.py`, `organism:tests/source_unit/cognition/test_structure.py`, `organism:tests/source_unit/cognition/test_reversible_structure_phase1.py`, `organism:tests/source_unit/cognition/test_insufficiency_driven_growth.py`, `organism:tests/source_unit/cognition/test_metaplasticity.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Reviewed at | organism@b674450dd667 (RECORDED) |
 | Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0071 evidence gap ([issue](https://github.com/biopeia/organism/issues/44)); F-0072 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open) |
 
 ### The generative resident and the model boundary
@@ -957,7 +957,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Loopback observation read bridge for local presentation (structural) |
 | Governed by | [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md](../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md) |
 | Tests | `observation:tests/test_http_bridge.py`, `frontend:tests/observation-client.test.js`, `frontend:tests/snapshot-refresh.test.js`, `frontend:tests/frontend-server.test.js`, `frontend:tests/model.test.js`, `frontend:tests/views.test.js` |
-| Reviewed at | observation@2f4751f53678, frontend@496c05dcd062 (RECORDED) |
+| Reviewed at | observation@2f4751f53678, frontend@622e6b864a66 (RECORDED) |
 
 ## Lab
 

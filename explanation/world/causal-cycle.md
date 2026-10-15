@@ -1,6 +1,6 @@
 # The sensorimotor causal cycle
 
-Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
+Reviewed against `world` at commit `76680345941fb627764ad831deded267dc11777c`
 (main on 2026-10-15). Statements are marked by what supports them: the code,
 the tests, or an accepted decision.
 
@@ -68,17 +68,23 @@ The storage abstraction is implemented by `FileOwnerCheckpointStore`
   `f"genesis:{digest[:24]}"`. This allows clean bootstrap of `DurableWorldRuntime`
   at tick 0 without requiring a preceding physical step context.
 
-## Bounded multi-cycle session loop
+## Multi-cycle session loop and streaming execution
 
 For multi-cycle simulation runs, `run_scalar_sensorimotor_session`
-(`world:src/world/causal_cycle.py:613-747`) coordinates sequential execution
+(`world:src/world/causal_cycle.py:613-760`) coordinates sequential execution
 under explicit bounds:
 
-- **Serial synchronous execution:** Advances sequentially through ticks up to
-  `max_cycles`. State outputs (`sensory_input.state`, `body_state.root`,
+- **Finite and continuous modes:** When `max_cycles` is a positive integer,
+  advances sequentially through ticks up to that bound. When `max_cycles=None`,
+  the session operates in continuous mode, requiring a callable `stop_requested`
+  predicate. State outputs (`sensory_input.state`, `body_state.root`,
   `body_state`) are carried forward strictly into the next cycle's inputs.
+- **Bounded-memory streaming (`retain_cycle_results`):** Continuous callers can
+  set `retain_cycle_results=False` to consume results cycle-by-cycle through the
+  `on_cycle_result` callback. The session reports `completed_cycle_count` while
+  leaving `cycles=()`, bounding memory consumption over arbitrarily long runs.
 - **Cooperative boundary interruption:** A thread-safe stop callback
-  (`stop_requested()`) is sampled strictly **between** cycles (lines 696–698).
+  (`stop_requested()`) is sampled strictly **between** cycles (lines 707–709).
   If a stop is requested (e.g., via SIGINT or SIGTERM), the session completes
   the active cycle, commits to disk, and halts cleanly with status
   `ScalarSensorimotorSessionStatus.STOPPED`. In-flight physics, durable commit,
@@ -89,6 +95,11 @@ under explicit bounds:
   Crucially, the committed World cut is **preserved** and reverified against the
   store manifest; it is never rolled back or retried. The session result records
   `publication_delivery_status_uncertain = True` to notify the operator.
+- **Cut preservation on latch recovery:** If a transition fails after recovery
+  becomes required (`ManifestStatus.RECOVERY_REQUIRED`), the session preserves
+  the previously verified `last_cut` receipt rather than erasing it with `None`.
+  The failure is reported truthfully without falsely claiming absence of earlier
+  committed history (`test_world_owned_session_preserves_last_verified_cut_when_recovery_is_required`).
 
 ## Restoration and live continuation
 
@@ -111,7 +122,7 @@ Given a durable World runtime and the latest committed cut:
 | Claim | Support |
 |---|---|
 | Complete cycle coordination and 7-stage sequence | Code in `world:src/world/causal_cycle.py` |
-| Bounded session loop, cooperative stopping, and cut preservation | Code in `world:src/world/causal_cycle.py:613-747` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
+| Bounded and continuous session loop, streaming execution, cooperative stopping, and cut preservation | Code in `world:src/world/causal_cycle.py:613-760` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Articulated MuJoCo execution from motor commands | Code in `world:src/world/adapters/articulated_mujoco.py` |
 | Atomic owner checkpoint and genesis persistence | Code in `world:src/world/owner_checkpoint_store.py` and tests in `world:tests/test_owner_checkpoint_store.py` |
 | Full state restoration and continuation matching live execution | Acceptance tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |

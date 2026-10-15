@@ -1,6 +1,6 @@
 # The M1 bounded process bootstrap and operator profile
 
-Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
+Reviewed against `world` at commit `76680345941fb627764ad831deded267dc11777c`
 (main on 2026-10-15). Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
@@ -11,8 +11,12 @@ The M1 bounded process bootstrap is the production operating entry point for
 autonomous, multi-cycle sensorimotor simulation runs.
 
 It is implemented as a standalone command-line executable:
-`world-m1 --profile <operator-profile.json> --state-root <new-directory> --cycles <1-10000>`
+`world-m1 --profile <operator-profile.json> --state-root <new-directory> [--cycles <1-10000>]`
 (`world:pyproject.toml:12-13`, `world:src/world/m1_process.py::main`).
+An explicit `--cycles` bounds execution to a finite cycle count (1–10,000);
+omitting `--cycles` selects continuous mode, which streams cycle results
+without unbounded memory growth until an orderly stop signal or domain
+termination is received.
 
 The executable is governed by an explicit process contract
 (`world:M1_PROCESS_CONTRACT.md`). It establishes clean separation between
@@ -51,12 +55,19 @@ The configuration of a run is defined by an operator profile schema:
 `biopeia.world.m1.scalar-sensorimotor-profile` version 1
 (`world:src/world/m1_profile.py::load_operator_profile`).
 
-The repository ships an exemplary reference profile:
-`world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json`.
-This profile was derived directly from historical acceptance benchmarks in the
-documentation repository
-(`docs:technical/migration/MIGRATION_END_TO_END_ACCEPTANCE_REPORT.md:48-61`) at
-commit `586dcbb8376c2800fc7ea8e04ba0b486db3e87db`, updated for MuJoCo 3.15.0.
+The repository ships reference profiles:
+- `world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json`: derived directly
+  from historical acceptance benchmarks in the documentation repository
+  (`docs:technical/migration/MIGRATION_END_TO_END_ACCEPTANCE_REPORT.md:48-61`) at
+  commit `586dcbb8376c2800fc7ea8e04ba0b486db3e87db`, updated for MuJoCo 3.15.0.
+- `world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v2.json`: enables solver
+  profile revision `operator-r3` (`m1-fixed-single-hinge-grid-v1`). World evaluates
+  a deterministic bounded set of applied torques from a fresh MuJoCo state and
+  commits only candidate transitions whose joint velocity respects Embodiment's
+  maximum angular velocity cap without clipping `qvel`. Failure to find a
+  compliant candidate fails the cycle. Each `cycle_committed` JSONL event emits
+  `velocity_regulation` evidence (torque, effort limit, velocity cap, candidate
+  velocity) as process telemetry.
 
 The profile defines:
 - World identifier and source revisions.
@@ -91,8 +102,10 @@ Once preflight checks succeed, `construct_fresh_runtime`
 
 ## Cooperative signals and teardown protection
 
-Execution runs the bounded session loop (`run_scalar_sensorimotor_session`) up
-to the requested number of cycles.
+Execution runs through `run_scalar_sensorimotor_session` (`world:src/world/causal_cycle.py:613-755`).
+In finite mode, execution stops after the specified cycle count; in continuous
+mode, it streams results without unbounded result retention (`retain_cycle_results=False`)
+until interrupted or stopped by a domain stop predicate.
 
 Process shutdown is governed by strict signal coordination:
 - Traps `SIGINT` and `SIGTERM` signals (`world:src/world/m1_process.py:139-142`),
@@ -112,10 +125,12 @@ Process shutdown is governed by strict signal coordination:
 
 | Claim | Support |
 |---|---|
-| Executable CLI entry point `world-m1` | Code in `world:pyproject.toml:12-13` and `world:src/world/m1_process.py:main` |
+| Executable CLI entry point `world-m1` (bounded & continuous modes) | Code in `world:pyproject.toml:12-13` and `world:src/world/m1_process.py:main` |
 | Process contract, lifecycle protocol, and preflight rules | Documented in `world:M1_PROCESS_CONTRACT.md` |
 | Fail-closed preflight checks and zero disk residue on failure | Code in `world:src/world/m1_process.py:20-68` and tests in `world:tests/integration/test_m1_process.py:75-88` |
 | Operator profile schema v1 and runtime builder | Code in `world:src/world/m1_profile.py` and tests in `world:tests/test_m1_profile.py` |
+| Operator profile v2 and single-hinge velocity regulation | Config `world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v2.json`, solver code in `world:src/world/adapters/articulated_mujoco.py`, and tests in `world:tests/integration/physical_step/test_velocity_regulation.py` |
 | Genesis blob persistence at tick 0 | Code in `world:src/world/owner_checkpoint_store.py:81-100` and tests in `world:tests/test_owner_checkpoint_store.py` |
 | Loopback observation bridge integration and ready event emission | Code in `world:src/world/m1_process.py:148-154` and integration tests |
-| Cooperative signal trapping and safe teardown protection | Code in `world:src/world/m1_process.py:139-234` and tests in `world:tests/integration/test_m1_process.py:90-163` |
+| Cooperative signal trapping, safe teardown protection, and streaming continuous loop | Code in `world:src/world/m1_process.py:139-234` and tests in `world:tests/integration/test_m1_process.py:90-163` |
+

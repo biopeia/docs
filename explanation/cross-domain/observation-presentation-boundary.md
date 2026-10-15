@@ -1,6 +1,6 @@
 # The human-facing presentation boundary
 
-Reviewed against `frontend` at commit `496c05dcd062eb0833abdfb1030cfb87f6f80aa7`
+Reviewed against `frontend` at commit `622e6b864a66a3a41c1b18d2da8cb5e3474a9561`
 (main on 2026-10-15). Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
@@ -96,6 +96,17 @@ compromising security or simulation isolation:
      `world_target_causal_tick`, and parent lineage hash `owner_checkpoint_sha256`.
    Any unapproved semantic family is skipped; if no approved claims remain,
    status transitions to `'unsupported'`.
+4. **Isolated session lifecycle endpoint (`frontend:scripts/frontend-server.js`, `frontend:src/main.js`):**
+   The server exposes `GET /api/session/status` reading local session state
+   from `.local/m1/sessions/<uuid>.json`. It filters internal process execution
+   fields, returning strictly validated lifecycle metadata: `run_id`, `world_id`,
+   `status` (`running`, `completed`, `stopped`, or `failed`), `created_at`,
+   `ended_at`, `last_verified_committed_tick`, and `commit_id`. If the session
+   file is missing, unreadable, or its process identity is dead/stale, it returns
+   404 `session_status_unavailable`. In the UI, `sessionPanel()` renders the
+   lifecycle status in an explicit banner separate from the observation notice,
+   preserving constitutional separation between process execution status and
+   Observation semantic claims (`frontend:tests/frontend-server.test.js`).
 
 ## Serial snapshot refresh and temporal disclaimers
 
@@ -160,6 +171,7 @@ deployment) remains intentionally unratified and blocked.
 |---|---|
 | Seven peer routes, fourteen availability states, fail-closed read-only assertion | Code in `frontend:src/model.js` and tests in `frontend:tests/model.test.js` |
 | Same-origin proxy, loopback isolation, CSP `connect-src 'self'` | Code in `frontend:scripts/frontend-server.js` and tests in `frontend:tests/frontend-server.test.js` |
+| Dedicated session lifecycle status endpoint and non-observation isolation | Code in `frontend:scripts/frontend-server.js`, `frontend:src/main.js`, and tests in `frontend:tests/frontend-server.test.js` |
 | Approved claim decoding, typed validation, unsupported filtering | Code in `frontend:src/observation-client.js` and tests in `frontend:tests/observation-client.test.js` |
 | Serial non-overlapping refresh, tab visibility pause, fail-closed clearing | Code in `frontend:src/snapshot-refresh.js` and tests in `frontend:tests/snapshot-refresh.test.js` |
 | Live multi-cycle Chrome CDP session, temporal proof rule, negative relay bounds | Code in `frontend:scripts/m1-live-session-acceptance.py` and `frontend:scripts/acceptance-live-browser.mjs` |

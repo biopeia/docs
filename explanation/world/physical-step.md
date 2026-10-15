@@ -1,7 +1,7 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world@e2be58700c870419a309ef3e2460b30b95c256be` (main on
-2026-10-14); first written against `e423a04a`. The fixtures described here
+Reviewed against `world@76680345941fb627764ad831deded267dc11777c` (main on
+2026-10-15); first written against `e423a04a`. The fixtures described here
 import the other repositories at their pinned revisions, while production
 sensorimotor execution is provided by `world:src/world/causal_cycle.py` and
 `world:src/world/physical_step_publication.py`.
@@ -21,7 +21,9 @@ which issues explicit source and target causal ticks in a `PhysicalStepContext`
 inside a durable World transition, sequences owner projections, numerical solving,
 owner adoption, and checkpoint reference returns, and propagates failures to latch
 recovery. The coordinator takes its six operations as ports supplied by the
-caller.
+caller. Step candidates (`PhysicalStepCandidate`) hold separate body and environment
+candidates, and may carry optional World-owned solver telemetry in `evidence: dict[str, object] | None = None`,
+preserving semantic owner state exclusively in owner candidates.
 
 In historical test fixtures, those ports were supplied by integration test functions.
 At current main (`e2be5870`), World provides production implementations:

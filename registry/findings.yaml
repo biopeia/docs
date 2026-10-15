@@ -1689,8 +1689,10 @@ findings:
     documented_in:
       - explanation/organism/graph-plasticity.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/organism/issues/44"
+    disposition: >
+      Resolved in organism PR #174 (commit b674450dd6678d7a0a00a41591648511814709ba; issue #44): the alternating predictor test was reframed as a bounded characterization test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline. It explicitly asserts that the Oja weight update does not beat the zero-output baseline or persistence baseline on causally subsequent samples, formalizing the absence of predictive efficacy for this loop.
 
   F-0072:
     class: implementation_finding
