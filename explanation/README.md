@@ -18,7 +18,7 @@ The order of the main publication, set in [publication/biopeia-master.yaml](../p
 2. Organism: 22 documents ([organism](organism/README.md))
 3. Embodiment: 5 documents ([embodiment](embodiment/README.md))
 4. Environment: 5 documents ([environment](environment/README.md))
-5. World: 11 documents ([world](world/README.md))
+5. World: 12 documents ([world](world/README.md))
 6. Modality and Observation: 4 documents ([modality](modality/README.md), [observation](observation/README.md))
 7. Lab: 4 documents ([lab](lab/README.md))
 8. Cross-domain architecture: 1 document ([cross-domain](cross-domain/README.md))

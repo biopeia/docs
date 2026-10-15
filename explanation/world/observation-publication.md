@@ -1,7 +1,7 @@
 # Post-commit observation publication and outcome classification
 
-Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be`
-(main on 2026-10-14). Statements are marked by what supports them: the code,
+Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
+(main on 2026-10-15). Statements are marked by what supports them: the code,
 the tests, or an accepted decision.
 
 ## What it is
@@ -90,6 +90,22 @@ prove this non-interference:
   with `reason="consumer_overflow"`), World commit and owner adoption proceed
   without interruption or corruption
   (`test_observation_subscriber_overflow_does_not_change_world_causal_result`).
+
+## Integration with the local observation read bridge
+
+In end-to-end integration and operator processes
+(`world:tests/integration/observation/test_world_post_commit_owner_publication.py`,
+`world:src/world/m1_process.py`), the sink is an in-memory `ObservationPlane`
+paired with a `LocalObservationReadBridge`
+(`observation:src/observation/http_bridge.py`).
+
+Following each durable World commit:
+- World delivers the verified `embodiment.body_pose` and
+  `environment.finite_scalar_field` claims to the plane.
+- The read bridge exposes `GET /v1/current` on a loopback port
+  (`127.0.0.1:<port>`), allowlisting requests from `http://127.0.0.1:4173`.
+- Downstream observers read passive, detached snapshots over HTTP with
+  `Cache-Control: no-store` without participating in the simulation thread.
 
 ## What supports this description
 
