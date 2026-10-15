@@ -32,7 +32,7 @@ designs:
     document_status: proposed
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
-    editorial_notes: "Refines the accepted Frontend spatial readiness gate; proposal only. No owner publication contract or renderer implementation is approved by this entry."
+    editorial_notes: "Refines the accepted Frontend spatial readiness gate. The Owner accepted bounded candidate field subsets in Embodiment #77, Environment #73 and Observation #37; exact wire schemas and the shared spatial-frame relationship remain unresolved. No publication contract or renderer implementation is approved by this entry."
 
   design.cross-domain.biopeia-frontend-v1:
     title: "Biopeia Frontend v1 — Independent Visualization Application"

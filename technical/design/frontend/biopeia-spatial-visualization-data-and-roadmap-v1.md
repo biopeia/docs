@@ -71,6 +71,40 @@ joint topology, URDF generation, static primitives, physical-step state or
 BodyPose does not establish compatible identity, asset lifetime, display
 geometry or cross-owner coherence for a browser scene.
 
+### Bounded owner dispositions (2026-10-15)
+
+The Domain Owner accepted the candidate field subsets recorded in [Embodiment
+#77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6197195602),
+[Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6197196000),
+and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6197196506).
+These are bounded scope dispositions, not completed wire schemas or permission
+to add fields outside the candidates:
+
+- Embodiment may author a static render-only segment/joint descriptor and a
+  dynamic per-link transform projection, bound to body, episode, morphology,
+  geometry revision, named source cut, explicit frames and units. Internal
+  checkpoint/URDF, mass, material/contact/receptor/effector and cognitive data
+  remain excluded. If Embodiment cannot produce its own transforms, the body
+  is omitted rather than derived by Frontend.
+- Environment may author a static descriptor limited to the already modeled
+  ground-plane/sphere primitives, object/frame identifiers and Environment
+  identity/revisions in declared SI units. Solver values, genesis/checkpoint
+  data, arbitrary asset references and unmodeled/dynamic objects remain
+  excluded.
+- Observation may pass separately versioned immutable spatial descriptors
+  and dynamic state only after the exact source-owned schemas are established.
+  Its existing local-only GET/read limits, response cap, strict validation and
+  no-history/no-cache/no-cross-owner-join boundary remain in force.
+
+No disposition authorizes a shared cross-owner spatial transform. Current
+sources demonstrate separate owner frame declarations, but not an explicit
+assertion that an Environment frame and an Embodiment frame are the same frame
+or how one transforms to the other. A combined scene must therefore remain
+unavailable until that relationship is explicitly specified by its competent
+authority. This is distinct from World's existing generic committed-cut
+verification: causal co-membership does not itself establish spatial frame
+compatibility.
+
 ### World #156 disposition update (2026-10-15)
 
 The current-source capability matrix and issue/dependency inventory are
@@ -116,6 +150,38 @@ and separately measured stable shell/focus/scroll behavior, but no authorized
 scene geometry. Thus these checks support current passive presentation
 readiness only; they do not satisfy Spatial Visualization V1's final browser
 criterion.
+
+### Current implementation gaps after the owner dispositions
+
+At the exact source snapshot above:
+
+1. Embodiment's `ArticulatedBodySpec` contains candidate segment dimensions,
+   origins and joint topology, but its complete checkpoint representation
+   also contains fields explicitly excluded from visualization. The accepted
+   render subset needs a new owner-authored projection; the checkpoint must
+   not be serialized or filtered by Frontend. `ArticulatedEmbodimentPhysicalState`
+   contains root pose and joint position/velocity, not per-link transforms.
+   Embodiment must author the accepted transform projection; the browser must
+   not derive it.
+2. Environment's `StaticPhysicalScene` combines renderable plane/sphere
+   geometry with gravity, friction and optional genesis provenance. A safe
+   descriptor must be separately projected and must omit these excluded
+   fields.
+3. World verifies generic owner checkpoint lineage, authority, World identity
+   and causal tick for post-commit claims. The current production publication
+   join contains no spatial descriptor or per-link family. This existing gate
+   is necessary for committed dynamic claims but does not create a spatial
+   frame relation.
+4. Observation's HTTP allowlist currently contains exactly
+   `embodiment.body_pose` and `environment.finite_scalar_field`; no accepted
+   geometry or per-link family is carried. The candidate carriage approval
+   does not change that allowlist until exact schemas/limits are implemented
+   and reviewed.
+
+These are source gaps, not requests to enlarge a domain's authority. Static
+owner descriptors and dynamic owner state must remain distinct. Any future
+renderer must show separate owner claims rather than assemble them into one
+scene until the frame relationship and relevant cut binding are proven.
 
 ## Proposal: readiness requirements, not a contract
 
@@ -232,11 +298,12 @@ outside this design's proposed first spatial milestone.
 | Phase | Work | Entry evidence | Exit evidence |
 |---|---|---|---|
 | 0. Contract inventory | Recheck exact owner source revisions and map current geometry, pose, frames, identities, dynamic state, Observation families and World-cut references | Docs #164 accepted; bounded M1 publication evidence | Current-source matrix; explicit gaps; no inferred UI contract |
-| 1. Owner proposals | Embodiment and Environment independently propose or reject their static/dynamic representations; World specifies/rejects cut relationship; Observation specifies carriage/access feasibility | Phase 0 evidence and owner Issues scoped in their repositories | Each affected owner records an explicit decision; rejected/unsupported data removed from roadmap |
-| 2. Cross-domain design review | Reconcile representation compatibility, frames, revisions, partial states, assets/resources, security, provenance and failure behavior | Owner decisions/proposals; Docs #167 and Observation #37 findings | Approved architecture/contract decisions, exact dependencies and implementation-start gate; unresolved authority is a blocker |
-| 3. Minimal authorized renderer | Implement only one source-backed fixture slice using accepted contracts; geometry transfer static/revisioned and dynamic claims reference exact revisions/cut when required | Separate explicit Owner start instruction plus all applicable readiness gates | Tests prove valid render, mismatched revision/frame rejection, missing-asset behavior, provenance round-trip and accessible non-3D equivalent |
-| 4. Real-browser acceptance | Run a continuous World and browser over owner-approved live publications | Phase 3 implementation and exact release candidates | Browser shows real source-driven changes; cut/availability/disconnect semantics truthful; no unsupported geometry; complete reproducible evidence and independent review |
-| 5. Broader scene capability | Add further geometry families, resource types or multiple bodies only through owner-scoped proposals | Prior phase accepted and new capability owners identified | Each added family independently reviewed and covered by compatibility, security, performance and fallback evidence |
+| 1. Exact owner schemas | Specify bounded Embodiment and Environment projections and Observation's closed read schemas; keep World verification generic unless evidence shows a missing cut check | Bounded scope decisions in Embodiment #77, Environment #73 and Observation #37; exact current-source revisions above | Exact schemas, exclusions, units, limits and lineage tests recorded in owner repositories; no out-of-scope fields |
+| 2. Spatial-frame relationship | Decide how/if Environment geometry and Embodiment transforms share a named frame; establish owner and revision/lifetime of the relation. World cut membership alone is insufficient | Separate owner frames and current generic World cut gate; explicit unresolved relation | Either a verified explicit mapping acceptable to all affected owners or a documented decision to render separate projections only; no heuristic join |
+| 3. Cross-domain design review | Reconcile exact schemas, frame mapping, revisions, partial states, security, provenance and failure behavior | Owner schema proposals, spatial-frame disposition, Docs #167 and Observation #37 gates | Approved architecture/contract decisions, exact dependencies and implementation-start gate; unresolved authority is a blocker |
+| 4. Minimal authorized renderer | Implement only one source-backed slice using accepted contracts; geometry transfer static/revisioned and dynamic claims reference exact revisions/cut when required | Exact approved schemas, resolved frame relationship for any combined view, security/readiness gates | Tests prove valid render, mismatched revision/frame rejection, missing-data behavior, provenance round-trip and accessible non-3D equivalent |
+| 5. Real-browser acceptance | Run a continuous World and browser over owner-approved live publications | Phase 4 implementation and exact release candidates | Browser shows real source-driven changes; cut/availability/disconnect semantics truthful; no unsupported geometry; reproducible evidence and independent review |
+| 6. Broader scene capability | Add further geometry families, resource types or multiple bodies only through owner-scoped proposals | Prior phase accepted and new capability owners identified | Each added family independently reviewed and covered by compatibility, security, performance and fallback evidence |
 
 Phase 4 must not claim persistent history: durable Observation history, query,
 missed-cut reconstruction and longitudinal continuity belong to M2. Current
@@ -276,11 +343,12 @@ World journal/checkpoints do not substitute for an Observation archive.
   unavailable and unsupported data must remain distinct when the source
   contract permits that distinction.
 
-The design deliberately leaves unresolved whether owners will publish
-geometry, which assets/primitive families are appropriate, how static data is
-referenced/cached, whether dynamic joint state is suitable for external
-presentation, and which consumer access contract will be approved. No owner
-decision is inferred from a merge, CI, existing fixture, or this proposal.
+The bounded primitive/per-link candidate scopes and Observation carriage
+approach are now accepted as recorded above. Exact schemas, any shared
+Environment-to-Embodiment frame relationship, static-data refresh/lifetime,
+and the cut relationship for dynamic state remain unresolved. The candidate
+approval does not authorize arbitrary assets or broader geometry families.
+No decision is inferred from a merge, CI, existing fixture, or this proposal.
 
 ## Related records
 
@@ -310,7 +378,7 @@ commits behind its recorded `origin/main`; only files read explicitly with
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
 | Organism | `d8ed534d48188fb2f629faaa8dd85b95063a0c2d` | `README.md` and source search for geometry/spatial publication | Organism owns longitudinal identity/private state and lifecycle, not physical body state. No spatial geometry publication was identified. This design excludes private cognition and does not infer organism activity from geometry. |
 | Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. The intervening revision changes migration inventory/tests, not the current renderer inventory. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
-| Docs / Workspace | Docs `4988eee30b2ee2cd152066e138fb5fd1e325359e`; Workspace working tree clean | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
+| Docs / Workspace | Docs `ef82e43097e19284279d71bf395160393d5de472`; Workspace `6e8d83cf353d2bef7addcdb293508784c0bede6c` | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
 
 The audit found existing owner geometry sources and a generic World committed-
 cut publication gate, but no complete path that publishes compatible
