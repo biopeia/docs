@@ -8,8 +8,14 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "publication"))
-
-from model import ManifestError, load_manifest, manifest_errors  # noqa: E402
+from model import (  # noqa: E402
+    DEFAULT_MANIFESTS,
+    MANIFEST,
+    TECHNICAL_REFERENCE_MANIFEST,
+    ManifestError,
+    load_manifest,
+    manifest_errors,
+)
 
 
 def write(root: Path, manifest: dict) -> Path:
@@ -32,7 +38,16 @@ def manifest(**overrides) -> dict:
 
 
 def test_repository_manifest_is_publishable():
-    assert manifest_errors(load_manifest(), ROOT) == []
+    assert manifest_errors(load_manifest(MANIFEST), ROOT) == []
+
+
+def test_technical_reference_manifest_is_publishable():
+    assert manifest_errors(load_manifest(TECHNICAL_REFERENCE_MANIFEST), ROOT) == []
+
+
+def test_all_default_manifests_are_publishable():
+    for m in DEFAULT_MANIFESTS:
+        assert manifest_errors(load_manifest(m), ROOT) == []
 
 
 def test_valid_manifest_loads_and_readme_is_not_a_chapter(tmp_path):

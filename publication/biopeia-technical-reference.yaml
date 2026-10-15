@@ -1,0 +1,45 @@
+schema_version: 1
+
+# Composition of the Biopeia Technical Reference publication. This companion
+# volume presents the cross-domain contracts, component and interface catalogs,
+# parameters, metrics, terminology and decision records.
+# Derived from the canonical registry and documents without rewriting source text.
+publication:
+  id: biopeia-technical-reference
+  title: Biopeia
+  subtitle: Technical Reference, Components, Contracts and Records
+  type: Technical Reference
+  output: Biopeia-Technical-Reference
+  selection: true
+
+# Front matter that follows the contents list and precedes Part I.
+front:
+  - id: reader-guide
+    title: Reader guide
+    generated: [reader-guide]
+
+# Parts of the Technical Reference publication.
+parts:
+  - id: system-contracts
+    title: Cross-domain contracts and authority
+    chapters:
+      - explanation/cross-domain/observation-presentation-boundary.md
+    generated: [authority-map, contracts, contract-catalog]
+
+  - id: component-catalog
+    title: Canonical component catalog
+    generated: [components]
+
+  - id: units-and-evidence
+    title: Units and evidence semantics
+    chapters:
+      - reference/units.md
+      - reference/evidence-status.md
+
+  - id: registers-and-notation
+    title: Terminology, parameters and metrics
+    generated: [glossary, notation, parameters, metrics]
+
+  - id: records
+    title: Architecture decisions and designs
+    generated: [decisions, designs]
