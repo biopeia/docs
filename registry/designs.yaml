@@ -32,7 +32,7 @@ designs:
     document_status: proposed
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
-    editorial_notes: "Refines the accepted Frontend spatial readiness gate. The Owner authorized bounded design/contract-definition work for candidate geometry and dynamic state in Embodiment #77 and Environment #73, passive carriage in Observation #37, and a consumer-verifiable committed-cut relationship in World #162; this is not approval of exact wire contracts or implementation. Exact schemas, spatial-frame compatibility and committed-cut verification remain unresolved. Explicit no-actuation result design is tracked separately in Organism #176 and World #165. No publication contract or renderer implementation is approved by this entry."
+    editorial_notes: "Refines the accepted Frontend spatial readiness gate. Environment #73 approved a bounded static geometry baseline for implementation/local publication, implemented by merged PR #75; Embodiment #77 approved a bounded baseline, while merged PR #78 adds candidate documentation only and no projection implementation. Observation #37 accepted passive-carriage design direction only; World #162 accepted consumer-verifiable committed-cut design work only, not implementation/publication. Exact wire contracts, cross-domain frame compatibility, transport, cut verification and renderer remain unresolved. Explicit no-actuation result design is tracked separately in Organism #176 and World #165. This entry does not approve a composed scene or renderer."
 
   design.cross-domain.biopeia-frontend-v1:
     title: "Biopeia Frontend v1 — Independent Visualization Application"

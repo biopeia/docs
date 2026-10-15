@@ -58,12 +58,12 @@ The source snapshot used for this proposal is:
 
 | Repository | Revision | Relevant implementation inspected | What it demonstrates / does not demonstrate |
 |---|---|---|---|
-| `embodiment` | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `src/embodiment/physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`; `src/embodiment/observation.py` | Embodiment has owner-bound articulated morphology, joint topology/state and a BodyPose projection. This does not establish a browser-facing morphology/mesh/joint publication contract. Since the prior inspected revision, only migration metadata and lockfile changed. |
-| `environment` | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `src/environment/static_scene.py`, `physical.py`, `identified_resource.py` | Environment has explicit fixture-oriented static scene/frame/primitive values and resource projections. They are not a stable general scene or asset-delivery contract. |
-| `world` | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `src/world/causal_cycle.py`, `durable_runtime.py`, `observation_publication.py`, `adapters/articulated_mujoco.py` | World owns causal coordination and committed cuts, and can correlate post-commit projections. The intervening changes add/strengthen grid-v2 physical candidate selection and journal behavior; they do not authorize arbitrary owner geometry or a browser scene contract. |
+| `embodiment` | `4b542455a9c95bcc105a9885eaac395c0d99b921` | `src/embodiment/physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`; candidate `docs/spatial-render-projection-contract-candidate-v1.md` | Owner-bound morphology and root/joint state remain internal; BodyPose remains root-only. PR #78 adds a non-normative candidate, not a browser-facing publication, final schema, or per-link transform producer. |
+| `environment` | `d59770c05366b24a604b220fc9f7b551b27877f7` | `src/environment/static_scene.py`, `spatial_render.py`; `tests/test_spatial_render.py` | Adds a bounded deterministic, detached local projection of existing planes/spheres, frame and Environment identity/revision, metres and render-subset digest. It is not a transport/publication path, general asset format, dynamic state, or cross-domain frame/cut proof. |
+| `world` | `51cea9f8975fbdea603592fa5e9c56b073a2f4d4` | `src/world/causal_cycle.py`, `durable_runtime.py`, `observation_publication.py`, `adapters/articulated_mujoco.py`, `m1_profile.py` | World owns causal coordination and committed cuts and validates post-commit owner projections. The current M1 consumer payload still does not expose a verifiable spatial cut association or geometry composition contract. |
 | `observation` | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `src/observation/semantic.py`, `embodiment.py`, `environment.py`, `http_bridge.py` | Current local/browser path is bounded to BodyPose and finite scalar-field projections. Neither currently allowlisted M1 family exposes a World commit ID/cut receipt in its consumer payload; the bridge explicitly offers per-message, not cross-owner snapshot, coherence. No approved geometry family or durable historical scene query was found. |
-| `frontend` | `326613b74e388d3108cbafd3bab9128a35bd2246` | `src/main.js`, `observation-client.js`, `observation-store.js`, `presentation-scheduler.js`, `views.js`; browser acceptance scripts | The browser displays the two supported claims and explicitly reports no authorized scene geometry. Store subscriptions and presentation updates are selective; no renderer is present and claims are not reconstructed into meshes. |
-| `docs` | `16d951c` | Accepted Frontend UX/readiness designs | Docs #164 defines spatial rendering truthfulness and screen acceptance; its contract-readiness and implementation gates remain applicable. |
+| `frontend` | `3b158cc73e57a8175265e1d25a66eb09346679f9` | `src/main.js`, `observation-client.js`, `observation-store.js`, `presentation-scheduler.js`, `views.js`; browser acceptance scripts | The browser displays the two supported claims and independent 2D coordinate markers; it explicitly does not present them as a physical scene. No authorized 3D renderer is present and claims are not reconstructed into meshes. |
+| `docs` | `951a4ac610c3bcf64638b4433e99683f5bf5b943` | Accepted Frontend UX/readiness designs; current registry and roadmap | Docs #164 defines spatial rendering truthfulness and screen acceptance; Docs #183 is the current proposal update. Contract-readiness and implementation gates remain applicable. |
 
 These are code/document inspections at the listed revisions, not owner approval
 of a new spatial contract. In particular, the existence of frame descriptors,
@@ -254,10 +254,15 @@ At the exact source snapshot above:
    contains root pose and joint position/velocity, not per-link transforms.
    Embodiment must author the accepted transform projection; the browser must
    not derive it.
-2. Environment's `StaticPhysicalScene` combines renderable plane/sphere
-   geometry with gravity, friction and optional genesis provenance. A safe
-   descriptor must be separately projected and must omit these excluded
-   fields.
+2. Environment's `project_spatial_render_scene` now returns a detached,
+   canonicalizable descriptor over modeled planes/spheres and the declared
+   frame, Environment identity/revision, metre units and a render-only SHA-256
+   digest. Source bounds are 128 items, 128 UTF-8 bytes per text value and
+   65,536 canonical descriptor bytes. It excludes gravity, friction, genesis,
+   checkpoints and dynamic state. This projection is implemented and tested
+   at Environment `d59770c05366b24a604b220fc9f7b551b27877f7`; it does not
+   itself publish or transport the descriptor, bind it to Embodiment, or prove
+   World cut membership. The current M1 profile still has an empty scene.
 3. World verifies generic owner checkpoint lineage, authority, World identity
    and causal tick for post-commit claims. Separately, the articulated
    physical-step adapter checks equality of the body and scene frame IDs only;
@@ -470,8 +475,8 @@ commits behind its recorded `origin/main`; only files read explicitly with
 
 | Repository | Revalidated revision | Source evidence inspected | Current finding and limit |
 |---|---|---|---|
-| Embodiment | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`, `observation_contract.py`; tests `test_articulated_spec.py`, `test_articulated_state.py`, `test_physical_projection.py`, `test_body_pose_observation_projection.py`, `test_physics3d_observation_contract.py` | Owner-bound morphology contains segments, dimensions/materials, joint topology, frames and stable morphology content identity. Owner state validates root pose and joint values. The BodyPose projection is root pose only; no browser-facing segment-geometry or per-link world-transform publication contract was identified. The listed tests were inspected as existing test locations, not run as part of this revalidation. |
-| Environment | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `static_scene.py`, `physical.py`, `procedural_genesis.py`, `identified_resource.py`; tests `test_static_scene.py`, `test_physical_projection.py`, `test_environment_physical_projection.py` | Environment owns explicit static scene/frame/primitive and resource geometry values; the procedural sphere layout is narrow and deterministic. These values and solver/checkpoint uses do not by themselves establish an external visual publication contract, general scene/asset format or correlation with Embodiment. Tests were not run in this revalidation. |
+| Embodiment | `4b542455a9c95bcc105a9885eaac395c0d99b921` | `physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`; candidate `docs/spatial-render-projection-contract-candidate-v1.md` | Internal morphology, root pose and joint state remain as previously described. PR #78 adds a design candidate; the current source still does not establish an external geometry family or per-link transform producer. Exact candidate implementation conformance was not tested in this revalidation. |
+| Environment | `d59770c05366b24a604b220fc9f7b551b27877f7` | `spatial_render.py`, `static_scene.py`; `tests/test_spatial_render.py` | `project_spatial_render_scene` implements bounded static projection; focused test command `uv run --with pytest pytest -q tests/test_spatial_render.py` passed (6 tests). This proves the Environment projection contract in this checkout, not external transport, browser delivery, cross-owner compatibility or causal cut association. |
 | World | `51cea9f8975fbdea603592fa5e9c56b073a2f4d4` | `observation_publication.py`, `durable_runtime.py`, `adapters/articulated_mujoco.py`, `m1_profile.py`, M1 profile JSON; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py`, `test_articulated_production_join.py`; [World #162](https://github.com/biopeia/world/issues/162) | World validates owner publications against an internal `CommittedWorldCut` (world identity, causal tick, commit ID and owner checkpoint references). That server-side validation does not itself expose a consumer-verifiable receipt in the current M1 Observation payloads. Separately, the M1 profile uses the Embodiment profile frame ID for the Environment scene frame (parent `world`, identity basis/origin); the adapter checks ID equality only, not frame semantics, and `m1_profile.py` constructs the scene with `objects=()`. The only commit after the prior source-inspection revision `a7c8099…` changes `uv.lock`; the inspected source files are unchanged. World #162 asks its owner to decide the sufficient consumer-visible cut-association contract; no sufficiency rule is assumed here. Tests were inspected, not run in this revalidation. |
 | Observation | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `README.md`, `http_bridge.py`, `semantic.py`; tests `test_http_bridge.py`, `test_plane.py`, `test_observational_boundary_adversarial.py` | The documented browser bridge remains bounded to BodyPose v1 and finite scalar-field current projections. The in-memory plane's global delivery sequence is not domain/causal time and it is not durable history. No general geometry publication family or durable scene query was found. Tests were not run in this revalidation. |
 | Frontend | `3b158cc73e57a8175265e1d25a66eb09346679f9` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`, `src/style.css`; [PR #24](https://github.com/biopeia/frontend/pull/24) adds `tests/views.test.js` coverage | Frontend still consumes the same two bounded M1 claim families and has no 3D renderer dependency. PR #24 adds separate SVG coordinate markers for supported finite coordinates, with independent display scaling, owner identity, frame and provenance labels; it expressly does not compose claims into a scene. This is coordinate evidence presentation, not authorized physical geometry or a coherent shared World snapshot. Current-source tests/build were not rerun in this documentation revalidation. |
@@ -493,11 +498,11 @@ revalidation.
 
 | Capability | Status | Owner | Source / evidence | Tests | Limitation and linked decision |
 |---|---|---|---|---|---|
-| Internal articulated morphology and validated joint state | `EXISTING` | Embodiment | `d73315d…`; `physics3d/articulated_spec.py`, `articulated_state.py` | Source and test locations inspected; not run | Internal owner representation only. Embodiment #77 accepts design direction; exact geometry conventions, digest and transform production remain to be settled. |
-| Root body pose projection | `PARTIAL` | Embodiment | `d73315d…`; `physical_projection.py`, `observation_contract.py` | Projection tests inspected; not run | Root pose is not per-segment geometry or link transforms. No second kinematics engine is authorized. |
-| Browser-readable articulated geometry and segment transforms | `ABSENT` | Embodiment | Same source snapshot; no external geometry family identified | No conformance test exists in the inspected current source | Publication requires exact owner-approved contract. See Embodiment #77. |
-| Internal Environment scene/resource geometry | `EXISTING` | Environment | `d09e45c…`; `static_scene.py`, `physical.py`, `identified_resource.py` | Source and test locations inspected; not run | Existing owner geometry is not a visual publication contract. Environment #73 accepts design direction; primitive/frame scope and review remain open. |
-| Renderable active M1 Environment scene | `ABSENT` | Environment | `d09e45c…`; M1 profile has `objects=()` | Profile/source inspected; no rendered-scene test | Do not invent a floor, objects, terrain or resources. Environment #73. |
+| Internal articulated morphology and validated joint state | `EXISTING` | Embodiment | `4b54245…`; `physics3d/articulated_spec.py`, `articulated_state.py` | Source inspected; previous focused tests are not evidence for a new render family | Internal owner representation only. Embodiment #77 accepts a design base; exact geometry conventions, digest and transform production remain to be settled. |
+| Root body pose projection | `PARTIAL` | Embodiment | `4b54245…`; `physical_projection.py`, `observation_contract.py` | Existing projection test locations inspected; not rerun here | Root pose is not per-segment geometry or link transforms. No second kinematics engine is authorized. |
+| Browser-readable articulated geometry and segment transforms | `ABSENT` | Embodiment | `4b54245…`; code plus non-normative candidate doc inspected | No conformance test exists in the inspected source for a published geometry/per-link family | Publication requires exact owner-approved contract and an identified transform producer. See Embodiment #77. |
+| Bounded static Environment render projection | `EXISTING` | Environment | `d59770c…`; `spatial_render.py` | `tests/test_spatial_render.py`: 6 passed on the cited checkout | Detached local projection only; no Observation transport, cross-domain frame join, or World-cut proof. Environment #73 approved the bounded baseline; exact consumer composition remains separate. |
+| Renderable active M1 Environment scene | `ABSENT` | Environment | Environment `d59770c…`; World `51cea9f…` M1 profile sets an empty scene | Profile/source inspected; no rendered-scene test | The projection can truthfully represent an empty scene; do not invent a floor, objects, terrain or resources. Environment #73. |
 | Confirmed World cut and owner-checkpoint validation | `EXISTING` | World | `51cea9f…`; `observation_publication.py`, `durable_runtime.py` | Test locations inspected; not run | Internal validation exists; browser-verifiable proof is not present in current M1 claims. World #162. |
 | Consumer-verifiable proof that dynamic projections share one confirmed cut | `ABSENT` | World | `51cea9f…`; current claims lack exposed commit identity/proof | No consumer conformance test identified | Equal tick/frame labels alone are insufficient. Candidate should reuse existing commit/checkpoint evidence; no new history store. World #162 accepts direction only. |
 | Current bounded Observation reads for BodyPose and finite scalar field | `PARTIAL` | Observation | `a8b43af…`; `README.md`, `http_bridge.py`, `semantic.py` | Bridge/boundary test locations inspected; not run | Existing current-view transport, not spatial geometry, durable history or shared-cut composition. Observation #37. |
@@ -517,24 +522,31 @@ without an approved publication and verified cut relationship.
 
 ### Candidate contract status (2026-10-15)
 
-The owner-design direction has since been accepted as a design base, without
-accepting final schemas or authorizing implementation/publication. The exact
-current candidates remain proposals for their respective owners:
+The owner-design direction and bounded local publication baselines have since
+received distinct dispositions. Do not conflate the implemented Environment
+projection with a carried Observation family or a coherent scene. Current
+owner dispositions and candidate references are:
 
 | Domain | Candidate evidence | Status and scope |
 |---|---|---|
-| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [merged PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575` | Merged non-normative documentation candidate for bounded static scene geometry. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
-| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [merged PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Merged non-normative documentation candidate for bounded morphology and transforms. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
-| World | [World #162](https://github.com/biopeia/world/issues/162), candidate comment `6200546569` | Proposed consumer-verifiable association to an existing committed cut; no new persistence. Not owner-accepted or implemented. |
-| Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), candidate comment `6200559423` | Proposed passive carriage on the existing local boundary. No new allowlist entry, semantic join, or remote exposure is approved. |
+| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), owner disposition at comment `6201000808`, [merged PR #75](https://github.com/biopeia/environment/pull/75), head `982c555df0cc333aeba536a6c66783f37285652e` | Owner approved the bounded read-only static geometry baseline for implementation/local publication. PR #75 implements `project_spatial_render_scene` for modeled ground-plane/sphere primitives, stable IDs, frames, Environment identity/revision and SI lengths; it excludes solver parameters, seeds/checkpoints, arbitrary assets and dynamics without separate owner-authored state/cut binding. The projection is not an Observation transport path or a cross-domain frame/cut join. |
+| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), owner disposition at comment `6201001211`, [merged candidate-documentation PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Owner approved the bounded baseline for implementation/local publication: static articulated geometry/topology and separate dynamic kinematics with identity, revision, units and frames. PR #78 adds a non-normative design candidate only; current `main` does not implement that projection or a per-link transform producer. Exact producer, conventions and bounds remain gated; no Frontend-derived kinematics or solver/private fields. |
+| World | [World #162](https://github.com/biopeia/world/issues/162), design disposition at comment `6201001585`, [PR #166](https://github.com/biopeia/world/pull/166) at `10a4d9232f4f61c46bb199049420041b2de228f7` | Owner accepted design work for consumer-verifiable association to the same confirmed committed cut, reusing existing World evidence and no new persistence. The design disposition does **not** authorize implementation/publication. PR #166 is a separate implementation candidate; its exact-head CI was reported green but required review remains pending. |
+| Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), carriage disposition at comment `6201002076` | Owner accepted the bounded passive-carriage design direction only: separately versioned/bounded owner-approved claims, provenance preserved, existing local GET/security and payload limits, no joins/history/assets. It does not authorize an allowlist entry, schema, code, or transport change. |
 
-The independent integration review found no internal contradiction in these
-candidate proposals, but explicitly did not treat them as accepted schemas or
-implementation-ready contracts. Each domain owner must approve its exact
-contract; implementation/publication remains a separate gate. A static-only
-Environment view may be staged before dynamic contracts, but must be visibly
-partial and may use only real authorized Environment data. The registry state
-remains `proposed / not_evaluated / UNRESOLVED`.
+These dispositions are not interchangeable: Environment and Embodiment
+approved bounded owner publication baselines; Observation accepted a passive
+carriage design direction; World accepted a cut-association design direction,
+not its implementation. Exact field sets, limits, producer behavior,
+cross-domain frame compatibility, the consumer-verification trust path, and
+failure handling remain to be resolved by the responsible owners. The
+registry state remains `proposed / not_evaluated / UNRESOLVED`.
+
+The Owner separately directed no-actuation semantics in the design decisions
+recorded on [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6201001211),
+[Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6201000808),
+[World #162](https://github.com/biopeia/world/issues/162#issuecomment-6201001585),
+and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6201002076): Organism must explicitly produce a valid no-actuation result; World must not infer that result from silence/error, issue a neutral or repeated command, or mutate state artificially. Invalid/missing output fails the transition and preserves the last confirmed cut; vital termination must be explicit from its competent domain. The current `None` behavior must not change until its exact call path and contract meaning are documented. This is design direction only, not implementation authorization.
 
 The audit found existing owner geometry sources and an M1 profile-configured
 same-frame-ID compatibility check, but no complete path that publishes compatible
@@ -620,8 +632,8 @@ implementation, publication, or the Frontend renderer. The following are
 illustrative review material, not normative contracts. Existing security/read
 limits and owner authority remain in force.
 
-The candidate-gap review used these local `main` revisions as its source
-snapshot (not as runtime pins): Workspace
+The earlier candidate-gap review used these local `main` revisions as its
+source snapshot (not as runtime pins): Workspace
 `4e34c97569aaa1ba5611eda3dab3923cd33dfd83`, Docs
 `0373d063ada83b08fc4343f6a8c6dc382a155283`, Frontend
 `3b158cc73e57a8175265e1d25a66eb09346679f9`, World
@@ -837,9 +849,11 @@ their repositories before exact contract approval.
 | Observation | Strict allowlist, passive byte-preserving or equivalently lossless carriage, provenance preservation, total/count bounds, invalid payload rejection and no cross-owner join | Observation and affected owners approve exact carried schema/bounds; existing security limits unchanged |
 | Frontend | Consume only the approved shape; no fabricated defaults, forward kinematics, implicit joins, stale-source mixing or unverified common-scene label | Contract gates pass; renderer implementation is separately authorized |
 
-These are test plans only. No new test currently proves these candidate
-contracts, no new data family has been published, and no renderer implementation
-is authorized by the design-base disposition. The exact schemas, static
+These are test plans for the cross-domain candidate contracts only. Environment
+has since added a local static projection (documented above), but no new
+Observation data family or composed scene has been published. The design-base
+disposition did not authorize a renderer; the later owner dispositions remain
+separate and are summarized below. The exact schemas, static
 revision lifetime, frame compatibility rules (including why matching frame
 labels alone would or would not suffice), digest canonicalization, numerical
 tolerances, size/count limits, error behavior, verifier trust path and
@@ -854,8 +868,8 @@ registry state for this document therefore remains `proposed` /
 
 | Claim | Evidence | Type | Limits |
 |---|---|---|---|
-| Environment source code has bounded static and resource geometry values | Environment `static_scene.py`, `physical.py`, `procedural_genesis.py` at `d09e45c...` | Implemented (source observed) | Not a general visual contract or browser delivery path |
-| Embodiment source code has articulated morphology and owner-validated joint/root state | Embodiment `articulated_spec.py`, `articulated_state.py` at `d73315d...` | Implemented (source observed) | No identified UI geometry publication contract; source presence is not authorization |
+| Environment has a bounded local static render projection | Environment `spatial_render.py` at `d59770c05366b24a604b220fc9f7b551b27877f7` | Implemented; focused tests 6 passed | No publication/transport, dynamic state, cross-domain frame join, or World-cut proof |
+| Embodiment source code has articulated morphology and owner-validated joint/root state | Embodiment `articulated_spec.py`, `articulated_state.py` at `4b542455a9c95bcc105a9885eaac395c0d99b921` | Implemented (source observed) | No identified UI geometry publication contract or per-link transform producer; source presence is not authorization |
 | Current Frontend consumes the two bounded M1 claim families and presents their supported coordinates as separate 2D markers, without inferring a scene | Frontend `README.md`, `package.json`, `src/model.js`, `src/views.js` and `src/style.css` at `3b158cc73e57a8175265e1d25a66eb09346679f9`; [PR #24](https://github.com/biopeia/frontend/pull/24) tests | Implemented presentation boundary | No real-browser rendering of authorized 3D geometry was run; no geometry contract or 3D renderer is currently exposed |
 | World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `51cea9f...` (source file unchanged since `a7c8099...`) | Implemented (source observed) | Does not establish complete scene membership or browser support |
 | M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `51cea9f...` (source files unchanged since `a7c8099...`) | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
