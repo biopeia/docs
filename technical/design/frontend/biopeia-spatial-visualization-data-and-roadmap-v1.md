@@ -96,13 +96,27 @@ to add fields outside the candidates:
   Its existing local-only GET/read limits, response cap, strict validation and
   no-history/no-cache/no-cross-owner-join boundary remain in force.
 
-No disposition authorizes a shared cross-owner spatial transform. Current
-sources demonstrate separate owner frame declarations, but not an explicit
-assertion that an Environment frame and an Embodiment frame are the same frame
-or how one transforms to the other. A combined scene must therefore remain
-unavailable until that relationship is explicitly specified by its competent
-authority. This is distinct from World's existing generic committed-cut
-verification: causal co-membership does not itself establish spatial frame
+No disposition authorizes a new shared cross-owner spatial transform. The
+current source audit does, however, identify a narrower M1 configuration: the
+articulated MuJoCo adapter rejects inputs unless the Embodiment body's
+`reference_frame` equals the Environment scene's `frame.frame_id`; the M1
+profile creates that Environment frame using the Embodiment profile's
+`frame_id` and declares its parent as `world`, with an identity basis/origin.
+This is a profile-configured same-frame-ID compatibility check. The adapter
+checks identifier equality only; it does not independently validate axes,
+handedness, units, origin, an actual transform, or semantic compatibility.
+This is not a consumer-visible spatial publication or a general cross-profile
+frame contract.
+
+The distinction matters: the approved candidate schemas and current generic
+post-commit publication join do not carry the M1 profile's frame-ID linkage
+and equality-check evidence, static descriptor revision, and dynamic per-link
+transforms together to Observation. A renderer must not claim that relation for arbitrary profiles or
+independently delivered claims. For the M1 profile, the existing solver gate
+may be relevant evidence for a bounded rendering relation after the exact
+owner-authored projections and their cut/revision binding are specified and
+the frame linkage is preserved or revalidated in the authorized publication
+path. World causal co-membership still does not itself establish spatial frame
 compatibility.
 
 ### World #156 disposition update (2026-10-15)
@@ -168,10 +182,17 @@ At the exact source snapshot above:
    descriptor must be separately projected and must omit these excluded
    fields.
 3. World verifies generic owner checkpoint lineage, authority, World identity
-   and causal tick for post-commit claims. The current production publication
-   join contains no spatial descriptor or per-link family. This existing gate
-   is necessary for committed dynamic claims but does not create a spatial
-   frame relation.
+   and causal tick for post-commit claims. Separately, the articulated
+   physical-step adapter checks equality of the body and scene frame IDs only;
+   the M1 profile uses the Embodiment profile frame ID for the Environment
+   frame ID and sets parent `world` with identity basis/origin. The M1 profile
+   configures this same-ID compatibility, but the adapter does not validate
+   frame semantics (axes, handedness, units, origin or transform). The profile
+   also constructs the physical scene with `objects=()`, so this path supplies
+   no renderable Environment primitive geometry. This is not a consumer-visible
+   spatial publication. The current production
+   publication join contains no spatial descriptor or per-link family and
+   does not expose this frame-linkage proof to Observation.
 4. Observation's HTTP allowlist currently contains exactly
    `embodiment.body_pose` and `environment.finite_scalar_field`; no accepted
    geometry or per-link family is carried. The candidate carriage approval
@@ -299,7 +320,7 @@ outside this design's proposed first spatial milestone.
 |---|---|---|---|
 | 0. Contract inventory | Recheck exact owner source revisions and map current geometry, pose, frames, identities, dynamic state, Observation families and World-cut references | Docs #164 accepted; bounded M1 publication evidence | Current-source matrix; explicit gaps; no inferred UI contract |
 | 1. Exact owner schemas | Specify bounded Embodiment and Environment projections and Observation's closed read schemas; keep World verification generic unless evidence shows a missing cut check | Bounded scope decisions in Embodiment #77, Environment #73 and Observation #37; exact current-source revisions above | Exact schemas, exclusions, units, limits and lineage tests recorded in owner repositories; no out-of-scope fields |
-| 2. Spatial-frame relationship | Decide how/if Environment geometry and Embodiment transforms share a named frame; establish owner and revision/lifetime of the relation. World cut membership alone is insufficient | Separate owner frames and current generic World cut gate; explicit unresolved relation | Either a verified explicit mapping acceptable to all affected owners or a documented decision to render separate projections only; no heuristic join |
+| 2. Spatial-frame relationship | Determine whether and how the M1 profile-configured same-frame-ID compatibility can be preserved for a bounded consumer view; do not generalize it to arbitrary profiles. World cut membership alone is insufficient | M1 profile uses the Embodiment profile frame ID for its Environment frame; World adapter checks ID equality only, without validating frame semantics; no spatial family or frame proof in post-commit Observation publication | Owner-reviewed exact frame binding and its propagation/verification for the selected profile, or a documented decision to render separate projections only; no heuristic join |
 | 3. Cross-domain design review | Reconcile exact schemas, frame mapping, revisions, partial states, security, provenance and failure behavior | Owner schema proposals, spatial-frame disposition, Docs #167 and Observation #37 gates | Approved architecture/contract decisions, exact dependencies and implementation-start gate; unresolved authority is a blocker |
 | 4. Minimal authorized renderer | Implement only one source-backed slice using accepted contracts; geometry transfer static/revisioned and dynamic claims reference exact revisions/cut when required | Exact approved schemas, resolved frame relationship for any combined view, security/readiness gates | Tests prove valid render, mismatched revision/frame rejection, missing-data behavior, provenance round-trip and accessible non-3D equivalent |
 | 5. Real-browser acceptance | Run a continuous World and browser over owner-approved live publications | Phase 4 implementation and exact release candidates | Browser shows real source-driven changes; cut/availability/disconnect semantics truthful; no unsupported geometry; reproducible evidence and independent review |
@@ -344,11 +365,12 @@ World journal/checkpoints do not substitute for an Observation archive.
   contract permits that distinction.
 
 The bounded primitive/per-link candidate scopes and Observation carriage
-approach are now accepted as recorded above. Exact schemas, any shared
-Environment-to-Embodiment frame relationship, static-data refresh/lifetime,
-and the cut relationship for dynamic state remain unresolved. The candidate
-approval does not authorize arbitrary assets or broader geometry families.
-No decision is inferred from a merge, CI, existing fixture, or this proposal.
+approach are now accepted as recorded above. Exact schemas, consumer-visible
+propagation and validation of the M1 solver's existing frame relation,
+static-data refresh/lifetime, and the cut relationship for dynamic state
+remain unresolved. The candidate approval does not authorize arbitrary assets
+or broader geometry families. No decision is inferred from a merge, CI,
+existing fixture, or this proposal.
 
 ## Related records
 
@@ -372,7 +394,7 @@ commits behind its recorded `origin/main`; only files read explicitly with
 |---|---|---|---|
 | Embodiment | `d73315d87bbb3f2eea14e8c33812b37b59a5d72f` | `physics3d/articulated_spec.py`, `articulated_state.py`, `physical_projection.py`, `observation_contract.py`; tests `test_articulated_spec.py`, `test_articulated_state.py`, `test_physical_projection.py`, `test_body_pose_observation_projection.py`, `test_physics3d_observation_contract.py` | Owner-bound morphology contains segments, dimensions/materials, joint topology, frames and stable morphology content identity. Owner state validates root pose and joint values. The BodyPose projection is root pose only; no browser-facing segment-geometry or per-link world-transform publication contract was identified. The listed tests were inspected as existing test locations, not run as part of this revalidation. |
 | Environment | `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` | `static_scene.py`, `physical.py`, `procedural_genesis.py`, `identified_resource.py`; tests `test_static_scene.py`, `test_physical_projection.py`, `test_environment_physical_projection.py` | Environment owns explicit static scene/frame/primitive and resource geometry values; the procedural sphere layout is narrow and deterministic. These values and solver/checkpoint uses do not by themselves establish an external visual publication contract, general scene/asset format or correlation with Embodiment. Tests were not run in this revalidation. |
-| World | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `observation_publication.py`, `durable_runtime.py`; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py` | World verifies that each published owner observation references a checkpoint in a World-verified committed cut, has matching source lineage and names the same World and causal tick. This generic gate does not create geometry, assert scene completeness, interpret owner values, or make an arbitrary UI join acceptable. Tests were not run in this revalidation. |
+| World | `a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad` | `observation_publication.py`, `durable_runtime.py`, `adapters/articulated_mujoco.py`, `m1_profile.py`, M1 profile JSON; tests `test_observation_publication.py`, `test_world_post_commit_owner_publication.py`, `test_articulated_production_join.py` | Generic committed-cut verification does not create geometry or assert scene completeness. The M1 profile uses the Embodiment profile frame ID for the Environment scene frame (parent `world`, identity basis/origin); the adapter checks ID equality only. It does not validate frame semantics, and `m1_profile.py` constructs the scene with `objects=()`. This is profile-configured same-ID compatibility, not a consumer-visible spatial contract. Tests were inspected, not run in this revalidation. |
 | Observation | `a8b43af65b79ca4e2455bfc1ff1b55faf3d4d353` | `README.md`, `http_bridge.py`, `semantic.py`; tests `test_http_bridge.py`, `test_plane.py`, `test_observational_boundary_adversarial.py` | The documented browser bridge remains bounded to BodyPose v1 and finite scalar-field current projections. The in-memory plane's global delivery sequence is not domain/causal time and it is not durable history. No general geometry publication family or durable scene query was found. Tests were not run in this revalidation. |
 | Frontend | `326613b74e388d3108cbafd3bab9128a35bd2246` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`; tests include `model.test.js`, `observation-client.test.js`, `observation-store.test.js` | The supported model remains the two bounded M1 claims; README explicitly denies inference of scene geometry, shared World snapshot, causal relation and organism activity. `package.json` has no 3D renderer dependency. No authorized geometry data is currently available to render; absence in the current client is not proof that a domain source cannot provide it. Tests were not run in this revalidation. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
@@ -380,13 +402,15 @@ commits behind its recorded `origin/main`; only files read explicitly with
 | Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. The intervening revision changes migration inventory/tests, not the current renderer inventory. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
 | Docs / Workspace | Docs `ef82e43097e19284279d71bf395160393d5de472`; Workspace `6e8d83cf353d2bef7addcdb293508784c0bede6c` | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
 
-The audit found existing owner geometry sources and a generic World committed-
-cut publication gate, but no complete path that publishes compatible
+The audit found existing owner geometry sources and an M1 profile-configured
+same-frame-ID compatibility check, but no complete path that publishes compatible
 Embodiment geometry, Environment geometry and required dynamic state through
-an approved browser-readable Observation contract. A displayable scene cannot
-be reconstructed safely from BodyPose plus a scalar field. This is a finding
-about the inspected source path, not a claim that the source domains lack all
-physical geometry.
+an approved browser-readable Observation contract. The World gate applies to
+the physical solver inputs; the current generic post-commit publication path
+does not carry a spatial family or expose that frame-linkage proof. A
+displayable scene cannot be reconstructed safely from BodyPose plus a scalar
+field. This is a finding about the inspected source path, not a claim that the
+source domains lack all physical geometry.
 
 ### Issue and dependency disposition
 
@@ -429,4 +453,5 @@ gates and the applicable security/read-boundary decisions remain controlling.
 | Embodiment source code has articulated morphology and owner-validated joint/root state | Embodiment `articulated_spec.py`, `articulated_state.py` at `d73315d...` | Implemented (source observed) | No identified UI geometry publication contract; source presence is not authorization |
 | Current Frontend documents only two M1 claim families and no inferred scene | Frontend `README.md` and `src/model.js` at `326613b...` | Documented / implemented boundary | No real-browser test was run for a 3D renderer because no geometry contract is currently exposed |
 | World has a generic post-commit owner-publication verification path | World `observation_publication.py` at `a7c8099...` | Implemented (source observed) | Does not establish complete scene membership or browser support |
+| M1 physical-step inputs use a profile-configured same frame ID | World `m1_profile.py`, M1 profile JSON and `adapters/articulated_mujoco.py` at `a7c8099...` | Implemented (source observed) | Adapter checks identifier equality only; it does not validate frame semantics. The M1 profile scene has `objects=()`, and no corresponding spatial Observation publication or browser contract is exposed |
 | New domain owner review is needed before proposing owner geometry publication | No external geometry publication family found in inspected Observation adapter; current design #176 leaves owner decisions open | Inference from inspected evidence | Requires Embodiment, Environment, Observation and competent cross-domain Owner disposition; not an approved contract |
