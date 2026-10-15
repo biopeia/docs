@@ -96,6 +96,44 @@ to add fields outside the candidates:
   Its existing local-only GET/read limits, response cap, strict validation and
   no-history/no-cache/no-cross-owner-join boundary remain in force.
 
+### Owner direction for design work only (2026-10-15)
+
+The Owner has authorized the next bounded design and contract-definition work,
+but has **not** approved implementation, publication, or a completed wire
+contract. The direction is recorded in the Owner's disposition on [Frontend
+#22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732),
+with affected-domain records on [Embodiment
+#77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6199062525),
+[Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6199062981),
+[World #162](https://github.com/biopeia/world/issues/162#issuecomment-6199063376),
+and [Observation
+#37](https://github.com/biopeia/observation/issues/37#issuecomment-6199063932).
+These dispositions unblock design only; owners still need to review the exact
+proposed contract before implementation.
+
+The current design direction is deliberately narrow:
+
+- Environment may define a read-only publication for static, owner-authored
+  render geometry, identifiers, units, coordinate frame and revision.
+- Embodiment may define distinct static articulated geometry/topology and
+  dynamic kinematics publications, with body/episode/morphology identity,
+  source revision, units and frames. Frontend must not derive missing physical
+  properties.
+- Observation may carry approved source-owned claims without changing their
+  meaning or correlating them on its own.
+- A composite scene may be described as causally coherent only when an
+  explicit World-owned and consumer-verifiable relationship identifies the
+  same confirmed committed cut and verifies each source-state/revision
+  relationship. Equal tick numbers alone are insufficient. The design must
+  define verification and behavior for missing, conflicting, or late claims;
+  unresolved claims remain separate and cannot be called one coherent scene.
+
+This remains a proposal direction, not a choice of schema, envelope, transport,
+asset model, or implementation. Design work must first demonstrate the exact
+current-source gap and the minimum fields/relations needed, preferring a
+narrow extension over a new publication architecture. Existing UX and
+security/read-access constraints remain in force. No M2/M3 work is included.
+
 No disposition authorizes a new shared cross-owner spatial transform. The
 current source audit does, however, identify a narrower M1 configuration: the
 articulated MuJoCo adapter rejects inputs unless the Embodiment body's
@@ -145,6 +183,45 @@ The actual M1.1 browser reproduction is recorded in [Workspace #50 comment
 World committed 271 continuous ticks; the browser observed real changing
 BodyPose/finite-scalar publications and displayed “No authorized scene
 geometry.” This is bounded M1 evidence, not 3D-rendering or humanoid evidence.
+
+### Explicit no-actuation result: design gate, not an interpretation of `None`
+
+The Owner's decision on [Frontend
+#22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732)
+distinguishes a valid, explicit no-actuation result from a missing, malformed,
+incomplete or failed Organism result. World may advance physical evolution
+without an actuation request only for the valid explicit outcome. It must not
+manufacture a neutral command, replay the prior command or mutate physical
+state to simulate rest. An invalid result must fail the transition in a
+controlled way and preserve the last confirmed cut. Vital/lifecycle
+termination must be explicit from its competent domain and cannot be inferred
+from no-actuation.
+
+This is a semantic decision, not evidence that current code already implements
+that result contract. At Organism
+`d8ed534d48188fb2f629faaa8dd85b95063a0c2d`,
+`ExplorationActionCandidate.motor_command` is typed `MotorCommand | None`.
+`OrganismExplorationComposer.prepare` initializes its local command to `None`
+and sets a command only when the prepared `intents` collection is non-empty.
+Thus this path produces an internal candidate with no command when no intent
+was prepared, but the candidate carries no separate discriminator declaring
+that condition a valid no-actuation result. Errors raised before candidate
+creation are separate failure paths; they are not valid abstention. At World
+`a7c8099cf6ede9cfdb8f6cf7eaefb2eab8dc9bad`,
+`causal_cycle.py` raises when that field is `None`, and the articulated
+MuJoCo adapter accepts a required `MotorCommand`. Therefore the current
+candidate `None` is not yet a demonstrated valid no-actuation result, and
+the current caller treats it as a failed transition. This observation does
+not determine the broader contract meaning of every no-command path.
+
+The design-only follow-ups are [Organism
+#176](https://github.com/biopeia/organism/issues/176) and [World
+#165](https://github.com/biopeia/world/issues/165). They must inspect the exact
+result path, validity checks, physical no-actuation integration and cut
+preservation. No change to the present `None` treatment or to actuator/
+termination semantics is authorized until those designs and owner reviews
+establish the required contract. This investigation does not alter World
+#156's bounded grid-v2 acceptance.
 
 ### Frontend current-main presentation evidence (2026-10-15)
 
@@ -365,12 +442,12 @@ World journal/checkpoints do not substitute for an Observation archive.
   contract permits that distinction.
 
 The bounded primitive/per-link candidate scopes and Observation carriage
-approach are now accepted as recorded above. Exact schemas, consumer-visible
-propagation and validation of the M1 solver's existing frame relation,
-static-data refresh/lifetime, and the cut relationship for dynamic state
-remain unresolved. The candidate approval does not authorize arbitrary assets
-or broader geometry families. No decision is inferred from a merge, CI,
-existing fixture, or this proposal.
+approach are authorized for design and owner review, not accepted wire
+contracts. Exact schemas, consumer-visible propagation and validation of the
+M1 solver's existing frame relation, static-data refresh/lifetime, and the cut
+relationship for dynamic state remain unresolved. The design direction does
+not authorize arbitrary assets or broader geometry families. No decision is
+inferred from a merge, CI, existing fixture, or this proposal.
 
 ## Related records
 
