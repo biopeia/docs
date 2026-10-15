@@ -19,8 +19,11 @@ Explanatory documents of the World domain (semantic-authority).
 5. [The durable World runtime](durable-runtime.md)
 6. [The journal snapshot store](journal-snapshot-store.md)
 7. [The physical causal step, as it exists today](physical-step.md)
-8. [The MuJoCo step executor](mujoco-step-executor.md)
-9. [World recovery](recovery.md)
+8. [The sensorimotor causal cycle](causal-cycle.md)
+9. [Post-commit observation publication and outcome classification](observation-publication.md)
+10. [The M1 bounded process bootstrap and operator profile](m1-process-bootstrap.md)
+11. [The MuJoCo step executor](mujoco-step-executor.md)
+12. [World recovery](recovery.md)
 
 ## Canonical documents
 
@@ -37,6 +40,9 @@ Explanatory documents of the World domain (semantic-authority).
 | [recovery.md](recovery.md) | `mechanism.world-recovery` | CURRENT | RECORDED |
 | [physical-step.md](physical-step.md) | `mechanism.physical-causal-step` | EXPERIMENTAL | RECORDED |
 | [mujoco-step-executor.md](mujoco-step-executor.md) | `component.world-mujoco-step-executor` | EXPERIMENTAL | RECORDED |
+| [observation-publication.md](observation-publication.md) | `component.world-observation-publication` | CURRENT | RECORDED |
+| [causal-cycle.md](causal-cycle.md) | `component.world-causal-cycle` | CURRENT | RECORDED |
+| [m1-process-bootstrap.md](m1-process-bootstrap.md) | `component.world-m1-process-bootstrap` | CURRENT | RECORDED |
 
 ## Related domains
 
@@ -44,17 +50,30 @@ Explanatory documents of the World domain (semantic-authority).
 - Correlation of a physical step: with embodiment, environment
 - Operator material transfer: with embodiment, environment, lab
 - Observation of a committed cut: with observation
+- Operator material transfer observation publication: with lab, observation
 - Body physical input to a solver: with embodiment
 - Organism cognitive state in a World causal cut: with organism
+- Loopback observation read bridge for local presentation: with observation
 
 ## Designs
 
+- [Biopeia Spatial Visualization — Owner-Authorized Data Readiness and Roadmap](../../technical/design/frontend/biopeia-spatial-visualization-data-and-roadmap-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Biopeia Frontend v1 — Independent Visualization Application](../../technical/design/frontend/biopeia-frontend-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Functional, Interaction and UX Specification](../../technical/design/frontend/biopeia-frontend-ux-spec-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Visual Design Specification](../../technical/design/frontend/biopeia-frontend-visual-design-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Approval and Development Readiness Plan](../../technical/design/frontend/biopeia-frontend-approval-and-development-readiness-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1](../../technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
+- [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Biopeia Physical-Step and Causal-Commit Integration v1](../../technical/design/runtime/biopeia-physical-step-integration-v1.md): document approved, implementation partial, scope TARGET
+- [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](../../technical/design/observability/lab-world-observation-integration-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
+- [Biopeia Observation — Passive Observational Data Lake v1](../../technical/design/observation/observation-data-lake-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 
 ## Decision records
 
 - [ADR-0073 — Biopeia Migration Causal and Physical Contracts](../../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md)
+- [ADR-0078 — Observation is causally passive](../../technical/adr/ADR-0078-observation-is-causally-passive.md)
 - [ADR-0080 — World identity is authoritative, not a presentation label](../../technical/adr/ADR-0080-world-identity-is-authoritative-not-a-presentation-label.md)
 - [ADR-0083 — Causal cycles have explicit commit semantics](../../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md)
 - [ADR-0084 — Single writer or explicit coordination for shared persistent state](../../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md)
@@ -66,6 +85,8 @@ Explanatory documents of the World domain (semantic-authority).
 - [ADR-0098 — Physical substrate and causal integration](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)
 - [ADR-0106 — Hybrid multi-owner persistence](../../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md)
 - [ADR-0107 — Journal role](../../technical/adr/ADR-0107-journal-role.md)
+- [ADR-0112 — Repository Settings and GitHub Actions Baseline](../../technical/adr/ADR-0112-repository-settings-and-actions-baseline.md)
+- [ADR-0113 — Independent Frontend and Lab Presentation Boundary](../../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md)
 
 ## Open findings
 

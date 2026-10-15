@@ -1,7 +1,7 @@
 # Procedural genesis of a scene
 
 Reviewed against `environment` at commit
-`f97ec22272b6be1e6742770e37cd370e7d96d6bc`. Everything below describes that
+`d09e45c47fe86c23b2fc977e26938920eb9058b8` (main on 2026-10-14); first written against `f97ec222`. Everything below describes that
 revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 
@@ -42,9 +42,12 @@ SHA-256 is taken over that form and the sphere's index, and four numbers
 between zero and one are read from the digest: three place the centre inside
 the box, the fourth picks the radius within the range.
 
-Nothing else enters. The function's own description says it "does not read
-host time, process state, or global RNG". The seed and every field of the
-configuration are inputs: changing any of them changes the scene
+The generator's canonical inputs include the seed and the full configuration,
+including the sliding-friction coefficient for generated spheres. Plane and
+sphere friction are retained in the generated scene and in the canonical
+configuration used for its digest. The function's own description says it
+"does not read host time, process state, or global RNG". Changing the seed
+or configuration changes the scene
 (`test_seed_and_configuration_are_causal_generator_inputs`), and equal
 specifications give equal scenes
 (`test_same_complete_spec_generates_same_scene_and_explicit_provenance`).
@@ -86,6 +89,6 @@ None. Generation happens once, before the scene exists, and reads no clock.
 
 | Claim | Support |
 |---|---|
-| Inputs, refusal of invalid or unknown specifications, determinism, sensitivity to seed and configuration, provenance, checkpoint of a generated scene | Code and tests in `environment:tests/test_genesis.py` |
+| Inputs (including sphere friction), refusal of invalid or unknown specifications, determinism, sensitivity to seed and configuration, provenance, checkpoint of a generated scene | Code and tests in `environment:tests/test_genesis.py` |
 | Overlapping spheres and spheres under the ground | Code, and one ad hoc run of the module at that revision |
 | The limits of what is claimed | The module's own documentation and the repository's README |

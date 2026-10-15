@@ -91,14 +91,165 @@ The disposition below concerns direct transfer of each historical source artifac
 ## Additional source-test evidence: repository governance tooling
 
 Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
-The Git tree at that revision identifies these exact test blobs. They exercise the source monorepo's `scripts/governance/ci_plan.py`, generated PR-summary tooling, and cross-member version synchronization. They are disposed as source tests, not copied or ported as TARGET tests.
+The Git tree at that revision identifies these exact test blobs. They exercise the source monorepo's governance harness, agent context bounds, CI planning, domain coverage heuristics, publication classification, PR-summary tooling, and cross-member version synchronization. They are disposed as source tests, not copied or ported as TARGET tests.
 
 | Source path | Source blob SHA-1 | Disposition |
 |---|---|---|
+| `tests/governance/README.md` | `b8da9954fb8b5d30eb8cb0c7ebab0da37eb7e008` | `DROP` |
+| `tests/governance/test_agent_context.py` | `33da135a102fb0ae642ae6c65fac7ca13682209f` | `DROP` |
+| `tests/governance/test_agent_governance.py` | `d92df6a4ecac58346b743039801ea38e05b668a6` | `DROP` |
+| `tests/governance/test_candidate_publication.py` | `41c213c233a253eb267699fad8382eacc5bb56ce` | `DROP` |
 | `tests/governance/test_ci_plan.py` | `4964d256ff10537bda52301e3d26d308490e6a23` | `DROP` |
+| `tests/governance/test_domain_coverage.py` | `7c742ee92a2b4ce615ed7f0972d14cbfae2da464` | `DROP` |
 | `tests/governance/test_pr_summary.py` | `7ea6a5d32563491198cd1cfbcaa77b9a534c428e` | `DROP` |
+| `tests/governance/test_publish_classification.py` | `015809b063f1fd4ad05244256f09e5676910dabf` | `DROP` |
+| `tests/governance/test_test_impact.py` | `3456c1b20b99138d74b02efa6fc931018dd8b178` | `DROP` |
 | `tests/governance/test_version_sync.py` | `d36f56b1556b107073cc67bb52b44c81a1edfcc9` | `DROP` |
 
-TARGET comparison was checked against `biopeia/.github@671b13855d48ea9ec5a81044f05b416ea2cbfd24` and `biopeia/.github-private@010ef3c748689aa369016d2c9a95a87a1f207837`. The public repository contains repo-native reusable workflows; the private repository contains the separately ratified agent work/review contracts. Neither tree contains the source test modules or the tested source monorepo planner, PR-summary script, or cross-member version-sync utility. This supports `DROP` for these three source test files only; it does not assess every governance test, claim that Biopeia has no future governance needs, or replace testing of the current TARGET contracts.
+TARGET comparison was checked against `biopeia/.github@671b13855d48ea9ec5a81044f05b416ea2cbfd24` and `biopeia/.github-private@010ef3c748689aa369016d2c9a95a87a1f207837`. The public repository contains repo-native reusable workflows; the private repository contains the separately ratified agent work/review contracts. Neither tree contains these source test modules or the tested source monorepo harness. This supports `DROP` for these source test files only; it does not claim that Biopeia has no future governance needs, or replace testing of the current TARGET contracts.
 
-This is a **MIGRATION_CLOSURE ledger disposition** for the three source test paths. It creates no **POST_MIGRATION** implementation task: a future change to Biopeia CI, PR summaries, or project versioning would need its own current TARGET requirement and issue. It does not close the broader test-inventory or migration-reconciliation findings in `docs#63`.
+This is a **MIGRATION_CLOSURE ledger disposition** for the `tests/governance/` test paths. It creates no **POST_MIGRATION** implementation task: any future change to Biopeia CI, PR summaries, or project versioning would need its own current TARGET requirement and issue. It does not close the broader test-inventory or migration-reconciliation findings in `docs#63`.
+
+## Additional source-test evidence: one-time removal of a prohibited source directory
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d` (tree `915146b807a2f3b4b362b485d0fd4010bb4c7cde`). The tracked source test has the following exact identity:
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `tests/docs/test_internal_is_gone.py` | `586a09d3f3d6a48122165ddaafa89fd42611f9a0` | `DROP` |
+
+This test asserts two completed source-corpus cleanup facts: the historical `docs/_internal/` directory is absent, and a source-only `SOURCES.md` no longer names that removed directory. It has no target test destination: neither assertion specifies a Biopeia contract, and the historical Symbiont documentation and directory are not part of the Biopeia target corpus. This records `DROP` as a TARGET test only; it neither deletes source history nor claims that Biopeia has no future documentation-integrity needs. Any new Biopeia documentation invariant must be specified and tested against current Biopeia requirements rather than copied from this cleanup test.
+
+Target comparison revision: `biopeia/docs@27ab5aa` (the Docs `main` base reviewed for this bounded row). This row is a source-test disposition only; it does not close other source-test rows or any part of the `docs#63` umbrella beyond this exact file.
+
+## Additional source-document evidence: historical roadmap log
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+The exact source identity and direct-transfer disposition are:
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `docs/history/roadmap-log.md` | `89119d9cca76db450a8f88a5509ed17a87ecc607` | `DROP` |
+
+The source file identifies itself as a historical Symbiont roadmap log containing completed milestones, merge-sequence history, and per-patch tracking. The corresponding path is absent from Biopeia Docs at comparison revision `9611f882571a2116026dfa872875dffc9b65cd86`. This supports `DROP` as a direct source-file transfer only: the historical source remains preserved in Symbiont, and this row does not determine whether Biopeia may later need a separately reconstructed explanation. It does not reconcile other rows or close the broader `docs#63` issue.
+
+## Additional source-tooling evidence: repository scripts and governance tooling
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+The Git tree at that revision identifies these 27 governance and benchmark tooling blobs. They implement historical monorepo test running, CI planning, benchmarking, profiling, kernel characterization, and version synchronization. They are disposed as historical monorepo tooling with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `scripts/agentctl.py` | `e264a567c2c8577ff7ddb694f8054c15c8b587d5` | `DROP` |
+| `scripts/aggregate_e8_label_invariance.py` | `82c57ff0f06ed98337222c4678538d6bca14ffe3` | `DROP` |
+| `scripts/bench_age_scaling.py` | `016180361782ba65a2587aad246f080b01bd0f3b` | `DROP` |
+| `scripts/bench_browser_layout.mjs` | `086d97251096f71b18e03320d6040fa9b6606b9a` | `DROP` |
+| `scripts/bench_cognitive_scaling.py` | `10255c1783edf89d9c43e7afac27ea972ac3fa2d` | `DROP` |
+| `scripts/bench_observability_tax.py` | `c6974b9847b59d2772eb06cf55ab998f111d481e` | `DROP` |
+| `scripts/bench_organism_tick.py` | `0696e995d16347674bfab2afcf21672438a13784` | `DROP` |
+| `scripts/bench_p1_observability_components.py` | `3d02fd366bdd74dff2785dd947631fbbb1b364da` | `DROP` |
+| `scripts/bench_ridge_predictor.py` | `0522daeb45c9298abfd4f1118e27d3711cc1d139` | `DROP` |
+| `scripts/bench_sensorimotor_matching.py` | `3d81831d810f0ce4c12f8152c0735f0c89e87dea` | `DROP` |
+| `scripts/bench_sse_transport.py` | `6d659b62fb7f0ffdf729b8bd06441580aa66cfff` | `DROP` |
+| `scripts/bench_world_journal_index.py` | `47e66ac469626339ee156d4ea00a4dcdc8330f4a` | `DROP` |
+| `scripts/characterize_kernel.py` | `278af30a340c87e52d9eadef54ec239cf6e48753` | `DROP` |
+| `scripts/check_isolation.py` | `b2ae2bca4190a53edf74afb883bd1b6af7a791fe` | `DROP` |
+| `scripts/governance/__init__.py` | `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` | `DROP` |
+| `scripts/governance/ci_plan.py` | `d05c01013a139b6a6144f6d88712b849d4a5ab81` | `DROP` |
+| `scripts/governance/classify.py` | `b2a4430e857597f0b8db5f7ee868c899f3def9b2` | `DROP` |
+| `scripts/governance/pr_summary.py` | `b487ef58cde2bff0705d1db26ad1b9959f7b9c5d` | `DROP` |
+| `scripts/governance/publish.py` | `c2c4966edd6742725035674b1b346633d2509d1d` | `DROP` |
+| `scripts/governance/test_impact.py` | `5ef6a452c4b6190c307084fc4bb61ea16feecae9` | `DROP` |
+| `scripts/governance/version.py` | `256cacedf4e33499418d21b3e5b4386ed563d96a` | `DROP` |
+| `scripts/profile_cognitive_hotpath.py` | `66e14a7b99d7872165b0d7b8e20d3e2fce8fd36c` | `DROP` |
+| `scripts/reprofile_performance.py` | `d0ebf6b3dcda530205932d7af1c5f394fe4b4e35` | `DROP` |
+| `scripts/run-ecosystem.sh` | `4cbaa112b977c91503eb111228333724e00ce1d2` | `DROP` |
+| `scripts/run_e8_label_invariance.py` | `24b5a5828b8de6a75493591d9f1295e5dfdccb82` | `DROP` |
+| `scripts/run_tests.py` | `005279ca627b05ddd54bde9f5496b8ce83434a4a` | `DROP` |
+| `scripts/tick_state_hash_trace.py` | `198da8cf99151046ce754d63547219c7bc2bf876` | `DROP` |
+
+Target comparison revision: `biopeia/docs@4042d40`. None of these source scripts are present in Biopeia target repositories. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
+
+## Additional source-package evidence: historical host infrastructure package
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d` (tree `596491547744632143e682cf7fde85ada813e3f6`).
+The 17 modules of the legacy `symbiont.host` package implement host-resident discovery, telemetry, acclimation, checkpointing, and hypotheses testing tied directly to historical monorepo execution. Biopeia target architecture decouples Organism from local host discovery; target code imports none of these modules. They are disposed with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `symbiont/src/symbiont/host/__init__.py` | `b480455f44dc651280dce049e48e1d1fb81b262f` | `DROP` |
+| `symbiont/src/symbiont/host/acclimation.py` | `94cce3bca3d16069bcd39f2eb2eea9f358f59c52` | `DROP` |
+| `symbiont/src/symbiont/host/adaptive.py` | `2dcba6ee561a2892701274eadd648711e23c96ef` | `DROP` |
+| `symbiont/src/symbiont/host/checkpoint.py` | `aa784cfacf0fd215840588cfd3135a9d3e8dad18` | `DROP` |
+| `symbiont/src/symbiont/host/consolidated_baseline.py` | `f4c7bcd36dd890c56877d827112a989623ddb597` | `DROP` |
+| `symbiont/src/symbiont/host/continuity.py` | `468fec1651cf9f7e0175bbf01217b40026fb055a` | `DROP` |
+| `symbiont/src/symbiont/host/contracts.py` | `7d41e8b0e6997e1462402fffebae506d5b5d4ffb` | `DROP` |
+| `symbiont/src/symbiont/host/discovery.py` | `6318e4feedc6ac6163ba8285eb264b10ccdf84f7` | `DROP` |
+| `symbiont/src/symbiont/host/drift.py` | `a17e8eb3105144b477fb06ef9e9af708581d3ca1` | `DROP` |
+| `symbiont/src/symbiont/host/durable.py` | `ec71f45eedf1e33fcdfe066777f84a117d6bd619` | `DROP` |
+| `symbiont/src/symbiont/host/hypotheses.py` | `af2f0b583b1148afcf8a66c20a2ad1e4285a84f1` | `DROP` |
+| `symbiont/src/symbiont/host/lifecycle.py` | `b602c782b760e215255f06ef48fa619ecd922247` | `DROP` |
+| `symbiont/src/symbiont/host/percepts.py` | `78ae657f0be5bd33fea25a3929336ceb30596bbb` | `DROP` |
+| `symbiont/src/symbiont/host/readings.py` | `6429335837437d2a234cf5242407a087ceb882d1` | `DROP` |
+| `symbiont/src/symbiont/host/rhythms.py` | `07d25a51a8d91cd654549c8e6be9268a38fe120d` | `DROP` |
+| `symbiont/src/symbiont/host/second_look.py` | `1d31ab8ab6735117abbe41805a301584c14ed98b` | `DROP` |
+| `symbiont/src/symbiont/host/sources.py` | `10caaf11bdc5b5b3e1f421ebccadd79dfaae17b1` | `DROP` |
+
+Target comparison revision: `biopeia/docs@215325d`. No Biopeia repository contains this package. This records `DROP` as TARGET code only; it neither deletes source history nor alters target runtime behavior.
+
+## Additional source-test evidence: experimental integrity and smoke suites
+
+Pinned source: `alessbarb/symbiont-lab@80d372a186513035f85a769db886e505cabba52d`.
+These 47 test and harness blobs exercise the historical monolithic 5-domain layout, internal runtime bindings, tick contexts, and smoke launcher of Symbiont. They are disposed as historical monorepo tests with `DROP` from target code.
+
+| Source path | Source blob SHA-1 | Disposition |
+|---|---|---|
+| `tests/README.md` | `9952e1ce94c427da4c404659b378918d20e813df` | `DROP` |
+| `tests/__init__.py` | `fc6e791f05b91bc229627ce24bef2aac26b69b89` | `DROP` |
+| `tests/layout.py` | `d0df9a961f3bc80eafba6fff5d2592917d4d4438` | `DROP` |
+| `tests/smoke/README.md` | `0a0b674960334b1d3139ce685a9b5ad5aabd71ce` | `DROP` |
+| `tests/smoke/test_ecosystem_launcher.py` | `11f0af0408f0c7d3455e7661cd0816a63b37371b` | `DROP` |
+| `tests/experimental_integrity/README.md` | `9f48ca28c111743aa600b3a0587640b5ff4aaad2` | `DROP` |
+| `tests/experimental_integrity/test_action_domain_checkpoint.py` | `77ff9ea56cc10647590546b5f86775c25cddfa8f` | `DROP` |
+| `tests/experimental_integrity/test_action_embodiment_binding.py` | `885611b1d8c400121ad5af66a84464fa8a8a43de` | `DROP` |
+| `tests/experimental_integrity/test_actuator_evidence_authority.py` | `66de85982a27949729fd274ce80bf9bfff489441` | `DROP` |
+| `tests/experimental_integrity/test_architecture_convergence.py` | `4f477576f0fa2a4ad76f9bb9333702c377d786e7` | `DROP` |
+| `tests/experimental_integrity/test_browser_render_boundary.py` | `c2b5f0b87a8ac0f40b4966a940eb14ba0f9b47dd` | `DROP` |
+| `tests/experimental_integrity/test_canonical_organism_profile.py` | `7584d0230cd006fa245ba746c9f35fd1d205248c` | `DROP` |
+| `tests/experimental_integrity/test_cognition_domain_boundary.py` | `c4e61e4ba5d654792dcbbc225947df39320f3bfe` | `DROP` |
+| `tests/experimental_integrity/test_cognitive_atlas_boundary.py` | `74a4a046fdf5802d844a425e4aaadfea0b6f1b63` | `DROP` |
+| `tests/experimental_integrity/test_cognitive_cycle_v1.py` | `68a576c8cbf4e56eb0cbd88c457aa67f0387001e` | `DROP` |
+| `tests/experimental_integrity/test_development_domain_boundary.py` | `c93b07e3a5473c60b7927deda7fafc38164a0d48` | `DROP` |
+| `tests/experimental_integrity/test_domain_tick_context.py` | `9b555843f22900addfd8bed6441b6b0f7bddca40` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_domain_boundary.py` | `0e6b23aa7a7fc24ee920dc3b7c10f89d92e421c0` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_inheritance_integrity.py` | `a708ab8021d4962d773c379009fb7eb7406bc7b1` | `DROP` |
+| `tests/experimental_integrity/test_embodiment_v2_architecture.py` | `067bf1cb1871cabe4404ebb07dd4105d986f6974` | `DROP` |
+| `tests/experimental_integrity/test_environment_placement.py` | `623950ae82d4a7416166f9ac0f83ba06fd22df04` | `DROP` |
+| `tests/experimental_integrity/test_epistemic_domain_boundary.py` | `cfa6f28a22023815991ecce1fdbde8537c772925` | `DROP` |
+| `tests/experimental_integrity/test_executive_authority.py` | `64a4474020c62c8d88cb1db6a617bafba720551d` | `DROP` |
+| `tests/experimental_integrity/test_five_domain_architecture.py` | `9ae5d4f4eba6e776eb80edeb68134f600f8bbd35` | `DROP` |
+| `tests/experimental_integrity/test_generative_cognition_boundary.py` | `43a8234e59e0316d1f37af32ae5a5987db7b2ef5` | `DROP` |
+| `tests/experimental_integrity/test_ground_truth_boundary.py` | `0fe2c62381c669d4b07755cccb933991f52a6230` | `DROP` |
+| `tests/experimental_integrity/test_lab_sensorimotor_boundary.py` | `255413f663705e4cc9986ace559c05a63661b081` | `DROP` |
+| `tests/experimental_integrity/test_lifecycle_domain_boundary.py` | `c2789c9af4d60ffd88b4158c7ab72cfb5c6d3fde` | `DROP` |
+| `tests/experimental_integrity/test_lifecycle_ownership.py` | `ff8c8a74e8000348c413604e3d556ad60c3f4b7f` | `DROP` |
+| `tests/experimental_integrity/test_live_delta_boundary.py` | `9db84e932d505a91687489bce6b4e0f6aa19042e` | `DROP` |
+| `tests/experimental_integrity/test_longitudinal_contract_declaration.py` | `f4ec32aff0c32bfe12922eacbeb08a6becdc8de9` | `DROP` |
+| `tests/experimental_integrity/test_memory_domain_boundary.py` | `20e37dc11361f980790644df52cf0025b9dd95d0` | `DROP` |
+| `tests/experimental_integrity/test_no_legacy_motor_aliases.py` | `e290598566e9839284ab74fce8a180e67c89167b` | `DROP` |
+| `tests/experimental_integrity/test_observatory_passive_boundary.py` | `740abf0494b1a67a07e27f43b1fb5479dea9860c` | `DROP` |
+| `tests/experimental_integrity/test_p8_reprofile_contract.py` | `41cd335242ebb3c1935fe1ef9b7a91a6dadf1d0f` | `DROP` |
+| `tests/experimental_integrity/test_perception_domain_boundary.py` | `6dbdda3d394f801346c73d7c0172c83008754760` | `DROP` |
+| `tests/experimental_integrity/test_prospective_agency_boundary.py` | `f5b2dd38682569a3fab971150ff1ca0eb253a34b` | `DROP` |
+| `tests/experimental_integrity/test_rate_decoupling_boundary.py` | `eac3960d79ce7c082af194f4f8610bcbebe9e2e1` | `DROP` |
+| `tests/experimental_integrity/test_regulation_domain_boundary.py` | `2e1ac5ca6161a40c59b3be99ec8072997cb657ab` | `DROP` |
+| `tests/experimental_integrity/test_revision_authority_boundaries.py` | `ed9606c4195486103cb0fb78b42b6bd05fc4bd8d` | `DROP` |
+| `tests/experimental_integrity/test_runtime_domain_boundaries.py` | `9135f4d812eb49f76623b29e008f20f57262b40e` | `DROP` |
+| `tests/experimental_integrity/test_runtime_import_boundary.py` | `01107fa7d037981a73c2d0c6dad1dc89c03b41b5` | `DROP` |
+| `tests/experimental_integrity/test_runtime_v2_dependency_boundaries.py` | `1b7d6b861a613b59e6ed25bdb76efcdb744a8b3c` | `DROP` |
+| `tests/experimental_integrity/test_runtime_v2_orchestration.py` | `4b0f1168374c77703e496b276a8f80b01f0a810d` | `DROP` |
+| `tests/experimental_integrity/test_sensorimotor_v2_authority.py` | `8d0e9b86351f0611135c8d9b62147f137f9f03bc` | `DROP` |
+| `tests/experimental_integrity/test_single_motor_authority.py` | `3e0e2097aa83188be1f68341b79a558341ff3eb7` | `DROP` |
+| `tests/experimental_integrity/test_tick_context_boundary.py` | `f06d8f4479970ce3edfa3378a8f389fc935d6a03` | `DROP` |
+
+Target comparison revision: `biopeia/docs@03536d7`. No Biopeia repository contains these legacy test modules or test harness. This records `DROP` as TARGET tests only; it neither deletes source history nor alters target runtime behavior.

@@ -15,6 +15,9 @@ defaults:
   run:
     shell: bash
 
+permissions:
+  contents: read
+
 env:
   # Keep in step with PINNED_VERSION in tools/publication/mermaid.py.
   MERMAID_CLI_VERSION: "11.4.2"
@@ -22,14 +25,12 @@ env:
 jobs:
   publication:
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write  # only used to attach the files of a numbered release
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "22"
       - name: Install LibreOffice, poppler and the typefaces the document names
@@ -59,20 +60,9 @@ jobs:
       # On main the build is the published edition: it fails unless this
       # repository and every domain repository are at a clean revision, and
       # the manifest records each one.
-      - uses: actions/create-github-app-token@v2
-        if: github.event_name != 'pull_request'
-        id: app
-        with:
-          app-id: ${{ vars.CI_READ_APP_ID }}
-          private-key: ${{ secrets.CI_READ_APP_PRIVATE_KEY }}
-          owner: biopeia
-          repositories: organism,embodiment,environment,world,modality,observation,lab
       - name: Check out the domain repositories
         if: github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          gh auth setup-git
           for repo in organism embodiment environment world modality observation lab; do
             # Whole history: links to code are checked at the revision each chapter
             # was reviewed against, which is rarely the latest.
@@ -87,15 +77,25 @@ jobs:
             cat build/publication/publication-manifest.json
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: github.event_name != 'pull_request'
         with:
           name: biopeia-master-${{ github.sha }}
           path: build/publication/
           if-no-files-found: error
+  release:
+    if: startsWith(github.ref, 'refs/tags/docs-v')
+    needs: publication
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: biopeia-master-${{ github.sha }}
+          path: build/publication
       # A tag `docs-v<id>` publishes that numbered release with its files.
       - name: Attach the files to the GitHub Release
-        if: startsWith(github.ref, 'refs/tags/docs-v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -1,8 +1,9 @@
 # The articulated body: what it is made of and where its joints are
 
-Reviewed against `embodiment` at commit `97cb09a82b0bc9bf4ad11f6497cce071b85efedd`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `97cb09a8`. Everything below describes the
+later revision. Statements are marked by what supports them: the code, the
+tests, or an accepted decision.
 
 ## What it is
 
@@ -197,20 +198,35 @@ returned for one authorized step." Building one checks only that no joint
 appears twice; a candidate with a joint far outside its range can be built
 and is refused later.
 
-Adoption takes that candidate and the correlation to expect, and proceeds
-in this order:
+Adoption is invoked via `ArticulatedEmbodimentPhysicalState.adopt_candidate`
+(`embodiment:src/embodiment/physics3d/articulated_state.py:241`), consuming a
+`SolverArticulatedCandidate` and a `world_context: WorldPhysicalStepContext`.
+Embodiment derives the expected step correlation from `world_context` and requires
+`world_context.target_causal_tick == world_context.source_causal_tick + 1`.
 
-1. the candidate's joints must be exactly the descriptor's joints;
-2. the root adopts its candidate, with every check described in
+The check order is strict:
+
+1. the candidate's joints must be exactly the active morphology's declared joints;
+2. the root adopts its candidate against `world_context`, with every check described in
    [the body's physical state](physical-state.md): the correlation, the
-   World, tick, body, episode and morphology revision, the frames, the unit
+   World, tick, body, episode and morphology revision, the frames, and the unit
    quaternion;
 3. a new articulated state is built from the adopted root and the candidate's
-   joints, which is where positions outside the limits and excessive
-   velocities are refused.
+   joints, where positions outside the limits (`lower_rad`, `upper_rad`) and
+   excessive velocities (`max_velocity_rad_per_s`) raise `ValueError`.
 
 Any failure raises and produces nothing. Since every value involved is
 immutable, the state adopted from is unchanged whatever happens.
+
+### Full articulated state lineage for body pose
+
+An articulated state can project its root pose for passive observation via
+`body_pose_observation_projection()` (`articulated_state.py:214`).
+Although `BodyPoseObservationProjection` carries only the root pose sample,
+its `source_state_sha256` digest is explicitly computed from the **full articulated
+checkpoint bytes** (`self.checkpoint_digest`, line 232), not the embedded root state's
+digest (`self.root.checkpoint_digest`). This binds the published pose directly to the
+complete physical truth of root, morphology and joint positions.
 
 What the tests cover:
 
@@ -248,15 +264,18 @@ the active owner descriptor; it does not silently accept a different
 morphology. This owner boundary does not authenticate the descriptor's
 external origin.
 
-Restoring is strict (`test_articulated_checkpoint_rejects_unknown_schema_and_implicit_units`,
-`test_state_and_checkpoint_must_match_active_morphology_descriptor`, and an
-ad hoc run for the rest): the set of top-level fields must be exactly the
-expected one, the outer articulated-checkpoint schema version must be the
-integer 2 (the nested root checkpoint has its own schema version), the units
-must be the two named, the binding must equal the supplied descriptor's
-field for field, and the decoded state must pass every rule of construction. Altered
-bytes with a joint out of range, a joint missing, an extra field in a joint,
-another owner marker or another body in the root were all refused.
+The canonical outer schema identifier is
+`ARTICULATED_PHYSICAL_CHECKPOINT_SCHEMA = "embodiment-articulated-physical-checkpoint-v2"`;
+the nested root checkpoint has its own schema. Restore is strict: the set of
+top-level fields must be exact, units explicit, the binding must match the
+active descriptor field for field, and decoded state must pass construction
+rules. `validate_checkpoint` independently checks checkpoint bytes against
+the active morphology, schema and SHA-256 reference;
+`verify_restoration` checks that restored state corresponds exactly to the
+referenced bytes. These checks do not authenticate the external origin of
+the descriptor and do not establish durable storage or recovery after
+process failure. Tests cover altered bytes, invalid state, wrong owner
+identity, and mismatched restored state.
 
 A state encoded and restored equals the original and encodes to the same
 bytes (`test_articulated_checkpoint_is_deterministic_and_restores_exact_state`),
@@ -272,13 +291,11 @@ Four things follow, read from the code and confirmed by a run:
   as given. Two states built with the joint position `1` and `1.0` compare
   equal and encode differently, and so do `0.0` and `-0.0`. A state
   restored from bytes re-encodes to those same bytes.
-- **Less is offered than by the root.** The root state has a digest of its
-  checkpoint and an explicit statement that it has no durable reference.
-  The articulated state has neither. Like the root, it does not answer the
-  two validation questions of World's durable runtime, and the schema name
-  under which World's fixture stores it,
-  `embodiment-articulated-physical-state-v1`, appears only in that fixture
-  (read at `world@a8d07fd791da76365aa74080eef1e82b11a599fd`).
+- **The verification boundary is limited.** Owner validation and restoration
+  verification exist in Embodiment, but they verify against a supplied
+  independent reference; they do not authenticate who created it or prove
+  durable storage/recovery. The World integration fixture still supplies
+  the adapter and does not make this a production-integrated checkpoint.
 
 ## Time
 
@@ -307,8 +324,8 @@ not behaviour observed here.
 
 ## Where it is used
 
-No source module of any repository uses these types (search of 2026-10-09
-named above). They are used by two integration fixtures of World, described
+No production source module was identified using these types in the reviewed
+repository trees. World contains two integration fixtures that use them, described
 in [the physical causal step](../world/physical-step.md). In
 `test_articulated_mujoco_candidate_is_adopted_and_world_committed` a body of
 two boxes and one hinge is stepped, its state is adopted and stored, the
@@ -316,10 +333,10 @@ owners are restored from the committed cut, and a second step is taken. The
 fixture calls itself "a workspace-local integration fixture, not a production
 solver adapter".
 
-World's integration extra pins `embodiment` at an earlier commit,
-`3fe3cda64516dd5a8148ec49b826c025925396c0`. The six modules described in
-this document and in [the physical projection](physical-projection.md) are
-identical at the two commits.
+World's integration extra pins `embodiment` at
+`badf444f8f62e91d1c5ed4a65f3fe23c6cbda6b8`, earlier than the reviewed
+Embodiment revision. That fixture therefore does not exercise the current
+owner-validation and restoration-verification methods described above.
 
 ## Correspondence with the decisions
 
@@ -348,12 +365,12 @@ This is a comparison of content, not a ruling on conformance.
 | Claim | Support |
 |---|---|
 | Determinism of the description, the two topology checks, channel names, immutability of the value types | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_physics3d_mechanics.py`, run at that revision (all pass) |
-| Rules of construction of the state, adoption by identifier, refusals, stale morphology, checkpoint determinism and strictness, descriptor binding, continuation after restore | Code and tests in `embodiment:tests/test_articulated_state.py`, run at that revision (all pass) |
-| Carrier links, dropped segments, narrowed limits, precision, absence of validation, malformed text | Code, and one ad hoc run of the modules at that revision; no test is kept for these |
+| Rules of construction of the state, adoption by identifier, refusals, stale morphology, checkpoint determinism and strictness, descriptor binding, owner validation and restoration verification | Code and tests in `embodiment:tests/test_articulated_state.py` |
+| Carrier links, dropped segments, narrowed limits, precision, malformed text | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_articulated_state.py` |
 | Hand-made descriptor accepted; digest blind to six fields; checkpoint restored under a descriptor from a different specification; equal states with different bytes; limits enforced at the specification's values | Code, and the same ad hoc run |
 | Inherited limits of adoption (caller-supplied expectation, invented revisions, two candidates for one step) | The same ad hoc run, on the articulated state |
 | Fields, names and constants read by no code; no source module uses these types | A search of the source and test trees of the seven repositories at their main branches on 2026-10-09 |
-| Use in World's fixture; the schema name | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, read; run by World's integration job at pinned revisions, not run for this document |
+| Use in World's fixture | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; fixture composition, not production wiring |
 | Who owns body truth; what ends with a body | Accepted decisions ADR-0073, ADR-0098, ADR-0104, ADR-0094, ADR-0095; statements of intent, not test results |
 
 No run with a real solver, no stored checkpoint and no experiment was

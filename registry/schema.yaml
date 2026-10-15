@@ -20,6 +20,7 @@ domains:
 # never as the implementation or tests of a Biopeia unit.
 extra_repositories:
   docs: {historical: false}
+  frontend: {historical: false}
   symbiont-lab: {historical: true}
 
 # Where documents referenced from the registry live inside this repository.
@@ -89,6 +90,9 @@ lifecycle:
   reproduction: [conditional, inherit_allowed, not_applicable, not_inherited]
 
 # Design register (registry/designs.yaml). Three independent axes.
+# `cross-domain` is a register scope for designs with no single semantic
+# domain owner. Such designs must name their affected domains explicitly.
+design_cross_domain: cross-domain
 design_document_statuses:
   - proposed
   - in_review

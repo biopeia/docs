@@ -28,12 +28,23 @@ Explanatory documents of the Observation domain (capability).
 
 - Observation of a committed cut: with world
 - Telemetry through the inherited projection: with lab
+- Operator material transfer observation publication: with lab, world
 
 ## Designs
 
+- [Biopeia Frontend v1 — Security and Deployment Boundary](../../technical/design/frontend/biopeia-frontend-security-and-deployment-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Biopeia Spatial Visualization — Owner-Authorized Data Readiness and Roadmap](../../technical/design/frontend/biopeia-spatial-visualization-data-and-roadmap-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [Biopeia Frontend v1 — Independent Visualization Application](../../technical/design/frontend/biopeia-frontend-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Functional, Interaction and UX Specification](../../technical/design/frontend/biopeia-frontend-ux-spec-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Visual Design Specification](../../technical/design/frontend/biopeia-frontend-visual-design-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Biopeia Frontend v1 — Approval and Development Readiness Plan](../../technical/design/frontend/biopeia-frontend-approval-and-development-readiness-v1.md): document approved, implementation not_evaluated, scope TARGET
+- [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
+- [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Observation Semantic Model v1](../../technical/design/observability/observation-semantic-model-v1.md): document approved, implementation partial, scope TARGET
+- [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](../../technical/design/observability/lab-world-observation-integration-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Observation Architecture v1 — Target Design](../../technical/design/observability/observation-architecture-target-design-v1.md): document superseded, implementation not_applicable, scope HISTORICAL
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
+- [Biopeia Observation — Passive Observational Data Lake v1](../../technical/design/observation/observation-data-lake-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 
 ## Decision records
 

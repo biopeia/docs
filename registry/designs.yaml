@@ -15,6 +15,106 @@ schema_version: 1
 # register, verbatim. editorial_notes are written here and are not source text.
 designs:
 
+  design.cross-domain.biopeia-frontend-security-and-deployment-v1:
+    title: "Biopeia Frontend v1 — Security and Deployment Boundary"
+    path: technical/design/frontend/biopeia-frontend-security-and-deployment-v1.md
+    domain: cross-domain
+    participating_domains: [observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
+  design.cross-domain.biopeia-spatial-visualization-data-and-roadmap-v1:
+    title: "Biopeia Spatial Visualization — Owner-Authorized Data Readiness and Roadmap"
+    path: technical/design/frontend/biopeia-spatial-visualization-data-and-roadmap-v1.md
+    domain: cross-domain
+    participating_domains: [embodiment, environment, world, observation]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: "Refines the accepted Frontend spatial readiness gate. The Owner authorized bounded design/contract-definition work for candidate geometry and dynamic state in Embodiment #77 and Environment #73, passive carriage in Observation #37, and a consumer-verifiable committed-cut relationship in World #162; this is not approval of exact wire contracts or implementation. Exact schemas, spatial-frame compatibility and committed-cut verification remain unresolved. Explicit no-actuation result design is tracked separately in Organism #176 and World #165. No publication contract or renderer implementation is approved by this entry."
+
+  design.cross-domain.biopeia-frontend-v1:
+    title: "Biopeia Frontend v1 — Independent Visualization Application"
+    path: technical/design/frontend/biopeia-frontend-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
+
+  design.cross-domain.biopeia-frontend-ux-spec-v1:
+    title: "Biopeia Frontend v1 — Functional, Interaction and UX Specification"
+    path: technical/design/frontend/biopeia-frontend-ux-spec-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
+
+  design.cross-domain.biopeia-frontend-visual-design-v1:
+    title: "Biopeia Frontend v1 — Visual Design Specification"
+    path: technical/design/frontend/biopeia-frontend-visual-design-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
+
+  design.cross-domain.biopeia-frontend-approval-and-development-readiness-v1:
+    title: "Biopeia Frontend v1 — Approval and Development Readiness Plan"
+    path: technical/design/frontend/biopeia-frontend-approval-and-development-readiness-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: TARGET
+    decision:
+      reference: "technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md"
+      date: "2026-10-13"
+
+  design.cross-domain.longitudinal-continuity-and-reembodiment-v1:
+    title: "Biopeia — Longitudinal Continuity and Re-embodiment Protocol v1"
+    path: technical/design/runtime/longitudinal-continuity-and-reembodiment-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, world, modality, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+
+  design.cross-domain.repository-settings-and-actions-workflow-normalization-v1:
+    title: "Repository Settings and GitHub Actions Workflow Normalization v1"
+    path: technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    decision:
+      reference: "technical/adr/ADR-0112-repository-settings-and-actions-baseline.md"
+      date: "2026-10-13"
+
+  design.cross-domain.design-first-work-and-governance-procedure-v1:
+    title: "Design-First Work and Governance Procedure v1"
+    path: technical/design/governance/design-first-work-and-governance-procedure-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: approved
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    decision:
+      reference: "technical/adr/ADR-0111-design-first-work-and-governance-procedure.md"
+      date: "2026-10-12"
+
   design.runtime.biopeia-physical-step-integration-v1:
     title: "Biopeia Physical-Step and Causal-Commit Integration v1"
     path: technical/design/runtime/biopeia-physical-step-integration-v1.md
@@ -171,6 +271,15 @@ designs:
       names Organism and World among the authorities and says Modality does
       not automatically become one, which agrees with ADR-0095 and ADR-0099
       and differs from the list in that target design.
+
+  design.cross-domain.lab-world-observation-integration-v1:
+    title: "Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries"
+    path: technical/design/observability/lab-world-observation-integration-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
 
   design.observability.observation-architecture-target-design-v1:
     title: "Observation Architecture v1 — Target Design"
@@ -342,3 +451,19 @@ designs:
       date: the module documentation it reports as saying that Lab hosts the
       plane was corrected in observation 25b6738. The document was not
       edited.
+
+  design.observation.observational-data-lake-v1:
+    title: "Biopeia Observation — Passive Observational Data Lake v1"
+    path: technical/design/observation/observation-data-lake-v1.md
+    domain: observation
+    participating_domains: [organism, embodiment, environment, world, modality, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: >
+      Proposed detailed design following the Architecture Owner's accepted
+      conceptual direction to separate the operational observational archive
+      from Lab scientific evidence custody. The design remains unratified and
+      selects no storage, schema, API, transport, deployment or security
+      mechanism. Record whether a derived constitutional ADR is required before
+      design approval; do not request re-acceptance of the same direction.

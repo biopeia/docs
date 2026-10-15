@@ -1,11 +1,9 @@
 # What a cognitive checkpoint carries
 
-Reviewed against `organism@ba0011797a6a3b4d48c7731651e50560c4043f18` and
-`world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
+Reviewed against `organism@de16558faeba04f05eee6d2035a8f7f1e64b822b` and
+`world@e2be58700c870419a309ef3e2460b30b95c256be` (main on 2026-10-14); first written against `ba001179`.
 Everything below describes those revisions. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
-Searches were made on 2026-10-11, and the ad hoc runs were made at the
-Organism revision above.
 
 ## What it is
 
@@ -22,14 +20,12 @@ state to save; it saves what it is given. Its own description draws the
 boundary twice: "This payload includes only explicitly supplied state." and
 "This is not a complete Organism checkpoint."
 
-Two properties decide what such a checkpoint is worth. At the revision
-reviewed before this one, the answer to both was no. One has changed.
+Two properties decide what such a checkpoint is worth:
 
-- **It is now exact for what it carries.** A restored graph has the same
-  weights and traces as the saved one and computes the same numbers. Earlier
-  it was a rounded copy.
-- **It is still not complete.** Several kinds of state that the package's own
-  mechanisms keep have no place in it, though fewer than before.
+- **It is exact for what it carries.** A restored graph has the same
+  weights and traces as the saved one and computes the same numbers.
+- **It is bounded and fail-closed.** It carries effective `KernelLimits`
+  and rejects any external generative dependency closure fail-closed.
 
 Both are described below with what was run to confirm them.
 
@@ -41,16 +37,25 @@ Both are described below with what was run to confirm them.
 |---|---|---|
 | Transition state | yes | Identity, last tick, previous frame's values, exactly |
 | Graph | yes | Nodes and edges exactly, including each edge's weight and `eligibility` |
-| Experience records | no, default none | Each record's canonical form |
-| Safety state | no | A failure count and a flag |
-| Sensory normalizers | no | Mean, variance and count of every normalizer supplied |
-| Generative resident | no | The resident's own export |
-| Genetic-state group | no, all or none | Genome, germline state and expression state |
+| Experience records | yes (empty list valid) | Each record's canonical form |
+| Safety state | yes (explicit null valid) | A failure count and a flag |
+| Sensory normalizers | yes (empty object valid) | Mean, variance and count of every normalizer supplied |
+| Generative resident | yes (explicit null valid) | The resident's own export (schema v6) |
+| Genetic-state group | yes (all or none null/object) | Genome, germline state and expression state |
+| Dependency closure | yes (must be empty list `[]`) | External dependencies are rejected fail-closed |
+| Kernel limits | yes | Serialized configuration of effective `KernelLimits` |
 
-The document has exactly 12 top-level fields: the nine state parts above, the
-identity, a schema name and schema version 7. The genetic-state group is
-optional, but if any of its three parts is supplied, all three must be
-present. Encoding is deterministic: keys sorted, no optional whitespace.
+The document has exactly 14 required top-level fields under schema
+`biopeia.organism.cognitive-runtime` version 9. Duplicate JSON keys are
+strictly rejected (`_reject_duplicate_json_fields`). Encoding is
+deterministic: keys sorted, no optional whitespace.
+
+Restoration enforces that the caller provides an explicit `KernelLimits`
+matching the checkpoint's recorded configuration
+(`matches_checkpoint_configuration()`); any mismatch raises
+`CognitiveRuntimeCheckpointError`. Furthermore, if the generative resident
+declares external model registrations or factual resolvers, serialization
+and restoration reject the payload fail-closed.
 
 Constructing the value already checks that the parts belong together: every
 experience record and the resident must carry the same identity as the

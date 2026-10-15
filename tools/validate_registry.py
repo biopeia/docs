@@ -229,7 +229,8 @@ def validate(
                     f"{where}: document front matter declares a status; "
                     "registry/designs.yaml is the only authority for it"
                 )
-        if design.get("domain") not in domains:
+        cross_domain = schema.get("design_cross_domain")
+        if design.get("domain") not in domains and design.get("domain") != cross_domain:
             errors.append(f"{where}: domain {design.get('domain')!r} not in {sorted(domains)}")
         for p in as_list(design.get("participating_domains")):
             if p not in domains or p == design.get("domain"):
@@ -677,6 +678,30 @@ def unknown_cited_tests(docs_root: Path, repos_root: Path, domains: list[str]) -
     return problems
 
 
+REVIEWED_HEADER_RE = re.compile(r"Reviewed against `?([a-z]+)`? at (?:commit )?`?([0-9a-f]{7,40})`?")
+
+
+def unaligned_review_bases(registry_dir: Path, docs_root: Path) -> list[str]:
+    """Report canonical docs whose header review commit does not match coverage.yaml."""
+    units = load_registry(registry_dir).get("coverage") or {}
+    problems: list[str] = []
+    for uid, unit in sorted(units.items()):
+        basis = (unit.get("review") or {}).get("basis") or {}
+        for canonical in as_list(unit.get("canonical_docs")):
+            path = docs_root / canonical
+            if not path.is_file():
+                continue
+            header = path.read_text(encoding="utf-8")[:600]
+            for match in REVIEWED_HEADER_RE.finditer(header):
+                repo, sha = match.group(1), match.group(2)
+                expected = basis.get(repo)
+                if expected and not (expected.startswith(sha) or sha.startswith(expected)):
+                    problems.append(
+                        f"{canonical}: header cites {repo}@{sha} but unit {uid} basis is {expected}"
+                    )
+    return problems
+
+
 def source_coverage(registry_dir: Path, repos_root: Path) -> dict[str, dict[str, Any]]:
     """Per domain repository: which source modules are named by some unit.
 
@@ -749,6 +774,10 @@ def main(argv: list[str] | None = None) -> int:
         for line in cited:
             print(f"CITED {line}")
         print(f"Cited tests not found: {len(cited)}")
+        unaligned = unaligned_review_bases(args.registry, args.docs_root)
+        for line in unaligned:
+            print(f"REVIEW-BASE {line}")
+        print(f"Unaligned review bases: {len(unaligned)}")
         if stale and args.fail_on_stale:
             return 1
 

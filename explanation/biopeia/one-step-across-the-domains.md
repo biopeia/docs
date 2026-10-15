@@ -28,21 +28,24 @@ because it is the main result.
 | Link | Exists as | Where |
 |---|---|---|
 | Environment holds external truth | Source code | [finite resource](../environment/finite-resource.md), [static scene](../environment/static-scene.md) |
-| Environment to Organism, through transduction | Nothing: a constant in a test | [Modality](../modality/current-state.md) |
-| Organism produces a motor command | Six separate source pieces; joined only in a test fixture | [action path](../organism/action-path.md) |
+| Environment to Organism, through transduction | A dimensionless scalar identity contract in Modality; one test fixture carries it through World to an Organism sense transition | [Modality](../modality/current-state.md), [sense-to-checkpoint transition](../organism/sense-to-checkpoint-transition.md) |
+| Organism produces a motor command | Source components construct the path; integration fixtures join them | [action path](../organism/action-path.md), [physical step](../world/physical-step.md) |
 | Motor command to effectors | Source code | [actuation projection](../embodiment/actuation-projection.md) |
-| A solver computes a candidate | Functions inside two test fixtures | [physical step](../world/physical-step.md) |
+| A solver computes a candidate | A World coordinator exists in source; a MuJoCo step executor exists separately, but current end-to-end solver calls remain in fixtures | [physical step](../world/physical-step.md), [MuJoCo executor](../world/mujoco-step-executor.md) |
 | Embodiment adopts the candidate | Source code | [physical state](../embodiment/physical-state.md) |
 | Environment adopts its side | Source code, for an unchanged scene only | [static scene](../environment/static-scene.md) |
 | World commits the cut | Source code | [durable runtime](../world/durable-runtime.md), [manifest](../world/causal-manifest.md) |
 | Observation of the committed cut | Claim types in source; built by a test fixture; nothing published | [claim model](../observation/semantic-claim-model.md), [plane](../observation/observation-plane.md) |
 | Lab records evidence | Source code, for an operator's transfer only | [operator material transfer](../lab/operator-material-transfer.md) |
 
-Read down the middle column. The pieces owned by a single domain exist. What
-connects one domain to the next mostly does not exist outside tests. World
-has a coordinator that sequences projection, solving, adoption and commit for
-one physical step, but the adapters it is given, and the solver, are written
-inside test fixtures; nothing in any repository runs the whole chain.
+Read down the middle column. Some joins now have tested paths: one fixture
+carries a scalar-field signal from Environment through Modality into an
+Organism cognitive transition, and other fixtures exercise the World
+physical-step coordinator. These are separate slices. No production caller
+joins sensing, Organism agency, physical action, owner adoption, durable World
+commit, and Observation publication into one complete path. In particular,
+the source MuJoCo executor is not wired as the coordinator's solver port.
+The component documents identify the boundaries and the exact fixture limits.
 
 ## Link by link
 
@@ -57,25 +60,25 @@ a resource is a quantity at a place, not food. See
 
 ### From the environment to the organism
 
-Between a phenomenon outside and a number inside there should be
-transduction, and Modality is where its rules are decided to live. The
-`modality` package is empty. The only place a signal passes from an
-environment to an organism is a World integration test, in which the value
-is a constant and is handed over unchanged. See
-[Modality: decided role and current state](../modality/current-state.md).
-
-So the chain has no first link in code. An organism in Biopeia does not yet
-receive anything from an environment through a transducer.
+Modality now defines a single identity transduction contract for a
+dimensionless scalar field. A World integration fixture projects a scalar
+field from Environment, constructs a Modality signal, binds it to an
+Organism sense node, and calls the Organism cognitive transition. The value
+is preserved rather than interpreted. This is a narrow tested slice, not a
+general sensory system or a production-connected path; Modality has no
+general operator catalogue or persistent state. See
+[Modality](../modality/current-state.md) and the
+[sense-to-checkpoint transition](../organism/sense-to-checkpoint-transition.md).
 
 ### What the organism does
 
-Organism has the records and functions from which a motor command is built:
-an affordance is admitted, an intent is activated, a proposal is arbitrated
-into a commitment, and a controller yields a command addressed to actuators
-by opaque identifier. These are six separate pieces; no code in the Organism
-repository joins them. See [how an Organism acts](../organism/action-path.md),
-which is careful to describe operations on data structures and not to claim
-intention or decision in any wider sense.
+Organism has source functions for the action path and the cognitive
+sense-to-checkpoint path. Test fixtures exercise selected compositions, but
+there is not yet one production composition that takes a sensed value through
+agency to a motor command. See [how an Organism acts](../organism/action-path.md)
+and the [sense-to-checkpoint transition](../organism/sense-to-checkpoint-transition.md),
+which describe operations on data structures without attributing broader
+intentional understanding to them.
 
 What makes an Organism the same Organism, and what a portable checkpoint of
 it carries, is described in
@@ -95,15 +98,19 @@ the command it accepts and does not import Organism. See
 A solver computes where the body ends up. By decision it is a numerical
 substrate and not an authority
 ([ADR-0098](../../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md)).
-In code, the only calls that advance a physical simulation are in two World
-test fixtures. See [the physical causal step](../world/physical-step.md).
+World contains both the physical-step coordinator and a standalone MuJoCo
+executor. The executor is not wired to the coordinator; its current
+integration calls and the coordinator's adapters are supplied by test
+fixtures. See [the physical causal step](../world/physical-step.md) and
+[the MuJoCo step executor](../world/mujoco-step-executor.md).
 
 ### Adoption by the owners
 
 The solver's result is a proposal. Embodiment accepts it for the body only
 if it carries the correlation of the step that was expected, and then
-returns the body's state at the next tick. Environment does the same for its
-scene, and for a static scene accepts only no change at all. See
+returns the body's state at the next tick. Environment has owner-side
+adoption for a static scene (unchanged only) and a separate bounded dynamic
+object state. These are not yet a general environmental dynamics model. See
 [the body's physical state](../embodiment/physical-state.md) and
 [the static scene](../environment/static-scene.md).
 
@@ -129,9 +136,10 @@ process mid-write.
 
 After a commit, statements about the World, the body and the environment
 can be expressed as semantic claims, each naming the authority that owns its
-meaning. Observation has the claim types and an in-memory plane that would
-hold and deliver them. No authority has an adapter to Observation, and
-nothing publishes to the plane outside its own tests. See
+meaning. Observation has the claim types and an in-memory plane that can hold
+and deliver them. Selected publication paths are exercised by tests, but no
+authority publishes real owner projections into the plane during an
+integrated run. See
 [the semantic claim model](../observation/semantic-claim-model.md) and
 [the observation plane](../observation/observation-plane.md).
 
@@ -200,20 +208,21 @@ anything that runs.
 | Step, as decided | What must hold | Today |
 |---|---|---|
 | 1. Environment owns the external state | Environment owns environmental truth and its meaning (ADR-0074) | Exists in source |
-| 2. Modality transduces it into an opaque input | Transduction, not interpretation; every persistent state it needs has one owner, and none is Modality's (ADR-0099, ADR-0073) | Nothing: a constant in a test |
-| 3. The Organism's transition processes the input through its public boundary | Others do not read or rewrite the Organism's private state (ADR-0092) | The transition exists; nothing calls it |
-| 4. An intent to act originates in the Organism | The Organism's condition reaches others as what it emits (ADR-0092) | Six pieces, joined only in a test fixture |
+| 2. Modality transduces it into an opaque input | Transduction, not interpretation; every persistent state it needs has one owner, and none is Modality's (ADR-0099, ADR-0073) | One dimensionless scalar identity contract; a World integration fixture carries it into an Organism transition |
+| 3. The Organism's transition processes the input through its public boundary | Others do not read or rewrite the Organism's private state (ADR-0092) | A sense-to-checkpoint function exists and is exercised by Organism tests; World fixtures exercise a narrower cognitive transition |
+| 4. An intent to act originates in the Organism | The Organism's condition reaches others as what it emits (ADR-0092) | Action-path components exist; only fixture compositions connect them |
 | 5. The complete motor command is built by production code | A command names body, episode, morphology revision, effector and kind; position in a list is never authoritative; an omitted channel is not a command (ADR-0073) | Embodiment's projection exists in source; the command reaches it only in a fixture |
-| 6. World issues the physical step and a configured solver computes a candidate | The solver computes and has no semantic authority; it never changes an owner's state (ADR-0098, ADR-0073) | A coordinator in World; the solver and its adapters are in test fixtures |
+| 6. World issues the physical step and a configured solver computes a candidate | The solver computes and has no semantic authority; it never changes an owner's state (ADR-0098, ADR-0073) | Coordinator and a standalone MuJoCo executor exist in source; the executor is not wired to the coordinator, whose solver calls remain fixture-supplied |
 | 7. Each owner validates and adopts only its own state | A failed solver, a rejected candidate or a missing adoption cannot produce a committed step (ADR-0073) | Exists in source for Embodiment; for Environment, for an unchanged scene only |
 | 8. World commits one coherent cut | A cut is committed only after every required owner state is durably identifiable and recoverable; a failure before commit requires recovery, and a partial cut is never taken for a complete one (ADR-0083, ADR-0093, ADR-0106) | Exists in source |
 | 9. Owners' projections of the committed state reach Observation | Observation is passive and cannot change what it observes (ADR-0078) | Claim types in source; built by a test fixture; nothing published |
 | 10. One evidence record traces the run from initial state to committed result | An intervention by Lab is attributable, not privileged; evidence custody is the apparatus's (ADR-0073, ADR-0100) | Exists for an operator's transfer only |
 
 The third column repeats the table at the top of this document and, for
-step 3, [the cognitive graph](../organism/cognitive-graph.md). Steps 1 and 8
-exist, and step 7 in part; the others exist as pieces or not at all, and
-nothing joins the ten.
+step 3, [the cognitive graph](../organism/cognitive-graph.md). Some individual
+segments are now source-backed and tested, but no path joins all ten steps.
+That missing integration is distinct from the presence of narrower tested
+sensing, cognition, physical-step, and persistence slices.
 
 ## What would let an implementation be accepted
 

@@ -456,6 +456,14 @@ def test_sentinel_detects_corruption(
     assert any(expected in e for e in errors), errors
 
 
+def test_cross_domain_design_scope_is_valid(ws: Workspace) -> None:
+    ws.data = copy.deepcopy(ws.data)
+    ws.data["designs"][D]["domain"] = "cross-domain"
+    ws.write()
+    errors, _ = ws.validate()
+    assert not errors, errors
+
+
 def test_component_unit_without_registry_entry(ws: Workspace) -> None:
     ws.data["components"].clear()
     ws.write()
@@ -604,3 +612,18 @@ def test_cited_test_that_no_repository_defines_is_reported(ws: Workspace) -> Non
     assert vr.unknown_cited_tests(ws.docs, ws.repos, ["organism"]) == [
         "explanation/organism.md: cites test_genome_renamed, defined in no repository"
     ]
+
+
+def test_unaligned_review_bases_reported(ws: Workspace) -> None:
+    (ws.docs / "explanation" / "concept.md").write_text(
+        "# Concept\n\nReviewed against `organism` at commit `111111111111`.\n"
+    )
+    ws.data["coverage"]["concept.organism"]["canonical_docs"] = ["explanation/concept.md"]
+    ws.data["coverage"]["concept.organism"]["review"] = {
+        "status": "RECORDED",
+        "basis": {"organism": "222222222222"},
+    }
+    ws.write()
+    problems = vr.unaligned_review_bases(ws.registry, ws.docs)
+    assert len(problems) == 1
+    assert "explanation/concept.md: header cites organism@111111111111 but unit concept.organism basis is 222222222222" in problems[0]

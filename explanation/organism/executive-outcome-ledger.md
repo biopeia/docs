@@ -1,6 +1,6 @@
 # The executive outcome ledger
 
-Reviewed against `organism` at commit `6543188ff302a5f2dc8002c0086252d6061e5310`.
+Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
 Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or neither.
 
@@ -24,10 +24,13 @@ counts. The module is explicit about what it leaves alone: "nothing here
 writes causal evidence, controllability, agency or competence evidence, and
 nothing here is a reward".
 
-**Nothing in the Organism repository writes to the ledger or reads from it.**
-Only its tests construct one. Admission accepts a history callback, and no
-code builds that callback from a ledger. This document therefore describes a
-component that is complete in itself and connected to nothing.
+`ActionDomain` accepts an optional `ExecutiveOutcomeLedger`. On an explicit
+terminal `close()`, it validates a supplied non-neutral outcome against the
+intent, records it under the intent's competence and anticipated effect, then
+closes the commitment and intent. Unit tests exercise successful recording
+and rejection cases (`organism:tests/source_unit/actuation/test_domain.py`).
+This is a source-level composition contract, not evidence that a production
+runtime supplies the ledger or calls `close()` from an observed world cycle.
 
 ## What an outcome is
 
@@ -180,7 +183,7 @@ yet contradict or fulfil it.
 | Classification of outcomes, the confidence formula and its limits, the window of sixteen, refusal of neutral outcomes, per-pair modulation, suppression and its lifting, the bound and eviction, exact round trip, refusal of the earlier schema | Code and tests in `organism:tests/source_unit/agency/test_executive_outcome.py` |
 | The table of factors; lifting is permanent; a suppress sample fills a place; lookups change counters; lookups do not refresh a pair; ticks are not ordered; capacity is not restored | Code, and one ad hoc run of the module at that revision; no test is kept for these |
 | How the factor is used by admission | Code of `organism:src/organism/agency/prospective.py` and the same ad hoc run, with a hand-written callback |
-| Nothing writes to or reads from the ledger; no checkpoint includes it; the module named as the source of the reason strings is absent | Search of the repository at that revision |
+| `ActionDomain.close()` records an explicitly supplied non-neutral outcome; no reviewed organism checkpoint includes the ledger | Code and `test_domain.py`; source search |
 | That this state is the Organism's and longitudinal | Accepted decisions ADR-0092 and ADR-0095; statements of intent |
 
 No recorded outcome from a run of an Organism was examined, because none can
@@ -189,8 +192,8 @@ at all, is not supported by anything reviewed here.
 
 ## Open questions
 
-- Which component ends an intent, classifies the ending and records it, and
-  which builds the description of the binding state that suppression needs.
+- Which runtime component supplies factual outcomes and invokes the explicit
+  close operation; the domain validates but does not infer those facts.
 - Whether a lookup is meant to change the ledger, given that admission may
   look up candidates it then does not admit.
 - Whether the ledger belongs in the Organism's portable checkpoint.

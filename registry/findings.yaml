@@ -929,9 +929,12 @@ findings:
       The inherited projection coerces without telling: an integer key
       truncates 3.9 to 3 and turns a boolean into 1 or 0, not-a-number passes
       through, some values are passed through by reference, an empty joint
-      list is kept while an empty link list is dropped. Its keys keep
-      historical names, including symbiont_tick, and its frame writes
-      feeds_back false as a constant label that nothing measures.
+      list is kept while an empty link list is dropped. At this observed
+      revision, the projection also copied the historical symbiont_tick key;
+      that TARGET projection bridge was subsequently removed for Observation
+      #22 in merge commit 6aac3c76684834722440f53c9d8604ac4c16b138. The
+      frame still writes feeds_back false as a constant label that nothing
+      measures. This finding remains open for these separate defects.
     documented_in:
       - explanation/observation/inherited-projection.md
     material: false
@@ -1302,6 +1305,10 @@ findings:
     material: true
     status: issue_opened
     issue: "https://github.com/biopeia/organism/issues/39"
+    update: >
+      Resolved in organism: derivation of executable competence records from
+      learned motor primitives is implemented in organism:src/organism/cognition/derivation.py
+      and verified across execution binding and affordance resolution tests.
 
   F-0101:
     class: contract_gap
@@ -1318,6 +1325,10 @@ findings:
     material: true
     status: issue_opened
     issue: "https://github.com/biopeia/organism/issues/40"
+    update: >
+      Partly resolved in organism: the binding registry now provides an explicit
+      mark_stale_for_surface() method to prevent silent overwriting of evidence
+      across re-embodiment transitions.
 
   F-0102:
     class: recovery_durability_gap
@@ -1361,6 +1372,10 @@ findings:
     material: true
     status: issue_opened
     issue: "https://github.com/biopeia/organism/issues/42"
+    update: >
+      Resolved in organism: controllability_opportunities() now isolates passive
+      baseline observation windows strictly to prevent cross-source hit
+      contamination.
 
   F-0104:
     class: implementation_finding
@@ -1723,6 +1738,10 @@ findings:
     material: true
     status: issue_opened
     issue: "https://github.com/biopeia/organism/issues/46"
+    update: >
+      Resolved in organism: GenerativeScheduler and HypothesisCalibrator enforce
+      bounded history capacity limits (KernelLimits.max_generative_history = 1000)
+      preventing unbounded growth in cognitive checkpoint schema v9.
 
   F-0075:
     class: implementation_finding

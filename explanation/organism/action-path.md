@@ -1,12 +1,10 @@
 # From an affordance to a motor command
 
-Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`;
-first written against `6543188`, and the section on the actuator surface was
-rewritten when the surface changed. The one place where the stages are joined
-is a test fixture of World, read at `world` commit
-`a8d07fd791da76365aa74080eef1e82b11a599fd`. Everything below
-describes those revisions. Statements are marked by what supports them: the
-code, the tests, an ad hoc run, or an accepted decision.
+Reviewed against `organism` at commit
+`de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on 2026-10-14); first written against `ba001179`.
+The action composition is exercised by World's sensorimotor causal cycle and
+acceptance tests. Statements are marked by what supports them: code, tests, or
+an accepted decision.
 
 ## What it is
 
@@ -15,10 +13,15 @@ how much to apply on which channel. This document follows how such a value, a
 motor command, comes to exist in the Organism package, starting from the
 earliest record that something could be done at all.
 
-The package does this in six separate steps. Each step produces a small record
-and hands a few of its fields to the next. No step moves anything: the last
-record is still only a value, and what happens to a body is decided elsewhere,
-in Embodiment and in a solver.
+The package provides records and primitives, plus explicit execution
+coordinators: `ActionDomain`, the canonical action pipeline
+(`organism:src/organism/actuation/pipeline.py`), and bounded motor exploration
+(`organism:src/organism/actuation/bounded_action.py::OrganismExplorationComposer`).
+It can materialise an admitted decision as an intent, arbitrate and register a
+commitment, issue a command through a controller, validate it against an
+actuator surface, and close the action with a supplied terminal outcome. It
+does not itself move a body: physical effects remain in Embodiment and a
+solver.
 
 The names of the records (affordance, intent, proposal, commitment) are taken
 from the code. They are used here as names of data structures. This document
@@ -26,16 +29,12 @@ describes the operations performed on them and does not claim that an Organism
 intends, decides or knows anything in a wider sense; nothing reviewed here
 would support such a claim.
 
-**The most important fact about this mechanism is that no code in the Organism
-repository joins the steps.** Each is a separate class or function with its
-own checks. Nothing in `src/` calls the admission function, the arbitrator,
-the controller or the command binding; nothing in `src/` or in the Organism
-tests ever constructs an intent, and a commitment is constructed only by one
-test module. The only place where the six are executed in sequence is the
-physical step fixture of World, described under
-[the physical causal step](../world/physical-step.md). What follows therefore
-describes six mechanisms and one hand-written composition of them, not a
-running loop.
+**Production execution context:** `ActionDomain` joins these steps within an
+explicit execution context. In production, `world:src/world/causal_cycle.py`
+and `world:src/world/organism_transition.py` construct and drive this context
+via `OrganismExplorationComposer` and `OrganismCheckpointContract`, validating
+actuator applicability and surface fingerprints across ticks and restarts
+(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
 
 ## The six steps at a glance
 
@@ -51,8 +50,10 @@ ArbitrationDecision ──read by caller──▶ ActionCommitment
                                        ControllerFrame ──bind──▶ MotorCommand
 ```
 
-Every arrow labelled "caller" is a place where the package offers no function:
-whoever composes the path copies fields from one record into the next by hand.
+The coordinator owns admission-to-intent consistency, arbitration and
+commitment registration, and command issue/execution. Proposal construction,
+controller selection and the physical transition remain explicit inputs or
+boundaries outside that coordinator.
 
 ## Step 1: an affordance
 
@@ -154,16 +155,23 @@ establishes is narrower and is set out under
 
 What is not checked, confirmed by running the module:
 
-- **That an intent came from an admission.** No function turns a decision into
-  an intent. An intent naming a competence that appears in no affordance and
-  no decision was constructed without objection.
+- **That an intent came from an authentic admission.**
+  `ActionDomain.admit()` materialises the supplied decision as an intent and
+  checks that its competence and origin are consistent with the supplied
+  supporting affordance. The standalone intent constructor remains
+  permissive: an intent naming a competence absent from any affordance or
+  decision can still be constructed directly. The coordinator also does not
+  authenticate the affordance's provenance; see
+  [what the path does not establish](#what-the-path-does-not-establish).
 - **That an intent starts pending.** One can be constructed already active.
 - **The order of ticks on activation.** An intent created at tick 5 was
   activated at tick 2.
 
 An intent can be exported to a plain mapping and restored from one, and the
-round trip returned an equal record. No Organism test covers the intent
-record at all.
+round trip returned an equal record. The domain tests exercise materializing
+and transitioning an intent, but the record's serialization and standalone
+permissive construction observations above are not a complete dedicated
+intent-record test suite.
 
 ## Step 4: a proposal and its arbitration
 
@@ -198,11 +206,15 @@ code and confirmed by running it:
 5. Then regulation, then exploration, then whatever remains by identifier.
 
 The arbitrator returns a decision and a reason string. **It does not create,
-alter or end a commitment.** When a commitment has passed its maximum
-duration the arbitrator returns a new proposal and the old commitment is left
-active. The commitment's `interruptibility` field is not read by the
-arbitrator or by anything else in the package. The arbitrator has no test in
-the Organism repository and no caller in its source.
+alter or end a commitment.** `ActionDomain.select_and_commit()` supplies the
+currently registered commitment, validates a selected proposal against a
+registered pending intent, creates and registers one commitment, and
+interrupts the previous commitment and intent when replacing them. The domain
+keeps this context in memory; no checkpoint/restore contract is provided
+here. The arbitrator's precedence rules remain as described above; its
+standalone behavior and the coordinator path have tests in
+`organism:tests/source_unit/actuation/test_domain.py` (the arbitrator itself
+remains separately untested).
 
 ## Step 5: a commitment
 
@@ -242,11 +254,9 @@ exported nor restorable: the class has no checkpoint. The tick it is given is
 stamped on the frame and compared only with the commitment's start; frames for
 tick 2 and then tick 1 were both produced, each advancing the position.
 
-A frame is not yet a command. The code says so: "A frame cannot cross the body
-boundary. ActionDomain must convert it into a provenance-bearing MotorCommand
-under the active ActionCommitment." No `ActionDomain` exists in the
-repository. The conversion that does exist is a function
-(`organism:src/organism/actuation/command.py::motor_command_from_frame`). It
+A frame is not yet a command. `ActionDomain.issue_command()` obtains a frame
+under its registered active commitment and calls
+`organism:src/organism/actuation/command.py::motor_command_from_frame`. It
 refuses an inactive commitment, a frame from another controller, commitment or
 competence, a tick that is not an integer, precedes the commitment or differs
 from the frame's
@@ -331,17 +341,23 @@ that number in.
 
 ## What the path does not establish
 
-- **That a command descends from an admission.** Each record carries the
-  identifier of the one before it as a plain string. None of those strings is
-  resolved. A command proves only that some active commitment object with a
-  matching controller identifier was at hand when the function was called.
-- **That exactly one commitment holds control.** See step 5.
-- **That anything was executed.** A command is a value. The package's own
-  record for an executed command (`ActionAttempt`) is not constructed anywhere
-  in the repository.
-- **That an outcome was fed back.** Nothing on this path ends an intent or a
-  commitment in response to what happened afterwards, and nothing records an
-  outcome in the executive outcome ledger.
+- **That a command descends from an authentic admission.** Within one
+  `ActionDomain`, intent and commitment references are checked against its
+  registered state. `admit()` still cannot authenticate caller-provided
+  provenance; its docstring assigns that guarantee to the canonical
+  cognition/admission composition. Outside the coordinator, records remain
+  independently constructible.
+- **That its in-memory registration survives restart.** The reviewed
+  `ActionDomain` has no checkpoint/restore contract.
+- **That a physical effect occurred.** `execute()` checks the command against
+  the surface and returns requested/delivered actuation values; Embodiment and
+  the solver determine physical effects. The coordinator does not construct
+  an `ActionAttempt` in this path.
+- **That observed outcomes are fed back automatically.** `close()` can end an
+  active action and can record a supplied, validated non-neutral outcome in a
+  supplied outcome ledger. It does not infer or observe outcomes; the caller
+  must provide them. This capability does not establish a production
+  feedback loop.
 - **Anything about cognition or learning.** In the only composition that
   exists, every input is a constant: the affordance is written by hand, the
   readout is the literal 0.9, the epistemic and homeostatic callbacks return
@@ -352,9 +368,11 @@ that number in.
 
 The fixture builds a surface of two channels, one affordance with prediction
 confidence 0.4, and admits it (relevance 0.6 against a minimum of 0.2). It
-copies the decision into an intent and activates it, builds one proposal from
-the prospection source, passes it alone to the arbitrator, builds a commitment
-by hand, and gives a controller one step that drives the first channel at 0.5.
+passes the decision and supporting affordance to `ActionDomain.admit()`, builds
+one proposal from the prospection source, and passes it to
+`select_and_commit()`. The domain registers the commitment and activates the
+corresponding intent. A controller has one step that drives the first channel
+at 0.5.
 Inside the World transition it asks the controller for a frame and binds it
 into a command for the tick being committed.
 
@@ -400,22 +418,22 @@ statements of intent; this document does not test them.
 |---|---|
 | Conditions under which admission returns a decision | Code and tests in `organism:tests/source_unit/agency/test_executive_admission.py` |
 | A less predictable affordance outranks a more predictable one; executability confidence is not read; readout size beyond the threshold is not used | Code, and one ad hoc run of the module at that revision; no test is kept for it |
-| The intent state machine, and that an intent needs no admission, may be born active and may be activated before it was created | Code and the same ad hoc run; the intent record has no test |
-| The arbitrator's order of precedence, that it holds no state and does not end a commitment | Code and the same ad hoc run; the arbitrator has no test |
+| The intent state machine and permissive standalone construction | Code and ad hoc run; `test_domain.py` additionally covers coordinator admission and transitions, not every standalone construction case |
+| The arbitrator's order of precedence, that it holds no state and does not end a commitment | Code and ad hoc run; `ActionDomain` tests exercise its selected-path composition, but there is no dedicated arbitrator test module |
 | A commitment needs no arbitration; two can be active at once | Code and the same ad hoc run |
 | What the command binding refuses | Code and tests in `organism:tests/source_unit/actuation/test_command_binding.py` |
 | Controller repeats its last step, accepts repeated and decreasing ticks, has no checkpoint | Code and the same ad hoc run |
 | Effector identity is stable under input reordering; contract changes affect fingerprint, not identity | Code and tests in `organism:tests/source_unit/actuation/test_surface.py` |
 | What the surface check accepts and refuses | Code and tests in `organism:tests/source_unit/actuation/test_system.py`; the acceptance of a command with no commitment from the ad hoc run |
-| No Organism source joins the steps; the resolver, the arbitrator and the attempt record have no caller | Search of the repository at that revision |
-| The composition in the fixture, including use of `ActuatorSystem.execute_command()` | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; it was read, not run, for this document |
+| `ActionDomain` admission, commitment registration, command issue/execution and terminal close/outcome recording | Code in `organism:src/organism/actuation/domain.py` and tests in `organism:tests/source_unit/actuation/test_domain.py` |
+| The composition in the fixture, including domain-coordinated intent and commitment | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; fixture evidence, not production runtime evidence |
 | What a command must be bound to, and that omission is not a command | Accepted decision ADR-0073; a statement of intent |
 
-The modules that would produce the inputs of this path (the competence
-library, the effect and controllability models, the execution bindings, the
-prospective deliberation that offers a second route to a decision) were not
-reviewed. No run of a composed Organism was examined, because none exists at
-this revision.
+This review does not establish a production caller for `ActionDomain`, a
+durable action-context checkpoint, or a runtime-observed end-to-end causal
+cycle. Several inputs to the path (competence library, effect and
+controllability models, execution bindings, and alternate prospective route)
+are outside this document's review scope.
 
 ## Open questions
 

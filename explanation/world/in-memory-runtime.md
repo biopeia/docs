@@ -1,6 +1,6 @@
 # The in-memory World runtime
 
-Reviewed against `world` at commit `cb4bd6b0506b554bf4187b36c23095a7521c4504`.
+Reviewed against `world` at commit `e423a04a113e6015a7eca0986d303129eebaceaa`.
 Everything below describes that revision.
 
 ## What it is
@@ -44,8 +44,13 @@ If the transition raises, returns something that is not a JSON object, or the
 record cannot be appended, the runtime remembers the failed tick and the
 error, and refuses every later tick
 (`test_transition_failure_requires_recovery_and_publishes_no_failed_record`,
-`test_invalid_transition_payload_fails_closed_without_publishing_record`).
-No record is published for the failed tick.
+`test_invalid_transition_payload_fails_closed_without_publishing_record`). A
+`KeyboardInterrupt` from the callback is handled the same way: the proposed tick
+is recorded as failed, the runtime becomes recovery-required, and the interrupt
+is re-raised. This closes the runtime against reuse after a callback may have
+partially changed owner state. No record is published for the failed tick. The regression test in
+`world:tests/test_runtime.py` checks that the interrupt is re-raised, no record
+is published, and a later tick is refused.
 
 Two limits, both stated by the module itself:
 

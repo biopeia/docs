@@ -9,7 +9,11 @@ date. In the registry it depends on every unit it draws from.
 The unit documents describe the Organism one mechanism at a time. This one
 follows a single life through them, in order, and says at each stage what is
 decided, what exists, and what joins that stage to the next. It is not a
-story of an Organism living: at the revisions reviewed, no Organism has.
+report of an Organism living: no full-lifecycle runtime execution was examined.
+The cognition and continuity synthesis is refreshed at
+`organism@ba0011797a6a3b4d48c7731651e50560c4043f18`, with the World fixtures
+reviewed at `world@95f5064c6b06bd66bb58a72110b066afe4ca70b0`. A composed
+source operation, a test of it and an observed life remain different evidence.
 
 ## The life that is decided
 
@@ -27,27 +31,25 @@ Reproduction, when it happens, originates in the Organism
 
 ## The life in one table
 
-| Stage | What exists | What joins it to the next stage |
+| Stage | What exists | What joins it to the next stage, or remains absent |
 |---|---|---|
-| Being born | An identity that is wrapped, a genome read from a packaged seed, an empty graph, empty tables | Nothing in source performs a birth |
-| Receiving a signal | A function that turns a raw reading into a bounded number | No transduction exists; nothing adds a first sense node |
-| Activating | One pass of arithmetic over the graph, at an explicit tick | Nothing calls the transition |
-| Changing | Rules that move weights and add or remove nodes and edges | No code calls them, together or at all |
-| Finding what follows what | Per-channel correlation; counts of changes after commands | The structures are constructed nowhere |
-| Keeping a pattern | Statistics on four-step patterns, some marked usable | Constructed only by its own tests; nothing turns a pattern into a competence record |
-| Being able to use it now | A table of bindings to a body's surface; a resolver | Nothing consults the table |
-| Choosing | Admission with a factor from past outcomes; a second chooser by expected value | No code ends an attempt and records it; the second chooser's result goes nowhere |
-| Acting | Six steps from an affordance to a motor command | Joined only in a test fixture |
-| Guessing ahead | Bookkeeping for guesses and their later confirmation | There is no model; only an interface for one |
-| Keeping a record | A format for an episode and a bounded list; a log of declared causes | Nothing creates a record from something that happened |
-| Being saved | An exact envelope; one payload that fills it | The payload is not exact and not complete; most state is exported by nothing |
-| Resuming | Decoders that rebuild what was saved | Nothing in the package restarts anything |
-| Changing body | Refusals and flags in two components | No operation performs a re-embodiment |
-| Reproducing | Fields that a reproduction step would need | No operation produces an offspring |
+| Being born | Caller-supplied identity, packaged seed genome and empty graph | No reviewed source birth operation creates and binds a complete Organism |
+| Receiving a signal | Explicit opaque-signal binding; narrow scalar-field transduction | World sensing fixture reaches a hand-built graph, not the accepted checkpointed Organism step; birth graph still has no sense nodes |
+| Activating and changing a weight | Source composition activates the graph and applies explicit per-edge learning instructions | Accepted cognitive step invokes it and checkpoints the result; the instructions still come from the caller |
+| Changing structure | Rules that add or remove nodes and edges | No source caller of structural plasticity in the reviewed units |
+| Finding what follows what | Per-channel correlation and counts of changes after commands | No documented running acquisition loop reports experienced transitions to these structures |
+| Keeping a pattern | Statistics on four-step patterns, some marked usable | No documented path turns a retained pattern into a competence record, binding and affordance |
+| Choosing and acting | Admission, arbitration and an in-source action coordinator | ActionDomain joins supplied decisions to registered commands and explicit closure; no reviewed runtime joins graph readouts to this path |
+| Guessing ahead | Resident bookkeeping and adapters for supplied models | Accepted cognitive step preserves resident state but does not step it |
+| Keeping a record | Episode format, bounded ledger and declared-cause log | No reviewed source producer constructs an episode from a lived transition |
+| Being saved | Exact graph/cognitive payload inside an exact envelope; outer transition metadata | Optional state is caller-selected; structural and agency/actuation state are not all assembled |
+| Resuming | Strict decoders and in-memory continuation leases | No durable cross-process continuation authority or full runtime restart established |
+| Changing body | Dormancy/reactivation can replace a body reference, preserving envelope and identity | Private body-dependent bindings and competence are not rebound by that operation |
+| Reproducing | Genetic fields and codecs | No reviewed reproductive operation produces offspring |
 
-Read the right-hand column. At every stage the mechanism is present, and
-what would hand its result to the next stage is not. The sections below say
-the same thing stage by stage, with what each unit document adds.
+The right-hand column no longer says every connection is absent. Several
+bounded compositions exist in source and have tests. What remains missing is
+the runtime and complete state closure that would join them into a life.
 
 ## Being born
 
@@ -75,21 +77,34 @@ on some nodes of the graph are propagated in one pass
 (the cognitive graph). That is all a pass does: no weight changes, nothing is
 remembered inside the graph, nothing is done to a body.
 
-What would feed it is missing on both sides. Outside the Organism, Modality
-holds no transduction
-([Modality](../modality/current-state.md)). Inside, the graph is born with no
-sense node, and what is meant to add the first one is an open question of
-the unit.
+[Opaque sense binding](sense-to-checkpoint-transition.md) now checks a
+signal's channel and explicit provenance before it reaches a graph. Outside
+the Organism, Modality has a narrow, stateless identity transduction for one
+dimensionless scalar field ([Modality](../modality/current-state.md)). A World
+fixture samples that field through a receptor and calls the sense-input
+helper with a hand-built sense node. It does not call the checkpointed accepted
+step or join sensing to motor selection.
+
+Birth remains a separate boundary: the packaged graph is empty, and the
+reviewed source does not add its first sense node. The accepted sense path
+requires at least one binding, so the packaged defaults cannot enter that
+path unchanged.
 
 ## Changing with what happens
 
-The functions that could change the graph are separate from the function
-that runs it: rules that move the weight of an edge, rules that add and
-remove edges and nodes, and two values meant to restrain them
-([how the graph is changed](graph-plasticity.md)). No code calls them. Where
-one runs, a test runs it; where several run in order, the order is written in
-the test. The unit document draws the conclusion: it does not describe how an
-Organism learns, only pieces from which a learning loop could be assembled.
+[Graph plasticity](graph-plasticity.md) separates activation, weight changes
+and structural changes. Three weight functions now have a source caller:
+[the cognitive composition](sense-to-checkpoint-transition.md#the-composition)
+computes predictor comparisons, updates eligibility and applies the weight
+rule to edges named in explicit learning instructions. A checkpointed accepted
+step invokes that composition and saves its graph and transition result.
+
+This is a bounded composition, not an autonomous learning policy. The caller
+supplies the selected edges, rate, modulation and eligibility/frozen flags;
+the composition does not derive them from prediction error, gene values or
+somatic state. Structural changes and shadow candidates still have no source
+caller in the reviewed unit. The outer accepted step has no source runtime
+caller in the seven repositories; tests exercise it.
 
 ## Finding what follows what
 
@@ -101,7 +116,7 @@ two series moved together, not that one caused the other.
 counts how often a change followed a kind of command compared with how often
 it happened otherwise, and computes numbers it calls controllability and
 agency. Nothing there intervenes or tests; it counts what a caller reports,
-and no code reports to it.
+and the reviewed unit establishes no running producer of experienced transitions.
 
 ## From a pattern to something that can be done
 
@@ -124,16 +139,26 @@ into a binding and an affordance.
 
 [The action path](action-path.md) runs in six steps from an affordance to a
 motor command. The last record is still only a value; what happens to a body
-is decided in Embodiment and in a solver. No code in the domain composes the
-six steps.
+is decided in Embodiment and in a solver. An in-source `ActionDomain` now
+joins intent materialization, arbitration, commitment registration, command
+issue/execution and terminal closure. It creates an intent from a decision
+only after checking consistency against a supplied supporting affordance;
+the standalone intent constructor remains more permissive. The coordinator
+does not authenticate the affordance's evidence or construct a learned
+competence, proposal or controller for its caller. Unit tests and a World
+physical-step fixture exercise the path, not a running Organism.
 
 Two things could let the past weigh on a choice.
 [The executive outcome ledger](executive-outcome-ledger.md) keeps the last
 outcomes of each competence and effect and returns a factor that admission
 multiplies in. [Prospective deliberation](prospective-deliberation.md) takes
 candidates, asks a supplied function what each would lead to, and returns
-the one whose outcome was valued highest. No code records an outcome or a
-value outside tests, and the result of deliberation is used by nothing.
+the one whose outcome was valued highest. `ActionDomain.close` can now
+record a supplied executive outcome sample in its supplied ledger, after
+checking consistency with terminal status, reason and tick. It does not
+observe consequences or infer that sample. The prospective-deliberation unit
+still establishes no runtime use of the chooser's result, and the accepted
+cognitive step does not call either mechanism.
 
 [Attention allocation](attention-allocation.md) ranks candidates by
 uncertainty and cost within a budget; nothing uses it.
@@ -165,42 +190,56 @@ The envelope carries an identity, bytes only the Organism understands, and a
 list of what those bytes depend on, and it carries them exactly
 (identity and the checkpoint envelope).
 
-One thing fills it:
-[the cognitive checkpoint](cognitive-checkpoint.md), six cognitive and
-memory parts and optionally the three genetic ones, as a caller supplies
-them. Two properties decide what it is worth. It is not exact: a restored
-graph is a rounded version of the saved one and computes different numbers.
-It is not complete: it describes itself as "not a complete Organism
-checkpoint".
+[The cognitive checkpoint](cognitive-checkpoint.md) holds six cognitive and
+memory parts and optionally the three genetic ones supplied as a group. The
+graph codec now preserves weights and eligibility exactly; tests compare
+future activation and learning transitions of live and restored copies.
+Normalizer state, resident budget, reconciliation history and insertion order
+are also preserved when supplied. The earlier rounding/reset description is
+no longer true at this revision.
 
-Most components can write their state out and read it back, and the
-component catalog records `preserve` for them at checkpoint and restart.
-Their unit documents add what that leaves unsaid: the experience ledger, the
-provenance log, the competence engine, the executive outcome ledger, the
-value ledger and the binding registry each have an export that no composed
-checkpoint carries. Being able to be saved and being saved are different,
-and for those six only the first is true.
+Completeness is a different question. Structural counts and agency/actuation
+state are not in this cognitive composition. Experience records are included
+only if supplied; an experience ledger's full state is not thereby assembled.
+Models and the factual evidence resolver are external restore inputs; a
+restored resident without them cannot resume all its operations. An exact
+codec proves neither that every required component was supplied nor that all
+external dependencies were declared.
 
-A restored resident comes back with no models and no resolver unless they
-are passed in again, so until then its reconciliation is inert.
+[The accepted cognitive step](sense-to-checkpoint-transition.md#the-accepted-step)
+restores the payload, replaces graph and cognitive transition state, carries
+optional parts unchanged and wraps it in a new envelope. One step is then
+counted by the outer
+[Organism transition boundary](transition-and-continuation.md). That outer
+state carries lifecycle, accepted-step counter and optional body/World
+references. These are not missing fields of the inner cognitive payload:
+they live one layer outside it. The accepted step does not run the resident,
+agency, motor intent or expression regulator.
+
+A continuation registry now refuses duplicate leases and stale continuations
+within one registry object. Its snapshots and branching metadata do not
+provide cross-process canonical authority: copied stores can grant separate
+leases, and a durable atomic authority store is not implemented there.
+Neither this registry nor the accepted step has a reviewed source runtime
+caller. Round-trip and lease tests are not evidence of a complete deployed
+restart.
 
 ## Changing body
 
-No operation performs a re-embodiment. What the components would do if one
-did is recorded in the component catalog, and it is not uniform:
+The transition boundary permits `ACTIVE` to `DORMANT`, then `DORMANT` to
+`ACTIVE` with a new explicit body-context reference. It preserves identity,
+step count and opaque envelope through the change. It is therefore no longer
+accurate to say that no body-context change operation exists.
 
-- Most keep their state unchanged: the envelope has no field that names a
-  body; ledgers are keyed by competence, effect or outcome, not by body.
-- The competence engine refuses to restore for another body and drops the
-  candidates it held for one. The decision that re-embodiment must not
-  silently erase what was learned
-  ([ADR-0104](../../technical/adr/ADR-0104-body-schema-and-competence.md))
-  is the one to read beside it; whether patterns of an earlier body are meant
-  to stay in Organism state while unusable is an open question of the unit.
-- The binding registry reports a row for another surface as not executable,
-  and no code marks it stale.
-- Sense nodes are named by strings the caller chose; nothing rebinds or
-  invalidates them.
+Its limit matters just as much: the operation is told the lifecycle change,
+and never opens private bytes. It neither rebinds sense channels nor
+revalidates body-specific competence/evidence. The competence engine's
+body-specific restore/reset behaviour and the binding registry's surface
+checks must still be evaluated by the integration that performs the change.
+A preserved envelope and new reference are not evidence that an Organism
+recovers the use of what it acquired on another body. The relevant requirement
+is [ADR-0104](../../technical/adr/ADR-0104-body-schema-and-competence.md), not
+a result shown by the metadata operation.
 
 ## Reproducing, resting, ending
 
@@ -208,18 +247,28 @@ No operation produces an offspring. The words mutation, recombination and
 inheritance appear in the genetics code as names of fields that a
 reproduction step would need; the step is absent (the genome).
 
-Dormancy and the death of an Organism are decided to be distinct events
-(ADR-0088). None of the eighteen Organism units documents an operation for
-either.
+Dormancy and the death of an Organism are distinct events (ADR-0088).
+The transition boundary now records explicit dormancy, reactivation and
+termination requests and rejects transitions out of termination. It does not
+decide those events from a body's death or a World's presence loss, and no
+reviewed runtime drives them. A branch under a new identity is continuation
+metadata, not reproductive offspring.
 
 ## What this adds up to
 
-Eighteen mechanisms, each complete in itself and most of them tested, and no
-Organism: nothing constructs them together, advances them tick by tick, and
-hands the result of one to the next. That is not a defect of any one of
-them. It is the piece that is missing, and several units ask in their open
-questions which component is meant to be it.
+Several bounded pieces are now joined in source: checked signals can reach a
+checkpointed cognitive step, admitted action can reach a registered command,
+and explicit lifecycle/continuation operations can preserve identity metadata.
+These are substantive changes from the earlier inventory of isolated pieces.
 
-Why it matters for what Biopeia wants to find out is in
-[the candidate hypotheses](../biopeia/research-hypotheses.md): none of them
-can be tested until something does.
+The reviewed evidence still does not show one runtime constructing complete
+state, advancing these paths together, and handing sensory and motor
+consequences to acquired change over a life. In particular, the World sensing
+fixture and the accepted checkpointed cognitive step do not meet, and no
+reviewed source connects cognitive readouts to action admission. This is an
+integration and state-closure limit, not a claim that every local mechanism
+is absent or that no component test is useful.
+
+[The candidate hypotheses](../biopeia/research-hypotheses.md) set out the
+experimental comparisons that remain unconfirmed. The tests of these bounded
+paths constrain implementation; they do not demonstrate those hypotheses.

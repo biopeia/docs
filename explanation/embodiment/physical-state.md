@@ -1,7 +1,8 @@
 # The body's physical state and the adoption of a solver candidate
 
-Reviewed against `embodiment` at commit `a5129f03aa4b024e33d332f917b9235afe97959c`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
+2026-10-14); first written against `a5129f0`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -35,6 +36,13 @@ morphology, of the environment and of the solver configuration. Every text
 field must be non-empty and is stored with surrounding whitespace removed;
 the tick is a non-negative integer.
 
+`adopt_candidate` now receives a `WorldPhysicalStepContext`, not a separately
+supplied `expected_step`. Embodiment derives the expected correlation from
+that context and requires the target tick to be the immediate successor of
+the source tick. This is structural validation of a Python value, not
+cryptographic proof of World authorization. Adoption returns a staged new
+value; World chooses which reference becomes authoritative at commit.
+
 **The candidate** (`SolverBodyCandidate`) is what a solver proposes: a
 correlation, the names of the reference frame and body frame, a position in
 metres, an orientation as an `xyzw` quaternion, a linear velocity in metres
@@ -63,11 +71,12 @@ last step is an initial state and may be created at any tick (ad hoc run).
 
 ## Adoption
 
-Adoption takes a candidate and an expected correlation and returns a new
-state. It proceeds in this order, and any failure raises without producing
+Adoption takes a candidate and a World step context and returns a new state.
+It proceeds in this order, and any failure raises without producing
 anything:
 
-1. The candidate's correlation must equal the expected one, field for field.
+1. Embodiment derives the expected correlation from the supplied context;
+   the candidate's correlation must equal it, field for field.
 2. That correlation must name this state's World, tick, body, episode and
    morphology revision.
 3. The candidate's frames must be explicit and be the frames of the current
@@ -142,6 +151,12 @@ frame, and the decoded state must pass every consistency rule above
 A state encoded and restored equals the original and has the same digest
 (`test_checkpoint_bytes_are_deterministic_and_restore_exact_adopted_state`).
 
+Adoption now receives `WorldPhysicalStepContext`; Embodiment derives the
+physical-step correlation from that context and requires the target tick to
+be the immediate successor of the source tick. The context is a structural
+Python value, not cryptographic proof of authorization. The transition is
+staged; World selects which reference becomes authoritative at commit.
+
 The component is explicit that bytes are not durability. Its checkpoint
 "has no durable checkpoint reference until an
 external store persists and verifies its bytes"; the state refuses to be
@@ -152,14 +167,10 @@ Nothing in this component writes a file.
 
 Two things follow that a reader of World's documents should know:
 
-- This type does not offer the two questions World's durable runtime asks of
-  an owner, whether bytes are valid for an identity and schema, at
-  validation and after restoration. The somatic checkpoint of the same
-  repository does (see [somatic state](somatic-state.md)). In World's
-  integration fixture, at `world@c162b67e698de9b47450264402677b0165e6e20e`,
-  the answer for the physical state is a function written in the test, and
-  the schema name `embodiment-physical-state-v2` appears only in World's
-  integration tests.
+- This physical-state type still does not itself provide World-owner
+  checkpoint validation and restoration methods. In the reviewed World
+  integration fixture, these operations are supplied by test code; that does
+  not establish a production adapter or durable recovery path.
 - A body therefore has two unrelated checkpoints, this one and the somatic
   one. This one names a World and a causal tick; the somatic one names
   neither.
@@ -199,10 +210,9 @@ it. This is a comparison of content, not a ruling on conformance.
 
 | Claim | Support |
 |---|---|
-| Consistency rules of the state, the adoption rules on correlation, immutability, checkpoint determinism and strictness, absence of a durable reference | Code and tests in `embodiment:tests/test_physical_transition.py`, run at that revision (all pass) |
+| Consistency rules of the state, adoption from `WorldPhysicalStepContext`, immutability, checkpoint determinism and strictness, absence of a durable reference | Code and tests in `embodiment:tests/test_physical_transition.py` |
 | Frames must match; non-unit quaternion and non-finite position refused at adoption, not at construction of the candidate | Code, and one ad hoc run of the module at that revision; no test is kept for these |
 | Invented environment and solver revisions adopted; one state adopting two candidates for one step; implausible values adopted; initial state at any tick | Code, and the same ad hoc run |
-| No owner validation methods on this type; schema name defined in World's integration tests | Code of this module and of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | That owners adopt and solvers do not; what ends with a body | Accepted decisions ADR-0073, ADR-0098, ADR-0094, ADR-0095; statements of intent, not test results |
 
 No run with a real solver, no stored checkpoint and no experiment was

@@ -1,7 +1,8 @@
 # The observation plane
 
-Reviewed against `observation` at commit `be82907d1d677b2362e369d15eb1e8e964d893aa`; first written against `397c0b4`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `observation` at commit `2f4751f53678f2210930770605844cac766b1da4` (main on
+2026-10-15); first written against `397c0b4`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
 
@@ -29,10 +30,11 @@ not do is read the loss as a fact about the source.
 It lives in memory only. The code says: "This plane is not durable and cannot
 resume across process restarts."
 
-At this revision nothing uses it. No repository of Biopeia, at the main
-branches read for this review, constructs an `ObservationPlane` outside this
-repository's own tests. What follows is the behaviour of the object, shown by
-its tests and by running it, not the behaviour of a system in which it runs.
+In production sensorimotor execution, World constructs an in-memory
+`ObservationPlane` during bootstrap (`world:src/world/m1_profile.py`) and
+publishes post-commit owner observation projections into it. Consumers read
+the current plane snapshot through the bounded local read bridge
+(`observation:src/observation/http_bridge.py::LocalObservationReadBridge`).
 
 ## Publishing
 
@@ -73,6 +75,20 @@ In an ad hoc run with eight threads publishing two thousand observations
 each, the sixteen thousand sequence numbers were distinct and contiguous. No
 test exercises concurrent use.
 
+### Publication sequence, republication, and late delivery
+
+Two delivery characteristics are verified by tests (`observation:tests/test_plane.py`):
+
+1. **Republication is not deduplicated.** Publishing an identical observation
+   twice delivers two distinct messages with incremented delivery sequence
+   numbers (`test_identical_observation_republication_is_delivered_again`). The
+   plane does not suppress repeated source publications.
+2. **Arrival order governs delivery sequence.** If an observation for causal
+   tick 2 is published and followed by one for causal tick 1, the plane delivers
+   tick 2 as sequence 1 and tick 1 as sequence 2
+   (`test_late_older_domain_time_is_delivered_in_publication_sequence`). The
+   plane does not reorder messages into domain-time order.
+
 ## What current means
 
 The plane keeps one message per key. The key
@@ -108,6 +124,25 @@ not imply source absence, unavailability, or non-existence".
 
 `current()` and `current_messages()` return whatever is held, optionally for
 one family. The set carries no statement of how its members relate in time.
+
+### Adversarial boundary guarantees: not a data lake
+
+The plane is an ephemeral, bounded buffer. Boundary tests
+(`observation:tests/test_observational_boundary_adversarial.py`) enforce three limits:
+
+- **Snapshot isolation against consumer mutation:** A consumer modifying the
+  `value` mapping inside a returned message does not alter the plane's
+  retained snapshot (`test_mutating_read_projection_cannot_rewrite_plane_history`).
+- **Explicit rebase on replay eviction:** When a consumer attempts to resume
+  with a watermark that has been evicted from the bounded replay buffer, the
+  plane does not truncate or invent history; it emits `PlaneRebaseRequired`
+  with reason `replay_expired` (`test_bounded_replay_eviction_requires_rebase`).
+- **Explicit clear signaling:** Invoking `clear()` resets retained state and
+  emits `PlaneRebaseRequired` with reason `run_boundary`
+  (`test_explicit_clear_rebases_stream_without_causal_context`).
+
+The plane provides no durable storage, no cross-restart resumption, and no
+cross-owner causal cut synchronization.
 
 ## Streams
 
@@ -220,9 +255,17 @@ one. It does hand the producer's own objects to consumers, uncopied.
 The [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md)
 decides that the live plane "belongs to Observation, not to Lab", and draws
 authorities exposing their own boundaries, then "Observation adapters", then
-the plane. The plane is in the `observation` repository. No adapter exists in
-it, and none was found elsewhere; the repository's migration record says not
-to add source-domain adapters until their design gates are approved.
+the plane.
+
+At this revision, Observation defines typed domain adapters in
+`observation:src/observation/embodiment.py` and
+`observation:src/observation/environment.py`. They adapt Embodiment BodyPose
+(`embodiment.body_pose` v1), Embodiment reserve snapshots
+(`biopeia.embodiment.reserve_state_snapshot` 1), Environment scalar fields
+(`biopeia.environment.finite-scalar-field` 1), and Environment resource
+snapshots (`biopeia.environment.resource_state_snapshot` 1). The adapters
+validate structural shapes, units, reference frames, and owner checkpoint
+digests without claiming authority or establishing World commit durability.
 
 The same design says that the plane's delivery sequence "is not causal time
 and must not be presented as such", and that a set of claims presented
@@ -245,6 +288,69 @@ where it does not signal.
 
 [ADR-0101](../../technical/adr/ADR-0101-operator-control.md) keeps operator
 control out of observation. The package contains no control path of any kind.
+
+## The bounded local current read bridge
+
+To allow local presentation viewers and development proxies to inspect the
+latest committed observations without giving them active access or mutating
+runtime state, the package provides a loopback HTTP bridge
+(`observation:src/observation/http_bridge.py::LocalObservationReadBridge`,
+`LocalObservationHTTPServer`).
+
+### Wire protocol and endpoints
+
+- **Route:** `GET /v1/current`. Rejects all query parameters with `404 not_found`
+  and rejects any request carrying a body with `400 request_body_not_supported`.
+  All non-GET methods (`HEAD`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`) are
+  rejected with `405 method_not_allowed`.
+- **Envelope declaration:** The endpoint responds with JSON conforming to
+  `biopeia.observation.current.v1`. The response declares explicit boundaries:
+  ```json
+  {
+    "schema": "biopeia.observation.current.v1",
+    "availability": "available",
+    "absence_semantics": "not_evidence_of_source_absence",
+    "scope": "bounded_in_memory_current_subset",
+    "freshness": "not_established_by_snapshot",
+    "coherence": "per_message_only_no_cross_owner_snapshot_guarantee",
+    "messages": [...]
+  }
+  ```
+  If no approved observations are present in the plane, the bridge returns
+  status `200` with `availability: "current_view_empty"`, reminding consumers
+  that empty views are not evidence of source absence.
+
+### Approved family validation
+
+The bridge does not expose raw internal objects. It filters and validates
+payloads against an explicit allowlist of approved M1 families:
+1. `embodiment.body_pose` (contract `embodiment.body_pose`, revision `v1`):
+   validates 3D position vector in meters, XYZW unit quaternion orientation
+   conforming to right-handed Hamilton conventions, reference frame, body
+   frame, causal tick under World authority, and parent lineage hash
+   `embodiment_state_sha256`.
+2. `environment.finite_scalar_field` (contract `biopeia.environment.finite-scalar-field`, revision `1`):
+   validates dimensionless scalar value in range `[0.0, 1.0]`, sample point
+   in meters, source and target ticks under World authority, and parent
+   lineage hash `owner_checkpoint_sha256`.
+
+Unapproved families are skipped silently. Any approved family with invalid
+payload or corrupted envelope fails closed, emitting `503 current_view_unavailable`.
+
+### Security and passivity guarantees
+
+- **Loopback isolation:** The bridge binds strictly to loopback addresses
+  (`127.0.0.1` / `::1`). Attempts to bind public or wildcard addresses fail.
+- **Host and Origin enforcement:** The incoming `Host` header must exactly match
+  the server's bound host and port (`127.0.0.1:<port>`), and the `Origin` header
+  must match the authorized caller (`http://127.0.0.1:4173` by default). Mismatches
+  return `400 invalid_host` or `403 origin_denied`.
+- **Response byte limit:** Capped at 1,000,000 bytes (1 MB). If the encoded
+  view exceeds this limit, the bridge returns `413 current_view_exceeds_response_limit`.
+- **Security headers:** Every response sets `Cache-Control: no-store`,
+  `X-Content-Type-Options: nosniff`, and `Connection: close`.
+- **Non-mutating read:** Reading `plane.current_messages()` does not advance the
+  plane's sequence counter or modify retained state (`observation:tests/test_http_bridge.py`).
 
 ## What supports this description
 

@@ -1,28 +1,44 @@
 # The operator material transfer
 
-Reviewed against `lab` at commit `29e25d85e796d96a3f2e830fd870a2f74e8e2266`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run made on 2026-10-11, or an
-accepted decision. A decision states intent; it is not a result.
+Reviewed against `lab` at commit `0baff4d0208b2f19d244078eb8576931ba524c08` (main on
+2026-10-14); first written against `29e25d8`. Everything below describes the
+later revision. Statements are marked by what
+supports them: the code, the tests, or an accepted decision. A decision
+states intent; it is not a result.
 
-The code this component calls in other repositories was read at their heads
-on that day:
-`embodiment` `597cc4a09f4a5c94095b17ad0f2ba510df6d02c3`,
-`environment` `e91bb67f81f3bc15715489cf1262328934454f1b`,
-`observation` `6aac3c76684834722440f53c9d8604ac4c16b138` and
-`world` `95f5064c6b06bd66bb58a72110b066afe4ca70b0`. The ad hoc runs used
-those heads. Lab's own tests run against older revisions, pinned in
-`lab:pyproject.toml`; where the two differ in outcome, this document says
-so.
+The code this component calls in other repositories is pinned in
+`lab:pyproject.toml`:
+- `embodiment` `c456401e9517bbb1fec02d84cbac7e94fddf9d68`
+- `environment` `0ce1a4e3f4dd12529639f032929b8e09df4ce7d7`
+- `observation` `d351df3d7cd2706fdd280a8d4e17359001689dd8`
+- `world` `95bafc14ecd579b5573c4fadd1d7d3b5833b6c2f`
 
 ## What it is
 
 Somebody outside the simulated life decides that a quantity should move from
 a resource in the environment into a body, and asks for it. Nothing inside
-the simulation caused it: no organism acted, no body touched anything. The
-operator material transfer is the one place in Lab where such a request is
-carried out, and it is built so that the request leaves a trace and so that
-Lab itself decides as little as possible.
+the simulation caused it: no organism acted, no body touched anything.
+
+### Fail-closed execution status
+
+In the current implementation, **material transfer execution is explicitly
+unsupported and fails closed**. Calling `apply_material_transfer` immediately raises
+`MaterialTransferAuthorizationUnsupported` before touching World, inspecting
+owner state, or writing checkpoints
+(`lab:src/lab/interventions/material_transfer.py::apply_material_transfer`).
+
+The reason is architectural: an `InterventionRequest` carries caller-declared
+identifiers and constraints (`operator_id`, `intervention_id`, etc.); it does
+not constitute authenticated identity or verified authorization. Under Lab proposal
+#330 (`docs/design/proposals/lab-target-authority-request-boundary-v1.md`), verified
+authorization remains unsupported.
+
+Integration tests executing the transfer path
+(`tests/integration/test_material_transfer_intervention.py` and
+`tests/integration/test_operator_material_transfer.py`) are skipped in CI
+(`pytestmark = pytest.mark.skip`). A dedicated test verifies the fail-closed
+rejection
+(`tests/integration/test_material_transfer_authorization.py::test_material_transfer_fails_before_touching_world_or_owner_state`).
 
 The module describes itself in those terms: "This is a caller-requested scalar
 transfer, not an autonomous action, physical contact model, or demonstrated
@@ -222,23 +238,65 @@ restorer the caller supplies, as described in
 
 ## What reaches Observation
 
-After commit Lab supplies a projection input of six keys: a source label, the
-body's identity as the instance, the causal tick twice, as tick and as
-sequence, a fixed label for the kind of body, and the quantity remaining in
-the resource. It supplies nothing of the body's state and no metabolic
-reserve ratio. The passive projection output is limited by fields recognized
-by Observation and supplied by Lab; it carries no run ID.
+Lab no longer passes ad hoc telemetry to Observation's legacy inherited projection.
+Instead, observation publication is an explicit, separate post-commit operation:
+`lab:src/lab/interventions/material_transfer.py::publish_material_transfer_observations`.
 
-With that input the projection returns two records. In an ad hoc run the
-body record held the source, the instance, the sequence, the tick and the
-label; the vitals record held the source, the instance, the sequence, the
-tick and the remaining quantity. No cognition event is emitted because no
-recognized cognition data is present. No Organism takes part in the
-transfer.
+The function takes the committed `MaterialTransferResult`, the durable World runtime,
+and an in-process `ObservationPlane`. It emits two independently owned state claims:
 
-The projection describes itself as working "without fabricating absent
-observations". The events are returned to the caller; this component does not
-store or send them.
+1. **Environment resource state observation:** projected from the committed resource
+   checkpoint bytes via `environment.identified_resource.project_committed_resource_state`
+   and wrapped by `observation.environment_resource_state_observation`.
+2. **Embodiment reserve state observation:** projected from the committed body
+   checkpoint bytes via `embodiment.checkpoint.project_committed_reserve_state`
+   and wrapped by `observation.embodiment_reserve_state_observation`.
+
+These owner observations are published together against the exact committed cut
+through `world.observation_publication.publish_committed_owner_observations`.
+
+### Cryptographic and journal binding
+
+Publication fails with a `ValueError` unless the following bindings strictly hold:
+- **Explicit run context:** `result.experiment_id` and `result.run_id` must be present.
+- **World cut match:** `cut.world_id` and `cut.causal_tick` must match `result.record`.
+- **Exact transition record:** `world.records` must contain exactly one committed
+  transition record (`world.causal_tick.committed`) for that tick, and `result.record`
+  must equal it (`test_publication_rejects_missing_committed_world_transition_record`,
+  `test_publication_rejects_ambiguous_committed_world_transition_records`).
+- **Verified cut receipt:** `world.committed_cut_for` must match `cut`.
+- **Exact Lab evidence cut participant:** `cut.owner_checkpoint_references` must contain
+  exactly one Lab evidence checkpoint reference matching `result.evidence_reference`.
+- **Committed action record:** `world.records` must contain exactly one matching
+  `world.owner_record.committed` for `lab-intervention-evidence` and the action identity.
+- **Evidence byte integrity:** the evidence file on disk must match its SHA-256 and
+  pass `LabInterventionEvidenceCodec.validate_checkpoint`.
+- **Payload context correspondence:** `intervention_id`, `intervention_action_id`,
+  `transition_id`, `world_id`, `causal_tick`, `run_id`, `experiment_id`, `operator_id`,
+  and `applicability` must match between the journal action record and the evidence payload.
+
+The published messages are read back and associated with the Lab execution context
+via `LabObservationAssociation` and `associate_current_messages`.
+
+## Owner checkpoint restoration
+
+When restoring or recovering a World after a transfer, World asks each registered owner's
+checkpoint contract to validate the checkpoint and verify restoration.
+
+Historically, Environment's resource class required an `OwnerRestorationReference`
+instance method, creating a contract mismatch with World's 3-argument verification.
+Lab resolves this through `lab:src/lab/interventions/material_transfer_restoration.py::MaterialTransferOwnerRestoration`.
+
+The restorer:
+1. Validates that the cut contains exactly one Environment and one Embodiment owner reference.
+2. Reads and validates the checkpoint bytes against `IdentifiedFiniteResource.validate_checkpoint`
+   and `EmbodimentCheckpoint.validate_checkpoint`.
+3. Instantiates `IdentifiedFiniteResource.from_checkpoint_bytes` and `EmbodimentCheckpoint.from_bytes`.
+4. Exposes `contracts(resource_id, body_id)`:
+   - `_EnvironmentRestoreContract.verify_restoration` maps World's `CheckpointReference`
+     into Environment's `OwnerRestorationReference(owner_identity, schema_version, checkpoint_sha256)`.
+   - `_EmbodimentRestoreContract.verify_restoration` checks that re-serialized body bytes
+     match the reference SHA-256 and passes `EmbodimentCheckpoint.verify_restoration`.
 
 ## What Lab does not own
 

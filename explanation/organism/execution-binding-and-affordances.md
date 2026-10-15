@@ -1,7 +1,8 @@
 # Execution bindings, availability and the affordance resolver
 
-Reviewed against `organism` at commit `3cc0f319f4ac00a631685aae0999134b6d64007f`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
+2026-10-14); first written against `3cc0f319`. Everything below describes the
+later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
@@ -70,38 +71,20 @@ has two ways in.
   the method's description says "Leaving INVALIDATED requires new evidence",
   and an attempt returned nothing and changed nothing.
 
-The registry never changes a status by itself. It does not know which surface
-is current. Two further methods count executions for a binding, as raw
-material for a caller's decision to mark it stale or invalid; no code makes
-that decision.
+To manage transitions across physical bodies and surfaces, `CompetenceExecutionBindingRegistry.mark_stale_for_surface`
+(`organism:src/organism/actuation/binding.py:343-367`) checks all bindings against the active
+`surface_fingerprint`. Any binding confirmed on a different surface is transitioned to
+`STALE` with `StalenessReason.SURFACE_NOT_CURRENT`.
 
-It holds 512 rows by default and, over that, keeps those most recently
-confirmed. With a capacity of two and confirmations at ticks 5, 1 and 9, the
-row from tick 1 was dropped.
+Bindings now carry an explicit `applicability_fingerprint`. When `derive_availability`
+(`organism:src/organism/agency/availability.py:87-119`) evaluates a binding against the
+current embodiment context, a mismatch in morphology or surface sets `scope = PredictionScope.HISTORICAL`
+and reason `AvailabilityReason.APPLICABILITY_MISMATCH`. Prior-body motor hypotheses are preserved
+as historical knowledge without allowing them to execute on an incompatible new body.
 
-### One row per competence
-
-Rows are keyed by competence identifier alone. Reporting evidence for the same
-competence on a second surface replaces the row. Confirmed by running the
-registry, with a binding first confirmed on surface A at tick 10 and then on
-surface B at tick 50:
-
-- the row named surface B and the new effect;
-- its evidence references were the two from surface A followed by the one
-  from surface B;
-- its valid-from tick was still 10 and its revision still 0;
-- no transition was recorded;
-- nothing remained about surface A, on which the competence was no longer
-  reported executable.
-
-So the registry cannot hold that a competence was confirmed on an earlier body
-and is unconfirmed on the present one. It holds the latest report, and the
-evidence list of a row may mix surfaces while its error message speaks of
-current evidence. This is part of finding F-0101.
-
-A method lists the competences whose row names a surface other than a given
-one. It changes nothing: after calling it the status was still valid and no
-transition was pending.
+Furthermore, motor competence records are derived directly from causal evidence via
+`organism:src/organism/actuation/derivation.py::derive_motor_competence_from_evidence`,
+registering the competence in `CompetenceLibrary` and generating verified execution bindings.
 
 ## Four questions and their answers
 
