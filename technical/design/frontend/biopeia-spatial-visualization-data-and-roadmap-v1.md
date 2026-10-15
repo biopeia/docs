@@ -477,8 +477,8 @@ commits behind its recorded `origin/main`; only files read explicitly with
 | Frontend | `3b158cc73e57a8175265e1d25a66eb09346679f9` | `README.md`, `package.json`, `src/model.js`, `src/views.js`, `src/observation-client.js`, `src/style.css`; [PR #24](https://github.com/biopeia/frontend/pull/24) adds `tests/views.test.js` coverage | Frontend still consumes the same two bounded M1 claim families and has no 3D renderer dependency. PR #24 adds separate SVG coordinate markers for supported finite coordinates, with independent display scaling, owner identity, frame and provenance labels; it expressly does not compose claims into a scene. This is coordinate evidence presentation, not authorized physical geometry or a coherent shared World snapshot. Current-source tests/build were not rerun in this documentation revalidation. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | `README.md` and `src/` search for geometry/spatial claims | Modality describes narrow, non-authoritative scalar transduction and does not own body/environment geometry. No spatial output contract was identified; this does not imply Modality is absent from all future sensory presentation. |
 | Organism | `d8ed534d48188fb2f629faaa8dd85b95063a0c2d` | `README.md` and source search for geometry/spatial publication | Organism owns longitudinal identity/private state and lifecycle, not physical body state. No spatial geometry publication was identified. This design excludes private cognition and does not infer organism activity from geometry. |
-| Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is a Workbench consumer integration. The intervening revision changes migration inventory/tests, not the current renderer inventory. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
-| Docs / Workspace | Docs `eec6ed35af985b5a7935cded2049201b22dfe612`; Workspace `6e8d83cf353d2bef7addcdb293508784c0bede6c` | Docs #176 registry entry and design; Docs #164 accepted UX design; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
+| Lab | `e6a084f1abae751a8248b373901150754a403bbc` (`origin/main`; local `HEAD` behind) | Current remote `README.md`; remote inspection confirmed the historical `src/lab/physics3d/engine.py` path is not present in current TARGET main. Lab #63 is closed as not planned/superseded; ADR-0113 and Docs #165 assign the general frontend consumer role to Frontend. | No current TARGET physics renderer was established as reusable. Lab #63 does not make Lab the Frontend owner or authorize use of historical engine code. |
+| Docs / Workspace | Docs `76d26cb240625f740c12f52aaaf706cc0ae4515f`; Workspace `4e34c97569aaa1ba5611eda3dab3923cd33dfd83` | Docs #176 registry entry and design; Docs #164 accepted UX design; Docs #183; Workspace #50 / Project history | Docs #176 remains `document_status: proposed`, `implementation_status: not_evaluated`, `architecture_scope: UNRESOLVED`. Docs #164 governs UX/fallback. Workspace M1.1 browser evidence is not a spatial contract. |
 
 ### Capability status matrix
 
@@ -506,7 +506,7 @@ revalidation.
 | Authorized spatial 3D renderer for real owner geometry | `ABSENT` | Frontend | `3b158cc…`; `package.json`, `src/` inspection | No real-browser 3D acceptance evidence | Renderer stays blocked until owner contracts, read boundary and cut proof are approved. Frontend #22. |
 | Spatial geometry publication role | `ABSENT` | Modality | `62af4ab…`; README/source search | No relevant contract test identified | No spatial authority inferred for Modality. |
 | Spatial geometry publication role | `ABSENT` | Organism | `d8ed534…`; README/source search | No relevant contract test identified | Organism identity/private state and lifecycle remain outside physical geometry. |
-| Reusable current-target Lab renderer | `ABSENT` | Lab | `e6a084f…` (`origin/main`); current README/path check | No current-target renderer test established | Historical engine path is not present in current target main; Lab #63 is a separate consumer. |
+| Reusable current-target Lab renderer | `ABSENT` | Lab | `e6a084f…` (`origin/main`); current README/path check | No current-target renderer test established | Historical engine path is not present in current target main; Lab #63 is closed as not planned/superseded; ADR-0113 and Docs #165 assign general Frontend ownership to Frontend. |
 | Canonical design/readiness record | `EXISTING` | Docs | `0373d063…`; Docs #176 registry, Docs #164 UX | Registry validation is tracked separately from this source inspection | Keep `proposed / not_evaluated / UNRESOLVED`; design-base acceptance does not change registry readiness. |
 | Workspace runtime/browser coordination evidence | `EXISTING` | Workspace | `4e34c97…`; Workspace #50 and M1.1 artifacts | Evidence is bounded to recorded M1.1 checks | Operational evidence is not a geometry/cut contract and does not establish Spatial V1 acceptance. |
 
@@ -514,6 +514,27 @@ The matrix records capability, not readiness or acceptance. In particular,
 `REQUIRES APPROVAL` must not be read as implementation authorization, while
 `EXISTING` owner-side geometry must not be synthesized into a browser scene
 without an approved publication and verified cut relationship.
+
+### Candidate contract status (2026-10-15)
+
+The owner-design direction has since been accepted as a design base, without
+accepting final schemas or authorizing implementation/publication. The exact
+current candidates remain proposals for their respective owners:
+
+| Domain | Candidate evidence | Status and scope |
+|---|---|---|
+| Environment | [Environment #73](https://github.com/biopeia/environment/issues/73), [merged PR #74](https://github.com/biopeia/environment/pull/74), head `eab901fa7bd20890b3ece9e58db5c3ae3d699575` | Merged non-normative documentation candidate for bounded static scene geometry. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
+| Embodiment | [Embodiment #77](https://github.com/biopeia/embodiment/issues/77), [merged PR #78](https://github.com/biopeia/embodiment/pull/78), head `406c08461a66962bef65ac0bd6715a83e32a05ac` | Merged non-normative documentation candidate for bounded morphology and transforms. The candidate is not owner-accepted as an exact schema; no publication or implementation authorization. |
+| World | [World #162](https://github.com/biopeia/world/issues/162), candidate comment `6200546569` | Proposed consumer-verifiable association to an existing committed cut; no new persistence. Not owner-accepted or implemented. |
+| Observation | [Observation #37](https://github.com/biopeia/observation/issues/37), candidate comment `6200559423` | Proposed passive carriage on the existing local boundary. No new allowlist entry, semantic join, or remote exposure is approved. |
+
+The independent integration review found no internal contradiction in these
+candidate proposals, but explicitly did not treat them as accepted schemas or
+implementation-ready contracts. Each domain owner must approve its exact
+contract; implementation/publication remains a separate gate. A static-only
+Environment view may be staged before dynamic contracts, but must be visibly
+partial and may use only real authorized Environment data. The registry state
+remains `proposed / not_evaluated / UNRESOLVED`.
 
 The audit found existing owner geometry sources and an M1 profile-configured
 same-frame-ID compatibility check, but no complete path that publishes compatible
@@ -552,9 +573,10 @@ source domains lack all physical geometry.
   contracts. It is distinct from World #103's generic post-commit publication
   join and #144's local bridge integration test.
 - Modality and Organism currently have no demonstrated spatial publication
-  role. Lab #63 is a separate Workbench consumer; historical Lab physics code
-  is not a current TARGET renderer. Neither is a justified spatial child task
-  on the current evidence.
+  role. Lab #63 is closed as not planned/superseded; ADR-0113 and Docs #165
+  assign the general Frontend consumer role to Frontend. Historical Lab
+  physics code is not a current TARGET renderer. Neither is a justified
+  spatial child task on the current evidence.
 
 The child Issues have recorded design-base Owner dispositions, now linked in
 the candidate-conformance section below. Those dispositions do not approve a
