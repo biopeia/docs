@@ -24,6 +24,16 @@ designs:
     implementation_status: not_evaluated
     architecture_scope: UNRESOLVED
 
+  design.cross-domain.biopeia-spatial-visualization-data-and-roadmap-v1:
+    title: "Biopeia Spatial Visualization — Owner-Authorized Data Readiness and Roadmap"
+    path: technical/design/frontend/biopeia-spatial-visualization-data-and-roadmap-v1.md
+    domain: cross-domain
+    participating_domains: [embodiment, environment, world, observation]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: "Refines the accepted Frontend spatial readiness gate; proposal only. No owner publication contract or renderer implementation is approved by this entry."
+
   design.cross-domain.biopeia-frontend-v1:
     title: "Biopeia Frontend v1 — Independent Visualization Application"
     path: technical/design/frontend/biopeia-frontend-v1.md
