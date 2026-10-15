@@ -16,6 +16,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from validate_registry import ROOT, load_strict_yaml  # noqa: E402
 
 MANIFEST = ROOT / "publication" / "biopeia-master.yaml"
+TECHNICAL_REFERENCE_MANIFEST = ROOT / "publication" / "biopeia-technical-reference.yaml"
+DEFAULT_MANIFESTS = (MANIFEST, TECHNICAL_REFERENCE_MANIFEST)
 
 # Sections rendered from the registry; projection.py holds one renderer each.
 GENERATED_SECTIONS = (
@@ -98,6 +100,11 @@ def manifest_errors(manifest: dict[str, Any], docs_root: Path) -> list[str]:
             errors.append(f"document is both a chapter and excluded: {path}")
         excluded[path] = reason
 
+    # A selection presents part of the corpus on purpose and accounts for no
+    # more than it lists. Only a complete publication must place every document.
+    if publication.get("selection"):
+        return errors
+
     # Every explanatory document is accounted for. README.md files are
     # navigation indexes, not chapters.
     for doc in sorted((docs_root / "explanation").rglob("*.md")):
@@ -120,10 +127,16 @@ def load_manifest(path: Path = MANIFEST, docs_root: Path = ROOT) -> dict[str, An
 
 
 if __name__ == "__main__":
-    try:
-        loaded = load_manifest()
-    except ManifestError as exc:
-        print(f"Publication manifest: FAIL\n{exc}")
+    targets = [Path(p) for p in sys.argv[1:]] if len(sys.argv) > 1 else list(DEFAULT_MANIFESTS)
+    failed = False
+    for target in targets:
+        try:
+            loaded = load_manifest(target)
+        except ManifestError as exc:
+            print(f"Publication manifest {target.name}: FAIL\n{exc}")
+            failed = True
+            continue
+        count = sum(len(s.get("chapters") or []) for s in sections(loaded))
+        print(f"Publication manifest {target.name}: PASS ({len(sections(loaded))} sections, {count} chapters)")
+    if failed:
         sys.exit(1)
-    count = sum(len(s.get("chapters") or []) for s in sections(loaded))
-    print(f"Publication manifest: PASS ({len(sections(loaded))} sections, {count} chapters)")

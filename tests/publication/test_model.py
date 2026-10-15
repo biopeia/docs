@@ -8,8 +8,14 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "publication"))
-
-from model import ManifestError, load_manifest, manifest_errors  # noqa: E402
+from model import (  # noqa: E402
+    DEFAULT_MANIFESTS,
+    MANIFEST,
+    TECHNICAL_REFERENCE_MANIFEST,
+    ManifestError,
+    load_manifest,
+    manifest_errors,
+)
 
 
 def write(root: Path, manifest: dict) -> Path:
@@ -32,7 +38,16 @@ def manifest(**overrides) -> dict:
 
 
 def test_repository_manifest_is_publishable():
-    assert manifest_errors(load_manifest(), ROOT) == []
+    assert manifest_errors(load_manifest(MANIFEST), ROOT) == []
+
+
+def test_technical_reference_manifest_is_publishable():
+    assert manifest_errors(load_manifest(TECHNICAL_REFERENCE_MANIFEST), ROOT) == []
+
+
+def test_all_default_manifests_are_publishable():
+    for m in DEFAULT_MANIFESTS:
+        assert manifest_errors(load_manifest(m), ROOT) == []
 
 
 def test_valid_manifest_loads_and_readme_is_not_a_chapter(tmp_path):
@@ -72,5 +87,13 @@ def test_excluded_document_with_reason_is_accepted(tmp_path):
     data = manifest(
         parts=[{"id": "w", "title": "W", "chapters": ["explanation/world/a.md"]}],
         excluded=[{"path": "explanation/world/b.md", "reason": "superseded draft"}],
+    )
+    load_manifest(write(tmp_path, data), tmp_path)
+
+
+def test_a_selection_need_not_place_every_document(tmp_path):
+    data = manifest(
+        publication={"id": "p", "title": "P", "output": "P", "selection": True},
+        parts=[{"id": "w", "title": "W", "chapters": ["explanation/world/a.md"]}],
     )
     load_manifest(write(tmp_path, data), tmp_path)

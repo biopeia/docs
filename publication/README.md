@@ -8,18 +8,21 @@ Three things are kept apart:
 - the **registry** (`registry/`) says where it comes from and what state it is in;
 - the **publication** (this directory) says in which order it is presented.
 
-`biopeia-master.yaml` is the composition of the main publication. It holds no
-documentary text. It lists parts and appendices; each names chapters, which
-are documents of this repository in reading order, and generated sections,
-which are rendered from the registry. A published document therefore never
-decides what the canonical documentation is: it presents sources that stay
-canonical where they are.
+`biopeia-master.yaml` is the composition of the main publication (Master
+Architecture). `biopeia-technical-reference.yaml` is the companion technical
+reference, focusing on cross-domain contracts, component and interface catalogs,
+evidence status, parameters, metrics, terminology and decision records. Neither
+manifest holds documentary text. They list parts and appendices; each names
+chapters, which are documents of this repository in reading order, and
+generated sections, which are rendered from the registry. A published document
+therefore never decides what the canonical documentation is: it presents
+sources that stay canonical where they are.
 
-The order starts with the system view (the domains, candidate research
-hypotheses, a derived capability-maturity summary, and how one step crosses
-them today), then goes down into the domains: Organism, Embodiment,
-Environment, World, Modality and Observation, Lab. The contracts that bind
-one domain to another come last, followed by the
+For the Master Architecture, the order starts with the system view (the
+domains, candidate research hypotheses, a derived capability-maturity summary,
+and how one step crosses them today), then goes down into the domains:
+Organism, Embodiment, Environment, World, Modality and Observation, Lab. The
+contracts that bind one domain to another come last, followed by the
 appendices. `registry/findings.yaml` is audit material and is not published.
 
 ## Three layers
@@ -103,15 +106,18 @@ release is the owner's act; none has been cut.
 
 - A chapter that does not exist, a document listed twice or an unknown
   generated section fails the build.
-- Every document under `explanation/` is either a chapter or listed under
-  `excluded` with a reason. A new document that nobody placed fails the
-  build; nothing is left out silently. `README.md` files are navigation
-  indexes and are never chapters.
+- For complete publications (such as `biopeia-master.yaml`), every document
+  under `explanation/` is either a chapter or listed under `excluded` with a
+  reason. A new document that nobody placed fails the build; nothing is left
+  out silently. `README.md` files are navigation indexes and are never chapters.
+- For companion selections (`selection: true`, such as
+  `biopeia-technical-reference.yaml`), only listed chapters and sections are
+  assembled without requiring global exhaustive placement of the full corpus.
 - A part with no explanatory document of its own is not padded with new text
   here. Writing that document is documentation work, done in the corpus.
 
 ```bash
-python tools/publication/model.py   # check the manifest
+python tools/publication/model.py   # check the manifests
 ```
 
 ## Known gaps
@@ -125,12 +131,13 @@ python tools/publication/model.py   # check the manifest
   the fullest page; no limit fails the build.
 - **Parts have no scope statement and chapters no abstract**: the corpus
   holds neither.
-- **One publication, in the order of the domains.** Two publications from the
-  same sources (an architecture overview and a technical reference), a new
-  part order and hand-authored system diagrams remain deferred until after
-  the migration (#78, #79). Capability maturity is now a derived chapter in
-  Part I; it does not replace the unit registry or claim integrated runtime
-  behaviour.
+- **Two publications from the same sources.** The corpus publishes both
+  the Master Architecture (`publication/biopeia-master.yaml`) and the
+  companion Technical Reference (`publication/biopeia-technical-reference.yaml`).
+  A hand-authored system diagram and prospective domain order reorganization
+  remain tracked in #79. Capability maturity is a derived chapter in
+  Part I of the master publication; it does not replace the unit registry or
+  claim integrated runtime behaviour.
 - **The reference registries are a bounded first set, not exhaustive.** The
   current registry contains 9 parameters and 3 metrics; notation has no
   registered entries. The appendices state this explicitly rather than
