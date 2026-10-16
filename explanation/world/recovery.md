@@ -97,6 +97,26 @@ failed termination of a presence is recovered to the cut in which the
 presence is still active
 (`test_rejected_or_failed_presence_lifecycle_does_not_publish_next_tick`).
 
+### Declared owner dependencies
+
+> Section added on 2026-10-17 against `world`
+> `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`. Sources examined:
+> `src/world/durable_runtime.py` (`recover_previous_cut`, `_verify_references`)
+> and `tests/test_checkpoint_dependencies.py`.
+
+Since world#173, an owner checkpoint reference may declare a dependency
+(`dependency_sha256`, optionally `dependency_parent`) on an earlier owner blob.
+Recovery verifies the references of the previous cut, declared dependencies
+included, before it calls the owner restorer, and again after it. A reference
+that carries a dependency its owner contract does not declare fails, and so
+does a declared dependency that does not resolve. If the base blob of a
+declared dependency is missing, recovery is refused; once the blob is back,
+the same recovery succeeds and the World continues from the recovered cut
+(`test_recover_previous_cut_with_dependencies`). An unverified dependency
+leaves the manifest in RECOVERY_REQUIRED
+(`world:tests/test_manifest.py::test_unverified_checkpoint_dependency_leaves_durable_recovery_required`,
+`world:tests/integration/test_durable_checkpoint_restore_slice.py::test_manifest_stays_recovery_required_when_dependency_is_unverified`).
+
 ## Starting again from a committed cut
 
 Restarting a World that was not in the middle of anything

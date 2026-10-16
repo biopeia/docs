@@ -252,8 +252,8 @@ the repository's. Stated here so they are not lost:
   previous committed tick; the flush-error test also checks that the journal
   file is truncated back to its committed size.
   (This list of journal cases was updated on 2026-10-16 against `world`
-  `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`; both tests also exist at this
-  unit's recorded basis `1f35e92`. The three temporary-file publication tests
+  `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`, which is now also this unit's
+  recorded basis; both tests already existed at the earlier basis `1f35e92`. The three temporary-file publication tests
   this document described earlier were removed by `9f65707`.)
   These are process terminations on the filesystem the tests ran on. The
   repository says this evidence "is not power-loss fault injection or a
