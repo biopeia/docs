@@ -15,8 +15,8 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from validate_registry import ROOT, load_strict_yaml  # noqa: E402
 
-MANIFEST = ROOT / "publication" / "biopeia-master.yaml"
-TECHNICAL_REFERENCE_MANIFEST = ROOT / "publication" / "biopeia-technical-reference.yaml"
+MANIFEST = ROOT / "publication" / "publications" / "biopeia-master.yaml"
+TECHNICAL_REFERENCE_MANIFEST = ROOT / "publication" / "publications" / "biopeia-technical-reference.yaml"
 DEFAULT_MANIFESTS = (MANIFEST, TECHNICAL_REFERENCE_MANIFEST)
 
 # Sections rendered from the registry; projection.py holds one renderer each.
@@ -114,6 +114,41 @@ def manifest_errors(manifest: dict[str, Any], docs_root: Path) -> list[str]:
     return errors
 
 
+def corpus_coverage_errors(manifests: list[dict[str, Any]], docs_root: Path = ROOT) -> list[str]:
+    """Check that across the suite of publications, all documentation is accounted for."""
+    errors: list[str] = []
+    all_chapters: set[str] = set()
+    all_excluded: set[str] = set()
+    all_generated: set[str] = set()
+
+    for m in manifests:
+        for s in sections(m):
+            all_chapters.update(s.get("chapters") or [])
+            all_generated.update(s.get("generated") or [])
+        for entry in m.get("excluded") or []:
+            if (entry or {}).get("path"):
+                all_excluded.add(entry["path"])
+
+    # Every document in explanation/ and reference/ must be published in at least one manifest
+    # or explicitly listed as excluded with a reason.
+    for root_dir in ("explanation", "reference"):
+        folder = docs_root / root_dir
+        if not folder.is_dir():
+            continue
+        for doc in sorted(folder.rglob("*.md")):
+            rel = doc.relative_to(docs_root).as_posix()
+            if doc.name != "README.md" and rel not in all_chapters and rel not in all_excluded:
+                errors.append(f"corpus document is neither published in any manifest nor excluded: {rel}")
+
+    # Every canonical generated section (contracts, catalogs, registers, decisions, designs)
+    # must be published in at least one manifest.
+    for gen in GENERATED_SECTIONS:
+        if gen not in all_generated:
+            errors.append(f"canonical generated section is not published in any manifest: {gen}")
+
+    return errors
+
+
 def load_manifest(path: Path = MANIFEST, docs_root: Path = ROOT) -> dict[str, Any]:
     """Load and validate the manifest; raise ManifestError listing every problem."""
     try:
@@ -129,14 +164,25 @@ def load_manifest(path: Path = MANIFEST, docs_root: Path = ROOT) -> dict[str, An
 if __name__ == "__main__":
     targets = [Path(p) for p in sys.argv[1:]] if len(sys.argv) > 1 else list(DEFAULT_MANIFESTS)
     failed = False
+    loaded_manifests: list[dict[str, Any]] = []
     for target in targets:
         try:
             loaded = load_manifest(target)
+            loaded_manifests.append(loaded)
         except ManifestError as exc:
             print(f"Publication manifest {target.name}: FAIL\n{exc}")
             failed = True
             continue
         count = sum(len(s.get("chapters") or []) for s in sections(loaded))
         print(f"Publication manifest {target.name}: PASS ({len(sections(loaded))} sections, {count} chapters)")
+
+    if len(loaded_manifests) > 1 or (not sys.argv[1:] and loaded_manifests):
+        coverage_errs = corpus_coverage_errors(loaded_manifests, ROOT)
+        if coverage_errs:
+            print("Publication corpus coverage: FAIL\n" + "\n".join(coverage_errs))
+            failed = True
+        else:
+            print("Publication corpus coverage: PASS (all explanation and reference documents, plus generated sections, accounted for)")
+
     if failed:
         sys.exit(1)

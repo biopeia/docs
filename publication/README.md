@@ -8,28 +8,28 @@ Three things are kept apart:
 - the **registry** (`registry/`) says where it comes from and what state it is in;
 - the **publication** (this directory) says in which order it is presented.
 
-`biopeia-master.yaml` is the composition of the main publication (Master
-Architecture). `biopeia-technical-reference.yaml` is the companion technical
-reference, focusing on cross-domain contracts, component and interface catalogs,
-evidence status, parameters, metrics, terminology and decision records. Neither
-manifest holds documentary text. They list parts and appendices; each names
-chapters, which are documents of this repository in reading order, and
-generated sections, which are rendered from the registry. A published document
-therefore never decides what the canonical documentation is: it presents
-sources that stay canonical where they are.
+`publications/biopeia-master.yaml` is the composition of the main publication
+(Master Architecture). `publications/biopeia-technical-reference.yaml` is the
+companion technical reference, focusing on cross-domain contracts, component
+and interface catalogs, evidence status, parameters, metrics, terminology and
+decision records. Neither manifest holds documentary text. They list parts and
+appendices; each names chapters, which are documents of this repository in
+reading order, and generated sections, which are rendered from the registry. A
+published document therefore never decides what the canonical documentation is:
+it presents sources that stay canonical where they are.
 
 For the Master Architecture, the order starts with the system view (the
 domains, candidate research hypotheses, a derived capability-maturity summary,
 and how one step crosses them today), then goes down into the domains:
 Organism, Embodiment, Environment, World, Modality and Observation, Lab. The
-contracts that bind one domain to another come last, followed by the
-appendices. `registry/findings.yaml` is audit material and is not published.
+contracts that bind one domain to another come last.
+`registry/findings.yaml` is audit material and is not published.
 
 ## Three layers
 
 1. **Projection** (`tools/publication/projection.py`): what is published.
    It knows nothing about appearance.
-2. **Style** (`style.yaml`): typefaces, sizes, colours, the logo and the
+2. **Style** (`style/style.yaml`): typefaces, sizes, colours, the logo and the
    layout limits. Data only. Changing it changes how a publication looks and
    nothing about what it says.
 3. **Rendering** (`tools/publication/docx.py`, `pdf.py`): lays the projection
@@ -46,7 +46,7 @@ up set in any other typeface, if a page is empty, or if too many are sparse.
 `assets/biopeia-logo.png` is the Biopeia mark, accepted by the Architecture
 Owner on 2026-10-10, and it is the publisher's only source for it. A build
 never fetches the mark from anywhere, and the build manifest records the
-hash of the file and of `style.yaml`, so a past build keeps its identity
+hash of the file and of `style/style.yaml`, so a past build keeps its identity
 whatever changes elsewhere. The accent colour is the mark's dark blue.
 
 ## Links

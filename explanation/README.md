@@ -12,7 +12,7 @@ How Biopeia works, traced to code, tests and decisions. Each directory has its o
 
 ## Reading order
 
-The order of the main publication, set in [publication/biopeia-master.yaml](../publication/biopeia-master.yaml).
+The order of the main publication, set in [publication/publications/biopeia-master.yaml](../publication/publications/biopeia-master.yaml).
 
 1. Biopeia: 3 documents ([biopeia](biopeia/README.md))
 2. Organism: 22 documents ([organism](organism/README.md))

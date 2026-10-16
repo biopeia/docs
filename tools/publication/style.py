@@ -15,7 +15,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from validate_registry import ROOT, load_strict_yaml  # noqa: E402
 
-STYLE = ROOT / "publication" / "style.yaml"
+STYLE = ROOT / "publication" / "style" / "style.yaml"
 REQUIRED = {
     "page": ("width_mm", "height_mm", "margin_mm"),
     "fonts": ("text", "code"),

@@ -118,29 +118,9 @@ parts:
       - explanation/cross-domain/observation-presentation-boundary.md
     generated: [contracts]
 
-appendices:
-  - id: components
-    title: Canonical component catalog
-    generated: [components]
-  - id: contracts
-    title: Cross-domain contract catalog
-    generated: [contract-catalog]
-  - id: glossary
-    title: Glossary
-    generated: [glossary]
-  - id: notation-parameters-metrics
-    title: Notation, parameters and metrics
-    generated: [notation, parameters, metrics]
-  - id: decisions
-    title: Decision record index
-    generated: [decisions]
-  - id: designs
-    title: Design index
-    generated: [designs]
-  - id: evidence
-    title: Evidence semantics
-    chapters:
-      - reference/evidence-status.md
+# Technical appendices, catalogs and records are published in the companion volume
+# publication/biopeia-technical-reference.yaml (components, contracts, parameters,
+# metrics, glossary, decisions, designs, units and evidence).
 
 # Documents under explanation/ that this publication deliberately leaves out,
 # each with its reason. A document that is neither a chapter nor listed here

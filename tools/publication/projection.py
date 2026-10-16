@@ -152,7 +152,7 @@ def gen_reader_guide(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, li
         "source repository. Anything else is a working edition, says so on every page,",
         "and must not be cited as a state of Biopeia.",
     ]
-    return "Reader guide", "publication/biopeia-master.yaml", body
+    return "Reader guide", "publication/publications/biopeia-master.yaml", body
 
 
 def gen_authority_map(reg: dict[str, Any], docs_root: Path) -> tuple[str, str, list[str]]:

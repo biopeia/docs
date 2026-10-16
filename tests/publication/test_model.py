@@ -13,6 +13,7 @@ from model import (  # noqa: E402
     MANIFEST,
     TECHNICAL_REFERENCE_MANIFEST,
     ManifestError,
+    corpus_coverage_errors,
     load_manifest,
     manifest_errors,
 )
@@ -48,6 +49,20 @@ def test_technical_reference_manifest_is_publishable():
 def test_all_default_manifests_are_publishable():
     for m in DEFAULT_MANIFESTS:
         assert manifest_errors(load_manifest(m), ROOT) == []
+
+
+def test_default_manifests_cover_entire_corpus():
+    manifests = [load_manifest(m) for m in DEFAULT_MANIFESTS]
+    assert corpus_coverage_errors(manifests, ROOT) == []
+
+
+def test_corpus_coverage_fails_closed_if_document_or_section_missing(tmp_path):
+    (tmp_path / "reference").mkdir(parents=True)
+    (tmp_path / "reference" / "extra.md").write_text("# Extra\n", encoding="utf-8")
+    manifests = [{"publication": {"id": "m"}, "parts": [{"id": "p", "title": "P", "chapters": []}]}]
+    errors = corpus_coverage_errors(manifests, tmp_path)
+    assert any("reference/extra.md" in err for err in errors)
+    assert any("canonical generated section is not published" in err for err in errors)
 
 
 def test_valid_manifest_loads_and_readme_is_not_a_chapter(tmp_path):
