@@ -46,6 +46,7 @@ Step execution and publication are serialized by
 (`world:src/world/durable_runtime.py:964`).
 
 The guard enforces strict single-tick latching:
+
 - If concurrent threads attempt a tick or publication, `TickInProgressError` is
   raised.
 - Reentrancy within the same thread is permitted for receipt lookup, but a
@@ -100,6 +101,7 @@ paired with a `LocalObservationReadBridge`
 (`observation:src/observation/http_bridge.py`).
 
 Following each durable World commit:
+
 - World delivers the verified `embodiment.body_pose` and
   `environment.finite_scalar_field` claims to the plane.
 - The read bridge exposes `GET /v1/current` on a loopback port

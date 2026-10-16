@@ -25,6 +25,7 @@ caller.
 
 In historical test fixtures, those ports were supplied by integration test functions.
 At current main (`e2be5870`), World provides production implementations:
+
 - [The sensorimotor causal cycle](causal-cycle.md) (`world:src/world/causal_cycle.py::run_scalar_sensorimotor_cycle_and_publish`)
   wires sensory perception, Organism cognitive proposal, articulated MuJoCo physics
   advancement (`world:src/world/adapters/articulated_mujoco.py`), atomic owner checkpoint

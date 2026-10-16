@@ -169,6 +169,35 @@ def render(docs_root: Path = ROOT) -> dict[str, str]:
                 *[f"- {link(f'reference/{name}', title_of(f'reference/{name}', docs_root))}" for name in files], ""]
 
     page("reference/README.md", "Reference", [reference])
+
+    # --- how-to/ -----------------------------------------------------------------
+    if (docs_root / "how-to").is_dir():
+        def how_to(link):
+            files = sorted(p.relative_to(docs_root / "how-to").as_posix()
+                           for p in (docs_root / "how-to").rglob("*.md") if p.name != "README.md")
+            return [
+                "## Purpose", "",
+                "Task-oriented, step-by-step procedures for operators, developers, and researchers.", "",
+                "## Guides", "",
+                *[f"- {link(f'how-to/{name}', title_of(f'how-to/{name}', docs_root))}" for name in files], "",
+            ]
+
+        page("how-to/README.md", "How-to Guides", [how_to])
+
+    # --- tutorials/ --------------------------------------------------------------
+    if (docs_root / "tutorials").is_dir():
+        def tutorials(link):
+            files = sorted(p.relative_to(docs_root / "tutorials").as_posix()
+                           for p in (docs_root / "tutorials").rglob("*.md") if p.name != "README.md")
+            return [
+                "## Purpose", "",
+                "Guided, executable learning experiences starting from verified baselines.", "",
+                "## Tutorials", "",
+                *[f"- {link(f'tutorials/{name}', title_of(f'tutorials/{name}', docs_root))}" for name in files], "",
+            ]
+
+        page("tutorials/README.md", "Tutorials", [tutorials])
+
     return pages
 
 
