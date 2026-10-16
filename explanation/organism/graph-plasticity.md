@@ -71,7 +71,9 @@ function reads the field.
 
 **The update.** `apply_oja_update` changes an edge's weight by
 
-    learning_rate × modulation × (source × target − target² × weight)
+```text
+learning_rate × modulation × (source × target − target² × weight)
+```
 
 and clips the result to [-2, 2]. This is Oja's form of a Hebbian rule: the
 weight moves with the product of the two values and is pulled back in
@@ -145,6 +147,24 @@ the weight ends at 7.7e-5. Result:
 | Mean loss, first 20 | 0.3451 |
 | Mean loss, last 20 | 0.3201 |
 | Loss of a predictor that always outputs 0 for this signal | 0.5 × 0.8² = 0.32 |
+
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+xychart-beta
+    title "Model loss against the zero-output baseline (alternating signal)"
+    x-axis ["t=2", "t=10", "t=20", "t=50", "t=100", "t=150", "t=200"]
+    y-axis "Huber loss" 0.30 --> 0.38
+    line [0.3528, 0.3460, 0.3387, 0.3270, 0.3214, 0.3203, 0.3201]
+    line [0.3200, 0.3200, 0.3200, 0.3200, 0.3200, 0.3200, 0.3200]
+```
+
+The upper line is the model's loss on the causally subsequent sample at the
+ticks shown, and the flat line the zero-output baseline (0.32). Values come from
+re-running the loop of
+`test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline` on
+2026-10-16 at `organism` `0ce7a031b6e9ee79ecbf7905c69452a5567f2dd2`. The
+persistence baseline, 1.1, is off the scale. The model approaches the
+zero-output baseline from above and never goes below it.
 
 The loss falls because the weight shrinks to zero. With a small positive
 weight the predictor's output is a small copy of the current signal, which is
