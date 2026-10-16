@@ -482,7 +482,6 @@ designs:
         observation: 29a6ba7a8cdd9772eec0e40087f748a7b7df2444
       tests:
         - "observation:tests/test_archive_reader.py"
-        - "observation:full-test-suite"
       observed: >
         Observation PRs #61 and #62 are merged on the evaluated Observation
         main revision; PR #63 adds an integration test for the existing
