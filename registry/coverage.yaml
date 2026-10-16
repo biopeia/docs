@@ -422,7 +422,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   mechanism.embodiment-actuation-projection:
@@ -437,8 +437,10 @@ units:
     implementation:
       - embodiment:src/embodiment/physics3d/actuator_binding.py
       - embodiment:src/embodiment/physics3d/actuation_projection.py
+      - embodiment:src/embodiment/physics3d/joint_torque.py
     tests:
       - embodiment:tests/test_actuation_projection.py
+      - embodiment:tests/test_joint_torque.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -446,7 +448,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
 
   component.embodiment-somatic-state:
     kind: component
@@ -476,8 +478,8 @@ units:
       status: RECORDED
       basis:
         lab: 800488dfccadf2a62e193405de141da0195f53f4
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 2f4751f53678f2210930770605844cac766b1da4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
@@ -979,10 +981,12 @@ units:
       - embodiment:src/embodiment/physics3d/articulated_spec.py
       - embodiment:src/embodiment/physics3d/mechanics.py
       - embodiment:src/embodiment/physics3d/articulated_state.py
+      - embodiment:src/embodiment/physics3d/spatial_render.py
     tests:
       - embodiment:tests/test_articulated_spec.py
       - embodiment:tests/test_physics3d_mechanics.py
       - embodiment:tests/test_articulated_state.py
+      - embodiment:tests/test_spatial_render.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
@@ -997,7 +1001,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   mechanism.embodiment-physical-projection:
@@ -1034,7 +1038,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   component.environment-dynamic-state:
@@ -1341,7 +1345,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
 
   component.organism-actuator-evidence:
     kind: component

@@ -1,7 +1,7 @@
 # The articulated body: what it is made of and where its joints are
 
-Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
-2026-10-14); first written against `97cb09a8`. Everything below describes the
+Reviewed against `embodiment` at commit `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` (main on
+2026-10-16); first written against `97cb09a8`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
 
@@ -297,6 +297,30 @@ Four things follow, read from the code and confirmed by a run:
   durable storage/recovery. The World integration fixture still supplies
   the adapter and does not make this a production-integrated checkpoint.
 
+## Bounded static render morphology projection
+
+The repository exposes a bounded, read-only render morphology projection
+(`embodiment:src/embodiment/physics3d/spatial_render.py::RenderMorphologyProjection`).
+It projects explicitly authored box geometry and revolute joint topology from
+the active morphology into detached JSON-compatible data:
+
+- up to 128 links and 128 segments;
+- up to 127 revolute joints;
+- non-empty, trimmed string identities;
+- coordinate system strictly `right_handed_z_up` and length unit `m`;
+- maximum descriptor payload of 256 KiB;
+- deterministic RFC 8785 canonical JSON bytes with a SHA-256 digest
+  (`render_morphology_sha256`).
+
+The module also provides validation of already-computed dynamic link pose
+candidates (`validate_dynamic_pose_candidate` and
+`validate_dynamic_pose_candidate_binding`). It never calculates kinematics or
+proves a World commit: dynamic pose candidates come from a physical step, and
+World remains responsible for binding a published sample to a confirmed causal
+cut (candidate contract in
+`docs/design/spatial-render-projection-contract-candidate-v1.md`).
+Supported by unit tests in `embodiment:tests/test_spatial_render.py`.
+
 ## Time
 
 The only clock is the World causal tick held by the root, which adoption
@@ -365,6 +389,7 @@ This is a comparison of content, not a ruling on conformance.
 | Claim | Support |
 |---|---|
 | Determinism of the description, the two topology checks, channel names, immutability of the value types | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_physics3d_mechanics.py`, run at that revision (all pass) |
+| Bounded static render morphology projection and dynamic link pose candidate validation | Code in `embodiment:src/embodiment/physics3d/spatial_render.py` and tests in `embodiment:tests/test_spatial_render.py` |
 | Rules of construction of the state, adoption by identifier, refusals, stale morphology, checkpoint determinism and strictness, descriptor binding, owner validation and restoration verification | Code and tests in `embodiment:tests/test_articulated_state.py` |
 | Carrier links, dropped segments, narrowed limits, precision, malformed text | Code and tests in `embodiment:tests/test_articulated_spec.py` and `embodiment:tests/test_articulated_state.py` |
 | Hand-made descriptor accepted; digest blind to six fields; checkpoint restored under a descriptor from a different specification; equal states with different bytes; limits enforced at the specification's values | Code, and the same ad hoc run |

@@ -389,7 +389,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only) |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_physical_transition.py`, `embodiment:tests/test_body_pose_sample.py` |
-| Reviewed at | embodiment@5a23e1fbeaa3, world@1f35e92611ed (RECORDED) |
+| Reviewed at | embodiment@8f9576a8cf5b, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0021 contract gap (open); F-0120 contract gap (open) |
 
 ### Actuation projection by stable effector identity
@@ -400,11 +400,11 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | embodiment; also involves organism |
 | Explained in | [explanation/embodiment/actuation-projection.md](../explanation/embodiment/actuation-projection.md) |
-| Implemented in | `embodiment:src/embodiment/physics3d/actuator_binding.py`, `embodiment:src/embodiment/physics3d/actuation_projection.py` |
+| Implemented in | `embodiment:src/embodiment/physics3d/actuator_binding.py`, `embodiment:src/embodiment/physics3d/actuation_projection.py`, `embodiment:src/embodiment/physics3d/joint_torque.py` |
 | Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `embodiment:tests/test_actuation_projection.py` |
-| Reviewed at | embodiment@5a23e1fbeaa3 (RECORDED) |
+| Tests | `embodiment:tests/test_actuation_projection.py`, `embodiment:tests/test_joint_torque.py` |
+| Reviewed at | embodiment@8f9576a8cf5b (RECORDED) |
 | Known findings | F-0022 implementation finding (open); F-0023 contract gap (open) |
 
 ### Somatic state, metabolic ledger and body checkpoint
@@ -423,7 +423,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Operator material transfer (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py`, `embodiment:tests/test_checkpoint.py` |
-| Reviewed at | lab@800488dfccad, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
+| Reviewed at | lab@800488dfccad, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0021 contract gap (open); F-0024 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/26)); F-0025 recovery durability gap ([issue](https://github.com/biopeia/embodiment/issues/27)); F-0026 documentation inconsistency (open); F-0027 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/20)) |
 
 ### Articulated body specification, active morphology and joint state
@@ -437,13 +437,13 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | execute a solver or let a solver change the state; coordinate or commit a World causal cut; treat the position of a joint in a collection as its identity; authenticate the origin of a morphology descriptor |
 | Owned by | embodiment; also involves world |
 | Explained in | [explanation/embodiment/articulated-body.md](../explanation/embodiment/articulated-body.md) |
-| Implemented in | `embodiment:src/embodiment/physics3d/articulated_spec.py`, `embodiment:src/embodiment/physics3d/mechanics.py`, `embodiment:src/embodiment/physics3d/articulated_state.py` |
+| Implemented in | `embodiment:src/embodiment/physics3d/articulated_spec.py`, `embodiment:src/embodiment/physics3d/mechanics.py`, `embodiment:src/embodiment/physics3d/articulated_state.py`, `embodiment:src/embodiment/physics3d/spatial_render.py` |
 | State | owner embodiment, family embodiment_local; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: reset, reproduction: not_inherited |
 | Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only) |
 | Depends on | `component.embodiment-physical-state` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `embodiment:tests/test_articulated_spec.py`, `embodiment:tests/test_physics3d_mechanics.py`, `embodiment:tests/test_articulated_state.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
-| Reviewed at | embodiment@5a23e1fbeaa3, world@1f35e92611ed (RECORDED) |
+| Tests | `embodiment:tests/test_articulated_spec.py`, `embodiment:tests/test_physics3d_mechanics.py`, `embodiment:tests/test_articulated_state.py`, `embodiment:tests/test_spatial_render.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
+| Reviewed at | embodiment@8f9576a8cf5b, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0116 recovery durability gap ([issue](https://github.com/biopeia/embodiment/issues/33)); F-0117 implementation finding (open); F-0118 implementation finding (open); F-0121 implementation finding (open) |
 
 ### Physical projection for a solver, body pose sample, declared conventions and physical duration
@@ -459,7 +459,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.embodiment-articulated-body`, `component.embodiment-physical-state` |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `embodiment:tests/test_physical_projection.py`, `embodiment:tests/test_body_pose_sample.py`, `embodiment:tests/test_physics3d_observation_contract.py`, `embodiment:tests/test_duration.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py` |
-| Reviewed at | embodiment@5a23e1fbeaa3, world@1f35e92611ed (RECORDED) |
+| Reviewed at | embodiment@8f9576a8cf5b, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0119 contract gap (open); F-0120 contract gap (open) |
 
 ### Actuator binding
@@ -478,7 +478,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `embodiment:tests/test_actuation_projection.py` |
-| Reviewed at | embodiment@5a23e1fbeaa3 (RECORDED) |
+| Reviewed at | embodiment@8f9576a8cf5b (RECORDED) |
 | Known findings | F-0128 contract gap (open) |
 
 ## Organism

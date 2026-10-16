@@ -1,7 +1,7 @@
 # Somatic state: what a body holds
 
-Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
-2026-10-14); first written against `6114f3d9`. Everything below describes the
+Reviewed against `embodiment` at commit `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` (main on
+2026-10-16); first written against `6114f3d9`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
 The ad hoc runs were made at an earlier revision,
@@ -153,36 +153,35 @@ from the code and were confirmed by the same run.
 record states that the extraction "does not reinterpret it as TARGET
 `ORGANISM_DEATH`". Nothing here is a statement about an Organism dying.
 
-### Three ways to die, at different moments
+### Three ways to die, with unified timing
 
-Read from the code and confirmed by a run.
-
-- Spending energy directly on the record, through its own method, marks the
-  body dead the moment the reserve reaches zero
+- Spending energy directly on the record marks the body dead the moment the
+  reserve reaches zero
   (`test_depleted_body_state_uses_current_code_dead_vital_label`).
 - Structural integrity reaching zero marks it dead at once.
-- Spending through the ledger does not. A charge that emptied the reserve
-  left the body with zero energy, pressure `unrecoverable` and vital state
-  `active`. It became dead only when a controller was next advanced.
+- Spending through the metabolic ledger routes through `consume_energy`: a
+  charge that exhausts the reserve marks the body dead immediately at its
+  Body-local age
+  (`test_metabolic_depletion_marks_body_dead_at_body_age_and_checkpoints_it`).
+  A zero-charge is not a depletion transition, but any positive charge when
+  depleted transitions to dead
+  (`test_zero_charge_is_not_a_depletion_transition_but_positive_charge_at_zero_is`).
 
-So the same depletion is or is not death, for a while, depending on which
-path spent the energy.
+Death timing across direct and ledger expenditure paths is unified at the
+body's internal age.
 
 ## Clocks
 
-Four counters appear, and nothing in this repository ties them together.
+Three counters appear:
 
-- The body's **age** advances by one when its owner calls the method for
-  it. Nothing here calls it.
+- The body's **age** advances by one when its owner calls the method for it.
 - The **ledger's tick** advances by one each time the ledger is advanced.
-- The controller is advanced with a **tick supplied by the caller**, which
-  becomes the tick of death if the body dies in that call.
 - The **World causal tick** does not appear in somatic state at all.
 
-The tick of death is documented as a "Body-local age tick". When death comes
-from the record's own methods it is the body's age. When it comes from the
-controller it is whatever the caller passed: a body of age 0 was given tick
-of death 3 (ad hoc run). No physical duration enters any of these
+The controller is advanced strictly with the body's internal age; it no longer
+accepts an external tick parameter
+(`test_controller_uses_body_age_not_an_external_tick`). The tick of death is
+consistently the body's age. No physical duration enters any of these
 operations.
 
 ## Receiving material
@@ -321,7 +320,7 @@ The Organism repository does not import this package.
 |---|---|
 | Record round trip, charge debiting energy once, depletion marking death, transfers, checkpoint strictness and owner validation | Code and tests in `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py` and `embodiment:tests/test_checkpoint.py`, run at that revision (all pass) |
 | Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states; dead is final | Code, and one ad hoc run of the modules at the earlier revision named above; no test is kept for these |
-| A ledger charge empties the reserve without death; tick of death taken from the caller | Code, and the same ad hoc run |
+| Unified reserve depletion death timing through direct and ledger consumption | Code in `embodiment:src/embodiment/metabolism.py` and `embodiment:src/embodiment/physiology.py`; tests in `embodiment:tests/test_somatic_state.py` |
 | Which values are never changed, which configuration values are never read, who calls what | A search of the source at that revision, and of the other repositories' main branches |
 | What a body owns, what reaches the Organism, what ends with a body | Accepted decisions ADR-0094 and [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md); statements of intent, not test results |
 
@@ -348,7 +347,6 @@ aggregate directly left it at 0.99 while the mean of the structures was
 - Whether the configuration, now carried by every checkpoint, may change
   during the life of a body. Restoring refuses a different one; nothing
   else in the code changes or fixes it.
-- Whether depletion through the ledger should be death at once, as it is
-  through the record.
 - Whether the per-kind accounts are somatic state. ADR-0094 leaves it
-  undecided.
+  undecided. Depletion timing through the ledger was unified with direct
+  consumption in commit 8f9576a.
