@@ -1,7 +1,7 @@
 # The observation plane
 
-Reviewed against `observation` at commit `2f4751f53678f2210930770605844cac766b1da4` (main on
-2026-10-15); first written against `397c0b4`. Everything below describes the
+Reviewed against `observation` at commit `572c86f8fce66a73cc3899a4a929448416f1e6bf` (main on
+2026-10-16); first written against `397c0b4`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.
@@ -27,14 +27,17 @@ never blocks a producer and never silently pretends to completeness. When it
 loses something for a consumer, it sends a rebase request, and what a consumer must
 not do is read the loss as a fact about the source.
 
-It lives in memory only. The code says: "This plane is not durable and cannot
-resume across process restarts."
+The plane itself lives in memory only. The code says: "This plane is not durable and cannot
+resume across process restarts." Where durable retention is required, callers opt into
+local capture via `LocalObservationArchiveCapture` which persists accepted messages into a
+local SQLite archive (`observation:src/observation/archive.py::SQLiteObservationArchive`).
 
 In production sensorimotor execution, World constructs an in-memory
 `ObservationPlane` during bootstrap (`world:src/world/m1_profile.py`) and
 publishes post-commit owner observation projections into it. Consumers read
 the current plane snapshot through the bounded local read bridge
-(`observation:src/observation/http_bridge.py::LocalObservationReadBridge`).
+(`observation:src/observation/http_bridge.py::LocalObservationReadBridge`), or
+query historical captures through the separate-process `ArchiveReader`.
 
 ## Publishing
 
@@ -325,7 +328,7 @@ runtime state, the package provides a loopback HTTP bridge
 ### Approved family validation
 
 The bridge does not expose raw internal objects. It filters and validates
-payloads against an explicit allowlist of approved M1 families:
+payloads against an explicit allowlist of approved families:
 
 1. `embodiment.body_pose` (contract `embodiment.body_pose`, revision `v1`):
    validates 3D position vector in meters, XYZW unit quaternion orientation
@@ -336,6 +339,17 @@ payloads against an explicit allowlist of approved M1 families:
    validates dimensionless scalar value in range `[0.0, 1.0]`, sample point
    in meters, source and target ticks under World authority, and parent
    lineage hash `owner_checkpoint_sha256`.
+3. `environment.render_scene` (contract `biopeia.environment.render-scene`, revision `1`):
+   validates static environment render geometry envelope, binding `environment_id`,
+   `environment_revision`, and `render_geometry_sha256` lineage without asserting cross-domain meaning.
+4. `embodiment.render_morphology` (contract `embodiment.render_morphology`, revision `v1`):
+   validates static morphology render geometry envelope, binding `body_id`,
+   `morphology_revision`, and `render_geometry_sha256` lineage.
+5. `embodiment.render_link_pose` (contract `embodiment.render_link_pose`, revision `v1`):
+   carries Embodiment-owned candidate poses (`embodiment.render_link_pose_candidate/v1`)
+   and World committed-cut association. Bounded to 384 KiB and 128 link poses.
+   Validates canonical RFC 8785 candidate digest against World committed-cut reference,
+   conforming quaternion bounds, and exact body identity match.
 
 Unapproved families are skipped silently. Any approved family with invalid
 payload or corrupted envelope fails closed, emitting `503 current_view_unavailable`.
@@ -355,14 +369,42 @@ payload or corrupted envelope fails closed, emitting `503 current_view_unavailab
 - **Non-mutating read:** Reading `plane.current_messages()` does not advance the
   plane's sequence counter or modify retained state (`observation:tests/test_http_bridge.py`).
 
+## Durable local archive and separate-process reader
+
+Observation provides an append-only, durable local archive (`SQLiteObservationArchive`)
+and an opt-in background capture worker (`LocalObservationArchiveCapture`):
+
+1. **Local SQLite archive (`SQLiteObservationArchive`):**
+   - Configured with a logical payload-byte ceiling (`max_payload_bytes`), bounding encoded record
+     payloads (not SQLite B-tree/page overhead).
+   - Enforces SQLite rollback journal mode `DELETE` with `PRAGMA synchronous=EXTRA` (directory sync
+     after deleting the rollback journal for power-loss durability) and `PRAGMA foreign_keys=ON`.
+   - File mode is constrained to `0o600`; symlink database paths are refused.
+   - Retains every authorized observation; identical repeated claims receive distinct `receipt_sequence` numbers.
+   - Fails closed on capacity (`ArchiveCapacityReached`) or corruption (`ArchiveCorrupt`). Existing records are never overwritten or expired.
+2. **Opt-in background capture (`LocalObservationArchiveCapture`):**
+   - Runs on a private worker thread (`observation-archive-capture`) and captures plane messages
+     starting strictly from the plane's watermark sequence (`latest_sequence`).
+   - Does not bootstrap the current-view cache as if it were history.
+   - Any queue overflow or delivery loss is surfaced explicitly in status (`gap_sequence`, `gap_reason`)
+     and recorded as `SourceDeliveryGap`; gaps are never masked as complete history.
+3. **Read-only query reader (`ArchiveReader`):**
+   - Opens the archive file via SQLite URI in read-only mode (`?mode=ro`, `PRAGMA query_only=ON`).
+   - Refuses symlinks and non-regular files.
+   - Verifies archive schema version (`2` or `3`), schema columns, content SHA256 digest, and payload byte size on every record read. Fails with `ArchiveCorrupt` on any digest mismatch or indexed column drift.
+   - Paginates via `query_page(*, filters=None, after_receipt_sequence=0, limit=100)`, supporting exact metadata filters (`owner`, `family`, `subject`, `revision`, `domain_time`).
+   - Exposes `capture_catalog()` and `capture_coverage(capture_id)`.
+
 ## What supports this description
 
 | Claim | Support |
 |---|---|
-| Bounded current view and live delivery; separation of entries by contract, revision, identity scope and lifetime, and epistemic kind; eviction; rebase on expired replay, on a bootstrap larger than the queue and on a slow consumer; validation of watermarks | Code and tests in `observation:tests/test_plane.py` (16 test cases, passing in an extraction of that revision) |
+| Bounded current view and live delivery; separation of entries by contract, revision, identity scope and lifetime, and epistemic kind; eviction; rebase on expired replay, on a bootstrap larger than the queue and on a slow consumer; validation of watermarks | Code and tests in `observation:tests/test_plane.py` (passing at reviewed revision) |
 | Detached publication/current/replay/live snapshots; rejection of unsupported custom and recursive values before sequence changes; semantic-key behavior; bounded current/replay and explicit rebase cases | Code and tests in `observation:tests/test_plane.py` at the reviewed revision |
-| No use of the plane outside its tests; no adapter | Text search of the main branches of the other repositories on the day of review |
-| No persistence; standard-library imports only | Code reading |
+| Local read bridge endpoint validation, approved families allowlist, static and candidate render contracts, origin checks, 1 MB limit | Code and tests in `observation:src/observation/http_bridge.py` and `tests/test_http_bridge.py` |
+| Durable SQLite archive, append-only records, DELETE journal mode with synchronous=EXTRA, payload ceiling, fail-closed capacity/corruption | Code and tests in `observation:src/observation/archive.py` and `tests/test_archive.py` |
+| Opt-in background capture from watermark, private thread, queue overflow explicit gap reporting | Code and tests in `observation:src/observation/capture.py` and `tests/test_capture.py` |
+| Read-only archive query pagination, exact metadata filtering, integrity verification, capture catalog and coverage | Code and tests in `observation:src/observation/archive.py` and `tests/test_archive_reader.py` |
 | Passivity, ownership of the plane, replay not being evidence, delivery guarantees as intended | ADR-0078, ADR-0100, ADR-0101 and the two designs: intent, not results |
 
 No test examined uses more than one thread. Nothing

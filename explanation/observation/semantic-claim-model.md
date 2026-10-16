@@ -1,7 +1,7 @@
 # The semantic claim model
 
-Reviewed against `observation` at commit `e37f82dc0282074874ef68911eda69c3661bf9a8` (main on
-2026-10-14); first written against `397c0b4`. Everything below describes the
+Reviewed against `observation` at commit `572c86f8fce66a73cc3899a4a929448416f1e6bf` (main on
+2026-10-16); first written against `397c0b4`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run of the module, or an
 accepted decision. A decision is intent, not a result.

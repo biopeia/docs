@@ -162,7 +162,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/unit/test_physical_step.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, modality@62af4aba0714, observation@2f4751f53678 (RECORDED) |
+| Reviewed at | world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, modality@62af4aba0714, observation@572c86f8fce6 (RECORDED) |
 | Known findings | F-0002 implementation finding ([issue](https://github.com/biopeia/world/issues/29)); F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0160 implementation finding (open); F-0164 evidence gap (accepted) |
 
 ### MuJoCo step executor
@@ -880,7 +880,7 @@ restates it so that the answers about one unit can be read in one place.
 | Implemented in | `modality:src/modality/scalar_field.py` |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | modality@62af4aba0714, world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
+| Reviewed at | modality@62af4aba0714, world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, observation@572c86f8fce6, lab@800488dfccad (RECORDED) |
 | Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation
@@ -896,12 +896,12 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | be the authority for any claim it describes; define a semantic family, a contract, units, a wire format or a transport; be imported by the source packages of the authorities |
 | Owned by | observation |
 | Explained in | [explanation/observation/semantic-claim-model.md](../explanation/observation/semantic-claim-model.md) |
-| Implemented in | `observation:src/observation/semantic.py` |
+| Implemented in | `observation:src/observation/semantic.py`, `observation:src/observation/spatial_contracts.py`, `observation:src/observation/embodiment.py`, `observation:src/observation/environment.py` |
 | State | owner implementation-local, family ephemeral |
 | Cross-domain contracts | Observation of a committed cut (structural); Operator material transfer observation publication (structural) |
 | Governed by | [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/design/observability/observation-semantic-model-v1.md](../technical/design/observability/observation-semantic-model-v1.md), [technical/design/observation/observation-architecture-biopeia-v1.md](../technical/design/observation/observation-architecture-biopeia-v1.md) |
-| Tests | `observation:tests/test_semantic_model.py` |
-| Reviewed at | observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
+| Tests | `observation:tests/test_semantic_model.py`, `observation:tests/test_embodiment_observation.py`, `observation:tests/test_environment_observation.py`, `observation:tests/test_committed_owner_state_adapters.py` |
+| Reviewed at | observation@572c86f8fce6, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0041 implementation finding ([issue](https://github.com/biopeia/observation/issues/14)); F-0044 implementation finding (accepted); F-0046 contract gap (open) |
 
 ### Observation plane
@@ -915,13 +915,13 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | alter, validate or interpret an observation, or decide what it means; present the delivery sequence as domain or causal time; call back into a producer or carry a command; claim durability, resumption across restarts or custody of evidence |
 | Owned by | observation |
 | Explained in | [explanation/observation/observation-plane.md](../explanation/observation/observation-plane.md) |
-| Implemented in | `observation:src/observation/plane.py` |
+| Implemented in | `observation:src/observation/plane.py`, `observation:src/observation/archive.py`, `observation:src/observation/capture.py` |
 | State | owner implementation-local, family ephemeral |
 | Cross-domain contracts | Observation of a committed cut (structural) |
 | Depends on | `component.observation-semantic-claim-model` |
 | Governed by | [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0101-operator-control.md](../technical/adr/ADR-0101-operator-control.md), [technical/design/observation/observation-architecture-biopeia-v1.md](../technical/design/observation/observation-architecture-biopeia-v1.md), [technical/design/observability/observation-semantic-model-v1.md](../technical/design/observability/observation-semantic-model-v1.md) |
-| Tests | `observation:tests/test_plane.py` |
-| Reviewed at | observation@2f4751f53678 (RECORDED) |
+| Tests | `observation:tests/test_plane.py`, `observation:tests/test_archive.py`, `observation:tests/test_archive_reader.py`, `observation:tests/test_capture.py` |
+| Reviewed at | observation@572c86f8fce6 (RECORDED) |
 | Known findings | F-0040 implementation finding ([issue](https://github.com/biopeia/observation/issues/13)); F-0041 implementation finding ([issue](https://github.com/biopeia/observation/issues/14)); F-0043 evidence gap ([issue](https://github.com/biopeia/observation/issues/16)); F-0044 implementation finding (accepted); F-0045 implementation finding (open); F-0047 contract gap (accepted); F-0049 performance concern (open) |
 
 ### Inherited projection
@@ -940,7 +940,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Telemetry through the inherited projection (shared_type) |
 | Governed by | [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md](../technical/adr/ADR-0085-project-identity-is-biopeia-and-the-individual-is-organism.md), [technical/design/observation/observation-architecture-biopeia-v1.md](../technical/design/observation/observation-architecture-biopeia-v1.md) |
 | Tests | `observation:tests/test_projection.py` |
-| Reviewed at | observation@2f4751f53678, world@1f35e92611ed, lab@800488dfccad (RECORDED) |
+| Reviewed at | observation@572c86f8fce6, world@1f35e92611ed, lab@800488dfccad (RECORDED) |
 | Known findings | F-0042 contract gap ([issue](https://github.com/biopeia/observation/issues/15)); F-0048 implementation finding (open) |
 
 ### Observation plane presentation boundary
@@ -954,12 +954,12 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | allow presentation components to issue simulation commands or mutate simulation state; weaken CSP directives (allowing only same-origin connect-src 'self' via local proxy) or expose live execution credentials |
 | Owned by | observation |
 | Explained in | [explanation/cross-domain/observation-presentation-boundary.md](../explanation/cross-domain/observation-presentation-boundary.md) |
-| Implemented in | `observation:src/observation/http_bridge.py`, `frontend:src/observation-client.js`, `frontend:src/snapshot-refresh.js`, `frontend:scripts/frontend-server.js`, `frontend:src/model.js`, `frontend:src/views.js` |
+| Implemented in | `observation:src/observation/http_bridge.py`, `frontend:src/observation-client.js`, `frontend:src/snapshot-refresh.js`, `frontend:scripts/frontend-server.js`, `frontend:src/model.js`, `frontend:src/views.js`, `frontend:src/spatial-renderer.js`, `frontend:src/spatial-render-controller.js`, `frontend:src/observation-store.js`, `frontend:src/presentation-scheduler.js` |
 | State | owner implementation-local, family ephemeral |
 | Cross-domain contracts | Loopback observation read bridge for local presentation (structural) |
 | Governed by | [technical/adr/ADR-0078-observation-is-causally-passive.md](../technical/adr/ADR-0078-observation-is-causally-passive.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md](../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md) |
-| Tests | `observation:tests/test_http_bridge.py`, `frontend:tests/observation-client.test.js`, `frontend:tests/snapshot-refresh.test.js`, `frontend:tests/frontend-server.test.js`, `frontend:tests/model.test.js`, `frontend:tests/views.test.js` |
-| Reviewed at | observation@2f4751f53678, frontend@496c05dcd062 (RECORDED) |
+| Tests | `observation:tests/test_http_bridge.py`, `frontend:tests/observation-client.test.js`, `frontend:tests/snapshot-refresh.test.js`, `frontend:tests/frontend-server.test.js`, `frontend:tests/model.test.js`, `frontend:tests/views.test.js`, `frontend:tests/spatial-renderer.test.js`, `frontend:tests/spatial-render-controller.test.js`, `frontend:tests/observation-store.test.js`, `frontend:tests/presentation-scheduler.test.js` |
+| Reviewed at | observation@572c86f8fce6, frontend@b21748d0929e (RECORDED) |
 
 ## Lab
 
