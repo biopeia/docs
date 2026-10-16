@@ -29,23 +29,66 @@ because it is the main result.
 |---|---|---|
 | Environment holds external truth | Source code | [finite resource](../environment/finite-resource.md), [static scene](../environment/static-scene.md) |
 | Environment to Organism, through transduction | A dimensionless scalar identity contract in Modality; one test fixture carries it through World to an Organism sense transition | [Modality](../modality/current-state.md), [sense-to-checkpoint transition](../organism/sense-to-checkpoint-transition.md) |
-| Organism produces a motor command | Source components construct the path; integration fixtures join them | [action path](../organism/action-path.md), [physical step](../world/physical-step.md) |
+| Organism produces a motor command | In World's production cycle, Organism's action composer proposes a bounded exploration command; the affordance-based action path is joined only in fixtures | [causal cycle](../world/causal-cycle.md), [action path](../organism/action-path.md), [physical step](../world/physical-step.md) |
 | Motor command to effectors | Source code | [actuation projection](../embodiment/actuation-projection.md) |
-| A solver computes a candidate | A World coordinator exists in source; a MuJoCo step executor exists separately, but current end-to-end solver calls remain in fixtures | [physical step](../world/physical-step.md), [MuJoCo executor](../world/mujoco-step-executor.md) |
+| A solver computes a candidate | The production cycle steps an articulated MuJoCo body through a World adapter; the separately documented MuJoCo step executor is not what it calls | [causal cycle](../world/causal-cycle.md), [physical step](../world/physical-step.md), [MuJoCo executor](../world/mujoco-step-executor.md) |
 | Embodiment adopts the candidate | Source code | [physical state](../embodiment/physical-state.md) |
 | Environment adopts its side | Source code, for an unchanged scene only | [static scene](../environment/static-scene.md) |
 | World commits the cut | Source code | [durable runtime](../world/durable-runtime.md), [manifest](../world/causal-manifest.md) |
-| Observation of the committed cut | Claim types in source; built by a test fixture; nothing published | [claim model](../observation/semantic-claim-model.md), [plane](../observation/observation-plane.md) |
+| Observation of the committed cut | After commit, the production cycle publishes verified owner observations to the observation plane | [causal cycle](../world/causal-cycle.md), [claim model](../observation/semantic-claim-model.md), [plane](../observation/observation-plane.md) |
 | Lab records evidence | Source code, for an operator's transfer only | [operator material transfer](../lab/operator-material-transfer.md) |
 
-Read down the middle column. Some joins now have tested paths: one fixture
-carries a scalar-field signal from Environment through Modality into an
-Organism cognitive transition, and other fixtures exercise the World
-physical-step coordinator. These are separate slices. No production caller
-joins sensing, Organism agency, physical action, owner adoption, durable World
-commit, and Observation publication into one complete path. In particular,
-the source MuJoCo executor is not wired as the coordinator's solver port.
-The component documents identify the boundaries and the exact fixture limits.
+Read down the middle column. World now has one production coordination path,
+[the sensorimotor causal cycle](../world/causal-cycle.md), that joins sensing
+through Modality, a bounded Organism exploration command, articulated physics,
+owner adoption, durable World commit and Observation publication, for one
+scalar field and one articulated body, under acceptance tests. It does not
+pass through Organism agency (an action chosen from an affordance), and Lab
+evidence is not joined to it. The component documents identify the
+boundaries and the exact test limits. (Summary rows updated on 2026-10-16 from
+the causal-cycle unit, reviewed at `world`
+`1f35e92611ed76f1863136916601f07fc2fd78c1`; the link-by-link sections below
+keep the revisions they state.)
+
+## The same step as it runs today
+
+The order of calls in `run_scalar_sensorimotor_cycle_and_publish` and the
+articulated adapter it calls, read from `world`
+`d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (`causal_cycle.py`,
+`organism_transition.py`, `adapters/articulated_mujoco.py`). World coordinates
+every stage; no owner calls another owner directly. Embodiment and Environment
+validate and adopt their candidates before the commit, and their accepted
+states are what is persisted; Organism adopts its candidate after the commit.
+The causal-cycle unit lists all adoption under one post-commit stage.
+
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+  autonumber
+  participant W as World (coordinator, durable runtime)
+  participant Emb as Embodiment
+  participant Env as Environment
+  participant Mod as Modality
+  participant Org as Organism
+  participant Phy as MuJoCo (via World adapter)
+  participant Obs as Observation plane
+  W->>Emb: project receptor sample point at source cut
+  W->>Env: sample scalar field at that point
+  W->>Mod: transduce sample (dimensionless identity)
+  W->>Org: advance with opaque signal, propose bounded exploration command
+  W->>Emb: compose command into joint torques (Embodiment mapping)
+  W->>Phy: step solver with torques
+  Phy-->>W: articulated candidate
+  W->>Emb: validate and adopt body candidate (pre-commit)
+  W->>Env: validate and adopt scene candidate (pre-commit)
+  W->>W: persist owner checkpoints, commit cut N+1
+  W->>Org: adopt candidate against committed cut
+  W->>Obs: publish verified owner observations
+```
+
+What the diagram does not show: failure paths (see
+[the causal cycle](../world/causal-cycle.md)), Organism agency, Lab, and any
+operator control.
 
 ## Link by link
 
