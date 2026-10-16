@@ -483,16 +483,19 @@ designs:
       tests:
         - "observation:tests/test_archive_reader.py"
       observed: >
-        PR #62's bounded local reader is present on the inspected Observation
-        main revision. The focused reader suite was previously recorded as 9
-        passing tests; it was not rerun for this documentation refresh. This
-        does not demonstrate full V2 acceptance or browser/remote history.
+        Observation PRs #61 and #62 are merged on the evaluated Observation
+        main revision. Source inspection confirms the bounded local archive,
+        capture accounting, and local read-only archive reader. The focused
+        archive reader suite passes (9 tests) at this revision. The broader
+        V2 query contracts, source/cut readiness, consumer access, and
+        operational retention/security requirements remain incomplete or
+        unresolved; this evidence does not establish V2 acceptance.
     editorial_notes: >
-      Proposed architecture; implementation is partial: Observation PR #61
-      provides bounded capture/archive behavior and PR #62 provides a local
-      read-only archive reader. This does not establish full Observation V2
-      acceptance, approve producer contracts, public API, remote service,
-      security or retention policy, or transfer scientific evidence custody
-      from Lab. ADR-0100 assessment is scoped to a passive operational archive;
-      a constitutional boundary change remains reserved to the Architecture
-      Owner. No further implementation is authorized by this design.
+      Issue #38 architecture proposal. The bounded local archive/capture and
+      read-only local reader are implemented in Observation PRs #61 and #62.
+      This is partial implementation of the broader V2 target, not V2
+      acceptance. The design approves no producer contract, public API,
+      remote service, security or retention policy, and does not transfer
+      scientific evidence custody from Lab. ADR-0100 assessment is scoped to
+      a passive operational archive; a constitutional boundary change remains
+      reserved to the Architecture Owner.
