@@ -94,7 +94,9 @@ currencies". There is one physical pool, the body's energy reserve.
   no lower than minus its capacity; the amount spent this tick rises, no
   higher than twice the capacity; and the body's energy reserve falls by
   the full amount, no lower than zero
-  (`test_body_backed_metabolic_charge_debits_physical_energy_once`).
+  (`test_body_backed_metabolic_charge_debits_physical_energy_once`). Since
+  `embodiment` `8f9576a` a positive charge that empties it is death at once
+  ([below](#one-moment-of-death-for-depletion)).
 - **Advancing** the ledger refills each account by its replenishment up to
   its capacity, charges the maintenance account, increments the ledger's
   tick, returns a snapshot and clears the amounts spent. Refilling accounts
@@ -153,37 +155,38 @@ from the code and were confirmed by the same run.
 record states that the extraction "does not reinterpret it as TARGET
 `ORGANISM_DEATH`". Nothing here is a statement about an Organism dying.
 
-### Three ways to die, at different moments
+### One moment of death for depletion
 
-Read from the code and confirmed by a run.
+> Section updated on 2026-10-16 against `embodiment`
+> `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` ("unify reserve depletion death
+> timing", closing embodiment#26); the rest of this document keeps the review
+> revision stated at its top.
 
-- Spending energy directly on the record, through its own method, marks the
-  body dead the moment the reserve reaches zero
-  (`test_depleted_body_state_uses_current_code_dead_vital_label`).
-- Structural integrity reaching zero marks it dead at once.
-- Spending through the ledger does not. A charge that emptied the reserve
-  left the body with zero energy, pressure `unrecoverable` and vital state
-  `active`. It became dead only when a controller was next advanced.
+Until that commit, emptying the reserve through the ledger left the body
+`active` until a controller was next advanced, while the same depletion
+through the record was death at once, and the controller took the tick of
+death from its caller. Now:
 
-So the same depletion is or is not death, for a while, depending on which
-path spent the energy.
+- A ledger charge of a positive amount spends through the record's own
+  method, so emptying the reserve marks the body dead at once, at its age
+  (`test_metabolic_depletion_marks_body_dead_at_body_age_and_checkpoints_it`;
+  the death and its tick survive a checkpoint round trip).
+- A charge of zero is not a depletion; a positive charge to a body already at
+  zero is (`test_zero_charge_is_not_a_depletion_transition_but_positive_charge_at_zero_is`).
+- Structural integrity reaching zero marks it dead at once, as before.
+- The controller no longer accepts a tick; a death it records is at the
+  body's age (`test_controller_uses_body_age_not_an_external_tick`).
 
 ## Clocks
 
-Four counters appear, and nothing in this repository ties them together.
+Three counters appear, and nothing in this repository ties them together.
 
 - The body's **age** advances by one when its owner calls the method for
-  it. Nothing here calls it.
+  it. Nothing here calls it. Every tick of death is now this age.
 - The **ledger's tick** advances by one each time the ledger is advanced.
-- The controller is advanced with a **tick supplied by the caller**, which
-  becomes the tick of death if the body dies in that call.
 - The **World causal tick** does not appear in somatic state at all.
 
-The tick of death is documented as a "Body-local age tick". When death comes
-from the record's own methods it is the body's age. When it comes from the
-controller it is whatever the caller passed: a body of age 0 was given tick
-of death 3 (ad hoc run). No physical duration enters any of these
-operations.
+No physical duration enters any of these operations.
 
 ## Receiving material
 
@@ -321,7 +324,7 @@ The Organism repository does not import this package.
 |---|---|
 | Record round trip, charge debiting energy once, depletion marking death, transfers, checkpoint strictness and owner validation | Code and tests in `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py` and `embodiment:tests/test_checkpoint.py`, run at that revision (all pass) |
 | Bounds not enforced on assignment; structure arithmetic; account bounds; refilling adds no energy; defaults of body and ledger; reversibility of states; dead is final | Code, and one ad hoc run of the modules at the earlier revision named above; no test is kept for these |
-| A ledger charge empties the reserve without death; tick of death taken from the caller | Code, and the same ad hoc run |
+| Ledger depletion is death at once, at the body's age; the controller takes no tick | Code and tests in `embodiment:tests/test_somatic_state.py` at `8f9576a8cf5b` (43 tests of the three registered files pass) |
 | Which values are never changed, which configuration values are never read, who calls what | A search of the source at that revision, and of the other repositories' main branches |
 | What a body owns, what reaches the Organism, what ends with a body | Accepted decisions ADR-0094 and [ADR-0095](../../technical/adr/ADR-0095-surviving-semantic-authorities.md); statements of intent, not test results |
 
@@ -348,7 +351,5 @@ aggregate directly left it at 0.99 while the mean of the structures was
 - Whether the configuration, now carried by every checkpoint, may change
   during the life of a body. Restoring refuses a different one; nothing
   else in the code changes or fixes it.
-- Whether depletion through the ledger should be death at once, as it is
-  through the record.
 - Whether the per-kind accounts are somatic state. ADR-0094 leaves it
   undecided.

@@ -31,7 +31,7 @@ owner state, or writing checkpoints
 The reason is architectural: an `InterventionRequest` carries caller-declared
 identifiers and constraints (`operator_id`, `intervention_id`, etc.); it does
 not constitute authenticated identity or verified authorization. Under
-Lab proposal #330 (`docs/design/proposals/lab-target-authority-request-boundary-v1.md`), verified
+Lab proposal #330 (`lab:docs/design/lab-target-authority-request-boundary-v1.md`), verified
 authorization remains unsupported.
 
 Integration tests executing the transfer path

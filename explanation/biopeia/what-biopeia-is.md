@@ -197,6 +197,38 @@ the durable evidence. No arrow leaves Observation towards an authority: a
 request to pause, step or inject is operator control, goes to the authority
 concerned, and World validates and commits it.
 
+```mermaid
+%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%
+flowchart LR
+  commit["World commits a cut"]
+  pub["Owners' projections published<br/>to Observation"]
+  archive["Observation archive<br/>(operational record)"]
+  present["Presentation<br/>(frontend)"]
+  labread["Lab reads publications<br/>as inputs"]
+  admit["Lab admits evidence<br/>under a protocol"]
+  custody["Lab custody of<br/>scientific evidence"]
+  commit --> pub
+  pub --> archive
+  pub --> present
+  archive --> present
+  pub --> labread
+  archive --> labread
+  labread --> admit --> custody
+```
+
+What separates a recorded observation from scientific evidence. A commit is
+not an admission of evidence
+([Lab authority boundary](https://github.com/biopeia/lab/blob/main/docs/design/lab-target-authority-request-boundary-v1.md)).
+Observation's archive keeps only publications that are already authorized,
+and reading from it is not admission
+([Observation V2 design](../../technical/design/observation/observation-v2-durable-archive-and-query.md),
+under ADR-0100). Presenting a publication does not admit it (ADR-0113, item
+3). Only Lab admits evidence, and only Lab keeps it in custody (ADR-0100,
+ADR-0113 item 2). The last two boxes are decided, not built: at
+`lab@b583717a51ab` Lab's observation consumer states that it has no
+evidence-admission behaviour, and no admission operation exists in Lab's
+source.
+
 ### Reproduction belongs to life
 
 Reproduction in an ecosystem is endogenous. A birth triggered by Lab is not
