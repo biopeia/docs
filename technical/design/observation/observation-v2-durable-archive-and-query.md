@@ -351,6 +351,45 @@ boundary for this run, and (3) a separate-process read-only query of its closed
 archive. It does not establish the complete Observation V2 criteria, and
 Observation #38 remains open.
 
+### Versioned operator procedure and latest bounded acceptance refresh (2026-10-17)
+
+The companion operator procedure is `how-to/operator/observation-v2-local-archive.md`. It makes the local, opt-in nature and failure interpretation explicit and records commands exercised against the candidate scripts. It does not add a `make run` option or modify any producer.
+
+The latest local evidence bundle is `.local/observation-v2-acceptance-20261018T233958Z/` (not committed to Docs). Its machine-readable capture and reopen reports record:
+
+- Run `observation-v2-41e9cda4-2081-431a-8976-075d2de9422c`, 10 bounded cycles, final causal tick 10, profile `m1.scalar-sensorimotor.operator-r3` with SHA-256 `1b16404ff02b000f458f8f0718d27356681efcb5a5c7bcd9140b651c50e03bbb`.
+- Capture `5c45d6a1-c49f-40e6-83a7-af6eaf592ce1` closed `closed_verified` for the capture's declared local interval: 32 persisted receipts, no recorded received-not-persisted publications, known gaps, or unverifiable intervals.
+- Separate-process SQLite reopen returned `integrity_check=ok`, valid payload digests, eight pages of four records, and exact stored-metadata filters for owner, family, subject, revision, and domain time. `run_id` is explicitly unsupported.
+- SQLite SHA-256 remained `c5bd84410e286f8548e4dbe87c32a574096199b535ce3493511a01f7353687ab` before and after read-only queries.
+- Actual source revisions and module paths are recorded in the capture report. Observation and Organism each had only a pre-existing untracked nested `.worktrees/` path; before/after snapshots matched and no source checkout was modified.
+
+This strengthens the procedure and bounded evidence that it can be reproduced from a composed local harness. It still does not demonstrate the default operator command, browser/history integration, physical disk exhaustion or device loss, World-cut membership, multi-owner causal completeness, shared/remote access, production retention/backup, or scientific evidence custody. `closed_verified` applies only to the capture's declared local interval. Observation #38 remains open and is not accepted by this evidence or by CI.
+
+### Bounded local-archive acceptance disposition (2026-10-17)
+
+This disposition is limited to the reproducible, opt-in local capture and
+read-only query increment. It is not acceptance of Observation V2 as a whole,
+does not close Observation #38, and does not alter the proposed/partial/
+`UNRESOLVED` architecture status.
+
+| Acceptance area | Result | Evidence and boundary |
+|---|---|---|
+| A — Integrity and honest coverage | **PASS, bounded** | Observation `main@572c86f8fce66a73cc3899a4a929448416f1e6bf`: 191 tests pass locally, including injected interruption, capacity, append/closure-marker failures and reader integrity/coverage cases. These are controlled fault tests, not physical disk-full, power-loss, or device-durability tests. In the runtime capture below, all 32 records persisted and the declared local interval closed verified; no loss or gap was recorded. |
+| B — Independent operator capture, close, and query | **PASS, bounded opt-in procedure** | The versioned scripts and How-to in this PR reproduce an exact-source 10-cycle World runtime with Observation capture, normal shutdown, and separate-process SQLite reopen. The run completed through tick 10; the reader recovered 32 records in eight pages of four, exact supported metadata filters, valid payload digests, SQLite `integrity_check=ok`, and an unchanged archive SHA-256. `run_id` explicitly returns `unsupported_filter`. The exact local evidence bundle is listed in the adjacent refresh above and is not committed. The procedure requires the six local source checkouts and existing World environment; it does not modify `make run` or provide a general installer. |
+| C — Durable-history product and full V2 | **NOT ACCEPTED / NOT DEMONSTRATED** | Frontend's current-view readiness is not an archive-backed browser history or analysis consumer. There is no consumer-verifiable historical World-cut membership query, cross-owner complete snapshot, shared/remote access, or accepted retention/backup/security operation. These are outside this local-only increment and remain tracked separately; do not infer them from local receipt order or equal ticks. |
+
+**Decision:** the local capture → verified close → separate-process read-only
+query path is demonstrated for the stated bounded procedure. The current
+`make run` command still does not enable durable capture by default. The
+successful capture is not producer-wide completeness: `closed_verified`
+means only that the archive's declared local interval and closure markers
+agree. The archive remains a passive record of authorized publications; Lab
+retains scientific evidence custody under ADR-0100.
+
+Observation #38 remains open. This bounded disposition does not satisfy its
+broader V2 criteria and is not an acceptance based solely on CI or the PR
+merge state.
+
 ## References
 
 - [ADR-0078 — Observation is causally passive](../../adr/ADR-0078-observation-is-causally-passive.md)

@@ -9,4 +9,5 @@ Task-oriented, step-by-step procedures for operators, developers, and researcher
 ## Guides
 
 - [How to Execute an M1 Bounded Simulation Process](operator/m1-process-execution.md)
+- [How to Capture and Read a Local Observation V2 Archive](operator/observation-v2-local-archive.md)
 - [How to Recover a World Runtime from a Failed Causal Cut (Programmatic Contract)](operator/recover-previous-cut.md)
