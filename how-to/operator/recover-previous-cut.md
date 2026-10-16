@@ -19,7 +19,7 @@ Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be`.
 
 ## Context and operational conditions
 
-Under [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), any failure during a causal transition locks the runtime in a durable `recovery_required` state. Ordinary ticks and normal runtime restoration are blocked until an explicit recovery procedure is performed.
+Under [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), any failure during a causal transition locks the runtime in a durable `RECOVERY_REQUIRED` status. Ordinary ticks and normal runtime initialization are blocked until an explicit recovery procedure is performed.
 
 Recovery always rolls back to the previous confirmed cut; it **never** attempts to guess or complete an interrupted tick.
 
@@ -27,45 +27,49 @@ Recovery always rolls back to the previous confirmed cut; it **never** attempts 
 
 ### Step 1: Diagnose the recovery requirement
 
-Inspect the causal manifest (`manifest/world-manifest-v2.json`) in the affected state root:
+Inspect the causal manifest (`manifest.json`) in the affected state root:
 
 ```python
-import json
 from pathlib import Path
+from world.manifest import ManifestStatus, WorldCausalManifestStore
 
 state_root = Path("./runs/m1-session-interrupted")
-manifest_data = json.loads((state_root / "manifest" / "world-manifest-v2.json").read_text())
+manifest_store = WorldCausalManifestStore(state_root / "manifest.json")
+manifest = manifest_store.read()
 
-print("Status:", manifest_data.get("status"))
-print("Failed transition ID:", manifest_data.get("pending_transition", {}).get("transition_id"))
-print("Committed cut tick:", manifest_data.get("committed_cut", {}).get("tick"))
+print("Status:", manifest.status.value)
+print("Pending transition ID:", manifest.pending_transition_id)
+print("Committed cut tick:", manifest.causal_tick)
+
+if manifest.status is ManifestStatus.RECOVERY_REQUIRED:
+    print("Explicit recovery required before runtime can resume.")
 ```
 
-If `status == "recovery_required"`, proceed to Step 2.
+If `manifest.status is ManifestStatus.RECOVERY_REQUIRED`, proceed to Step 2.
 
-### Step 2: Instantiate the durable runtime in recovery mode
+### Step 2: Initialize stores and identifiers
 
-Load the durable runtime pointing to the state directory. The runtime detects the recovery requirement:
+Instantiate the manifest and journal stores associated with the state root:
 
 ```python
-from world.durable_runtime import DurableWorldRuntime
-from world.owner_checkpoint_store import FileOwnerCheckpointStore
+from world.durable_runtime import DurableJournalSnapshotStore
+from world.runtime import WorldId
 
-checkpoint_store = FileOwnerCheckpointStore(state_root / "checkpoints")
-runtime = DurableWorldRuntime(state_root=state_root, checkpoint_store=checkpoint_store)
-
-assert runtime.is_recovery_required(), "World runtime is not in recovery-required state"
+world_id = WorldId(manifest.world_id)
+presence_id = manifest.presence_ids[0] if manifest.presence_ids else None
+journal_store = DurableJournalSnapshotStore(state_root / "journal", world_id)
 ```
 
-### Step 3: Execute `recover_previous_cut` with domain owner restoration
+### Step 3: Execute `DurableWorldRuntime.recover_previous_cut`
 
-Recovery requires passing a callable `restorer(references: tuple[CheckpointReference, ...])` to `recover_previous_cut`. The runtime passes the tuple of `CheckpointReference` objects recorded at the last committed cut, and the caller must ensure each participating domain owner (Organism, Embodiment, Environment) restores its live state from the payload at `ref.locator` before returning.
+Recovery is executed through the classmethod `DurableWorldRuntime.recover_previous_cut`, passing the stores, owner verification contracts, and an `owner_checkpoint_restorer` callback:
 
-The example below illustrates the integration contract. Note that `restore_organism_checkpoint`, `restore_embodiment_checkpoint`, and `restore_environment_checkpoint` are **illustrative integration handlers** that the runtime host or orchestrator provides to reload checkpoint state into the running domain subsystems. If any domain restoration fails or raises an exception, the World runtime does not commit the recovery receipt, and the uncommitted journal tail remains untouched.
+The example below illustrates the integration contract. Note that `restore_organism_checkpoint`, `restore_embodiment_checkpoint`, and `restore_environment_checkpoint` are **illustrative integration handlers** that the runtime host or orchestrator provides to reload checkpoint state into running domain subsystems. If any domain restoration fails or raises an exception, the World runtime does not commit the recovery receipt, and the uncommitted journal tail remains untouched.
 
 ```python
 from pathlib import Path
-from world.checkpoint_reference import CheckpointReference
+from world.durable_runtime import DurableWorldRuntime
+from world.manifest import CheckpointReference
 
 # Illustrative integration handlers: integrators implement these to route checkpoint
 # payloads to their running subsystem instances or continuation engines.
@@ -84,7 +88,7 @@ def restore_environment_checkpoint(locator: Path) -> None:
     ...
 
 
-def owner_restorer(references: tuple[CheckpointReference, ...]) -> None:
+def owner_checkpoint_restorer(references: tuple[CheckpointReference, ...]) -> None:
     """Restores authoritative owner state from verified committed checkpoint references."""
     for ref in references:
         locator_path = Path(ref.locator)
@@ -93,36 +97,40 @@ def owner_restorer(references: tuple[CheckpointReference, ...]) -> None:
 
         # Dispatch checkpoint payload to the owning domain's restore interface:
         if ref.owner == "organism":
-            # Organism restores private longitudinal cognitive state
             restore_organism_checkpoint(locator_path)
         elif ref.owner == "embodiment":
-            # Embodiment restores physical somatic and joint configuration
             restore_embodiment_checkpoint(locator_path)
         elif ref.owner == "environment":
-            # Environment restores static scene and dynamic resource entities
             restore_environment_checkpoint(locator_path)
         else:
             raise ValueError(f"Unrecognized owner in checkpoint reference: {ref.owner}")
 
 
-# Execute atomic rollback:
-receipt = runtime.recover_previous_cut(restorer=owner_restorer)
-print("Recovery completed successfully. Receipt ID:", receipt["receipt_id"])
+# Execute atomic rollback via classmethod; returns a recovered DurableWorldRuntime:
+recovered_runtime = DurableWorldRuntime.recover_previous_cut(
+    world_id,
+    presence_id,
+    manifest_store,
+    journal_store,
+    owner_checkpoint_verifier=owner_checkpoint_verifier,
+    owner_checkpoint_contracts=owner_checkpoint_contracts,
+    owner_checkpoint_restorer=owner_checkpoint_restorer,
+)
 ```
 
 ### Step 4: Verification of restored state
 
 Verify that:
 
-1. The uncommitted journal bytes were discarded and rolled back to the last committed cut offset.
+1. The uncommitted journal bytes were discarded and rolled back to the prior committed cut offset via `DurableJournalSnapshotStore._discard_uncommitted_tail`.
 2. The manifest records the cut as committed with no pending transitions:
 
    ```python
-   assert not runtime.is_recovery_required()
-   assert runtime.current_tick == manifest_data["committed_cut"]["tick"]
+   assert recovered_runtime.status is ManifestStatus.COMMITTED
+   assert recovered_runtime.causal_tick == manifest.causal_tick
    ```
 
-3. An immutable recovery receipt is persisted under `manifest/receipts/`.
+3. An immutable recovery receipt is persisted under `state_root / "recoveries" / f"{receipt_sha256}.json"`.
 
 The World is now restored to a clean, consistent state and may be safely resumed.
 
@@ -131,6 +139,6 @@ The World is now restored to a clean, consistent state and may be safely resumed
 | Claim | Support |
 |---|---|
 | Mandatory explicit recovery contract | [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md) |
-| Rollback method `recover_previous_cut` | `world:src/world/durable_runtime.py::DurableWorldRuntime.recover_previous_cut` |
-| Uncommitted journal truncation | `world:src/world/durable_runtime.py::_discard_uncommitted_tail` |
+| Rollback classmethod `recover_previous_cut` | `world:src/world/durable_runtime.py::DurableWorldRuntime.recover_previous_cut` |
+| Uncommitted journal truncation | `world:src/world/durable_runtime.py::DurableJournalSnapshotStore._discard_uncommitted_tail` |
 | Owner checkpoint restoration pattern | `world:tests/test_durable_runtime.py::test_explicit_recovery_restores_prior_cut_through_owner_and_records_receipt` |

@@ -41,8 +41,8 @@ head -n 25 profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json
 
 Notice the top-level declaration:
 
-- `schema_name`: `"biopeia.world.m1.scalar-sensorimotor-profile"`
-- `physics.solver_version`: `"3.15.0"`
+- `schema`: `"biopeia.world.m1.scalar-sensorimotor-profile"` (version 1)
+- `solver.version`: `"3.15.0"` (engine: `"mujoco"`)
 - `embodiment`: Defines joint masses and sensor placements.
 - `environment`: Defines the static terrain and scalar chemical field.
 
@@ -65,12 +65,12 @@ world-m1 --profile profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json \
 
 ### What happens as it runs
 
-This execution replicates the verified multi-cycle sequence tested in `world:tests/integration/test_m1_process.py::test_run_scalar_sensorimotor_session`:
+This execution replicates the verified multi-cycle sequence tested in `world:tests/integration/test_m1_process.py::test_fresh_world_process_runs_real_cycles_and_serves_postcommit_observations`:
 
 1. **Preflight validation:** `world-m1` verifies git status and exact dependency hashes.
 2. **Genesis commit:** At tick 0, genesis checkpoints for Organism, Embodiment, and Environment are written.
-3. **Loopback bridge:** A local HTTP observation bridge is bound to `127.0.0.1`.
-4. **Execution cycles:** 10 discrete causal cycles execute in sequence, advancing the tick counter from 1 to 10.
+3. **Loopback bridge:** A local HTTP observation bridge is bound to `127.0.0.1` and announced via `observation_bridge`.
+4. **Execution cycles:** 10 discrete causal cycles execute in sequence, advancing `last_verified_committed_tick` from 1 to 10.
 
 Upon completion, you will see output concluding with exit code `0`.
 
@@ -79,19 +79,20 @@ Upon completion, you will see output concluding with exit code `0`.
 The manifest tracks the authoritative state of the World:
 
 ```bash
-python3 -m json.tool "$TARGET_RUN/manifest/world-manifest-v2.json"
+python3 -m json.tool "$TARGET_RUN/manifest.json"
 ```
 
-Look for the `committed_cut` section:
+Look for the committed status and causal tick fields:
 
 ```json
 {
+  "schema_version": 1,
+  "world_id": "world.acceptance.sensorimotor-v1",
+  "causal_tick": 10,
   "status": "committed",
-  "committed_cut": {
-    "tick": 10,
-    "cut_id": "...",
-    "participants": ["organism", "embodiment", "environment"]
-  }
+  "commit_id": "...",
+  "presence_ids": ["presence.acceptance.sensorimotor-v1"],
+  "registered_owner_ids": [["organism", "..."], ["embodiment", "..."], ["environment", "..."]]
 }
 ```
 
@@ -111,15 +112,15 @@ Each line records an immutable causal cut with:
 - The hash references of the owner checkpoints at that exact moment.
 - The physics step outcome.
 
-## Step 5: Verify the content-addressed checkpoint store
+## Step 5: Verify the content-addressed owner checkpoint store
 
-Inspect the binary state blobs stored under `checkpoints/`:
+Inspect the binary state blobs stored under `owners/`:
 
 ```bash
-find "$TARGET_RUN/checkpoints" -type f
+find "$TARGET_RUN/owners" -type f
 ```
 
-Each file is stored using a content-addressed two-level hash directory structure (`checkpoints/ab/abcdef...blob`). This ensures that identical states share storage and that no checkpoint can be corrupted silently.
+Each file is stored using a content-addressed digest structure. This ensures that identical states share storage and that no checkpoint can be corrupted silently.
 
 ## Congratulations
 
