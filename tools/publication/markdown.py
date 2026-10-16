@@ -31,6 +31,8 @@ INLINE_RE = re.compile(
     r"|\*(?!\s)(?P<italic>[^*]+?)(?<!\s)\*"
     r"|\[(?P<label>[^\]]+)\]\((?P<href>[^)\s]+)\)"
 )
+BLOCKQUOTE_RE = re.compile(r"^>\s?(.*)$")
+ALERT_RE = re.compile(r"^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*(.*)$", re.IGNORECASE)
 
 
 class MarkdownError(ValueError):
@@ -90,6 +92,7 @@ def _starts_block(lines: list[str], i: int) -> bool:
     return bool(
         HEADING_RE.match(line)
         or FENCE_RE.match(line)
+        or line.lstrip().startswith(">")
         or (item and (not item.group(2)[0].isdigit() or item.group(2) == "1."))
         or (line.lstrip().startswith("|") and i + 1 < len(lines) and TABLE_RULE_RE.match(lines[i + 1]))
     )
@@ -136,6 +139,42 @@ def parse(text: str) -> list[dict[str, Any]]:
                 rows.append((cells + [[]] * len(header))[: len(header)])
                 i += 1
             blocks.append({"type": "table", "header": header, "rows": rows})
+            continue
+
+        if line.lstrip().startswith(">"):
+            raw_lines: list[str] = []
+            while i < len(lines) and lines[i].lstrip().startswith(">"):
+                cur = lines[i]
+                match = BLOCKQUOTE_RE.match(cur.lstrip())
+                raw_lines.append(match.group(1) if match else cur.lstrip()[1:])
+                i += 1
+
+            kind: str | None = None
+            first_idx = next((idx for idx, l in enumerate(raw_lines) if l.strip()), None)
+            if first_idx is not None:
+                alert_match = ALERT_RE.match(raw_lines[first_idx].strip())
+                if alert_match:
+                    kind = alert_match.group(1).upper()
+                    remainder = alert_match.group(2).strip()
+                    if remainder:
+                        raw_lines[first_idx] = remainder
+                    else:
+                        raw_lines.pop(first_idx)
+
+            paras: list[list[str]] = []
+            curr: list[str] = []
+            for rline in raw_lines:
+                if not rline.strip():
+                    if curr:
+                        paras.append(curr)
+                        curr = []
+                else:
+                    curr.append(rline)
+            if curr:
+                paras.append(curr)
+
+            callout_paras = [_flow(p) for p in paras if p]
+            blocks.append({"type": "callout", "kind": kind, "paragraphs": callout_paras})
             continue
 
         if LIST_RE.match(line):

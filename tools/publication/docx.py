@@ -393,6 +393,15 @@ class Document:
         self.body.append(self.image(data, f"diagram-{number}.png", int(cx * shrink), int(cy * shrink),
                                     '<w:jc w:val="center"/>'))
 
+    def callout(self, block: dict[str, Any], base: str) -> None:
+        kind = block.get("kind")
+        for index, inlines in enumerate(block.get("paragraphs") or []):
+            runs_inlines = list(inlines)
+            if index == 0 and kind:
+                label = f"{kind.capitalize()} — "
+                runs_inlines = [{"text": label, "bold": True, "italic": False, "code": False, "href": None}] + runs_inlines
+            self.body.append(paragraph("Callout", self.runs(runs_inlines, base)))
+
     def chapter_body(self, chapter: dict[str, Any]) -> None:
         base = chapter["base"]
         self.references, self.source = chapter.get("references") or {}, chapter["source"]
@@ -406,6 +415,8 @@ class Document:
                 self.list(block, base)
             elif block["type"] == "table":
                 self.table(block, base)
+            elif block["type"] == "callout":
+                self.callout(block, base)
             else:
                 self.code(block)
 
@@ -793,6 +804,10 @@ def styles_xml(style: dict[str, Any], text_width: int) -> str:
         para("ListParagraph", "List Paragraph", sizes["list"], after=50),
         para("TableText", "Table Text", sizes["table"], before=30, after=30),
         para("Code", "Code", sizes["code"], after=0, run=fonts(code_font), extra=code_shade),
+        para("Callout", "Callout", sizes["body"], before=60, after=60,
+             extra=f'<w:pBdr>{rule("left", colours["accent"], 16, 8)}</w:pBdr>'
+                   f'<w:ind w:left="240" w:right="120"/>'
+                   f'<w:shd w:val="clear" w:color="auto" w:fill="{colours["shade"]}"/>'),
         para("Meta", "Metadata", sizes["meta"], colour=colours["secondary"], after=200),
         para("Caption", "caption", sizes["caption"], colour=colours["secondary"], after=160),
         para("Header", "header", sizes["meta"], colour=colours["secondary"], after=0,

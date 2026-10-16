@@ -31,8 +31,8 @@ including public and private repositories. Its aim is consistent safety and
 maintainability for a one-person project without forcing identical workflows,
 checks or domain responsibilities.
 
-The design was merged as a proposal in [Docs PR
-#144](https://github.com/biopeia/docs/pull/144). The registry continues to
+The design was merged as a proposal in
+[Docs PR #144](https://github.com/biopeia/docs/pull/144). The registry continues to
 classify it as `proposed`. [ADR-0111](ADR-0111-design-first-work-and-governance-procedure.md)
 establishes the design-first process, but does not authorize this separate
 repository-settings baseline. The proposed Biopeia Repository Contract v1 is

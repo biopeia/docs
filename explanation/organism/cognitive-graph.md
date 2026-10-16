@@ -138,7 +138,7 @@ itself never acts." What consumes a readout is outside this package; see
 ### "Immutable" means the table, not the numbers
 
 The class documents itself as immutable; one of its docstrings says "the
-graph never mutates after __init__" and that a change "builds a whole new
+graph never mutates after **init**" and that a change "builds a whole new
 CognitiveGraph". That holds for the set
 of nodes and edges. It does not hold for the numbers on the edges. An edge is
 a mutable object, the graph keeps the objects it was given, and a graph built

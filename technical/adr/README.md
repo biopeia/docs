@@ -47,6 +47,7 @@ records and were not copied; they describe the historical system.
 | [ADR-0111](ADR-0111-design-first-work-and-governance-procedure.md) | Design-First Work and Governance Procedure | ACCEPTED — owner decision recorded 2026-10-12 | biopeia/.github-private#43 |
 | [ADR-0112](ADR-0112-repository-settings-and-actions-baseline.md) | Repository Settings and GitHub Actions Baseline | PROPOSED — owner disposition pending | biopeia/docs#145 |
 | [ADR-0113](ADR-0113-independent-frontend-and-lab-boundary.md) | Independent Frontend and Lab Presentation Boundary | ACCEPTED — Architecture Owner, 2026-10-13 | biopeia/docs#166 |
+| [ADR-0114](ADR-0114-diataxis-documentation-architecture-and-governance.md) | Diátaxis Documentation Architecture and Governance | ACCEPTED — Architecture Owner, 2026-10-16 | biopeia/docs#206 |
 
 `ADR-0075` to `ADR-0110` transcribe the architecture decisions `AD-0001` to
 `AD-0036` of the architecture audit, one record each, in source order. Their
