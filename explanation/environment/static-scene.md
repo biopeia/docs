@@ -1,8 +1,8 @@
 # The static scene and its owner
 
-Reviewed against `environment` at commit `d09e45c40633c9b2bf927c7aec3f6326318c2ea8` (main on
-2026-10-14); first written against `f97ec22`. Everything below describes the
-later revision. Statements are marked by what supports them: the code, the tests,
+Reviewed against `environment` at commit `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1`
+(main on 2026-10-15); first written against `f97ec22`. Everything below describes
+that revision. Statements are marked by what supports them: the code, the tests,
 or neither.
 
 ## What it is
@@ -89,6 +89,30 @@ are absent or the context is stale. Checkpoint schema v5 preserves explicit
 sliding-friction properties for the plane and sphere; v4 is rejected without
 a compatibility path.
 
+## Bounded static render projection
+
+The repository provides a bounded, read-only static render projection for local
+presentation (`environment:src/environment/spatial_render.py`). It projects only
+owner-authored static planes and spheres into detached JSON-compatible data.
+
+The module explicitly does not publish, transport, infer a causal cut, or
+establish coordinate-frame compatibility with other domains; a proposed contract
+is recorded in `environment:contracts/spatial-static-scene-v1.proposed.md`.
+The projection enforces strict structural bounds:
+
+- a maximum of 128 render items;
+- a maximum of 128 UTF-8 bytes for text identifiers, with control characters
+  forbidden;
+- finite numbers for coordinates, offsets and radii;
+- positive radius for spheres and frame alignment with the scene frame;
+- canonical ordering by UTF-8 encoded item identifier;
+- a deterministic RFC 8785 canonical JSON digest (`render_geometry_sha256`)
+  with a maximum descriptor payload of 65,536 UTF-8 bytes.
+
+Tested by `test_empty_descriptor_matches_approved_jcs_vector` and
+`test_sphere_descriptor_matches_approved_jcs_vector` in
+`environment:tests/test_spatial_render.py`.
+
 ## Time
 
 The owner counts adopted steps, starting so that the first step it adopts is
@@ -133,6 +157,7 @@ whoever builds them, which today is a test fixture; see
 | Claim | Support |
 |---|---|
 | Scene validation, physical projection, adoption rules, checkpoint strictness, contact-property preservation and replay refused after restore | Code and tests in `environment:tests/test_static_scene.py`, `environment:tests/test_environment_physical_projection.py`, and `environment:tests/test_restoration.py` |
+| Bounded static render projection and JCS canonical digest verification | Code in `environment:src/environment/spatial_render.py` and tests in `environment:tests/test_spatial_render.py` |
 | A step from another World is refused; owner and environment identifiers are not tied | Code, tests, and one ad hoc run of the module at that revision |
 | The offset of one between the owner's tick and World's | Code of this module and of World's physical step fixture |
 | That a solver does not own the scene | Accepted decision ADR-0098; a statement of intent |

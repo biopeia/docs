@@ -291,7 +291,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Owner checkpoint validation (structural); Operator material transfer (shared_type) |
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md) |
 | Tests | `environment:tests/unit/test_resource.py`, `environment:tests/test_identified_resource.py`, `environment:tests/test_restoration.py` |
-| Reviewed at | environment@d09e45c40633 (RECORDED) |
+| Reviewed at | environment@4eb1f8c3393a (RECORDED) |
 | Known findings | F-0014 implementation finding (open); F-0015 contract gap (open); F-0016 implementation finding (open) |
 
 ### Static scene and its owner
@@ -305,12 +305,12 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | depend on a solver or let a solver own the scene; adopt a changed scene; mint the authority of a physical step |
 | Owned by | environment; also involves world |
 | Explained in | [explanation/environment/static-scene.md](../explanation/environment/static-scene.md) |
-| Implemented in | `environment:src/environment/static_scene.py` |
+| Implemented in | `environment:src/environment/static_scene.py`, `environment:src/environment/spatial_render.py` |
 | State | owner environment, family environmental_state |
 | Cross-domain contracts | Owner checkpoint validation (structural); Correlation of a physical step (fixture_only); Frame and unit conventions between body and scene (by_convention) |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
-| Tests | `environment:tests/test_static_scene.py`, `environment:tests/test_environment_physical_projection.py`, `environment:tests/test_restoration.py` |
-| Reviewed at | environment@d09e45c40633 (RECORDED) |
+| Tests | `environment:tests/test_static_scene.py`, `environment:tests/test_environment_physical_projection.py`, `environment:tests/test_restoration.py`, `environment:tests/test_spatial_render.py` |
+| Reviewed at | environment@4eb1f8c3393a (RECORDED) |
 | Known findings | F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)) |
 
 ### Procedural genesis of a scene
@@ -329,7 +329,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-static-scene` |
 | Governed by | [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
 | Tests | `environment:tests/test_genesis.py` |
-| Reviewed at | environment@d09e45c40633 (RECORDED) |
+| Reviewed at | environment@4eb1f8c3393a (RECORDED) |
 | Known findings | F-0017 implementation finding (accepted); F-0019 evidence gap (open) |
 
 ### Physical projection of resource geometry
@@ -348,7 +348,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-finite-resource`, `component.environment-static-scene` |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md) |
 | Tests | `environment:tests/unit/test_physical_projection.py`, `environment:tests/test_boundary.py` |
-| Reviewed at | environment@d09e45c40633 (RECORDED) |
+| Reviewed at | environment@4eb1f8c3393a (RECORDED) |
 | Known findings | F-0015 contract gap (open); F-0018 implementation finding (open) |
 
 ### Dynamic object state and its owner
@@ -368,7 +368,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-static-scene` |
 | Governed by | [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/adr/ADR-0074-biopeia-world-environment-authority-split.md](../technical/adr/ADR-0074-biopeia-world-environment-authority-split.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `environment:tests/test_dynamic_state.py`, `environment:tests/test_restoration.py`, `world:tests/integration/test_environment_dynamic_adoption_restore.py` |
-| Reviewed at | environment@d09e45c40633, world@1f35e92611ed (RECORDED) |
+| Reviewed at | environment@4eb1f8c3393a, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0125 contract gap (open); F-0126 implementation finding (accepted); F-0127 implementation finding (open) |
 
 ## Embodiment
@@ -880,7 +880,7 @@ restates it so that the answers about one unit can be read in one place.
 | Implemented in | `modality:src/modality/scalar_field.py` |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | modality@93a4c3a4ea71, world@1f35e92611ed, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
+| Reviewed at | modality@62af4aba0714, world@1f35e92611ed, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@4eb1f8c3393a, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
 | Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation

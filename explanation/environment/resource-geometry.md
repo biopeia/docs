@@ -1,7 +1,7 @@
 # Giving a resource a physical shape
 
 Reviewed against `environment` at commit
-`d09e45c40633c9b2bf927c7aec3f6326318c2ea8` (main on 2026-10-14); first written against `f97ec222`. Everything below describes that
+`4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1` (main on 2026-10-15); first written against `f97ec222`. Everything below describes that
 revision.
 
 ## What it is
