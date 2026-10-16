@@ -169,8 +169,11 @@ CI runs two jobs. `registry` needs only this repository and blocks on registry
 integrity. `cross-repository` clones the seven domain repositories with a
 short-lived token from the read-only `biopeia-ci-read` GitHub App
 (`CI_READ_APP_ID` variable, `CI_READ_APP_PRIVATE_KEY` secret), blocks when a
-reference into them does not resolve, and reports staleness in the job summary
-without blocking. It can also be started by hand, since a unit becomes stale
+reference into them does not resolve or when a review commit, in a unit's
+basis or in its document's header, is not a commit of the named repository,
+and reports staleness in the job summary without blocking. The staleness
+report includes tests a document cites that are absent at its unit's review
+basis. It can also be started by hand, since a unit becomes stale
 when a domain repository changes, not when this one does. References to
 `symbiont-lab` are never resolved in CI. No domain repository runs a
 documentation check.
