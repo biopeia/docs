@@ -9,16 +9,7 @@ import json
 from pathlib import Path
 
 from observation import ArchiveReader
-
-
-def is_complete_closed_coverage(coverage: object) -> bool:
-    """Require both accounted closure and no recorded loss/gap."""
-    return bool(
-        coverage is not None
-        and getattr(coverage, "status", None) == "closed_verified"
-        and getattr(coverage, "complete", False)
-        and getattr(coverage, "closure_verified", False)
-    )
+from observation_v2_coverage import is_complete_closed_coverage
 
 
 def main() -> None:

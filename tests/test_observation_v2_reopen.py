@@ -1,13 +1,13 @@
-from importlib.util import module_from_spec, spec_from_file_location
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
 
-SCRIPT = Path(__file__).parents[1] / "how-to/operator/observation-v2-reopen.py"
-SPEC = spec_from_file_location("observation_v2_reopen", SCRIPT)
-assert SPEC is not None and SPEC.loader is not None
-MODULE = module_from_spec(SPEC)
-SPEC.loader.exec_module(MODULE)
+OPERATOR_DIR = Path(__file__).parents[1] / "how-to/operator"
+sys.path.insert(0, str(OPERATOR_DIR))
+from observation_v2_coverage import is_complete_closed_coverage
+
+sys.path.pop(0)
 
 
 def test_reopen_acceptance_requires_complete_closed_coverage():
@@ -15,7 +15,7 @@ def test_reopen_acceptance_requires_complete_closed_coverage():
         status="closed_verified", complete=True, closure_verified=True
     )
 
-    assert MODULE.is_complete_closed_coverage(coverage)
+    assert is_complete_closed_coverage(coverage)
 
 
 def test_reopen_rejects_closed_capture_with_persisted_loss_or_gaps():
@@ -25,11 +25,11 @@ def test_reopen_rejects_closed_capture_with_persisted_loss_or_gaps():
         coverage = SimpleNamespace(
             status=status, complete=False, closure_verified=True
         )
-        assert not MODULE.is_complete_closed_coverage(coverage)
+        assert not is_complete_closed_coverage(coverage)
 
 
 def test_reopen_rejects_unverified_or_missing_coverage():
-    assert not MODULE.is_complete_closed_coverage(None)
-    assert not MODULE.is_complete_closed_coverage(
+    assert not is_complete_closed_coverage(None)
+    assert not is_complete_closed_coverage(
         SimpleNamespace(status="active", complete=False, closure_verified=False)
     )
