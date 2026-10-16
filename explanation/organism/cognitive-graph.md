@@ -80,6 +80,43 @@ It holds twenty-three numbers; constructing a graph reads three of them. Several
 refer to an episodic memory and a consolidation schedule that are not in this
 package.
 
+```mermaid
+%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%
+flowchart LR
+  subgraph senses["SENSE nodes: no incoming edge"]
+    direction TB
+    s1["SENSE s_0"]
+    s2["SENSE s_1"]
+  end
+  subgraph inner["Inside the graph (at most 768 nodes, 192 concepts)"]
+    direction TB
+    c1["CONCEPT c_0"]
+    st1["STATE st_0"]
+    p1["PREDICTOR p_0<br/>predicts s_0"]
+  end
+  subgraph out["Readouts"]
+    direction TB
+    r1["READOUT r_0"]
+  end
+  boundary["No ACTION kind: readouts feed<br/>consultative circuits outside the graph"]
+  s1 -->|"delay 0 or 1"| c1
+  s2 -->|"delay 0 or 1"| c1
+  c1 -->|"delay 1"| st1
+  st1 -->|"delay 1, recurrent"| c1
+  c1 -->|"gating, factor 0 to 1"| p1
+  st1 -->|"predictive"| p1
+  c1 -->|"delay 1"| r1
+  r1 -.-> boundary
+```
+
+An illustrative graph, not one shipped by the package. What it shows is what
+`organism:src/organism/cognition/types.py` and `graph.py` enforce: six node
+kinds and no ACTION kind ("the graph itself never acts"), four edge kinds,
+weights in [-2, 2], gate factors in [0, 1], an edge delay of 0 or 1 ticks with
+0 allowed only from a SENSE node, no edge into a SENSE node, and the default
+ceilings of 768 nodes and 192 concepts in `KernelLimits`. Checked on
+2026-10-17 against `organism` `637bc21a7e2a1aa9e0870f55f134e839657687f4`.
+
 ## One pass of activation
 
 Read from `CognitiveGraph.activate` and confirmed by running it.
