@@ -394,7 +394,7 @@ units:
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.embodiment-physical-state:
     kind: component
@@ -477,7 +477,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 2f4751f53678f2210930770605844cac766b1da4
@@ -516,7 +516,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
         embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
         environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
         observation: 2f4751f53678f2210930770605844cac766b1da4
@@ -541,7 +541,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.lab-body-interoception-transducer:
     kind: component
@@ -651,7 +651,7 @@ units:
       basis:
         observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   mechanism.organism-action-path:
     kind: mechanism
@@ -982,7 +982,7 @@ units:
         world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
         modality: 62af4aba07146d5dfdc978af07bb72111112d873
         observation: 2f4751f53678f2210930770605844cac766b1da4
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.embodiment-articulated-body:
     kind: component
@@ -1718,7 +1718,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   concept.organism-continuation-closure-v1:
     kind: concept
