@@ -924,6 +924,8 @@ units:
     canonical_docs:
       - explanation/biopeia/capability-maturity.md
     depends_on:
+      - component.world-causal-cycle
+      - component.world-m1-process-bootstrap
       - concept.biopeia-one-step-across-the-domains
       - concept.biopeia-research-hypotheses
       - concept.organism-life-across-mechanisms

@@ -15,9 +15,11 @@ The coordinator is implemented in
 `world:src/world/causal_cycle.py::run_scalar_sensorimotor_cycle_and_publish`
 (single tick) and `run_scalar_sensorimotor_session` (multi-cycle session loop).
 It replaces test-only simulation fixtures with a production coordination
-path, proving that the multi-owner architecture executes and continues across
-restarts without losing causal integrity
-(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
+path. Acceptance tests exercise that path across the owners, through a
+commit, and across one fresh-process restore
+(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`); what
+the restore test compares is set out under
+[Restoration and live continuation](#restoration-and-live-continuation).
 
 ## The operational sequence
 
