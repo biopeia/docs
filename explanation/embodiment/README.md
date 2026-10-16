@@ -66,11 +66,11 @@ Explanatory documents of the Embodiment domain (semantic-authority).
 
 ## Open findings
 
-15 findings on these units are open, 5 of them with an issue in the owning repository:
+14 findings on these units are open, 4 of them with an issue in the owning repository:
 
 - contract gap: 7
 - documentation inconsistency: 1
-- implementation finding: 6
+- implementation finding: 5
 - recovery durability gap: 1
 
 They are recorded in [registry/findings.yaml](../../registry/findings.yaml) and listed per unit in [reference/units.md](../../reference/units.md).
