@@ -82,6 +82,14 @@ proportion to itself. It does nothing if the caller passes `frozen`, passes
 `test_oja_update_is_a_noop_when_modulation_is_zero`,
 `test_oja_update_moves_weight_toward_correlated_activity`).
 
+The function validates none of its inputs. Checked on 2026-10-16 at `organism`
+`637bc21a7e2a1aa9e0870f55f134e839657687f4` in an ad hoc run that is not kept
+as a test: the clip maps a NaN to the upper bound, so a non-finite learning
+rate, modulation or activation sets the weight to 2.0 without error, and a
+negative learning rate is accepted. Its one production caller passes values
+that `EdgeLearningInstruction` has already checked to be finite, with a
+non-negative rate. Recorded as finding F-0171.
+
 Three things the signatures leave unconnected, read from the code:
 
 - `eligible` is a boolean the caller supplies. The function does not look at
