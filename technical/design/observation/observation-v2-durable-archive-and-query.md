@@ -190,16 +190,18 @@ Observation #38 is currently **open, reopened**. The Owner reopened it after PR 
 | Classification, access, retention/deletion, audit, budgets, recovery and threat review | Local reader refuses writes and tests owner-only file permissions/symlink paths; capture tests cover local interruption and storage failures. Docs #167 remains open for broader Frontend access/deployment security. | **LOCAL SAFEGUARDS PARTIAL; OPERATIONS/SHARED ACCESS UNRESOLVED.** No remote/shared exposure, comprehensive retention/deletion policy, backup/restore service, cost budget or independent threat-model acceptance is evidenced here. Lab remains scientific evidence custodian. |
 | Exact-source delta against #37, tests, and distinct owner disposition | Current-source inventory in this document; Observation #37 closed after a bounded readiness inventory; the Owner's latest #38 comments explicitly keep #38 open. Full Observation suite reported by the Owner at `0e11ab728b4debb30e2d851ef3aa4149cc32dcb0`: 187 passed. | **READINESS INVENTORY RECORDED; NOT FULL V2 ACCEPTANCE.** The 187 tests establish repository test outcomes only. They do not establish browser E2E, full V2 acceptance, scientific validity, or remote access authorization. |
 
-The following broader capabilities remain unimplemented or unverified and must not be implied by the completed bounded increments:
+The merged increments #61 and #62 already demonstrate the following **bounded local behaviors**; they are not outstanding requirements merely because they are narrower than the target V2 archive:
 
-- Contract examples cover persisted, received-not-persisted, known-gap, unverifiable, closed-verified, complete-interval, duplicate, conflicting identity, interrupted session, capacity exhaustion, corruption, and unsupported query cases.
-- A consumer can retrieve a publication and its provenance without write authority; result distinguishes local receipt sequence from source sequence and World cut.
-- Exact World-cut query returns only explicitly verified associations and does not infer from matching tick/run/time labels.
-- Restart after a missing close marker leaves capture incomplete/unverifiable; no damaged or absent row is represented as persisted.
-- Query behavior meets Frontend/run-history/analysis minimums without adding a remote service or broad API surface before security disposition.
-- Retention/classification/access/recovery operational owners and limitations are explicit; no claim of scientific custody transfers from Lab.
-- Observation #37's exact-source readiness inventory is closed and accepted only as a readiness assessment, not as a client contract. Docs #167 shared/remote security and access disposition remains outstanding and is not required for the bounded local-only reader.
-- The design and local-reader increments are implemented in merged PRs #61 and #62. The criteria marked partial or unresolved above are not established by those merges alone. Any later implementation requires its own tests and review; Owner acceptance remains separate from CI and PR merge.
+- Capture tests distinguish persisted receipts from received-but-not-persisted losses, explicit delivery/capacity gaps, duplicate receipts, interrupted/open sessions, close-marker failures, and corrupt records. Reopening an interrupted capture leaves it open/unverifiable; these are local archive guarantees and do not prove that every producer publication reached Observation.
+- The local read-only `ArchiveReader` retrieves stored original publications and their available provenance, paginates by local receipt sequence, exposes capture catalog/coverage, reports unsupported filters or absent identity metadata explicitly, and refuses write/symlink paths. It does not infer source ordering or a World cut.
+
+The following **broader V2 capabilities remain unimplemented, unverified, or unresolved** and must not be implied by those local tests:
+
+- An exact World-cut query or multi-owner coherent history that returns only explicitly verified associations and never infers a join from matching tick/run/time labels.
+- A combined Frontend/run-history/analysis consumer that meets the minimum query needs without adding an unauthorized remote service or broad API surface.
+- Comprehensive retention, classification, access, deletion, backup/restore, operational ownership, resource budgets, and independent threat-model acceptance for broader/shared access. No claim of scientific custody transfers from Lab.
+- Observation #37 remains a bounded readiness inventory, not a client contract. Docs #167 shared/remote security and access disposition remains outstanding; it is not required for the local-only reader.
+- These implemented increments and tests do not establish full #38 acceptance. Any later capability requires its own evidence and review; Owner acceptance remains separate from CI and PR merge.
 
 ## 9. Decisions still open
 
