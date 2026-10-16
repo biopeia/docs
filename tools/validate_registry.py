@@ -180,7 +180,9 @@ def validate(
                 "it may only be a design or decision source"
             )
             return None
-        if repo == "docs" and not path.startswith(schema["layout"].get(field, "")):
+        allowed = schema["layout"].get(field, "")
+        allowed_prefixes = tuple(allowed) if isinstance(allowed, list) else (allowed,)
+        if repo == "docs" and not any(path.startswith(p) for p in allowed_prefixes):
             errors.append(f"{where}: {field} must live under {schema['layout'][field]}: {ref}")
             return None
         root = repo_root(repo)
@@ -193,8 +195,10 @@ def validate(
         return root / path
 
     def check_doc_paths(where: str, field: str, paths: Any) -> None:
+        prefix = schema["layout"][field]
+        prefixes = tuple(prefix) if isinstance(prefix, list) else (prefix,)
         for rel in as_list(paths):
-            if not str(rel).startswith(schema["layout"][field]):
+            if not any(str(rel).startswith(p) for p in prefixes):
                 errors.append(f"{where}: {field} must live under {schema['layout'][field]}: {rel}")
             elif not (docs_root / rel).is_file():
                 errors.append(f"{where}: {field} references missing document: {rel}")
@@ -646,7 +650,7 @@ CITED_TEST_RE = re.compile(r"`(test_[a-z0-9_]+)`")
 def broken_links(docs_root: Path) -> list[str]:
     """Relative links in explanation, technical and reference documents that do not resolve."""
     problems: list[str] = []
-    for top in ("explanation", "technical", "reference"):
+    for top in ("explanation", "technical", "reference", "how-to", "tutorials"):
         for doc in sorted((docs_root / top).rglob("*.md")) if (docs_root / top).is_dir() else []:
             for target in LINK_RE.findall(doc.read_text(encoding="utf-8")):
                 if target.startswith(("http://", "https://", "mailto:")):

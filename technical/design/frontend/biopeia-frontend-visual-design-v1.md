@@ -99,7 +99,6 @@ Each artboard is watermarked **SYNTHETIC DESIGN PREVIEW · NOT DATA**. All conte
 
 The diagrams are intentionally static. They do not imply an implemented frontend or approved spatial contract. Their purpose is to review hierarchy, density, theme treatment and empty-state behavior before components are authorized.
 
-
 ### 4.1 Remaining five screen concepts
 
 The five screens below now have matching composition guidance. They are intentionally lower-fidelity than World Overview and Spatial Explorer, but each specifies its information hierarchy, a populated synthetic preview, a no-context/error state and its behavior in both proposed themes. “Synthetic preview” means layout-only content, not a proposed Observation record, schema or claim. Every concept asset must carry a persistent synthetic watermark and must never be bundled as production data.

@@ -1,0 +1,23 @@
+config:
+  default: true
+  MD013: false # Line length (tables, code references, URLs exceed 80 chars)
+  MD033: false # Inline HTML elements (<br>, <a>, etc.)
+  MD024:
+    siblings_only: true # Allow duplicate headings across sections if not siblings
+  MD025: false # Allow frontmatter-based titles and procedure templates
+  MD028: false # Allow blank lines in blockquotes
+  MD041: false # First line heading (allow files starting with YAML frontmatter)
+  MD029: false # Ordered list prefix
+  MD034: false # Bare URLs
+  MD060: false # Table column style
+
+globs:
+  - "**/*.md"
+
+ignores:
+  - ".venv/**"
+  - "node_modules/**"
+  - "build/**"
+  - ".git/**"
+  - ".local/**"
+  - "technical/templates/**"

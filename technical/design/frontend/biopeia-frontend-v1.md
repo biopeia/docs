@@ -211,6 +211,7 @@ Purpose: find authorized World/run contexts without implying that a run is a
 World or that the frontend starts one.
 
 Content:
+
 - filterable list of World identity, run/study relation if published, latest
   committed cut, last publication time (labelled collection/delivery time),
   availability and access scope;
@@ -225,6 +226,7 @@ No “Create World”, “Start”, “Resume” or intervention controls in v1.
 Purpose: high-level inspection of one run's published causal state.
 
 Layout regions:
+
 1. **Identity/context strip:** World ID, run/study IDs when real, selected
    committed cut, Organism/Presence/Body links only when explicitly asserted.
 2. **State summary:** owner-projected cards for Organism, Embodiment and
@@ -252,6 +254,7 @@ environment feature; toggle available claim layers; select a committed cut.
 All controls are local presentation actions.
 
 Rules:
+
 - Render only geometry and pose grounded in claims with explicit frame,
   units, subject and morphology/environment revisions.
 - A body model may be schematic if the source contract only supports a
@@ -306,6 +309,7 @@ Purpose: inspect one SemanticClaim and related delivery metadata.
 
 The page separates semantic claim fields from envelope/delivery fields and
 shows:
+
 - family and semantic revision;
 - issuer-scoped observation/claim ID, if supplied;
 - typed subject and explicit cross-domain links;

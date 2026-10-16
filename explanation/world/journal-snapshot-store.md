@@ -29,6 +29,7 @@ formatted as single-line JSON with an explicit newline (`\n`) terminator.
 Writes are serialized using POSIX advisory file locking (`fcntl.flock`).
 
 A journal checkpoint reference carries:
+
 - `owner`: `"world-journal"`
 - `owner_identity`: The World ID string
 - `checkpoint_id`: `journal-cut-{tick}-sequence-{sequence}-offset-{offset}`
