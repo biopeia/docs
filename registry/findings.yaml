@@ -2124,3 +2124,16 @@ findings:
     status: resolved
     disposition: >
       Corrected in the documentation: the citation names the real test. The unit's review basis is unchanged.
+
+  F-0173:
+    class: evidence_gap
+    repository: lab
+    observed_at: 4e14108f5bb97e66902ea295e1930f3a43ce15d4
+    units:
+      - component.lab-observation-consumer
+    summary: >
+      `test_lab_associates_real_production_world_cycle_publications` loads World's acceptance test file with `runpy` (path from `BIOPEIA_WORLD_ACCEPTANCE_TEST`), replaces `ObservationPlane` in the globals of World's private test helper `_run`, and asserts that exactly two messages are published. Run on 2026-10-16 with every repository at its head (lab 4e14108, world d66ac6197c8e, organism 637bc21a7e2a, embodiment 8f9576a8cf5b, environment 4eb1f8c3393a, observation 572c86f8fce6, modality 62af4aba0714) it fails: the published message sequences are (1, 2, 3, 4, 5) against delivery sequences (1, 2, 3), because World's cycle now also publishes spatial projections. Lab's CI runs the test at its pinned World revision, where it passes. The test binds Lab's evidence to the internals of another repository's test file, so a change to World's tests can break Lab without any change to World's contract. In the same run the other Lab integration tests passed or were skipped by design (material-transfer execution is disabled until verified authorization exists).
+    documented_in:
+      - explanation/lab/observation-consumer.md
+    material: false
+    status: open
