@@ -1,9 +1,8 @@
 # The MuJoCo step executor
 
-Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run made at that revision on
-2026-10-11, or a statement by the repository about its own intent.
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16); first written against `95f5064c`. Statements are marked by what
+supports them: the code, the tests, or a statement by the repository about its own intent.
 
 ## What it is
 

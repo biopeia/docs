@@ -1,7 +1,7 @@
 # What a cognitive checkpoint carries
 
-Reviewed against `organism@de16558faeba04f05eee6d2035a8f7f1e64b822b` and
-`world@e2be58700c870419a309ef3e2460b30b95c256be` (main on 2026-10-14); first written against `ba001179`.
+Reviewed against `organism@637bc21a7e2a1aa9e0870f55f134e839657687f4` and
+`world@d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on 2026-10-16); first written against `ba001179`.
 Everything below describes those revisions. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -114,14 +114,21 @@ document. A checkpoint written under one set of ceilings was refused under a
 smaller one (ad hoc run), with the general error "malformed cognitive runtime
 checkpoint".
 
-The payload carries a `dependency_closure` field that must be present and
-empty: it supports only a self-contained subset, and an absent or non-empty
-closure is refused (`test_owner_payload_requires_dependency_manifest`,
-`test_owner_payload_rejects_unsupported_dependency_manifest`). Restored from
-an owner envelope, any dependency the envelope declares is refused rather
-than verified (`test_owner_payload_rejects_caller_declared_dependencies`);
-the envelope document describes the envelope's own closure check. Nothing in
-the composition declares a dependency of its own. (Corrected on 2026-10-16: the tests first cited here had been replaced by organism `c34147a` before this document's revision; finding F-0168.)
+The cognitive checkpoint payload requires an explicit dependency manifest
+that must be present and empty (`dependency_closure: []`,
+`test_owner_payload_requires_dependency_manifest`,
+`test_owner_payload_rejects_unsupported_dependency_manifest`). When restored
+from an owner envelope (`from_organism_checkpoint`), any dependency the envelope
+declares is refused fail-closed rather than verified
+(`test_owner_payload_rejects_caller_declared_dependencies`);
+the envelope document describes the envelope's own closure check. Furthermore,
+serializing or restoring a resident with unregistered models or external
+resolvers is strictly rejected fail-closed
+(`test_owner_payload_rejects_undeclared_external_generative_state`,
+`test_owner_payload_rejects_injected_registry`). Nothing in the composition
+declares a dependency of its own. (Corrected on 2026-10-16: the tests first cited
+here had been replaced by organism `c34147a` before this document's revision;
+finding F-0168.)
 
 ## Exact: the graph comes back as it was
 

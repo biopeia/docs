@@ -1,7 +1,7 @@
 # From a motor command to effector channels
 
-Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
-2026-10-14); first written against `a5129f0`. Everything below describes the
+Reviewed against `embodiment` at commit `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` (main on
+2026-10-16); first written against `a5129f0`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -179,6 +179,27 @@ A `JointTorqueRequest` is projected via `project_joint_torque_command` (lines 24
 - Neutral value is strictly `0.0` N·m; saturation policy is `reject`.
 - An omitted joint produces no output channel.
 
+## Explicit no-actuation projection
+
+When an Organism cycle produces an explicit no-actuation outcome, Embodiment
+validates applicability before the physical step advances
+(`embodiment:src/embodiment/physics3d/joint_torque.py::project_no_actuation`).
+
+The function takes an `EmbodimentJointTorqueBinding`, an
+`ActiveArticulatedMorphology` and an `issued_at_tick`. It checks that:
+
+- the binding's `body_id`, `embodiment_episode_id` and `morphology_revision`
+  match the active morphology;
+- the binding explicitly covers every joint in the active morphology;
+- every channel's axis matches the active morphology's joint axis;
+- the issue tick is a non-negative integer.
+
+If valid, it returns a `NoActuationProjection` carrying the binding identifier,
+binding fingerprint, body, episode, morphology revision and issued tick.
+Stale revisions or incomplete bindings fail closed with `ValueError`
+(`test_projects_explicit_no_actuation_against_active_morphology`,
+`test_no_actuation_rejects_stale_incomplete_or_invalid_projection`).
+
 ## Composing paired motor activations into joint torque
 
 For organisms with paired antagonistic motor channels (e.g., flexor/extensor pairs),
@@ -227,7 +248,7 @@ caller than that fixture.
 
 | Claim | Support |
 |---|---|
-| Provenance checks, binding and morphology agreement, coverage, uniqueness, availability, range, mapping by identifier, omission, binding checkpoint | Code and tests in `embodiment:tests/test_actuation_projection.py`, run at that revision (all pass) |
+| Provenance checks, binding and morphology agreement, explicit no-actuation projection, coverage, uniqueness, availability, range, mapping by identifier, omission, binding checkpoint | Code and tests in `embodiment:tests/test_actuation_projection.py` and `embodiment:tests/test_joint_torque.py` |
 | Output sorted by effector; bounds inclusive; only `reject` accepted; numeric neutral required; unavailable actuator may be left uncommanded | Code, and one ad hoc run of the module at that revision |
 | Dead body projected; issue tick unchecked; a stand-in object accepted as checkpoint; whitespace-only identifier accepted | Code, and the same ad hoc run; no test is kept for these |
 | What a command must be bound to and what omission means | Accepted decision ADR-0073; a statement of intent |

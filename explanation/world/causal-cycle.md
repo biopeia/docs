@@ -1,7 +1,7 @@
 # The sensorimotor causal cycle
 
-Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
-(main on 2026-10-15). Statements are marked by what supports them: the code,
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16). Statements are marked by what supports them: the code,
 the tests, or an accepted decision.
 
 ## What it is
@@ -100,6 +100,46 @@ under explicit bounds:
   store manifest; it is never rolled back or retried. The session result records
   `publication_delivery_status_uncertain = True` to notify the operator.
 
+## Explicit no-actuation progression
+
+When Organism produces no motor intents (for example, exploration yields
+`ExplorationOutcome.NO_ACTUATION`), Embodiment projects `NoActuationProjection`
+(`project_no_actuation` in `embodiment:src/embodiment/physics3d/joint_torque.py`).
+
+World and the MuJoCo adapter treat no-actuation strictly:
+
+- The solver adapter does not invoke compliant torque grid search. It
+  integrates strictly `applied_torque = 0.0`
+  (`world:src/world/adapters/articulated_mujoco.py:504-518`).
+- The resulting zero-torque candidate must satisfy Embodiment's joint position
+  and velocity caps. If the passive physics candidate violates limits, the
+  transition fails closed without committing, leaving the prior cut intact and
+  marking the manifest `RECOVERY_REQUIRED`
+  (`test_no_actuation_rejects_infeasible_zero_torque_without_committing`).
+- When compliant, physics advances, solver evidence records zero torque, and
+  the resulting cut commits normally
+  (`test_explicit_no_actuation_advances_physics_and_commits_cut`).
+
+## Compact Organism checkpoint (v5) and external history
+
+In addition to self-contained v4 checkpoints, the causal cycle wires the
+compact Organism exploration checkpoint format (`schema: biopeia-organism-exploration-checkpoint-v5`):
+
+- **Owner dependency declaration:** When the Organism action composer is
+  configured with an external `HistoryIndex`, its checkpoint payload references
+  its action-history head as an `OwnerCheckpointDependency`.
+- **World dependency verification:** World verifies that every declared
+  dependency reference is resolvable, structurally valid, and committed before
+  accepting the cut (`world:src/world/checkpoint_dependency.py`).
+- **Bit-identical longitudinal continuity:** An interrupted 24-cycle v5 session
+  stopped at a committed cut, restored from disk in a fresh process, and resumed
+  commits the exact same cuts, owner checkpoint digests, and action-history
+  heads as an uninterrupted run (`test_m3_longitudinal_continuity.py`).
+- **Equivalence with v4:** A 12-cycle session running v5 produces cut-for-cut
+  identical physical and environment owner states to v4, reconstructing the
+  exact v4 Organism state on demand
+  (`test_end_to_end_causal_cycle_acceptance.py`).
+
 ## Restoration and live continuation
 
 The cycle restores a committed cut and continues from it through
@@ -110,7 +150,8 @@ Given a durable World runtime and the latest committed cut:
 1. World verifies the committed cut and reads the corresponding checkpoint
    bytes from the owner checkpoint store.
 2. Organism, Embodiment, and Environment are restored from their exact
-   committed checkpoint bytes.
+   committed checkpoint bytes. If an owner checkpoint declares dependencies,
+   World resolves them via content-addressed lookups against the owner store.
 3. Actuator applicability and surface fingerprints are validated.
 4. One acceptance test stops a run after its first committed cut, restores
    it in a fresh process and runs the next tick. The summary of that tick
@@ -130,6 +171,8 @@ Given a durable World runtime and the latest committed cut:
 | Complete cycle coordination and 7-stage sequence | Code in `world:src/world/causal_cycle.py` |
 | Bounded session loop, cooperative stopping, and cut preservation | Code in `world:src/world/causal_cycle.py:613-747` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Articulated MuJoCo execution from motor commands | Code in `world:src/world/adapters/articulated_mujoco.py` |
+| Explicit no-actuation progression without torque search | Code in `world:src/world/adapters/articulated_mujoco.py:504-518` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
+| Compact v5 Organism checkpoint and dependency verification | Code in `world:src/world/checkpoint_dependency.py` and integration tests in `world:tests/integration/test_m3_longitudinal_continuity.py`, `world:tests/integration/test_m1_compact_organism_checkpoint.py` |
 | Atomic owner checkpoint and genesis persistence | Code in `world:src/world/owner_checkpoint_store.py` and tests in `world:tests/test_owner_checkpoint_store.py` |
 | Restoration and one continued tick matching an uninterrupted run | Acceptance tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Preserved domain ownership and passivity of observation | Accepted decisions ADR-0073, ADR-0078, ADR-0095 |

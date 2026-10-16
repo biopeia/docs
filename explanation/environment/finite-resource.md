@@ -1,7 +1,7 @@
 # The finite resource
 
-Reviewed against `environment` at commit `d09e45c40633c9b2bf927c7aec3f6326318c2ea8`
-(main on 2026-10-14); first written against `f97ec222`. Everything below
+Reviewed against `environment` at commit `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1`
+(main on 2026-10-15); first written against `f97ec222`. Everything below
 describes the later revision. Statements are marked by what supports them: the
 code, the tests, or neither.
 
@@ -204,6 +204,12 @@ reference is structurally listed in the cut. It does not authenticate World's
 signature or commit authority; World remains the trust boundary for the receipt
 itself.
 
+A strict negative guard ensures that `ResourceStateObservationProjection` cannot
+be misread as a sensory scalar field: it carries no `unit` or `quantity_kind`,
+and attempting to restore an `IdentifiedFiniteScalarField` from its checkpoint
+bytes fails closed
+(`test_resource_snapshot_cannot_be_misread_as_scalar_field_sensing`).
+
 ## Time
 
 None. The resource reads no clock and counts no ticks. Whatever paces its use
@@ -228,5 +234,5 @@ lives outside it.
 | The field does not shrink with use; the bound is per call; direct assignment is possible | Code, and one ad hoc run of the module at that revision |
 | Lengths are relative, by declaration; the quantity has no unit | Code of `environment:src/environment/resource.py` and `environment:src/environment/physical.py` |
 | Identified scalar field, sample correlation, and post-adoption projection | Code in `environment:src/environment/identified_resource.py:215-554` and tests in `environment:tests/test_identified_resource.py:309-552` |
-| Committed resource state projection, World receipt protocol, and strict rejection of unlisted or mismatched references | Code in `environment:src/environment/identified_resource.py:38-138` and tests in `environment:tests/test_identified_resource.py:43-204` |
+| Committed resource state projection, World receipt protocol, and strict rejection of unlisted or mismatched references | Code in `environment:src/environment/identified_resource.py:38-138` and tests in `environment:tests/test_identified_resource.py:43-236` |
 | Why the quantity belongs to Environment | Accepted decision ADR-0095; a statement of intent |

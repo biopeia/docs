@@ -1,7 +1,7 @@
 # Execution bindings, availability and the affordance resolver
 
-Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
-2026-10-14); first written against `3cc0f319`. Everything below describes the
+Reviewed against `organism` at commit `637bc21a7e2a1aa9e0870f55f134e839657687f4` (main on
+2026-10-16); first written against `3cc0f319`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
@@ -76,11 +76,16 @@ To manage transitions across physical bodies and surfaces, `CompetenceExecutionB
 `surface_fingerprint`. Any binding confirmed on a different surface is transitioned to
 `STALE` with `StalenessReason.SURFACE_NOT_CURRENT`.
 
-Bindings now carry an explicit `applicability_fingerprint`. When `derive_availability`
+Bindings carry an explicit `applicability_fingerprint`. When `derive_availability`
 (`organism:src/organism/agency/availability.py:87-119`) evaluates a binding against the
-current embodiment context, a mismatch in morphology or surface sets `scope = PredictionScope.HISTORICAL`
-and reason `AvailabilityReason.APPLICABILITY_MISMATCH`. Prior-body motor hypotheses are preserved
-as historical knowledge without allowing them to execute on an incompatible new body.
+current embodiment context:
+
+- If either the query or the binding lacks an applicability fingerprint, the scope is
+  `PredictionScope.UNCERTAIN_CURRENT` and the reason is `AvailabilityReason.APPLICABILITY_UNKNOWN`.
+  Missing current or stored context is treated as unknown, not proof of historical embodiment.
+- If both fingerprints are present but do not match, the scope is `PredictionScope.HISTORICAL`
+  and the reason is `AvailabilityReason.APPLICABILITY_MISMATCH`. Prior-body motor hypotheses are
+  preserved as historical knowledge without allowing them to execute on an incompatible new body.
 
 Furthermore, motor competence records are derived directly from causal evidence via
 `organism:src/organism/actuation/derivation.py::derive_motor_competence_from_evidence`,
@@ -139,7 +144,13 @@ stored".
 For each competence in the library it produces an affordance when all of the
 following hold: the embodiment identifier in the query equals its own; the
 callback says yes; the registry has a row for the competence; the prediction
-function returns an effect that the effect space knows. The affordance takes
+function returns an effect that the effect space knows; and both the resolver
+and the binding possess non-None applicability fingerprints that match
+(`self._applicability_fingerprint is not None` and
+`binding.applicability_fingerprint == self._applicability_fingerprint`).
+If applicability is missing or differs, the resolver refuses to expose an
+executable action (`organism:tests/source_unit/agency/test_affordance_resolver.py`).
+The affordance takes
 
 - its prediction confidence from the prediction;
 - its controllability from the controllability model's estimate for that
@@ -226,24 +237,32 @@ Every tick is an argument. The registry stores ticks as given and compares
 none of them; the search for clocks is described under
 [competence development](competence-development.md#time-and-determinism).
 
+## Byte serialization for owner checkpoints
+
+To participate cleanly in owner longitudinal checkpoints without external format leaks,
+both the competence model and library provide self-contained byte codecs:
+
+- `CompetenceEffectModel.to_bytes()` and `.from_bytes()` (`organism:src/organism/actuation/model.py`)
+- `CompetenceLibrary.to_bytes()` and `.from_bytes()` (`organism:src/organism/actuation/competence.py`)
+
+Both serializers use canonical sorted-key JSON and strictly reject duplicate JSON keys fail-closed
+(`organism:tests/source_unit/actuation/test_competence_checkpoint.py`).
+
 ## What supports this description
 
 | Claim | Support |
 |---|---|
 | The fields of a binding, its three statuses and their reasons | Code and tests in `organism:tests/source_unit/agency/test_competence_availability.py` |
 | Transitions are recorded and evidence revalidates; restore refuses an earlier schema | Code and the same tests |
+| Applicability fingerprint matching vs missing: UNCERTAIN_CURRENT on missing context, HISTORICAL on mismatch | Code and tests in `organism:tests/source_unit/agency/test_competence_availability.py` |
+| Resolver requires matching applicability context to expose executable affordance | Code in `organism:src/organism/agency/affordances.py` and tests in `organism:tests/source_unit/agency/test_affordance_resolver.py` |
+| Byte serialization of competence library and effect models with duplicate-key rejection | Code in `organism:src/organism/actuation/model.py` and `competence.py`, tests in `organism:tests/source_unit/actuation/test_competence_checkpoint.py` |
 | Numbers are limited to the unit interval; an invalidated binding cannot be set valid; eviction order; the listing method changes nothing | Code and one ad hoc run of the module at that revision |
 | One row per competence: a second surface replaces the first, keeps its evidence references, valid-from tick and revision, and records no transition | Code and the ad hoc run; no test |
-| The four answers, the scope and the reason | Code and the same tests |
+| The four answers, the scope and the reason | Code and tests in `test_competence_availability.py` |
 | The registry's and the function's answers on executability differ for a stale binding with a live reason | Code and the ad hoc run |
-| What the resolver requires and where each number of an affordance comes from | Code and the ad hoc run; the resolver has no test |
-| The resolver ignores binding status and surface and never reads its own fingerprint | Code and the ad hoc run |
 | Pending lifecycle transitions round-trip in order | Code and `test_all_pending_lifecycle_transitions_survive_checkpoint_restore` |
-| The registry is constructed only in its test module; the resolver and the library nowhere; no checkpoint includes the export | Search of the seven repositories at `origin/main`, 2026-10-09 |
 | What applicability and re-embodiment must respect | Accepted decision ADR-0104; a statement of intent |
-
-No binding made from an observed execution was examined, because nothing
-produces one at this revision.
 
 ## Open questions
 

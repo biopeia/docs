@@ -1,9 +1,9 @@
 # From an affordance to a motor command
 
 Reviewed against `organism` at commit
-`de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on 2026-10-14); first written against `ba001179`.
+`637bc21a7e2a1aa9e0870f55f134e839657687f4` (main on 2026-10-16); first written against `ba001179`.
 The action composition is exercised by World's sensorimotor causal cycle and
-acceptance tests. Statements are marked by what supports them: code, tests, or
+acceptance tests (`world@d66ac6197c8ea8489dc4f2689641ff0a88b6482a`). Statements are marked by what supports them: code, tests, or
 an accepted decision.
 
 ## What it is
@@ -446,6 +446,34 @@ says internal conditions are exposed outward as Organism-emitted signals or
 actions. A motor command is the only outward value on this path. Those are
 statements of intent; this document does not test them.
 
+## Compact ActionDomain checkpoint with external history (M3)
+
+Full `ActionDomain.checkpoint()` exports every commitment and intent ever registered,
+growing $O(N^2)$ over extended runs. To address this, `organism:docs/action-history/m3-specification.md`
+and `organism:src/organism/actuation/action_history.py` establish a compact checkpoint format
+with external content-addressed history segments:
+
+- **History segments:** An immutable, content-addressed chain of JSON segments
+  (`schema: "biopeia-organism-action-history-segment-v1"`), linked by SHA-256 digests
+  (`previous_head`). Terminal commitments, intents and closures are appended to segments.
+- **Compact domain state:** `ActionDomain` serializes only live commitments and pending/active
+  intents (`schema: "biopeia-organism-action-domain-compact-v1"`), retaining $O(1)$ size
+  with respect to run length.
+- **Retired identity tracking:** On restore, `ActionDomain.restore_live` populates
+  `_retired_intent_ids`, `_retired_commitment_ids` and `_retired_closed_ids` from the verified
+  history chain, preserving registration uniqueness and double-close prevention without keeping
+  historical record bodies in memory.
+- **Exploration checkpoint v5:** `exploration_checkpoint_v5` packages the compact domain state
+  into an envelope (`schema: "biopeia-organism-exploration-checkpoint-v5"`) and declares an
+  explicit external dependency (`declared_dependency(locator=..., sha256=head_sha256)`).
+  Restoring loads the historical segment chain backward to genesis via a caller-supplied resolver
+  and verifies each link and count before restoring the domain
+  (`test_exploration_v5_round_trips_exact_domain_state`, `test_load_history_rejects_broken_chain`).
+- **Production integration:** In World's causal cycle (`world:src/world/causal_cycle.py`),
+  `OrganismExplorationComposer` coordinates step persistence, linking history segments into
+  World's content-addressed dependency storage before committing the causal cut
+  (`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
+
 ## What supports this description
 
 | Claim | Support |
@@ -460,20 +488,14 @@ statements of intent; this document does not test them.
 | Effector identity is stable under input reordering; contract changes affect fingerprint, not identity | Code and tests in `organism:tests/source_unit/actuation/test_surface.py` |
 | What the surface check accepts and refuses | Code and tests in `organism:tests/source_unit/actuation/test_system.py`; the acceptance of a command with no commitment from the ad hoc run |
 | `ActionDomain` admission, commitment registration, command issue/execution and terminal close/outcome recording | Code in `organism:src/organism/actuation/domain.py` and tests in `organism:tests/source_unit/actuation/test_domain.py` |
-| The composition in the fixture, including domain-coordinated intent and commitment | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`; fixture evidence, not production runtime evidence |
+| Compact ActionDomain checkpoint round-trips live state and tracks retired record identities | Code in `organism:src/organism/actuation/action_history.py` and tests in `organism:tests/source_unit/actuation/test_action_history_prototype.py` |
+| Exploration checkpoint v5 declares external history dependency and restores via backward segment verification | Code in `organism:src/organism/actuation/action_history.py` and tests in `organism:tests/source_unit/actuation/test_exploration_v5.py` |
+| Production causal cycle integration via `OrganismExplorationComposer` | Code in `world:src/world/causal_cycle.py` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
+| The composition in the fixture, including domain-coordinated intent and commitment | Code of `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | What a command must be bound to, and that omission is not a command | Accepted decision ADR-0073; a statement of intent |
-
-This review does not establish a production caller for `ActionDomain`, a
-durable action-context checkpoint, or a runtime-observed end-to-end causal
-cycle. Several inputs to the path (competence library, effect and
-controllability models, execution bindings, and alternate prospective route)
-are outside this document's review scope.
 
 ## Open questions
 
-- Which component is meant to own the path as a whole: construct the intent
-  from a decision, the commitment from an arbitration, keep the one commitment
-  in force, and close both when an outcome is known.
 - Whether the controller's position belongs in the Organism's checkpoint. In
   the fixture the Organism state names a controller and an initial step, and
   no code reads them back.

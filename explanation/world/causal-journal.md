@@ -1,7 +1,7 @@
 # The World causal journal
 
-Reviewed against `world` at commit `a8d07fd791da76365aa74080eef1e82b11a599fd`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16); first written against `a8d07fd7`. Statements are marked by what
 supports them: the code, the tests, or neither.
 
 ## What it is
@@ -74,6 +74,12 @@ test:
   clears them until a later commit or an explicit abort;
 - staging lives in memory only. The module's own description calls it "an
   in-memory transaction aid, not a durable commit protocol".
+
+**Candidate overlay.** `EventJournal.candidate()` creates a `JournalCandidate`
+transaction view over a committed journal. Appends to the candidate compute
+running prefix digests incrementally without copying base records. Calling
+`candidate.commit()` transfers the candidate records and digests directly into
+the base journal (`test_candidate_is_an_append_overlay_until_explicit_commit`).
 
 At this revision neither World runtime uses staging. The durable runtime
 appends the committed tick record and may append zero or more opaque

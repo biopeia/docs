@@ -21,7 +21,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.world-causal-manifest:
     kind: component
@@ -45,7 +45,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.world-journal-snapshot-store:
     kind: component
@@ -67,7 +67,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.world-durable-runtime:
     kind: component
@@ -97,7 +97,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.world-in-memory-runtime:
     kind: component
@@ -121,7 +121,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   mechanism.world-causal-transition:
     kind: mechanism
@@ -147,7 +147,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   mechanism.world-genesis-and-rosters:
     kind: mechanism
@@ -171,7 +171,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   mechanism.world-recovery:
     kind: mechanism
@@ -194,7 +194,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   mechanism.physical-causal-step:
     kind: mechanism
@@ -231,11 +231,11 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
-        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
+        modality: 62af4aba07146d5dfdc978af07bb72111112d873
         observation: 2f4751f53678f2210930770605844cac766b1da4
 
   component.world-mujoco-step-executor:
@@ -259,7 +259,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.environment-finite-resource:
     kind: component
@@ -286,7 +286,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
 
   component.environment-static-scene:
     kind: component
@@ -300,10 +300,12 @@ units:
       - explanation/environment/static-scene.md
     implementation:
       - environment:src/environment/static_scene.py
+      - environment:src/environment/spatial_render.py
     tests:
       - environment:tests/test_static_scene.py
       - environment:tests/test_environment_physical_projection.py
       - environment:tests/test_restoration.py
+      - environment:tests/test_spatial_render.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -313,7 +315,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
 
   component.environment-procedural-genesis:
     kind: component
@@ -335,7 +337,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
 
   component.environment-resource-geometry:
     kind: component
@@ -359,7 +361,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
 
   concept.modality-current-state:
     kind: concept
@@ -386,11 +388,11 @@ units:
     review:
       status: RECORDED
       basis:
-        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        modality: 62af4aba07146d5dfdc978af07bb72111112d873
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 2f4751f53678f2210930770605844cac766b1da4
         lab: 800488dfccadf2a62e193405de141da0195f53f4
 
@@ -420,7 +422,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   mechanism.embodiment-actuation-projection:
@@ -435,8 +437,10 @@ units:
     implementation:
       - embodiment:src/embodiment/physics3d/actuator_binding.py
       - embodiment:src/embodiment/physics3d/actuation_projection.py
+      - embodiment:src/embodiment/physics3d/joint_torque.py
     tests:
       - embodiment:tests/test_actuation_projection.py
+      - embodiment:tests/test_joint_torque.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     adrs:
@@ -444,7 +448,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
 
   component.embodiment-somatic-state:
     kind: component
@@ -475,7 +479,7 @@ units:
       basis:
         lab: 800488dfccadf2a62e193405de141da0195f53f4
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 2f4751f53678f2210930770605844cac766b1da4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
@@ -658,6 +662,8 @@ units:
       - organism:src/organism/actuation/controller.py
       - organism:src/organism/actuation/command.py
       - organism:src/organism/actuation/domain.py
+      - organism:src/organism/actuation/action_history.py
+      - organism:src/organism/actuation/bounded_action.py
       - organism:src/organism/actuation/surface.py
       - organism:src/organism/actuation/system.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
@@ -665,6 +671,8 @@ units:
       - organism:tests/source_unit/agency/test_executive_admission.py
       - organism:tests/source_unit/actuation/test_command_binding.py
       - organism:tests/source_unit/actuation/test_domain.py
+      - organism:tests/source_unit/actuation/test_action_history_prototype.py
+      - organism:tests/source_unit/actuation/test_exploration_v5.py
       - organism:tests/source_unit/actuation/test_surface.py
       - organism:tests/source_unit/actuation/test_system.py
     adrs:
@@ -676,8 +684,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.organism-identity-checkpoint:
     kind: component
@@ -696,6 +704,7 @@ units:
     tests:
       - organism:tests/test_identity.py
       - organism:tests/test_checkpoint.py
+      - organism:tests/source_unit/test_longitudinal_checkpoint.py
       - organism:tests/source_unit/cognition/test_portable_checkpoint.py
     adrs:
       - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
@@ -705,7 +714,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.organism-executive-outcome-ledger:
     kind: component
@@ -956,11 +965,11 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
+        modality: 62af4aba07146d5dfdc978af07bb72111112d873
         observation: 2f4751f53678f2210930770605844cac766b1da4
         lab: 800488dfccadf2a62e193405de141da0195f53f4
 
@@ -978,10 +987,12 @@ units:
       - embodiment:src/embodiment/physics3d/articulated_spec.py
       - embodiment:src/embodiment/physics3d/mechanics.py
       - embodiment:src/embodiment/physics3d/articulated_state.py
+      - embodiment:src/embodiment/physics3d/spatial_render.py
     tests:
       - embodiment:tests/test_articulated_spec.py
       - embodiment:tests/test_physics3d_mechanics.py
       - embodiment:tests/test_articulated_state.py
+      - embodiment:tests/test_spatial_render.py
       - world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
@@ -996,7 +1007,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   mechanism.embodiment-physical-projection:
@@ -1033,7 +1044,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   component.environment-dynamic-state:
@@ -1063,7 +1074,7 @@ units:
     review:
       status: RECORDED
       basis:
-        environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   component.organism-competence-development:
@@ -1124,7 +1135,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.organism-execution-binding:
     kind: component
@@ -1140,6 +1151,8 @@ units:
       - organism:src/organism/agency/affordances.py
     tests:
       - organism:tests/source_unit/agency/test_competence_availability.py
+      - organism:tests/source_unit/agency/test_affordance_resolver.py
+      - organism:tests/source_unit/actuation/test_competence_checkpoint.py
     adrs:
       - docs:technical/adr/ADR-0095-surviving-semantic-authorities.md
       - docs:technical/adr/ADR-0104-body-schema-and-competence.md
@@ -1151,7 +1164,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.organism-prospective-deliberation:
     kind: component
@@ -1182,7 +1195,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.organism-genome:
     kind: component
@@ -1234,9 +1247,11 @@ units:
     implementation:
       - organism:src/organism/memory/experience.py
       - organism:src/organism/memory/ledger.py
+      - organism:src/organism/memory/recording.py
     tests:
       - organism:tests/memory/test_experience.py
       - organism:tests/memory/test_ledger.py
+      - organism:tests/memory/test_recording.py
     adrs:
       - docs:technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md
       - docs:technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md
@@ -1247,7 +1262,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.organism-causal-provenance-log:
     kind: component
@@ -1340,7 +1355,7 @@ units:
     review:
       status: RECORDED
       basis:
-        embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
 
   component.organism-actuator-evidence:
     kind: component
@@ -1506,7 +1521,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   mechanism.organism-cognitive-checkpoint:
     kind: mechanism
@@ -1540,8 +1555,8 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.organism-attention-allocation:
     kind: component
@@ -1587,7 +1602,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   mechanism.organism-sense-to-checkpoint-transition:
     kind: mechanism
@@ -1621,9 +1636,9 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        modality: 93a4c3a4ea71dcf65269ce730aab736238fd3ea7
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
+        modality: 62af4aba07146d5dfdc978af07bb72111112d873
 
   component.world-observation-publication:
     kind: component
@@ -1647,7 +1662,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.world-causal-cycle:
     kind: component
@@ -1670,7 +1685,7 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
 
   component.lab-observation-consumer:
     kind: component
@@ -1703,9 +1718,11 @@ units:
       - explanation/organism/continuation-closure-and-reembodiment.md
     implementation:
       - organism:src/organism/continuation.py
+      - organism:src/organism/checkpoint.py
       - organism:src/organism/cognition/portable_checkpoint.py
     tests:
       - organism:tests/test_continuation.py
+      - organism:tests/source_unit/test_longitudinal_checkpoint.py
       - organism:tests/source_unit/cognition/test_portable_checkpoint.py
     adrs:
       - docs:technical/adr/ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md
@@ -1714,7 +1731,7 @@ units:
     review:
       status: RECORDED
       basis:
-        organism: de16558faeba04f05eee6d2035a8f7f1e64b822b
+        organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
 
   component.observation-presentation-boundary:
     kind: component
@@ -1771,4 +1788,4 @@ units:
     review:
       status: RECORDED
       basis:
-        world: 1f35e92611ed76f1863136916601f07fc2fd78c1
+        world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a

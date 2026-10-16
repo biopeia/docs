@@ -1,7 +1,8 @@
 # The in-memory World runtime
 
-Reviewed against `world` at commit `e423a04a113e6015a7eca0986d303129eebaceaa`.
-Everything below describes that revision.
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16); first written against `e423a04a`. Everything below describes
+that revision.
 
 ## What it is
 

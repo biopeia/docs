@@ -1,7 +1,7 @@
 # The body's physical state and the adoption of a solver candidate
 
-Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
-2026-10-14); first written against `a5129f0`. Everything below describes the
+Reviewed against `embodiment` at commit `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` (main on
+2026-10-16); first written against `a5129f0`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 

@@ -1,7 +1,7 @@
 # The M1 bounded process bootstrap and operator profile
 
-Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
-(main on 2026-10-15). Statements are marked by what supports them: the code,
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16). Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
 
@@ -45,15 +45,18 @@ standard error with status `"failed"` and `outcome: "preflight_failed"`, and
 exits immediately with code `2`. Crucially, the filesystem is left completely
 unmodified (`world:tests/integration/test_m1_process.py:75-88, 165-181`).
 
-## The operator profile
+## The operator profile and CLI configuration
 
 The configuration of a run is defined by an operator profile schema:
-`biopeia.world.m1.scalar-sensorimotor-profile` version 1
+`biopeia.world.m1.scalar-sensorimotor-profile` version 1 or version 2
 (`world:src/world/m1_profile.py::load_operator_profile`).
 
-The repository ships an exemplary reference profile:
-`world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json`.
-This profile was derived directly from historical acceptance benchmarks in the
+The repository ships reference profiles:
+
+- `world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json` (schema v1)
+- `world:profiles/m1/scalar-sensorimotor-mujoco-3.15-v2.json` (schema v2, adding `geometry_revision` to the Embodiment definition)
+
+These profiles were derived from historical acceptance benchmarks in the
 documentation repository
 (`docs:technical/migration/MIGRATION_END_TO_END_ACCEPTANCE_REPORT.md:48-61`) at
 commit `586dcbb8376c2800fc7ea8e04ba0b486db3e87db`, updated for MuJoCo 3.15.0.
@@ -61,13 +64,23 @@ commit `586dcbb8376c2800fc7ea8e04ba0b486db3e87db`, updated for MuJoCo 3.15.0.
 The profile defines:
 
 - World identifier and source revisions.
-- Embodiment morphology, mass, damping, actuator mappings, and receptor offsets.
+- Embodiment morphology, mass, damping, actuator mappings, receptor offsets, and geometry revision.
 - Environment static arena boundaries, geometry, and scalar field parameters.
 - Organism cognitive initial state, action parameters, and foundation conventions.
 
 The process contract emphasizes: *"Operator profiles are configuration inputs,
 not physical ground truth or simulation results."* Profile parameters specify
 initialization conditions; they do not dictate causal simulation outcomes.
+
+### CLI checkpoint configuration
+
+In addition to `--profile`, `--state-root`, and `--cycles`, the `world-m1` CLI
+accepts:
+
+- `--organism-checkpoint {v4,v5}` (default `"v4"`, `world:src/world/m1_process.py:126-130`):
+  Selects between self-contained v4 exploration checkpoints and compact v5
+  checkpoints with World-verified external action-history dependencies
+  (`world:tests/integration/test_m1_process.py:165-220`).
 
 ## Genesis persistence and runtime construction
 
@@ -114,10 +127,10 @@ Process shutdown is governed by strict signal coordination:
 
 | Claim | Support |
 |---|---|
-| Executable CLI entry point `world-m1` | Code in `world:pyproject.toml:12-13` and `world:src/world/m1_process.py:main` |
+| Executable CLI entry point `world-m1` and checkpoint flags | Code in `world:pyproject.toml:12-13` and `world:src/world/m1_process.py:main`, tests in `world:tests/integration/test_m1_process.py` |
 | Process contract, lifecycle protocol, and preflight rules | Documented in `world:M1_PROCESS_CONTRACT.md` |
 | Fail-closed preflight checks and zero disk residue on failure | Code in `world:src/world/m1_process.py:20-68` and tests in `world:tests/integration/test_m1_process.py:75-88` |
-| Operator profile schema v1 and runtime builder | Code in `world:src/world/m1_profile.py` and tests in `world:tests/test_m1_profile.py` |
+| Operator profile schemas v1/v2 and runtime builder | Code in `world:src/world/m1_profile.py` and tests in `world:tests/test_m1_profile.py` |
 | Genesis blob persistence at tick 0 | Code in `world:src/world/owner_checkpoint_store.py:81-100` and tests in `world:tests/test_owner_checkpoint_store.py` |
 | Loopback observation bridge integration and ready event emission | Code in `world:src/world/m1_process.py:148-154` and integration tests |
 | Cooperative signal trapping and safe teardown protection | Code in `world:src/world/m1_process.py:139-234` and tests in `world:tests/integration/test_m1_process.py:90-163` |
