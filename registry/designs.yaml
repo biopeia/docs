@@ -467,3 +467,22 @@ designs:
       selects no storage, schema, API, transport, deployment or security
       mechanism. Record whether a derived constitutional ADR is required before
       design approval; do not request re-acceptance of the same direction.
+
+  design.observation.durable-archive-query-v2:
+    title: "Biopeia Observation V2 — Durable Archive and Read Queries"
+    path: technical/design/observation/observation-v2-durable-archive-and-query.md
+    domain: observation
+    participating_domains: [organism, embodiment, environment, world, modality, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: >
+      Issue #38 architecture proposal. It reuses the local archive behavior
+      evidenced by Observation PR #61 and specifies logical read/query needs,
+      capture semantics, authority boundaries, and incremental gates. It
+      approves no producer contract, public API, remote service, security or
+      retention policy, and does not transfer scientific evidence custody
+      from Lab. ADR-0100 assessment is scoped to a passive operational archive;
+      a constitutional boundary change remains reserved to the Architecture
+      Owner. Implementation remains not evaluated and no new implementation
+      is authorized by this design.
