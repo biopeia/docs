@@ -248,8 +248,7 @@ caller than that fixture.
 
 | Claim | Support |
 |---|---|
-| Provenance checks, binding and morphology agreement, coverage, uniqueness, availability, range, mapping by identifier, omission, binding checkpoint | Code and tests in `embodiment:tests/test_actuation_projection.py`, run at that revision (all pass) |
-| Explicit no-actuation projection validation and joint coverage | Code in `embodiment:src/embodiment/physics3d/joint_torque.py` and tests in `embodiment:tests/test_joint_torque.py` |
+| Provenance checks, binding and morphology agreement, explicit no-actuation projection, coverage, uniqueness, availability, range, mapping by identifier, omission, binding checkpoint | Code and tests in `embodiment:tests/test_actuation_projection.py` and `embodiment:tests/test_joint_torque.py` |
 | Output sorted by effector; bounds inclusive; only `reject` accepted; numeric neutral required; unavailable actuator may be left uncommanded | Code, and one ad hoc run of the module at that revision |
 | Dead body projected; issue tick unchecked; a stand-in object accepted as checkpoint; whitespace-only identifier accepted | Code, and the same ad hoc run; no test is kept for these |
 | What a command must be bound to and what omission means | Accepted decision ADR-0073; a statement of intent |

@@ -1,7 +1,7 @@
 # Post-commit observation publication and outcome classification
 
-Reviewed against `world` at commit `1f35e92611ed76f1863136916601f07fc2fd78c1`
-(main on 2026-10-15). Statements are marked by what supports them: the code,
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16). Statements are marked by what supports them: the code,
 the tests, or an accepted decision.
 
 ## What it is
@@ -92,6 +92,31 @@ prove this non-interference:
   without interruption or corruption
   (`test_observation_subscriber_overflow_does_not_change_world_causal_result`).
 
+## Spatial projection and render observations
+
+Following physical step execution, World handles two distinct classes of spatial
+render observations:
+
+1. **Cut-bound dynamic render link poses:**
+   When an articulated solver produces a transient render pose candidate, World
+   binds it to the committed cut via `associate_render_pose_candidate`
+   (`world:src/world/spatial_projection.py`). World verifies that the candidate's
+   source/target ticks and body identifier match the verified
+   `CommittedWorldCut`, and that its parent reference names the cut's exact
+   Embodiment checkpoint. It wraps the resulting `CommittedRenderPoseProjection`
+   into an `OwnerObservation` with `embodiment_render_link_pose_observation` and
+   delivers it through `publish_committed_owner_observations`. The digest
+   covers only the candidate bytes; it is not added to the World journal or
+   checkpoint.
+2. **Static owner scene and morphology projections:**
+   At initial cycle startup (`publish_static_spatial=True` in
+   `world:src/world/causal_cycle.py`), static render projections
+   (`environment_render_scene_observation` and
+   `embodiment_render_morphology_observation`) are published directly to the
+   `ObservationPlane` passively after the cut-bound claims. Static owner
+   projections are not checkpoint snapshots and must not be laundered through
+   World's committed-state association.
+
 ## Integration with the local observation read bridge
 
 In end-to-end integration and operator processes
@@ -103,7 +128,9 @@ paired with a `LocalObservationReadBridge`
 Following each durable World commit:
 
 - World delivers the verified `embodiment.body_pose` and
-  `environment.finite_scalar_field` claims to the plane.
+  `environment.finite_scalar_field` claims to the plane, along with dynamic
+  `embodiment.render_link_pose` projections and static spatial scene/morphology
+  claims when configured.
 - The read bridge exposes `GET /v1/current` on a loopback port
   (`127.0.0.1:<port>`), allowlisting requests from `http://127.0.0.1:4173`.
 - Downstream observers read passive, detached snapshots over HTTP with
@@ -116,5 +143,6 @@ Following each durable World commit:
 | Four outcome states, classification logic, non-retry on publication failure | Code in `world:src/world/physical_step_publication.py` and tests in `world:tests/test_observation_publication.py` |
 | Publication guard latching, inspection without mutation | Code in `world:src/world/durable_runtime.py:964-1100` |
 | Owner observation structural and digest validation against committed cut | Code in `world:src/world/observation_publication.py` |
+| Spatial projection cut association and verification | Code in `world:src/world/spatial_projection.py` and integration tests in `world:tests/integration/physical_step/test_articulated_production_join.py` |
 | Bit-identical non-interference and subscriber overflow resilience | Integration tests in `world:tests/integration/observation/test_world_post_commit_owner_publication.py` |
 | Architectural passivity of observation | Accepted decision ADR-0078 |

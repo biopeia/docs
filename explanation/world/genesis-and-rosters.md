@@ -1,8 +1,8 @@
 # World genesis, rosters and participant closure
 
-Reviewed against `world` at commit `95f5064c6b06bd66bb58a72110b066afe4ca70b0`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, or neither.
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+(main on 2026-10-16); first written against `95f5064c`. Statements are marked
+by what supports them: the code, the tests, or neither.
 
 ## What this is about
 

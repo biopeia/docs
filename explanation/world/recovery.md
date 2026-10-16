@@ -1,7 +1,7 @@
 # World recovery
 
-Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be` (main on
-2026-10-14); first written against `95f5064c`. Everything below describes the
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+2026-10-16); first written against `95f5064c`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
 

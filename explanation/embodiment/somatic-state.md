@@ -208,17 +208,6 @@ death from its caller. Now:
 - The controller no longer accepts a tick; a death it records is at the
   body's age (`test_controller_uses_body_age_not_an_external_tick`).
 
-## Clocks
-
-Three counters appear, and nothing in this repository ties them together.
-
-- The body's **age** advances by one when its owner calls the method for
-  it. Nothing here calls it. Every tick of death is now this age.
-- The **ledger's tick** advances by one each time the ledger is advanced.
-- The **World causal tick** does not appear in somatic state at all.
-
-No physical duration enters any of these operations.
-
 ## Receiving material
 
 One function lets something outside the body add to it

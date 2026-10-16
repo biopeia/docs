@@ -1,7 +1,7 @@
 # The durable World runtime
 
-Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be` (main on
-2026-10-14); first written against `95f5064c`. Everything below describes the
+Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+2026-10-16); first written against `95f5064c`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
 
@@ -74,8 +74,12 @@ The order is the substance. Read from
 6. **Check what came back.** The references must name exactly the proposed
    participants. For each, World reads the bytes at the locator itself,
    compares their hash with the reference, and asks that owner's contract
-   whether the checkpoint is valid. Owner causal records must be structurally
-   valid, uniquely identified and bound to participating owners.
+   whether the checkpoint is valid. If an owner declares dependencies on other
+   owner checkpoints, World verifies that every declared dependency reference
+   exists in the committed cut or its ancestors and that dependencies are
+   verified before dependents (`tests/test_checkpoint_dependencies.py`). Owner
+   causal records must be structurally valid, uniquely identified and bound to
+   participating owners.
 7. **Extend the journal with delta records.** Under schema `event-journal-v3`,
    World appends only the new delta records to `world-causal-journal-v3.jsonl`
    in this order: the tick record; a causal-cut record naming the commit, the

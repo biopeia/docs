@@ -1,7 +1,7 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world@e2be58700c870419a309ef3e2460b30b95c256be` (main on
-2026-10-14); first written against `e423a04a`. The fixtures described here
+Reviewed against `world@d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+2026-10-16); first written against `e423a04a`. The fixtures described here
 import the other repositories at their pinned revisions, while production
 sensorimotor execution is provided by `world:src/world/causal_cycle.py` and
 `world:src/world/physical_step_publication.py`.
