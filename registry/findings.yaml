@@ -563,8 +563,10 @@ findings:
     documented_in:
       - explanation/embodiment/somatic-state.md
     material: true
-    status: issue_opened
+    status: resolved
     issue: "https://github.com/biopeia/embodiment/issues/26"
+    disposition: >
+      Resolved in embodiment 8f9576a ("unify reserve depletion death timing", embodiment#26 closed): a positive ledger charge spends through the body record, so depletion is death at once at the body's age, and the controller no longer accepts a caller tick; covered by three new tests in tests/test_somatic_state.py. That body age, ledger tick and World causal tick are unrelated remains true and belongs to the somatic-dynamics question tracked as F-0027 (embodiment#20).
 
   F-0025:
     class: recovery_durability_gap
