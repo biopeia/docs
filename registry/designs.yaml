@@ -477,36 +477,39 @@ designs:
     implementation_status: partial
     architecture_scope: UNRESOLVED
     implementation_evidence:
-      evaluated_on: "2026-10-16"
+      evaluated_on: "2026-10-17"
       basis:
         observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
       tests:
+        - "observation:tests/test_capture.py"
         - "observation:tests/test_archive_reader.py"
       observed: >
-        Current source inspection confirms the bounded local archive, capture
-        accounting, and read-only local ArchiveReader on Observation
-        572c86f8fce66a73cc3899a4a929448416f1e6bf. A local SQLite artifact
-        reopens with integrity ok and a stopped, closed_verified capture of
-        11 persisted receipts (local sequence 1 through 11); World manifest
-        commit tick is 3. The artifact has no recorded capture invocation
-        (runtime-capture.json is empty), and the available harness script's
-        arguments cannot be recovered, so reproducible runtime generation is
-        not established. GitHub Observation #38 is open as checked 2026-10-16.
-        No current full-suite result is claimed. Historical test results are
-        not upgraded to this source basis. Historical World #176 review at
+        Observation 572c86f8fce66a73cc3899a4a929448416f1e6bf includes the
+        bounded local archive, capture accounting, and read-only ArchiveReader.
+        Its full source test suite passed 191 tests locally on 2026-10-17 with `PYTHONPATH="$PWD/repos/observation/src" repos/world/.venv/bin/python -m pytest repos/observation/tests -q`.
+        A separate bounded opt-in World runtime harness completed 10 cycles
+        through commit 10, persisted 32 local receipt sequences, closed with
+        verified local coverage, passed SQLite integrity and payload digest/
+        round-trip checks, and was reopened by a separate read-only process.
+        The archive SHA-256 was unchanged by those reads. The exercise is not
+        make run or a supported operator workflow; runtime Embodiment package
+        revision 957af224e4400fc30a9d8d78d987cec16a8e959e differs from the
+        local Embodiment checkout SHA and must not be conflated with it. The
+        local evidence bundle is not included in this Docs PR. GitHub
+        Observation #38 remains open. World #176 review at
         world c165acb confirms current contracts do not support durable
         historical-cut membership or complete multi-owner joins. Browser
-        history, remote access and operational retention/security remain
-        incomplete or unresolved; this evidence does not establish broader
-        V2 acceptance.
+        history, shared/remote access, and operational retention/security
+        remain incomplete or unresolved; this evidence does not establish
+        broader V2 acceptance.
     editorial_notes: >
       Issue #38 architecture proposal. The bounded local archive/capture and
       read-only local reader are implemented in Observation PRs #61 and #62;
       PR #63 adds integration-test coverage only.
       This is partial implementation of the broader V2 target, not V2
-      acceptance. A real bounded archive artifact is observed, but its exact
-      operator invocation is not reproducible from retained records; a
-      traceable runtime capture path remains the next increment. The design
+      acceptance. A bounded archive artifact is observed through a local
+      opt-in harness, but that harness is not a supported operator workflow;
+      a traceable, supported capture path remains unimplemented. The design
       approves no producer contract, public API, remote service, security or
       retention policy, and does not transfer
       scientific evidence custody from Lab. ADR-0100 assessment is scoped to

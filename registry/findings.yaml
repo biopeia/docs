@@ -2076,7 +2076,9 @@ findings:
     documented_in:
       - explanation/world/durable-runtime.md
     material: false
-    status: open
+    status: resolved
+    disposition: >
+      Resolved in the documentation on 2026-10-16: the process-termination paragraph of durable-runtime now cites the two journal-append tests added by world 9f65707, says what they assert, and quotes the repository's current non-claim from MIGRATION.md (the earlier quotation no longer appears in World). Both tests exist at the recorded basis 1f35e92 and at d66ac6197c8e. The paragraph carries its own update note; the units' review bases are unchanged.
 
   F-0170:
     class: documentation_inconsistency
