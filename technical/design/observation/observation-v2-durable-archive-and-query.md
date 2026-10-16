@@ -5,7 +5,7 @@ document_type: design
 owner: biopeia-observation-owner
 created: 2026-10-16
 language: en
-document_version: 1
+document_version: 2
 decision_reference: ADR-0100
 ---
 
@@ -161,9 +161,11 @@ This changes the #37 readiness finding for Spatial Explorer from “dynamic scen
 
 ### Local archive reader status (2026-10-16)
 
-Observation PR #62 is merged on `main` at `0e11ab728b4debb30e2d851ef3aa4149cc32dcb0`. Source inspection of `src/observation/archive.py` confirms that `ArchiveReader` opens the SQLite file read-only (`mode=ro` and `query_only`), verifies record integrity before returning original payload bytes and decoded owner publication, and supports pagination using the archive-local `receipt_sequence`. Exact filters are available for owner/family, subject, revision, and domain time where the stored publication metadata contains those identities. It also exposes status-bearing capture catalog and coverage results, plus integrity checking; unsupported filters, malformed identities, missing files and corrupt rows are not represented as successful empty history.
+Observation PR #62 is merged on `main` at `0e11ab728b4debb30e2d851ef3aa4149cc32dcb0`. Source inspection of `src/observation/archive.py` (blob `a0f2a58f250c109b0d59b40a6457160e50adb326`) confirms that `ArchiveReader` opens the SQLite file read-only (`mode=ro` and `query_only`), verifies record integrity before returning original payload bytes and decoded owner publication, and supports pagination using the archive-local `receipt_sequence`. The exact supported filters are owner, family, subject, revision, and domain time where the stored publication metadata contains those identities. It also exposes status-bearing capture catalog and coverage results, plus integrity checking; unsupported filters, malformed identities, missing files and corrupt rows are not represented as successful empty history.
 
-The reader does not add or infer metadata, does not join claims by World tick/run/time, and does not provide an HTTP endpoint, browser history, remote/shared access, or a general World-cut filter. The capture catalog/coverage describes persisted local accounting, not source-wide publication completeness. The focused `tests/test_archive_reader.py` suite was rerun against Observation `0e11ab728b4debb30e2d851ef3aa4149cc32dcb0`: 9 tests passed.
+The reader does not add or infer metadata, does not join claims by World tick/run/time, and does not provide an HTTP endpoint, browser history, remote/shared access, receipt-time filter, capture-scoped publication filter, or a general World-cut filter. Pagination is in local receipt order; it is not a causal cursor. The capture catalog/coverage describes persisted local accounting, not source-wide publication completeness. The focused `tests/test_archive_reader.py` suite was rerun against Observation `0e11ab728b4debb30e2d851ef3aa4149cc32dcb0`: 9 tests passed (recorded evidence; not rerun for this documentation refresh).
+
+**Owner-specific readiness delta from current source inspection:** the current Observation adapters include Environment static scene/resource/finite-scalar claims and Embodiment morphology/reserve/body-pose/render-link-pose claims; there is no Organism publication adapter in the inspected Observation source. This is a statement about the inspected adapter set, not proof that no other approved route can publish Organism-owned claims. The adapters preserve owner-scoped subject identities and owner contract revisions where defined. A generic stable source-publication ID or owner sequence is not established across these families; `source_sequence` in the archive is the Observation plane's local delivery sequence recorded for a capture, not a producer-authored identity or cross-restart continuity guarantee. Domain-time metadata is family-specific and may be absent. The Embodiment render-link-pose adapter retains a World cut identity, exact Embodiment checkpoint reference, and candidate digest; Observation structurally validates the bounded payload but explicitly does not itself verify World causality. Do not generalize this association to unrelated families or interpret it as a universal World-cut query capability. Relevant current source blobs: `src/observation/embodiment.py` (`2d36c85e96aeb71b9ad4fedbb2b436ad69aed280`) and `src/observation/environment.py` (`e4259490cc4a9b6ae45b8e987f7913371d33237b`).
 
 ## 8. Incremental plan and acceptance
 
