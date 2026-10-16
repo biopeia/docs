@@ -46,9 +46,16 @@ Each tick of the cycle advances through seven explicit stages:
 6. **Durable World commit:** World commits the transition to the append-only
    manifest and journal (`world.tick()`), generating a tamper-resistant
    `CommittedWorldCut` receipt.
-7. **Post-commit adoption and observation:** Owners adopt the candidate state
-   against the verified receipt (`adopt_after_world_commit`), and World
-   publishes verified owner observations to the observation plane.
+7. **Post-commit adoption and observation:** Organism's action composer
+   adopts its candidate against the verified receipt
+   (`adopt_after_world_commit`), and World publishes verified owner
+   observations to the observation plane. Embodiment and Environment do not
+   adopt here: they validate and adopt their candidates inside the physical
+   step, before stage 5, and their adopted states are what stage 5 persists
+   (`world:src/world/causal_cycle.py`, the `write_checkpoints` callback, and
+   `adopt_body` / `adopt_environment` in
+   `world:src/world/adapters/articulated_mujoco.py`; corrected on 2026-10-16,
+   same code at this document's revision and at `d66ac6197c8e`).
 
 ## The owner checkpoint store and genesis persistence
 

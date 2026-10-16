@@ -2122,3 +2122,18 @@ findings:
     status: resolved
     disposition: >
       Corrected in the documentation: the citation names the real test. The unit's review basis is unchanged.
+
+  F-0174:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: 1f35e92611ed76f1863136916601f07fc2fd78c1
+    units:
+      - component.world-causal-cycle
+    summary: >
+      Stage 7 of causal-cycle.md said that the owners adopt the candidate state against the verified receipt through `adopt_after_world_commit` after the commit. Only Organism's action composer does; Embodiment and Environment validate and adopt their candidates inside the articulated physical step (`adopt_body`, `adopt_environment`), before their adopted states are persisted and before World commits. Same code at 1f35e92 and d66ac6197c8e.
+    documented_in:
+      - explanation/world/causal-cycle.md
+    material: false
+    status: resolved
+    disposition: >
+      Corrected in the documentation: stage 7 now names only Organism's post-commit adoption and says where Embodiment and Environment adopt. The unit's review basis is unchanged.

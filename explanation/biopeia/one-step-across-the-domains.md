@@ -59,7 +59,7 @@ articulated adapter it calls, read from `world`
 every stage; no owner calls another owner directly. Embodiment and Environment
 validate and adopt their candidates before the commit, and their accepted
 states are what is persisted; Organism adopts its candidate after the commit.
-The causal-cycle unit lists all adoption under one post-commit stage.
+The causal-cycle unit states the same order (finding F-0174).
 
 ```mermaid
 %%{init: {'theme': 'neutral'}}%%

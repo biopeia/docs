@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-59 units, 11 cross-domain contracts, 126 findings.
+59 units, 11 cross-domain contracts, 127 findings.
 
 ## World
 
@@ -253,7 +253,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md) |
 | Tests | `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Reviewed at | world@1f35e92611ed (RECORDED) |
-| Known findings | F-0170 documentation inconsistency (resolved) |
+| Known findings | F-0170 documentation inconsistency (resolved); F-0174 documentation inconsistency (resolved) |
 
 ### World M1 process bootstrap and operator profile
 
