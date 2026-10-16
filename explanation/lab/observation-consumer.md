@@ -19,6 +19,7 @@ result.
 ## The execution association
 
 A read requires a `LabObservationAssociation`:
+
 - `experiment_id` and `run_id`: Lab-owned execution identifiers.
 - `world_id`, `causal_tick`, and `commit_id`: the World cut coordinates.
 
@@ -46,6 +47,7 @@ subscription, `_context_matches` (lines 87-142) enforces five invariants:
 ### Current messages (`associate_current_messages`)
 
 Queries `ObservationPlane.current_messages(family=family)`.
+
 - If one or more messages match, returns status `ASSOCIATED`.
 - If no messages match, returns status `UNASSOCIATED` with reason
   `"no matching message in current volatile view; not source absence"`.
@@ -59,6 +61,7 @@ Drains up to `max_messages` (default 512) from an `ObservationPlane`
 subscription queue. The caller manages the subscription lifecycle.
 
 The consumer requires the caller to rebase (`REBASE_REQUIRED`) whenever:
+
 - A stream item reports an explicit rebase reason (`item.reason` and
   `item.sequence`).
 - An item sequence is duplicate, out of order, or non-increasing

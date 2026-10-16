@@ -451,6 +451,7 @@ approved architecture. It does not satisfy the new Owner direction for durable,
 searchable historical observations across restarts and multiple consumers.
 
 ### Alternative B — Treat an Observation archive as a separate operational
+
 capability while preserving Lab evidence custody (accepted direction)
 
 This is the accepted conceptual direction: it can satisfy the target

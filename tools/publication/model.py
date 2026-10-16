@@ -17,7 +17,14 @@ from validate_registry import ROOT, load_strict_yaml  # noqa: E402
 
 MANIFEST = ROOT / "publication" / "publications" / "biopeia-master.yaml"
 TECHNICAL_REFERENCE_MANIFEST = ROOT / "publication" / "publications" / "biopeia-technical-reference.yaml"
-DEFAULT_MANIFESTS = (MANIFEST, TECHNICAL_REFERENCE_MANIFEST)
+OPERATOR_MANUAL_MANIFEST = ROOT / "publication" / "publications" / "biopeia-operator-manual.yaml"
+GUIDED_LEARNING_MANIFEST = ROOT / "publication" / "publications" / "biopeia-guided-learning.yaml"
+DEFAULT_MANIFESTS = (
+    MANIFEST,
+    TECHNICAL_REFERENCE_MANIFEST,
+    OPERATOR_MANUAL_MANIFEST,
+    GUIDED_LEARNING_MANIFEST,
+)
 
 # Sections rendered from the registry; projection.py holds one renderer each.
 GENERATED_SECTIONS = (
@@ -35,7 +42,7 @@ GENERATED_SECTIONS = (
     "designs",
 )
 # Chapters may come from these top-level directories only.
-CHAPTER_ROOTS = ("explanation/", "reference/")
+CHAPTER_ROOTS = ("explanation/", "reference/", "how-to/", "tutorials/")
 
 
 class ManifestError(ValueError):
@@ -129,9 +136,9 @@ def corpus_coverage_errors(manifests: list[dict[str, Any]], docs_root: Path = RO
             if (entry or {}).get("path"):
                 all_excluded.add(entry["path"])
 
-    # Every document in explanation/ and reference/ must be published in at least one manifest
+    # Every document in explanation/, reference/, how-to/, and tutorials/ must be published in at least one manifest
     # or explicitly listed as excluded with a reason.
-    for root_dir in ("explanation", "reference"):
+    for root_dir in ("explanation", "reference", "how-to", "tutorials"):
         folder = docs_root / root_dir
         if not folder.is_dir():
             continue

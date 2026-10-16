@@ -38,6 +38,9 @@ parts:
 
   - id: registers-and-notation
     title: Terminology, parameters and metrics
+    chapters:
+      - reference/parameters/cognitive-graph-invariants.md
+      - reference/parameters/m1-profile-specification.md
     generated: [glossary, notation, parameters, metrics]
 
   - id: records
