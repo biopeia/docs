@@ -506,8 +506,9 @@ designs:
       This is partial implementation of the broader V2 target, not V2
       acceptance. A real bounded archive artifact is observed, but its exact
       operator invocation is not reproducible from retained records; a
-      traceable runtime capture path remains the next increment. The design approves no producer contract, public API,
-      remote service, security or retention policy, and does not transfer
+      traceable runtime capture path remains the next increment. The design
+      approves no producer contract, public API, remote service, security or
+      retention policy, and does not transfer
       scientific evidence custody from Lab. ADR-0100 assessment is scoped to
       a passive operational archive; a constitutional boundary change remains
       reserved to the Architecture Owner.
