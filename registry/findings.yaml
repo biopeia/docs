@@ -2043,7 +2043,9 @@ findings:
     documented_in:
       - explanation/organism/graph-plasticity.md
     material: false
-    status: open
+    status: resolved
+    disposition: >
+      Resolved in the documentation on 2026-10-16: the end-to-end test section of graph-plasticity now names `test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline`, states its inverted pass condition, and records a re-run of its loop at organism 0ce7a031b6e9 (test and learning.py unchanged at 637bc21a7e2a). The section carries its own update note; the unit's review basis is unchanged.
 
   F-0168:
     class: documentation_inconsistency
