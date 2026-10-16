@@ -72,7 +72,9 @@ Explanatory documents are referenced from the registry by path and must live
 under `explanation/`. Decisions and designs kept here are referenced as
 `docs:technical/adr/...` and `docs:technical/design/...`. Sources in other
 repositories are referenced as `<repository>:<path>`, and each unit records in `review.basis` the commit of
-every referenced repository at which its explanation was last checked.
+every referenced repository at which its explanation was last checked as a
+whole; a section checked later carries its own dated note instead (see
+[evidence status](reference/evidence-status.md#what-a-review-basis-covers)).
 
 The design register is the only authority for the state of a design. It keeps
 three independent axes: whether the document is approved, whether Biopeia code

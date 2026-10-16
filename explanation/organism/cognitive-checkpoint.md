@@ -79,7 +79,7 @@ It refuses any other set of top-level fields, any other schema name or
 version, a missing graph, and an identity that differs between the document
 and the transition state inside it
 (`test_cognitive_checkpoint_rejects_unknown_fields`,
-`test_portable_checkpoint_schema_v6_is_not_accepted_as_a_current_payload`,
+`test_prior_portable_checkpoint_schemas_are_not_accepted`,
 `test_portable_checkpoint_rejects_non_integer_schema_version`,
 `test_cognitive_checkpoint_rejects_identity_mismatch`). Earlier versions are
 refused, not migrated: a payload written at the previously reviewed revision,
@@ -114,11 +114,14 @@ document. A checkpoint written under one set of ceilings was refused under a
 smaller one (ad hoc run), with the general error "malformed cognitive runtime
 checkpoint".
 
-When the payload arrives inside an envelope that declares dependencies, a
-reader must be supplied and the closure is verified first
-(`test_organism_checkpoint_restore_requires_and_verifies_dependency_closure`);
-the envelope document describes that check and its limits. Nothing in the
-composition declares a dependency of its own.
+The payload carries a `dependency_closure` field that must be present and
+empty: it supports only a self-contained subset, and an absent or non-empty
+closure is refused (`test_owner_payload_requires_dependency_manifest`,
+`test_owner_payload_rejects_unsupported_dependency_manifest`). Restored from
+an owner envelope, any dependency the envelope declares is refused rather
+than verified (`test_owner_payload_rejects_caller_declared_dependencies`);
+the envelope document describes the envelope's own closure check. Nothing in
+the composition declares a dependency of its own. (Corrected on 2026-10-16: the tests first cited here had been replaced by organism `c34147a` before this document's revision; finding F-0168.)
 
 ## Exact: the graph comes back as it was
 
