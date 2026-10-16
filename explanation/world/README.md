@@ -92,9 +92,10 @@ Explanatory documents of the World domain (semantic-authority).
 
 ## Open findings
 
-16 findings on these units are open, 8 of them with an issue in the owning repository:
+17 findings on these units are open, 8 of them with an issue in the owning repository:
 
 - contract gap: 5
+- documentation inconsistency: 1
 - evidence gap: 2
 - implementation finding: 6
 - performance concern: 1
