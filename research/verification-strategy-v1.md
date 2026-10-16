@@ -38,7 +38,10 @@ and what it costs to maintain them.
 ### V-01. Universal claims are checked with a handful of examples
 
 Twenty-three Organism tests are named for a property that holds for every
-input, and they exercise one to a few inputs. Examples at `organism@0ce7a031b6e9`:
+input. Four were inspected at `organism@0ce7a031b6e9`. Three exercise one to
+seven inputs, and the fourth runs 1,024 ticks of a single configuration
+(`test_exclusive_motor_groups_never_babble_antagonistic_channels_together`).
+The other nineteen were not inspected:
 
 - `test_extreme_inputs_never_produce_nan_or_inf` (`tests/source_unit/cognition/test_graph.py`)
   activates one graph with one input (`1e12`).
@@ -66,8 +69,8 @@ receives its rate and modulation through `EdgeLearningInstruction`, which
 rejects non-finite values and a negative rate, and its activations are
 tanh-bounded. So the defect is reachable only by direct callers of the
 primitive. It is **low severity**. It still matters as a demonstration: a
-generator over the input domain finds it on its first run, and the existing
-example never could.
+float strategy that includes non-finite values would reach these inputs, and
+the existing example cannot. Recorded as finding F-0171.
 
 **Proposal.** For these 23 tests and for the bounded numeric primitives they
 cover, add Hypothesis properties beside the examples, not in place of them.
@@ -142,15 +145,21 @@ and asserts the exact strings of six of its fields. Each new disposition adds
 a file, and changes in the record count force reconciliation commits (for
 example `lab e0746c4`, "reconcile disposition count for #169"). These tests
 protect against accidental edits, but they do it by restating the data.
-And they check only the rows someone wrote a test for: the 1,172-row source
-inventory and the 477-row custody table are checked as wholes only by a few
-consistency tests.
+Whole-table invariants already exist in places:
+`tests/unit/test_study_disposition_consistency.py` requires every one of the
+477 custody rows to carry one of two review statuses, and both contain
+`NOT_ADMITTED`. A scan of all twelve `migration/*.tsv` files at `lab@b583717a51ab`
+found `admitted` only in negated prose ("not ... admitted", "Do not treat ...
+as admitted"). Other tables, such as the study disposition register, are
+checked row by row.
 
-**Proposal.** Replace the per-row restatements with one record validator, as
-`docs/tools/validate_registry.py` does for the documentation registry. It
-would check closed vocabularies for each disposition and custody column,
-referential integrity across the TSVs, and the non-claim invariants **over
-every row**. Examples: every `SCIENTIFIC_EVIDENCE` custody row is also
+**Proposal.** Generalize that existing consistency test into one record
+validator, as `docs/tools/validate_registry.py` does for the documentation
+registry, and retire the per-row literal restatements it makes redundant. The
+validator would check closed vocabularies for each disposition and custody
+column, referential integrity across the TSVs, and the non-claim invariants
+**over every row of every table**, extending what the test already does for
+custody. Examples: every `SCIENTIFIC_EVIDENCE` custody row is also
 `NOT_ADMITTED`, unless an admission record names it; every `DEFER` and
 `HISTORICAL_PROTOCOL` row cites an owner decision; no row is `ADMITTED`
 without one. Per-row tests are kept only where a row carries an owner
