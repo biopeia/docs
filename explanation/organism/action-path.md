@@ -55,6 +55,40 @@ commitment registration, and command issue/execution. Proposal construction,
 controller selection and the physical transition remain explicit inputs or
 boundaries outside that coordinator.
 
+### Two routes into the coordinator
+
+A proposal reaches `ActionDomain` by one of two routes, and only one of them
+starts from an affordance.
+
+```mermaid
+%%{init: {'theme': 'neutral', 'flowchart': {'curve': 'linear'}}}%%
+flowchart TB
+  subgraph agency["Agency route: unit tests and a World fixture"]
+    direction LR
+    aff["ActionAffordance"] --> dec["ProspectiveDecision"] --> intent["ActionIntent"] --> propA["ActionProposal"]
+  end
+  subgraph explore["Bounded exploration: World's production cycle"]
+    direction LR
+    comp["OrganismExplorationComposer"] --> propB["ActionProposal<br/>source EXPLORATION,<br/>no affordance, no intent"]
+  end
+  propA --> domain["ActionDomain:<br/>select and commit, issue command"]
+  propB --> domain
+  domain --> cmd["MotorCommand,<br/>validated against the actuator surface"]
+  cmd --> world["World: Embodiment composes<br/>torques, solver steps"]
+```
+
+Bounded exploration builds its own proposal with source `EXPLORATION`, no
+competence and no affordance. It commits that proposal for one tick and
+issues the command through the same coordinator. It refuses to run while a
+commitment backed by an intent is in force
+(`organism:src/organism/actuation/bounded_action.py`, "exploration cannot
+replace an active intention commitment"; same code at `de16558` and at
+`637bc21a7e2a`). The production cycle therefore exercises the coordinator's
+arbitration, commitment and command issue, but not the route from an
+affordance. What the Organism hands on is the command; turning it into
+torques and moving the body happen in World, through Embodiment's mapping and
+the solver ([the causal cycle](../world/causal-cycle.md)).
+
 ## Step 1: an affordance
 
 An affordance (`organism:src/organism/agency/affordance.py::ActionAffordance`)
