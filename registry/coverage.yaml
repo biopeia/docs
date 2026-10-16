@@ -899,6 +899,7 @@ units:
     design:
       - docs:technical/design/runtime/biopeia-physical-step-integration-v1.md
     depends_on:
+      - component.world-causal-cycle
       - component.world-causal-manifest
       - component.world-durable-runtime
       - mechanism.world-recovery
