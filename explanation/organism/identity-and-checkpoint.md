@@ -129,6 +129,13 @@ on 2026-10-16: the tests first cited here had been replaced by organism
 The transition state offers the same check under the same name and passes it
 straight to the envelope (`test_dependency_verification_remains_owner_declared`).
 
+> Note added on 2026-10-17 against `organism` `779c097d21236cba0409f5fc52fbcd71bf2049d9`: the envelope's
+> encoding is canonical, but decoding accepts other byte forms of the same
+> state, such as indentation, key order, escapes or a trailing newline. Each
+> has a different SHA-256 (finding F-0175;
+> `docs:research/organism-codec-canonicality-v1.md`). The rest of this
+> document keeps the review revision stated at its top.
+
 This is the behaviour
 [ADR-0103](../../technical/adr/ADR-0103-portable-organism-state.md) asks of a
 portable checkpoint, which must carry its dependency closure "as embedded data
