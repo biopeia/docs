@@ -65,10 +65,10 @@ During initialization, `world-m1` emits lifecycle events on stdout:
 - A JSONL `ready` event is emitted upon genesis commit at tick 0:
 
   ```json
-  {"protocol_version": "biopeia.world.m1-process-v1", "event": "ready", "world_id": "world.acceptance.sensorimotor-v1", "run_id": "...", "profile_id": "m1.scalar-sensorimotor.operator-r2", "profile_sha256": "...", "source_revisions": {"world": "1f35e92611ed...", "organism": "0ce7a031b6e9..."}, "last_verified_committed_tick": null, "commit_id": null, "outcome": "ready", "observation_bridge": "http://127.0.0.1:4173"}
+  {"protocol_version": 1, "event": "ready", "world_id": "world.acceptance.sensorimotor-v1", "run_id": "...", "profile_id": "m1.scalar-sensorimotor.operator-r2", "profile_sha256": "...", "source_revisions": {"world": "1f35e92611ed...", "organism": "0ce7a031b6e9..."}, "last_verified_committed_tick": null, "commit_id": null, "outcome": "ready", "observation_bridge": "http://127.0.0.1:<ephemeral port>"}
   ```
 
-- The local loopback observation bridge (`observation_bridge`) is active and reachable by visualization clients during execution.
+- The local loopback observation bridge (`observation_bridge`) is active during execution. It binds an ephemeral loopback port (`observation_port=0`); `http://127.0.0.1:4173` is the browser origin it allows, not its address (`world:src/world/m1_process.py:146`; profile key `observation_bridge.allowed_origin`).
 - During cycle progression, `world-m1` emits `cycle_committed` events reporting the advancing `last_verified_committed_tick`.
 
 ### Step 4: Verify post-run artifacts
@@ -89,7 +89,7 @@ The directory structure must contain:
 
 | Symptom | Cause | Resolution |
 |---|---|---|
-| Exit code `2` with `outcome: "preflight_failed"`, error: `"working tree is dirty..."` | Dirty git working tree or unmet dependency pin. | Run `git status` and stash/commit all changes; verify dependencies in `.venv`. |
+| Exit code `2` with `outcome: "preflight_failed"`, error: `"World source checkout must have an exact commit and clean worktree"` | Dirty git working tree or unmet dependency pin. | Run `git status` and stash/commit all changes; verify dependencies in `.venv`. |
 | Exit code `2` with `outcome: "preflight_failed"`, error: `"state root already exists; fresh runs only"` | The path specified in `--state-root` already exists. | Specify a new, non-existent target path or fresh sandbox directory. |
 | Process halted via `SIGINT` | Operator interrupted run. | `world-m1` finishes the current in-flight cycle cleanly before terminating (`event: "stopped"`). The state root remains at a consistent, committed cut. |
 
