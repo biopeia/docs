@@ -27,3 +27,4 @@ states are independent, and an approved design is never, by that fact, an implem
 | [Observation Architecture for Biopeia v1](observation/observation-architecture-biopeia-v1.md) | observation | approved | partial | TARGET |
 | [Biopeia Observation — Passive Observational Data Lake v1](observation/observation-data-lake-v1.md) | observation | proposed | not_evaluated | UNRESOLVED |
 | [Biopeia Observation V2 — Durable Archive and Read Queries](observation/observation-v2-durable-archive-and-query.md) | observation | proposed | partial | UNRESOLVED |
+| [Embodiment — Post-step Joint Kinematics Projection v1](embodiment/post-step-joint-kinematics-projection-v1.md) | embodiment | in_review | not_started | TARGET |
