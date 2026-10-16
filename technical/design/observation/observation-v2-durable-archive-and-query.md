@@ -32,7 +32,7 @@ The design preserves ADR-0078 (causal passivity), ADR-0095/0099 (semantic author
 | Embodiment | `957af224e4400fc30a9d8d78d987cec16a8e959e` | Source owner of body/morphology claims; no new source publication contract is introduced here. |
 | Environment | `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1` | Source owner of environmental claims; no new source publication contract is introduced here. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | Capability/transduction lineage only; it is not an independent semantic authority. |
-| Lab | `03c7cb64c6e98226c0737fc6f8b8d341ae6eaf36` | Scientific apparatus/evidence custody remains separate. Archive retrieval is not evidence admission. |
+| Lab | `6198dff9a73e7150abedb5a30df335187092d71a` | Current `main` was rechecked after a Lab study-disposition update; the change touches study disposition/crosswalk records and consistency tests, not Observation's evidence-custody boundary. Scientific apparatus/evidence custody remains separate; archive retrieval is not evidence admission. |
 | Docs | `5edb112a462c2436d71afa44949aef36ef15e768` | Includes ADR-0100, V1 proposal, security/deployment design, and registry. |
 
 The source inspection distinguishes implemented behavior from proposed target behavior. In particular, the local archive is not a remote deployment, a browser API, or a production retention/security policy.
