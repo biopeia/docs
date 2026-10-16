@@ -48,11 +48,15 @@ Notice the top-level declaration:
 
 ## Step 2: Launch the 10-cycle simulation
 
-Create a clean temporary directory for your simulation run:
+Create a clean temporary sandbox for your simulation run:
 
 ```bash
-TARGET_RUN="/tmp/biopeia-tutorial-run"
-rm -rf "$TARGET_RUN"
+# Create an isolated temporary sandbox:
+SANDBOX="$(mktemp -d -t biopeia-tutorial-XXXXXX)"
+
+# world-m1 preflight requires state-root to not exist beforehand,
+# so select an unallocated path within the sandbox:
+TARGET_RUN="$SANDBOX/run"
 
 world-m1 --profile profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json \
          --state-root "$TARGET_RUN" \
@@ -60,6 +64,8 @@ world-m1 --profile profiles/m1/scalar-sensorimotor-mujoco-3.15-v1.json \
 ```
 
 ### What happens as it runs
+
+This execution replicates the verified multi-cycle sequence tested in `world:tests/integration/test_m1_process.py::test_run_scalar_sensorimotor_session`:
 
 1. **Preflight validation:** `world-m1` verifies git status and exact dependency hashes.
 2. **Genesis commit:** At tick 0, genesis checkpoints for Organism, Embodiment, and Environment are written.

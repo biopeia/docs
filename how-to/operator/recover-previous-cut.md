@@ -6,11 +6,16 @@ source_of_truth: world:src/world/durable_runtime.py
 review_basis: world@e2be58700c870419a309ef3e2460b30b95c256be
 ---
 
-# How to Recover a World Runtime from a Failed Causal Cut
+# How to Recover a World Runtime from a Failed Causal Cut (Programmatic Contract)
 
-This procedure guides operators and maintainers through recovering a durable World runtime when an in-flight tick was interrupted before completion.
+This procedure describes how a durable World runtime recovers after an in-flight causal tick was interrupted before commit.
 
 Reviewed against `world` at commit `e2be58700c870419a309ef3e2460b30b95c256be`.
+
+> [!IMPORTANT]
+> **Operational availability notice:** An automated operator CLI command (such as `world-m1 recover`) is **not yet implemented**. In the current release, recovery is an internal programmatic operation on `DurableWorldRuntime`.
+>
+> Operators and integrators must **not** employ stub restorers that return success unconditionally (`return True`). Causal recovery under ADR-0093 requires passing each `CheckpointReference` to its competent domain owner (Organism, Embodiment, Environment) to restore verified persistent state from disk.
 
 ## Context and operational conditions
 
@@ -18,7 +23,7 @@ Under [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-req
 
 Recovery always rolls back to the previous confirmed cut; it **never** attempts to guess or complete an interrupted tick.
 
-## Procedure
+## Programmatic recovery procedure
 
 ### Step 1: Diagnose the recovery requirement
 
@@ -40,7 +45,7 @@ If `status == "recovery_required"`, proceed to Step 2.
 
 ### Step 2: Instantiate the durable runtime in recovery mode
 
-Load the durable runtime pointing to the state directory. The runtime will detect the recovery requirement:
+Load the durable runtime pointing to the state directory. The runtime detects the recovery requirement:
 
 ```python
 from world.durable_runtime import DurableWorldRuntime
@@ -52,16 +57,37 @@ runtime = DurableWorldRuntime(state_root=state_root, checkpoint_store=checkpoint
 assert runtime.is_recovery_required(), "World runtime is not in recovery-required state"
 ```
 
-### Step 3: Execute `recover_previous_cut`
+### Step 3: Execute `recover_previous_cut` with domain owner restoration
 
-Invoke recovery passing the competent owner state restorer callback:
+Recovery requires passing a callable `restorer(references: tuple[CheckpointReference, ...])` that reads the authoritative checkpoint at `ref.locator` and restores the live owner state:
 
 ```python
-def owner_restorer(owner_name: str, checkpoint_ref: dict) -> bool:
-    """Restores the authoritative owner state for the specified cut."""
-    # Delegate to the owner's restore interface (Organism, Embodiment, Environment)
-    return True
+from pathlib import Path
+from world.checkpoint_reference import CheckpointReference
 
+
+def owner_restorer(references: tuple[CheckpointReference, ...]) -> None:
+    """Restores authoritative owner state from verified committed checkpoint references."""
+    for ref in references:
+        locator_path = Path(ref.locator)
+        if not locator_path.is_file():
+            raise FileNotFoundError(f"Missing required checkpoint payload: {locator_path}")
+
+        # Dispatch checkpoint payload to the owning domain's restore interface:
+        if ref.owner == "organism":
+            # Organism restores private longitudinal cognitive state
+            restore_organism_checkpoint(locator_path)
+        elif ref.owner == "embodiment":
+            # Embodiment restores physical somatic and joint configuration
+            restore_embodiment_checkpoint(locator_path)
+        elif ref.owner == "environment":
+            # Environment restores static scene and dynamic resource entities
+            restore_environment_checkpoint(locator_path)
+        else:
+            raise ValueError(f"Unrecognized owner in checkpoint reference: {ref.owner}")
+
+
+# Execute atomic rollback:
 receipt = runtime.recover_previous_cut(restorer=owner_restorer)
 print("Recovery completed successfully. Receipt ID:", receipt["receipt_id"])
 ```
@@ -89,4 +115,4 @@ The World is now restored to a clean, consistent state and may be safely resumed
 | Mandatory explicit recovery contract | [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md) |
 | Rollback method `recover_previous_cut` | `world:src/world/durable_runtime.py::DurableWorldRuntime.recover_previous_cut` |
 | Uncommitted journal truncation | `world:src/world/durable_runtime.py::_discard_uncommitted_tail` |
-| Receipt generation and verified recovery tests | `world:tests/test_durable_runtime.py::test_explicit_recovery_restores_prior_cut_through_owner_and_records_receipt` |
+| Owner checkpoint restoration pattern | `world:tests/test_durable_runtime.py::test_explicit_recovery_restores_prior_cut_through_owner_and_records_receipt` |

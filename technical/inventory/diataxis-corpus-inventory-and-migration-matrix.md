@@ -128,3 +128,15 @@ The 57 existing explanatory chapters in `explanation/` and 2 reference documents
 - All 2 canonical reference files accounted for: **100% COVERAGE**.
 - Zero orphaned documents.
 - Ready for Phase P2 (tooling and model expansion).
+
+---
+
+## 5. Ongoing Phased Refactoring Status (Conceptual Purity Roadmap)
+
+- **Coverage vs. Conceptual Purity:** The 100% corpus coverage recorded in this inventory matrix establishes complete accounting and traceability without orphaned documents. It does **not** imply that legacy chapters currently achieve 100% single-purpose Diátaxis purity.
+- **Transitional Master Standing:** Volume I (Master) retains its 57 chapters during transitional phases (P0–P2) to ensure publishing stability and backward traceability while the dedicated volumes (Technical Reference, Operator Manual, Guided Learning) are populated.
+- **Phase P3 Execution Commitment:** Each mixed chapter (with initial priorities in Organism cognitive graph, World recovery, and cross-domain presentation boundaries) will be incrementally refactored in dedicated issues, ensuring that:
+  1. Conceptual narratives remain in `explanation/`.
+  2. Verifiable parameter bounds and schemas migrate to `reference/`.
+  3. Actionable runtime procedures migrate to `how-to/`.
+  4. Dated code audit evidence tables migrate to `audits/implementation/`.
