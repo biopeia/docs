@@ -627,3 +627,53 @@ def test_unaligned_review_bases_reported(ws: Workspace) -> None:
     problems = vr.unaligned_review_bases(ws.registry, ws.docs)
     assert len(problems) == 1
     assert "explanation/concept.md: header cites organism@111111111111 but unit concept.organism basis is 222222222222" in problems[0]
+
+
+def test_header_commit_that_does_not_exist_is_an_error(ws: Workspace) -> None:
+    missing = "f" * 40
+    (ws.docs / "explanation" / "organism.md").write_text(
+        f"# Organism\n\nReviewed against `organism` at commit\n`{missing}`.\n"
+    )
+    problems = vr.unresolvable_review_commits(ws.registry, ws.docs, ws.repos)
+    # Every unit whose canonical document carries the header is reported.
+    assert f"component.genome: explanation/organism.md names organism@{missing}, which is not a commit in organism" in problems
+    assert all(f"organism@{missing}" in line for line in problems)
+
+
+def test_existing_header_and_basis_commits_pass(ws: Workspace) -> None:
+    (ws.docs / "explanation" / "organism.md").write_text(
+        f"# Organism\n\nReviewed against `organism@{ws.basis}`.\n"
+    )
+    assert vr.unresolvable_review_commits(ws.registry, ws.docs, ws.repos) == []
+
+
+def test_cli_fails_on_a_review_commit_that_does_not_exist(
+    ws: Workspace, capsys: pytest.CaptureFixture[str]
+) -> None:
+    ws.data["coverage"]["component.genome"]["review"]["basis"]["organism"] = "e" * 40
+    ws.write()
+    assert vr.main(["--registry", str(ws.registry), "--docs-root", str(ws.docs), "--repos-root", str(ws.repos)]) == 1
+    assert "which is not a commit in organism" in capsys.readouterr().out
+
+
+def test_cited_test_absent_at_the_review_basis_is_reported(ws: Workspace) -> None:
+    (ws.organism / "tests").mkdir()
+    (ws.organism / "tests" / "test_genome.py").write_text("def test_genome_exists() -> None:\n    pass\n")
+    git(ws.organism, "add", "-A")
+    git(ws.organism, "commit", "-q", "-m", "tests")
+    basis = git(ws.organism, "rev-parse", "HEAD")
+    (ws.organism / "tests" / "test_genome.py").write_text(
+        "def test_genome_exists() -> None:\n    pass\n\n\ndef test_genome_added_later():\n    pass\n"
+    )
+    git(ws.organism, "add", "-A")
+    git(ws.organism, "commit", "-q", "-m", "later test")
+    ws.data["coverage"]["component.genome"]["review"]["basis"]["organism"] = basis
+    ws.write()
+    (ws.docs / "explanation" / "organism.md").write_text(
+        "# Organism\n\nCovered by `test_genome_exists` and `test_genome_added_later`.\n"
+    )
+    assert vr.cited_tests_absent_at_basis(ws.registry, ws.docs, ws.repos) == [
+        "component.genome: explanation/organism.md cites test_genome_added_later, absent at its basis"
+    ]
+    # The current checkout defines both, so the head-based report sees nothing.
+    assert vr.unknown_cited_tests(ws.docs, ws.repos, ["organism"]) == []
