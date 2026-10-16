@@ -15,9 +15,11 @@ The coordinator is implemented in
 `world:src/world/causal_cycle.py::run_scalar_sensorimotor_cycle_and_publish`
 (single tick) and `run_scalar_sensorimotor_session` (multi-cycle session loop).
 It replaces test-only simulation fixtures with a production coordination
-path, proving that the multi-owner architecture executes and continues across
-restarts without losing causal integrity
-(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
+path. Acceptance tests exercise that path across the owners, through a
+commit, and across one fresh-process restore
+(`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`); what
+the restore test compares is set out under
+[Restoration and live continuation](#restoration-and-live-continuation).
 
 ## The operational sequence
 
@@ -93,8 +95,8 @@ under explicit bounds:
 
 ## Restoration and live continuation
 
-The cycle proves full crash-recovery continuation through
-`restore_scalar_sensorimotor_runtime` (`world:src/world/causal_cycle.py:148`).
+The cycle restores a committed cut and continues from it through
+`restore_scalar_sensorimotor_runtime` (`world:src/world/causal_cycle.py:220`).
 
 Given a durable World runtime and the latest committed cut:
 
@@ -103,10 +105,16 @@ Given a durable World runtime and the latest committed cut:
 2. Organism, Embodiment, and Environment are restored from their exact
    committed checkpoint bytes.
 3. Actuator applicability and surface fingerprints are validated.
-4. Subsequent ticks executed on the restored runtime produce bit-identical
-   causal journal records, body poses, and checkpoint digests when compared to
-   uninterrupted live execution
-   (`test_restored_causal_cycle_matches_live_continuation`).
+4. One acceptance test stops a run after its first committed cut, restores
+   it in a fresh process and runs the next tick. The summary of that tick
+   (commit identifier, Organism step, sensed value, motor-command channels,
+   joint state, the SHA-256 of every owner checkpoint reference, and the
+   emitted observations) equals the summary of an uninterrupted run that
+   continued from live state
+   (`test_committed_cycle_restores_and_continues_in_fresh_process`). This
+   covers one continued tick of the scalar sensorimotor fixture. It does not
+   compare causal journal records, and it does not compare more than one tick
+   after restore.
 
 ## What supports this description
 
@@ -116,5 +124,5 @@ Given a durable World runtime and the latest committed cut:
 | Bounded session loop, cooperative stopping, and cut preservation | Code in `world:src/world/causal_cycle.py:613-747` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Articulated MuJoCo execution from motor commands | Code in `world:src/world/adapters/articulated_mujoco.py` |
 | Atomic owner checkpoint and genesis persistence | Code in `world:src/world/owner_checkpoint_store.py` and tests in `world:tests/test_owner_checkpoint_store.py` |
-| Full state restoration and continuation matching live execution | Acceptance tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
+| Restoration and one continued tick matching an uninterrupted run | Acceptance tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Preserved domain ownership and passivity of observation | Accepted decisions ADR-0073, ADR-0078, ADR-0095 |
