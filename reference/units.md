@@ -82,7 +82,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md), [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md](../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md), [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/integration/test_durable_checkpoint_restore_slice.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | Reviewed at | world@1f35e92611ed (RECORDED) |
-| Known findings | F-0003 recovery durability gap ([issue](https://github.com/biopeia/world/issues/30)); F-0004 implementation finding ([issue](https://github.com/biopeia/world/issues/31)); F-0005 performance concern ([issue](https://github.com/biopeia/world/issues/32)); F-0006 evidence gap ([issue](https://github.com/biopeia/world/issues/33)); F-0007 recovery durability gap (accepted); F-0161 implementation finding (open); F-0162 recovery durability gap (open); F-0163 contract gap (open); F-0166 evidence gap (open); F-0169 documentation inconsistency (open) |
+| Known findings | F-0003 recovery durability gap ([issue](https://github.com/biopeia/world/issues/30)); F-0004 implementation finding ([issue](https://github.com/biopeia/world/issues/31)); F-0005 performance concern ([issue](https://github.com/biopeia/world/issues/32)); F-0006 evidence gap ([issue](https://github.com/biopeia/world/issues/33)); F-0007 recovery durability gap (accepted); F-0161 implementation finding (open); F-0162 recovery durability gap (open); F-0163 contract gap (open); F-0166 evidence gap (open); F-0169 documentation inconsistency (resolved) |
 
 ### In-memory World runtime
 
@@ -117,7 +117,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/test_manifest.py` |
 | Reviewed at | world@1f35e92611ed (RECORDED) |
-| Known findings | F-0161 implementation finding (open); F-0169 documentation inconsistency (open) |
+| Known findings | F-0161 implementation finding (open); F-0169 documentation inconsistency (resolved) |
 
 ### World genesis, rosters and participant closure
 
@@ -764,7 +764,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/cognition/test_learning.py`, `organism:tests/source_unit/cognition/test_shadow_prediction.py`, `organism:tests/source_unit/cognition/test_structure.py`, `organism:tests/source_unit/cognition/test_reversible_structure_phase1.py`, `organism:tests/source_unit/cognition/test_insufficiency_driven_growth.py`, `organism:tests/source_unit/cognition/test_metaplasticity.py` |
 | Reviewed at | organism@de16558faeba (RECORDED) |
-| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0071 evidence gap ([issue](https://github.com/biopeia/organism/issues/44)); F-0072 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open); F-0167 documentation inconsistency (open); F-0171 implementation finding (open) |
+| Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0071 evidence gap ([issue](https://github.com/biopeia/organism/issues/44)); F-0072 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open); F-0167 documentation inconsistency (resolved); F-0171 implementation finding (open) |
 
 ### The generative resident and the model boundary
 

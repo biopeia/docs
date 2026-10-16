@@ -172,6 +172,7 @@ command projection (`embodiment:src/embodiment/physics3d/joint_torque.py`).
 with a stable morphology `joint_id` and unit axis.
 
 A `JointTorqueRequest` is projected via `project_joint_torque_command` (lines 247-280):
+
 - Every channel must declare quantity `"joint_torque"` and unit `"N*m"`.
 - Torque values must be finite and within `[-max_motor_torque, +max_motor_torque]`
   of the active morphology joint spec.
@@ -189,6 +190,7 @@ actuators to a morphology joint with a non-negative scale factor:
 $$\tau = (a_{\text{positive}} - a_{\text{negative}}) \times \tau_{\text{max}} \times \text{scale}$$
 
 Rules enforced in code:
+
 - Activations must lie in $[0.0, 1.0]$.
 - Both channels of a pair must be present, or both omitted. A partial pair raises `ValueError`.
 - Equal non-zero activations produce an explicit net torque of `0.0` N·m.
