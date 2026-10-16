@@ -474,15 +474,25 @@ designs:
     domain: observation
     participating_domains: [organism, embodiment, environment, world, modality, lab]
     document_status: proposed
-    implementation_status: not_evaluated
+    implementation_status: partial
     architecture_scope: UNRESOLVED
+    implementation_evidence:
+      evaluated_on: "2026-10-16"
+      basis:
+        observation: 0e11ab728b4debb30e2d851ef3aa4149cc32dcb0
+      tests:
+        - "observation:tests/test_archive_reader.py"
+      observed: >
+        PR #62's bounded local reader is present on the inspected Observation
+        main revision. The focused reader suite was previously recorded as 9
+        passing tests; it was not rerun for this documentation refresh. This
+        does not demonstrate full V2 acceptance or browser/remote history.
     editorial_notes: >
-      Issue #38 architecture proposal. It reuses the local archive behavior
-      evidenced by Observation PR #61 and specifies logical read/query needs,
-      capture semantics, authority boundaries, and incremental gates. It
-      approves no producer contract, public API, remote service, security or
-      retention policy, and does not transfer scientific evidence custody
+      Proposed architecture; implementation is partial: Observation PR #61
+      provides bounded capture/archive behavior and PR #62 provides a local
+      read-only archive reader. This does not establish full Observation V2
+      acceptance, approve producer contracts, public API, remote service,
+      security or retention policy, or transfer scientific evidence custody
       from Lab. ADR-0100 assessment is scoped to a passive operational archive;
       a constitutional boundary change remains reserved to the Architecture
-      Owner. Implementation remains not evaluated and no new implementation
-      is authorized by this design.
+      Owner. No further implementation is authorized by this design.
