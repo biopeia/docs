@@ -11,6 +11,16 @@ from pathlib import Path
 from observation import ArchiveReader
 
 
+def is_complete_closed_coverage(coverage: object) -> bool:
+    """Require both accounted closure and no recorded loss/gap."""
+    return bool(
+        coverage is not None
+        and getattr(coverage, "status", None) == "closed_verified"
+        and getattr(coverage, "complete", False)
+        and getattr(coverage, "closure_verified", False)
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -95,8 +105,11 @@ def main() -> None:
     digest_valid = all(hashlib.sha256(record.original_payload).hexdigest() == record.content_sha256 for record in records)
     if integrity != "ok" or before != after or not digest_valid:
         raise RuntimeError("archive integrity, immutability, or payload digest check failed")
-    if catalog.status != "available" or coverage is None or not coverage.closure_verified:
-        raise RuntimeError("capture catalog/closure was not verified")
+    if (
+        catalog.status != "available"
+        or not is_complete_closed_coverage(coverage)
+    ):
+        raise RuntimeError("capture is not complete with a verified closed interval")
     if unsupported.status != "unsupported_filter":
         raise RuntimeError("run_id must remain explicitly unsupported")
 
