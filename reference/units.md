@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-59 units, 11 cross-domain contracts, 126 findings.
+59 units, 11 cross-domain contracts, 127 findings.
 
 ## World
 
@@ -1043,3 +1043,4 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0102-lab.md](../technical/adr/ADR-0102-lab.md), [technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md](../technical/adr/ADR-0113-independent-frontend-and-lab-boundary.md) |
 | Tests | `lab:tests/unit/test_observation_consumer.py`, `lab:tests/observation_integration/test_lab_observation_publication.py` |
 | Reviewed at | lab@800488dfccad (RECORDED) |
+| Known findings | F-0173 evidence gap (open) |
