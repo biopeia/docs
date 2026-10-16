@@ -184,8 +184,10 @@ current test no longer makes that call.
 For contrast, the same loop on a constant signal of 0.8 raised the weight to
 1.11 and the late loss fell to 0.004; a constant is the case a Hebbian rule
 fits. The constant-signal run is not kept as a test. Recorded as finding
-F-0071, which stays open with organism#44: no test shows a predictor beating
-a zero-output or persistence baseline.
+F-0071, which stays open with organism#44: no test shows a predictor in the
+graph, updated by the learning rule, beating a zero-output or persistence
+baseline. The shadow predictions below, kept outside the graph, can beat
+persistence on their own inputs, and they promote nothing into it.
 
 ## Candidates kept outside the graph
 
