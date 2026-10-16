@@ -1,13 +1,11 @@
 # Organism identity and the checkpoint envelope
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or an accepted decision.
-Searches were repeated on 2026-10-11. The two modules this document is
-about, `identity.py` and `checkpoint.py`, and their tests have not changed
-since `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, where the ad hoc
-runs below were made (diff inspected); the runs were not repeated. What has
-changed is what stands around the envelope.
+Reviewed against `organism` at commit `637bc21a7e2a1aa9e0870f55f134e839657687f4`
+(main on 2026-10-16); first written against `ba001179`. Everything below describes that revision.
+Statements are marked by what supports them: the code, the tests, an ad hoc run, or an accepted decision.
+Searches were repeated on 2026-10-16. In addition to the base envelope contract,
+`checkpoint.py` defines `OrganismLongitudinalCheckpoint`, an aggregate that encodes and
+verifies the complete continuation-closure taxonomy across all 10 longitudinal subsystems.
 
 ## What it is
 
@@ -122,9 +120,12 @@ silence means every declared dependency was present and intact
 
 The envelope does not perform this check when it is decoded. Decoding
 validates the document; the closure is verified only when someone calls the
-method with a reader. The composed cognitive payload does not call it:
-restoring that payload from an envelope refuses any declared dependency
-outright (`test_owner_payload_rejects_caller_declared_dependencies`). (Corrected on 2026-10-16: the tests first cited here had been replaced by organism `c34147a` before this document's revision; finding F-0168.)
+method with a reader (`test_checkpoint_verifies_dependency_closure`).
+The composed cognitive payload does not call it: restoring that payload
+from an envelope refuses any declared dependency outright
+(`test_owner_payload_rejects_caller_declared_dependencies`). (Corrected
+on 2026-10-16: the tests first cited here had been replaced by organism
+`c34147a` before this document's revision; finding F-0168.)
 The transition state offers the same check under the same name and passes it
 straight to the envelope (`test_dependency_verification_remains_owner_declared`).
 
@@ -248,6 +249,52 @@ ADR-0091 itself leaves the mechanism open: it says the owner and storage of
 the canonical designation are reserved to a later pass. What exists is
 therefore stated, not judged.
 
+## The longitudinal aggregate: OrganismLongitudinalCheckpoint
+
+Beyond the opaque `OrganismCheckpoint` envelope, `checkpoint.py` provides
+`OrganismLongitudinalCheckpoint` (`schema: "biopeia.organism-longitudinal-checkpoint"`,
+`schema_version: 1`), an aggregate that captures the complete named owner state
+through subsystem codecs.
+
+### Required component closure
+
+The aggregate requires exact presence of the ten named longitudinal components
+(`REQUIRED_LONGITUDINAL_COMPONENTS`):
+
+1. `lifecycle`
+2. `cognitive_transition`
+3. `cognitive_graph`
+4. `experience_memory`
+5. `genetic_expression`
+6. `learning_safety`
+7. `sensory_normalizers`
+8. `agency`
+9. `competencies`
+10. `action_commitments`
+
+Missing or unregistered extra components are strictly rejected fail-closed
+(`test_longitudinal_checkpoint_rejects_missing_or_unknown_components`).
+
+### Capture, serialization and restoration
+
+- **Capture:** `OrganismLongitudinalCheckpoint.capture_components(identity, states, encoders)`
+  requires a complete, identity-bound encoder registry matching `REQUIRED_LONGITUDINAL_COMPONENTS`.
+  Each encoder receives the component state and the owner `OrganismIdentity`, guaranteeing
+  that components cannot be captured across mismatched identities
+  (`test_capture_uses_a_complete_identity_bound_encoder_registry`).
+- **Wire representation:** Each component is stored as an envelope with base64 payload and
+  its exact SHA-256 digest (`payload_base64`, `sha256`). A tampered component digest or
+  duplicate JSON key fails closed (`test_longitudinal_checkpoint_rejects_tampered_component_digest`,
+  `test_longitudinal_checkpoint_rejects_duplicate_json_keys`).
+- **Restoration:** `checkpoint.restore_components(decoders, read_dependency=...)` requires a
+  complete decoder registry matching the component closure. It explicitly verifies the
+  external dependency closure before invoking decoders; missing dependencies or mismatched
+  hashes fail closed (`test_restore_requires_complete_decoders_and_dependency_closure`).
+- **Envelope bridge:** The aggregate bridges bidirectionally with the outer envelope
+  via `checkpoint.to_organism_checkpoint()` and `OrganismLongitudinalCheckpoint.from_organism_checkpoint()`,
+  verifying identity and dependency consistency on restoration
+  (`test_longitudinal_checkpoint_round_trips_exact_component_bytes`).
+
 ## At each lifecycle boundary
 
 The documentation registry asks, of every Organism component, what happens to
@@ -257,8 +304,8 @@ different kinds of support and should not be read as equally strong.
 | Boundary | What happens | Support |
 |---|---|---|
 | Birth | The identity is supplied by the caller and wrapped | Code and test |
-| Checkpoint | Identity, private bytes and dependency list are preserved exactly | Code and tests |
-| Restart | Decoding returns an equal value; nothing here restarts anything | Code and tests |
+| Checkpoint | Identity, private bytes and dependency list are preserved exactly; `OrganismLongitudinalCheckpoint` verifies component closure and component SHA-256 digests | Code and tests |
+| Restart | Decoding returns an equal value; decoders restore exact subsystem state only after external dependency closure verification | Code and tests |
 | Re-embodiment | The envelope has no field that names a body, so there is nothing to change. The body reference lives in the transition state around it, and replacing it leaves the envelope byte for byte the same | Absence in the code, and `test_reembodiment_preserves_identity_and_longitudinal_state`; that identity survives is ADR-0081, a statement of intent |
 | Reproduction | No operation exists. A branch under a new identity can be recorded one layer out; it is not an offspring | Nothing in the code of these two modules; that offspring and branches receive new identities is ADR-0091, a statement of intent |
 
@@ -268,6 +315,11 @@ different kinds of support and should not be read as equally strong.
 |---|---|
 | Identity wraps a supplied value and is recovered from text | Code and `organism:tests/test_identity.py` |
 | Envelope shape, deterministic encoding, strict decoding, digest check, closure check | Code and tests in `organism:tests/test_checkpoint.py` |
+| Longitudinal aggregate enforces 10-component closure, round-trips exact component bytes, and bridges to envelope | Code and tests in `organism:tests/source_unit/test_longitudinal_checkpoint.py::test_longitudinal_checkpoint_round_trips_exact_component_bytes` |
+| Longitudinal aggregate rejects missing or unknown components | Code and `organism:tests/source_unit/test_longitudinal_checkpoint.py::test_longitudinal_checkpoint_rejects_missing_or_unknown_components` |
+| Complete identity-bound encoder registry required for component capture | Code and `organism:tests/source_unit/test_longitudinal_checkpoint.py::test_capture_uses_a_complete_identity_bound_encoder_registry` |
+| Tampered component digests and duplicate JSON keys rejected | Code and `organism:tests/source_unit/test_longitudinal_checkpoint.py::test_longitudinal_checkpoint_rejects_tampered_component_digest`, `test_longitudinal_checkpoint_rejects_duplicate_json_keys` |
+| Subsystem restoration requires complete decoders and verified external dependency closure | Code and `organism:tests/source_unit/test_longitudinal_checkpoint.py::test_restore_requires_complete_decoders_and_dependency_closure` |
 | `create` accepts a non-UUID; the constructor accepts strings; state and digest, or the identity, can be replaced together; other read errors escape; duplicate dependencies and an empty closure pass | Code, and one ad hoc run of the module at `organism` `6543188ff302a5f2dc8002c0086252d6061e5310`, the two modules being unchanged since; no test is kept for these |
 | Two different states under one identity both decode | The same ad hoc run |
 | Restoring a composed payload verifies declared dependencies and the identity | Code and tests in `organism:tests/source_unit/cognition/test_portable_checkpoint.py`; the composed payload has its own document |

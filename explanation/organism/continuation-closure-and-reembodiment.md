@@ -1,7 +1,7 @@
 # Organism continuation closure and re-embodiment
 
-Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b`
-(main on 2026-10-14). Statements are marked by what supports them: the code,
+Reviewed against `organism` at commit `637bc21a7e2a1aa9e0870f55f134e839657687f4`
+(main on 2026-10-16); first written against `de16558faeba`. Statements are marked by what supports them: the code,
 the tests, or an accepted specification.
 
 ## What it is
@@ -13,9 +13,9 @@ new body.
 
 The rules governing what persists across re-embodiment, what is suspended,
 and what is discarded are established by the Organism Continuation Closure
-Specification v1 (`organism:docs/continuation/organism-continuation-closure-specification-v1.md`)
-and Owner-State Inventory v1
-(`organism:docs/continuation/organism-owner-state-inventory-v1.md`).
+Specification v1 (`organism:docs/continuation/organism-continuation-closure-specification-v1.md`),
+Owner-State Inventory v1 (`organism:docs/continuation/organism-owner-state-inventory-v1.md`),
+and the fail-closed longitudinal checkpoint aggregate (`OrganismLongitudinalCheckpoint`).
 
 ## The four-tier state taxonomy
 
@@ -25,8 +25,9 @@ Organism state is strictly classified into four operational tiers:
    State that must survive across any transition and any embodiment. This
    includes the transition identity (`OrganismIdentity`), cognitive graph
    topology and synaptic plasticity, historical experience ledger, germline
-   genome, and safety counters. If any required portable field cannot be
-   restored or validated, restoration fails closed.
+   genome, and safety counters. In `OrganismLongitudinalCheckpoint`, exactly ten
+   named subsystems (`REQUIRED_LONGITUDINAL_COMPONENTS`) must be present. If any
+   required portable field cannot be restored or validated, restoration fails closed.
 2. **`SUSPENDED_REVALIDABLE` (Surface-Bound Sensorimotor State):**
    State that was acquired on a specific physical body and cannot be executed
    safely on an arbitrary new body without verification. This includes
@@ -38,10 +39,12 @@ Organism state is strictly classified into four operational tiers:
    historical hypotheses (`PredictionScope.HISTORICAL`), preventing
    destructive cross-body actuator commands.
 3. **`RESOLVABLE_EXTERNAL` (External Dependency Closures):**
-   Declarations of external models, tokenizers, or neural resolvers. Under the
-   current target architecture, external dependencies are strictly prohibited:
-   `dependency_closure` must be an empty list `[]`. Any non-empty external
-   closure causes checkpoint restore to fail closed.
+   Content-addressed external artifacts referenced by digest. The standalone
+   cognitive checkpoint payload enforces an empty manifest (`dependency_closure: []`);
+   however, the M3 compact action history (`biopeia-organism-exploration-checkpoint-v5`)
+   and the aggregate `OrganismLongitudinalCheckpoint` explicitly support external
+   dependencies (`CheckpointDependency(locator, sha256)`). Restoration requires a
+   caller-supplied reader and verifies every declared digest before decoding subsystems.
 4. **`DISPOSABLE_EPHEMERAL` (Transient Scratchpad):**
    Single-tick proposal scratchpads, transient attention allocation masks,
    and uncommitted proposal buffers. These are discarded at every cut boundary
@@ -77,7 +80,8 @@ new body's active physical surface.
 | Claim | Support |
 |---|---|
 | Four-tier state classification and continuation closure rules | Specification in `organism:docs/continuation/organism-continuation-closure-specification-v1.md` |
+| Longitudinal checkpoint aggregate enforces 10-subsystem closure | Code in `organism:src/organism/checkpoint.py` and tests in `organism:tests/source_unit/test_longitudinal_checkpoint.py` |
 | Surface staleness marking and historical hypothesis preservation | Code in `organism:src/organism/actuation/binding.py:343-367` and `organism:src/organism/agency/availability.py:87-119` |
 | Fail-closed actuator applicability validation on checkpoint restore | Code in `organism:src/organism/actuation/bounded_action.py:521-591` and tests in `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
-| Empty dependency closure enforcement | Code in `organism:src/organism/cognition/portable_checkpoint.py:180-186` |
+| Cognitive checkpoint empty dependency closure enforcement | Code in `organism:src/organism/cognition/portable_checkpoint.py:180-186` |
 | Separation of longitudinal cognition from embodiment life | Accepted decisions ADR-0041, ADR-0095 |

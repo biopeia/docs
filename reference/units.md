@@ -162,7 +162,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/unit/test_physical_step.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | world@d66ac6197c8e, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@d09e45c40633, modality@93a4c3a4ea71, observation@2f4751f53678 (RECORDED) |
+| Reviewed at | world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, modality@62af4aba0714, observation@2f4751f53678 (RECORDED) |
 | Known findings | F-0002 implementation finding ([issue](https://github.com/biopeia/world/issues/29)); F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0160 implementation finding (open); F-0164 evidence gap (accepted) |
 
 ### MuJoCo step executor
@@ -215,7 +215,7 @@ restates it so that the answers about one unit can be read in one place.
 | Owned by | world; also involves organism, embodiment, environment, modality, observation, lab |
 | Explained in | [explanation/biopeia/capability-maturity.md](../explanation/biopeia/capability-maturity.md) |
 | Depends on | `component.world-causal-cycle`, `component.world-m1-process-bootstrap`, `concept.biopeia-one-step-across-the-domains`, `concept.biopeia-research-hypotheses`, `concept.organism-life-across-mechanisms`, `concept.modality-current-state`, `mechanism.organism-action-path`, `mechanism.organism-cognitive-checkpoint`, `mechanism.organism-sense-to-checkpoint-transition`, `mechanism.physical-causal-step`, `component.embodiment-articulated-body`, `component.embodiment-physical-state`, `component.environment-dynamic-state`, `component.environment-finite-resource`, `component.environment-static-scene`, `component.environment-procedural-genesis`, `component.organism-genome`, `component.organism-actuator-evidence`, `component.organism-causal-evidence`, `component.organism-competence-development`, `component.organism-execution-binding`, `component.organism-executive-outcome-ledger`, `component.organism-prospective-deliberation`, `component.world-durable-runtime`, `mechanism.world-recovery`, `component.observation-semantic-claim-model`, `component.observation-plane`, `component.lab-operator-material-transfer` |
-| Reviewed at | organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@d09e45c40633, world@1f35e92611ed, modality@93a4c3a4ea71, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, world@d66ac6197c8e, modality@62af4aba0714, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
 
 ### World post-commit observation publication
 
@@ -491,12 +491,12 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | organism; also involves world, embodiment |
 | Explained in | [explanation/organism/action-path.md](../explanation/organism/action-path.md) |
-| Implemented in | `organism:src/organism/agency/affordance.py`, `organism:src/organism/agency/prospective.py`, `organism:src/organism/agency/intention.py`, `organism:src/organism/actuation/action.py`, `organism:src/organism/actuation/arbitration.py`, `organism:src/organism/actuation/commitment.py`, `organism:src/organism/actuation/controller.py`, `organism:src/organism/actuation/command.py`, `organism:src/organism/actuation/domain.py`, `organism:src/organism/actuation/surface.py`, `organism:src/organism/actuation/system.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
+| Implemented in | `organism:src/organism/agency/affordance.py`, `organism:src/organism/agency/prospective.py`, `organism:src/organism/agency/intention.py`, `organism:src/organism/actuation/action.py`, `organism:src/organism/actuation/arbitration.py`, `organism:src/organism/actuation/commitment.py`, `organism:src/organism/actuation/controller.py`, `organism:src/organism/actuation/command.py`, `organism:src/organism/actuation/domain.py`, `organism:src/organism/actuation/action_history.py`, `organism:src/organism/actuation/bounded_action.py`, `organism:src/organism/actuation/surface.py`, `organism:src/organism/actuation/system.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
 | Cross-domain contracts | Motor command from Organism to Embodiment (structural) |
 | Depends on | `mechanism.physical-causal-step` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
-| Tests | `organism:tests/source_unit/agency/test_executive_admission.py`, `organism:tests/source_unit/actuation/test_command_binding.py`, `organism:tests/source_unit/actuation/test_domain.py`, `organism:tests/source_unit/actuation/test_surface.py`, `organism:tests/source_unit/actuation/test_system.py` |
-| Reviewed at | organism@de16558faeba, world@1f35e92611ed (RECORDED) |
+| Tests | `organism:tests/source_unit/agency/test_executive_admission.py`, `organism:tests/source_unit/actuation/test_command_binding.py`, `organism:tests/source_unit/actuation/test_domain.py`, `organism:tests/source_unit/actuation/test_action_history_prototype.py`, `organism:tests/source_unit/actuation/test_exploration_v5.py`, `organism:tests/source_unit/actuation/test_surface.py`, `organism:tests/source_unit/actuation/test_system.py` |
+| Reviewed at | organism@637bc21a7e2a, world@d66ac6197c8e (RECORDED) |
 | Known findings | F-0030 contract gap ([issue](https://github.com/biopeia/organism/issues/30)); F-0032 contract gap ([issue](https://github.com/biopeia/organism/issues/32)); F-0035 implementation finding (open); F-0037 evidence gap (open); F-0038 documentation inconsistency (open) |
 
 ### Organism identity and the checkpoint envelope
@@ -513,8 +513,8 @@ restates it so that the answers about one unit can be read in one place.
 | Implemented in | `organism:src/organism/identity.py`, `organism:src/organism/checkpoint.py`, `organism:src/organism/cognition/portable_checkpoint.py` |
 | State | owner organism, family identity_longitudinal; birth: initialize, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
-| Tests | `organism:tests/test_identity.py`, `organism:tests/test_checkpoint.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Tests | `organism:tests/test_identity.py`, `organism:tests/test_checkpoint.py`, `organism:tests/source_unit/test_longitudinal_checkpoint.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0031 contract gap ([issue](https://github.com/biopeia/organism/issues/31)); F-0033 contract gap ([issue](https://github.com/biopeia/organism/issues/33)); F-0034 implementation finding (open); F-0141 contract gap (open); F-0168 documentation inconsistency (resolved) |
 
 ### Executive outcome ledger
@@ -582,7 +582,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
 | Tests | `organism:tests/source_unit/actuation/test_effect_atoms.py`, `organism:tests/source_unit/actuation/test_causal_footprints.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
 
 ### Execution bindings, availability and the affordance resolver
@@ -600,8 +600,8 @@ restates it so that the answers about one unit can be read in one place.
 | State | owner organism, family embodiment_local; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: invalidate_authority, reproduction: not_inherited |
 | Depends on | `mechanism.organism-action-path`, `component.organism-competence-development`, `component.organism-causal-evidence`, `component.organism-executive-outcome-ledger` |
 | Governed by | [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0104-body-schema-and-competence.md](../technical/adr/ADR-0104-body-schema-and-competence.md) |
-| Tests | `organism:tests/source_unit/agency/test_competence_availability.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Tests | `organism:tests/source_unit/agency/test_competence_availability.py`, `organism:tests/source_unit/agency/test_affordance_resolver.py`, `organism:tests/source_unit/actuation/test_competence_checkpoint.py` |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0101 contract gap ([issue](https://github.com/biopeia/organism/issues/40)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0103 implementation finding ([issue](https://github.com/biopeia/organism/issues/42)); F-0105 evidence gap (open); F-0106 implementation finding (open); F-0107 documentation inconsistency (open) |
 
 ### Prospective deliberation and the outcome-value ledger
@@ -620,7 +620,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path`, `component.organism-competence-development` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/agency/test_prospective.py`, `organism:tests/source_unit/agency/test_policy.py`, `organism:tests/source_unit/agency/test_value.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0100 contract gap ([issue](https://github.com/biopeia/organism/issues/39)); F-0102 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/41)); F-0104 implementation finding (open); F-0105 evidence gap (open) |
 
 ### Genome, expression and germline record
@@ -652,12 +652,12 @@ restates it so that the answers about one unit can be read in one place.
 | Must not | create a record from an event; a caller supplies every record; resolve an evidence reference or change a status; retrieve by content, consolidate or archive; rewrite a record in place |
 | Owned by | organism |
 | Explained in | [explanation/organism/experience-record-and-ledger.md](../explanation/organism/experience-record-and-ledger.md) |
-| Implemented in | `organism:src/organism/memory/experience.py`, `organism:src/organism/memory/ledger.py` |
+| Implemented in | `organism:src/organism/memory/experience.py`, `organism:src/organism/memory/ledger.py`, `organism:src/organism/memory/recording.py` |
 | State | owner organism, family adaptive_longitudinal; birth: empty, checkpoint: preserve, restart: preserve, reembodiment: preserve, reproduction: not_inherited |
 | Depends on | `component.organism-identity-checkpoint` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
-| Tests | `organism:tests/memory/test_experience.py`, `organism:tests/memory/test_ledger.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Tests | `organism:tests/memory/test_experience.py`, `organism:tests/memory/test_ledger.py`, `organism:tests/memory/test_recording.py` |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0089 implementation finding (open); F-0093 contract gap (open) |
 
 ### Causal provenance log
@@ -782,7 +782,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.organism-action-path` |
 | Governed by | [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md), [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md) |
 | Tests | `organism:tests/source_unit/cognition/test_generative_resident.py`, `organism:tests/source_unit/cognition/test_generative_foundation.py`, `organism:tests/source_unit/cognition/test_generative_model.py`, `organism:tests/source_unit/cognition/test_generative_adapters.py`, `organism:tests/source_unit/cognition/test_generative_agenda.py`, `organism:tests/source_unit/cognition/test_generative_agenda_capacity.py`, `organism:tests/source_unit/cognition/test_generative_scheduler.py`, `organism:tests/source_unit/cognition/test_generative_execution.py`, `organism:tests/source_unit/cognition/test_generative_rollout.py`, `organism:tests/source_unit/cognition/test_generative_branch.py`, `organism:tests/source_unit/cognition/test_generative_counterfactual.py`, `organism:tests/source_unit/cognition/test_generative_replay.py`, `organism:tests/source_unit/cognition/test_generative_recombination.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis.py`, `organism:tests/source_unit/cognition/test_generative_calibration.py`, `organism:tests/source_unit/cognition/test_generative_consolidation.py`, `organism:tests/source_unit/cognition/test_generative_epistemic_value.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0070 implementation finding ([issue](https://github.com/biopeia/organism/issues/43)); F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0075 implementation finding (open); F-0076 implementation finding (open); F-0077 documentation inconsistency (open); F-0142 implementation finding (open); F-0168 documentation inconsistency (resolved) |
 
 ### What a cognitive checkpoint carries
@@ -798,7 +798,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-identity-checkpoint`, `component.organism-cognitive-graph`, `component.organism-generative-resident` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
 | Tests | `organism:tests/source_unit/cognition/test_portable_checkpoint.py`, `organism:tests/source_unit/cognition/test_graph_checkpoint.py`, `organism:tests/source_unit/cognition/test_generative_cognition_persistence.py`, `organism:tests/source_unit/cognition/test_generative_agenda_persistence.py`, `organism:tests/source_unit/cognition/test_generative_scheduler_persistence.py`, `organism:tests/source_unit/cognition/test_generative_hypothesis_persistence.py` |
-| Reviewed at | organism@de16558faeba, world@1f35e92611ed (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a, world@d66ac6197c8e (RECORDED) |
 | Known findings | F-0073 recovery durability gap ([issue](https://github.com/biopeia/organism/issues/45)); F-0074 performance concern ([issue](https://github.com/biopeia/organism/issues/46)); F-0076 implementation finding (open); F-0077 documentation inconsistency (open); F-0140 implementation finding (open); F-0168 documentation inconsistency (resolved) |
 
 ### Attention budget allocation
@@ -835,7 +835,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-identity-checkpoint` |
 | Governed by | [technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md](../technical/adr/ADR-0081-the-canonical-organism-is-longitudinal.md), [technical/adr/ADR-0088-lifecycle-event-ontology.md](../technical/adr/ADR-0088-lifecycle-event-ontology.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
 | Tests | `organism:tests/test_transition.py`, `organism:tests/test_continuation.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0140 implementation finding (open); F-0141 contract gap (open); F-0143 recovery durability gap (open); F-0146 evidence gap (open) |
 
 ### From an opaque sense signal to an accepted step
@@ -850,7 +850,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.organism-cognitive-graph`, `mechanism.organism-graph-plasticity`, `mechanism.organism-cognitive-checkpoint`, `component.organism-transition-and-continuation` |
 | Governed by | [technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md](../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md), [technical/adr/ADR-0105-cognition-structure.md](../technical/adr/ADR-0105-cognition-structure.md) |
 | Tests | `organism:tests/source_unit/cognition/test_sense_input.py`, `organism:tests/source_unit/cognition/test_composition.py`, `organism:tests/source_unit/cognition/test_owner_transition.py` |
-| Reviewed at | organism@de16558faeba, world@1f35e92611ed, modality@93a4c3a4ea71 (RECORDED) |
+| Reviewed at | organism@637bc21a7e2a, world@d66ac6197c8e, modality@62af4aba0714 (RECORDED) |
 | Known findings | F-0140 implementation finding (open); F-0142 implementation finding (open); F-0143 recovery durability gap (open); F-0144 implementation finding (open); F-0145 contract gap (open) |
 
 ### Organism continuation closure v1 and re-embodiment
@@ -861,10 +861,10 @@ restates it so that the answers about one unit can be read in one place.
 |---|---|
 | Owned by | organism |
 | Explained in | [explanation/organism/continuation-closure-and-reembodiment.md](../explanation/organism/continuation-closure-and-reembodiment.md) |
-| Implemented in | `organism:src/organism/continuation.py`, `organism:src/organism/cognition/portable_checkpoint.py` |
+| Implemented in | `organism:src/organism/continuation.py`, `organism:src/organism/checkpoint.py`, `organism:src/organism/cognition/portable_checkpoint.py` |
 | Governed by | [technical/adr/ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md](../technical/adr/ADR-0077-canonical-re-embodiment-and-reduced-seed-transplant-are-distinct-contracts.md), [technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md](../technical/adr/ADR-0091-one-non-terminated-continuation-per-organism-identity.md), [technical/adr/ADR-0103-portable-organism-state.md](../technical/adr/ADR-0103-portable-organism-state.md) |
-| Tests | `organism:tests/test_continuation.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
-| Reviewed at | organism@de16558faeba (RECORDED) |
+| Tests | `organism:tests/test_continuation.py`, `organism:tests/source_unit/test_longitudinal_checkpoint.py`, `organism:tests/source_unit/cognition/test_portable_checkpoint.py` |
+| Reviewed at | organism@637bc21a7e2a (RECORDED) |
 | Known findings | F-0172 documentation inconsistency (resolved) |
 
 ## Modality
@@ -880,7 +880,7 @@ restates it so that the answers about one unit can be read in one place.
 | Implemented in | `modality:src/modality/scalar_field.py` |
 | Governed by | [technical/adr/ADR-0099-modality-contract-library.md](../technical/adr/ADR-0099-modality-contract-library.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md](../technical/adr/ADR-0110-repository-consequence-and-dependency-direction.md), [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `modality:tests/test_scalar_field.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | modality@62af4aba0714, world@1f35e92611ed, organism@de16558faeba, embodiment@5a23e1fbeaa3, environment@4eb1f8c3393a, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
+| Reviewed at | modality@62af4aba0714, world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, observation@2f4751f53678, lab@800488dfccad (RECORDED) |
 | Known findings | F-0050 implementation finding (accepted); F-0051 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/11)); F-0052 documentation inconsistency ([issue](https://github.com/biopeia/modality/issues/12)); F-0053 documentation inconsistency (open); F-0054 documentation inconsistency (open); F-0055 evidence gap ([issue](https://github.com/biopeia/modality/issues/13)); F-0056 contract gap (open); F-0057 contract gap (open); F-0058 documentation inconsistency (open) |
 
 ## Observation

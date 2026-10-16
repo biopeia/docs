@@ -1,7 +1,7 @@
 # Prospective deliberation and the outcome-value ledger
 
-Reviewed against `organism` at commit `de16558faeba04f05eee6d2035a8f7f1e64b822b` (main on
-2026-10-14); first written against `3e6c222f`. Everything below describes the
+Reviewed against `organism` at commit `637bc21a7e2a1aa9e0870f55f134e839657687f4` (main on
+2026-10-16); first written against `3e6c222f`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 

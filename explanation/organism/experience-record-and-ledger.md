@@ -1,26 +1,20 @@
 # The experience record and its ledger
 
-Reviewed against `organism` at commit `ba0011797a6a3b4d48c7731651e50560c4043f18`.
-Everything below describes that revision. Statements are marked by what
-supports them: the code, the tests, an ad hoc run, or neither. Searches were
-repeated on 2026-10-11 over the source and tests of all seven repositories,
-and the ad hoc run was repeated at that revision.
+Reviewed against `organism` at commit `637bc21a7e2a1aa9e0870f55f134e839657687f4`
+(main on 2026-10-16); first written against `ba001179`. Everything below describes that revision.
+Statements are marked by what supports them: the code, the tests, an ad hoc run, or an accepted decision.
 
 ## What it is
 
-The Organism package has a directory called `memory`. It holds two things: a
-value that describes one episode, and a bounded list of such values kept for
-one Organism.
+The Organism package has a directory called `memory`. It holds an immutable
+value describing one episode (`ExperienceRecord`), a bounded FIFO container
+(`ExperienceLedger`), and a recording pipeline (`organism:src/organism/memory/recording.py`)
+that creates records deterministically from sensory inputs, cognitive activations, and
+action outcomes during organism transitions.
 
-The name promises more than the code performs, so it is worth saying at once
-what the operations are. A record can be constructed, checked for shape,
-written to plain data, read back and hashed. A ledger can append a record,
-drop its oldest, look a record up by identifier, and be written and read
-back. Nothing here recalls, retrieves by content, consolidates, forgets by
-any rule but age, or changes behaviour. And **nothing in the repository
-creates a record from something that happened**: only tests construct
-records, and only tests construct a ledger. This document describes a format
-and a container.
+The records capture abstract native tokens and verified evidence references without
+host entropy or ungrounded evaluator labels. Records can be constructed, shape-checked,
+serialized to JSON, restored, and accumulated into the ledger with strict capacity bounds.
 
 This ledger is not the [executive outcome ledger](executive-outcome-ledger.md).
 That one lives in the agency code, is keyed by competence and effect, and
@@ -165,16 +159,36 @@ owns, and
 and [ADR-0103](../../technical/adr/ADR-0103-portable-organism-state.md) ask
 that it continue with the Organism and travel in a portable checkpoint. The
 directory lives in the Organism package, binds every record to one Organism
-identifier and imports nothing from another domain. That is consistent with
-the decisions. Whether records are kept across the life of an Organism
-depends on a producer and on a composition that do not exist at this
-revision. The decisions state an intent; the code neither contradicts nor
-fulfils it.
+identifier and imports nothing from another domain.
 
 No host time is read and nothing is random: identifiers and tick classes are
 supplied by the caller, in line with what
 [ADR-0090](../../technical/adr/ADR-0090-host-wall-clock-time-is-never-implicit-causal-authority.md)
 asks, and for the plain reason that nothing here originates a value.
+
+## Deterministic recording from transitions
+
+`organism:src/organism/memory/recording.py` introduces explicit recording constructors
+and bounded accumulation policies:
+
+- **`ExperienceRecordingPolicy`:** Bounded configuration (`record_reception: bool`,
+  `record_interpretation: bool`, `max_records: int` in [16, 8192], `activation_threshold: float`,
+  `evidence_prefix: str`).
+- **Direct sensory receipt (`record_sense_reception`):** Captures external input through the
+  authorized causal boundary. Sets `source_kind: SourceKind.DIRECT`, `epistemic_status: EpistemicStatus.OBSERVED`,
+  `confidence_class: 7`, and `evidence_refs: (f"{evidence_prefix}:{world_id}:{causal_tick}",)`.
+  Refuses signals whose provenance disagrees with the reception provenance.
+- **Cognitive interpretation (`record_cognitive_interpretation`):** Captures internal node
+  activations above the configured threshold. Sets `source_kind: SourceKind.COGNITIVE`,
+  `epistemic_status: EpistemicStatus.ASSOCIATED`, `confidence_class: 4`, and empty `evidence_refs`.
+- **Action outcome knowledge (`record_action_outcome`):** Captures verified consequences following
+  an executed motor intent. Sets `source_kind: SourceKind.ACTION_OUTCOME`, `epistemic_status: EpistemicStatus.SUPPORTED`
+  (or `CONTRADICTED` if failed), `confidence_class: 6`, and binds verified outcome receipt references.
+- **Bounded accumulation (`accumulate_experience_records`):** Deterministically ingests new
+  records into the owner's `ExperienceLedger`, enforcing FIFO bounds without duplicate record IDs.
+- **Runtime wiring:** In `organism:src/organism/cognition/owner_transition.py::advance_organism_from_sense_signals`,
+  supplying an `experience_policy` automatically records sensory reception and cognitive activations,
+  accumulating them into `runtime.experience_records` across accepted steps.
 
 ## What supports this description
 
@@ -182,20 +196,14 @@ asks, and for the plain reason that nothing here originates a value.
 |---|---|
 | Round trip of a record, content hash without the identifier, refusal of a model record marked observed | Code and tests in `organism:tests/memory/test_experience.py` |
 | The bound and what is returned on overflow, refusal of foreign and repeated records, round trip of the ledger, refusals on reading back | Code and tests in `organism:tests/memory/test_ledger.py` |
-| The other refusals of a record; a model record marked supported is accepted; an unknown key is refused; a dropped identifier can be reused; capacity is restored; reading from nothing is refused | Code, and one ad hoc run of the modules at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18`; a test is kept only for the last |
-| Nothing constructs a record or a ledger outside tests; no code reads a status, a source kind or a confidence class beyond the three rules; nothing resolves an evidence reference; no checkpoint includes the ledger | Searches of `src` and `tests` at that revision, repeated on 2026-10-11 over the seven repositories for the constructors, and made on 2026-10-10 for the field names in code unchanged since |
+| Deterministic sensory reception recording with provenance validation and evidence ref binding | Code in `organism:src/organism/memory/recording.py` and tests in `organism:tests/memory/test_recording.py::test_record_sense_reception_creates_valid_direct_record` |
+| Cognitive activation interpretation recording with threshold filtering | Code in `organism:src/organism/memory/recording.py` and tests in `organism:tests/memory/test_recording.py::test_record_cognitive_interpretation_filters_by_threshold` |
+| Action outcome empirical validation recording | Code in `organism:src/organism/memory/recording.py` and tests in `organism:tests/memory/test_recording.py::test_record_action_outcome_creates_valid_action_record` |
+| Deterministic FIFO record accumulation | Code in `organism:src/organism/memory/recording.py` and tests in `organism:tests/memory/test_recording.py::test_accumulate_experience_records_enforces_fifo_bounds` |
+| Transition step integration via `advance_organism_from_sense_signals` | Code in `organism:src/organism/cognition/owner_transition.py` |
 | That this state is the Organism's and longitudinal | Accepted decisions ADR-0092, ADR-0081 and ADR-0103; statements of intent |
-
-No record produced by a run of an Organism was examined, because none can
-exist at this revision. That an Organism remembers anything, in any sense
-stronger than a caller appending to a list, is not supported by anything
-reviewed here.
 
 ## Open questions
 
-- Which component writes a record, from what, and what the tick class counts.
-- What an evidence reference refers to, and who may resolve it.
-- Whether the confidence class of 0 to 7 is meant to agree with the sixteen
-  confidence classes of the
-  [foundation conventions](foundation-conventions.md).
-- What happens to a dropped record.
+- What an external consumer does with accumulated experience records in longitudinal training.
+- What happens to a dropped record when the FIFO ledger overflows.

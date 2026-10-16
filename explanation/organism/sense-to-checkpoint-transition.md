@@ -1,8 +1,8 @@
 # From an opaque sense signal to an accepted step
 
-Reviewed against `organism@de16558faeba04f05eee6d2035a8f7f1e64b822b`,
-`world@e2be58700c870419a309ef3e2460b30b95c256be` and
-`modality@93a4c3a4ea71dcf65269ce730aab736238fd3ea7` (main on 2026-10-14); first written against `ba001179`.
+Reviewed against `organism@637bc21a7e2a1aa9e0870f55f134e839657687f4`,
+`world@d66ac6197c8ea8489dc4f2689641ff0a88b6482a` and
+`modality@62af4aba07146d5dfdc978af07bb72111112d873` (main on 2026-10-16); first written against `ba001179`.
 Everything below describes those revisions. Statements are marked by what
 supports them: the code, the tests, an ad hoc run, or an accepted decision.
 Searches of the seven repositories were made on 2026-10-11.
@@ -240,16 +240,17 @@ and 50, with one learning instruction.
 |---|---|
 | Transition state | Replaced: last tick 50, previous frame from the second pass |
 | Graph | Replaced: the instructed edge's weight moved from 0.05 to 0.0537 and its trace from 0 to 0.0281; both restored exactly from the new envelope |
-| Safety state, normalizers, experience records, genetic group | Byte for byte as before |
+| Safety state, normalizers, genetic group | Byte for byte as before |
+| Experience records | Byte for byte as before when `experience_policy` is None; updated deterministically when an `ExperienceRecordingPolicy` is supplied |
 | Generative resident | Byte for byte as before. It is restored and written back; it is not stepped |
 | Declared dependencies | The same list, copied to the new envelope |
 
 Three consequences, stated as facts.
 
-The step advances the graph and nothing else. The
-[generative resident](generative-resident.md), the
-[action path](action-path.md), the
-[experience ledger](experience-record-and-ledger.md) and the
+The step advances the graph, and optionally accumulates experience records when
+an explicit `ExperienceRecordingPolicy` is passed (`organism:src/organism/cognition/owner_transition.py:106-136`).
+The [generative resident](generative-resident.md), the
+[action path](action-path.md), and the
 [expression regulator](genome-and-inheritance.md) are not called. The frame's
 readouts are returned inside the composition and no code passes them on.
 
@@ -329,7 +330,7 @@ is the provenance's causal tick. Nothing here generates an identifier.
 | The Organism and Modality constants are separate definitions with equal values | Code of both modules; search of `organism:src` for imports of other packages, 2026-10-11 |
 | The three stages and their statuses; the copy of the graph; selection of an edge by kind; no update when `eligible` is false | Code of `organism:src/organism/cognition/composition.py` and tests in `organism:tests/source_unit/cognition/test_composition.py` |
 | Prediction error does not enter the update; `plasticity`, the genome, the expression state and the safety state are not read; structure is not changed | Code; for the safety state also the ad hoc run below |
-| The order of checks in the accepted step; failure publishes nothing; the counter and round trip | Code of `organism:src/organism/cognition/owner_transition.py` and tests in `organism:tests/source_unit/cognition/test_owner_transition.py` |
+| The order of checks in the accepted step; failure publishes nothing; the counter and round trip; optional experience policy accumulation | Code of `organism:src/organism/cognition/owner_transition.py` and tests in `organism:tests/source_unit/cognition/test_owner_transition.py` |
 | Which parts of the payload change over two steps; the learned weight and trace persist exactly; the resident is not stepped; the normalizer is not applied; dependencies are copied; a frozen safety state does not stop an update; ticks 10 and 50 accepted; a lower tick from another World refused by the graph transition; the packaged empty graph refused | Code, and one ad hoc run at `organism` `ba0011797a6a3b4d48c7731651e50560c4043f18`; no test is kept for these |
 | No caller in the source of any repository; the callers in tests | Searches on 2026-10-11 of the seven repositories at the revisions in `registry/coverage.yaml` for this unit and for [the transition boundary](transition-and-continuation.md) |
 | What the World test does and what it disclaims | Code of `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
