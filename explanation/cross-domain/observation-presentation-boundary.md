@@ -1,7 +1,8 @@
 # The human-facing presentation boundary
 
-Reviewed against `frontend` at commit `496c05dcd062eb0833abdfb1030cfb87f6f80aa7`
-(main on 2026-10-15). Statements are marked by what supports them: the code,
+Reviewed against `frontend` at commit `b21748d0929e21286c179eb02ca866abb7d8a718`
+(main on 2026-10-16) and `observation` at commit `572c86f8fce66a73cc3899a4a929448416f1e6bf`.
+Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
 
@@ -31,7 +32,8 @@ defines seven peer-level screens without hierarchy (`frontend:src/model.js::ROUT
 2. **World Overview** (`/overview`): High-level run state, active entities,
    and environmental summary.
 3. **Spatial Explorer** (`/spatial`): Spatial arrangement of embodiment and
-   environmental resources.
+   environmental resources rendered via passive WebGL link-precision projection
+   (`frontend:src/spatial-renderer.js`).
 4. **Causal Timeline** (`/timeline`): Ordered sequence of committed World
    cuts, distinguishing causal time from delivery time.
 5. **Sensorimotor Trace** (`/sensorimotor`): Physical pose, sensory samples,
@@ -85,7 +87,7 @@ compromising security or simulation isolation:
    connections (`frontend:tests/frontend-server.test.js`).
 3. **Approved claim family filtering (`frontend:src/observation-client.js`):**
    The client decodes the envelope schema `biopeia.observation.current.v1`
-   and validates incoming messages against two approved semantic families:
+   and validates incoming messages against an allowlist of approved semantic families:
    - `embodiment.body_pose` (contract `embodiment.body_pose`, revision `v1`):
      validates 3D position vector in meters, XYZW unit quaternion orientation,
      reference frames, context times containing `world_causal_tick`, and
@@ -94,6 +96,12 @@ compromising security or simulation isolation:
      validates dimensionless scalar value in range `[0.0, 1.0]`, sample point
      in meters, context times containing `world_source_causal_tick` and
      `world_target_causal_tick`, and parent lineage hash `owner_checkpoint_sha256`.
+   - `environment.render_scene` (contract `biopeia.environment.render-scene`, revision `1`):
+     validates static scene geometry envelope (`render_geometry_sha256`).
+   - `embodiment.render_morphology` (contract `embodiment.render_morphology`, revision `v1`):
+     validates static morphology geometry envelope (`render_geometry_sha256`).
+   - `embodiment.render_link_pose` (contract `embodiment.render_link_pose`, revision `v1`):
+     validates carried poses against World cut association, canonical RFC 8785 candidate digest, and body identity.
    Any unapproved semantic family is skipped; if no approved claims remain,
    status transitions to `'unsupported'`.
 

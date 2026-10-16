@@ -236,7 +236,7 @@ units:
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         modality: 62af4aba07146d5dfdc978af07bb72111112d873
-        observation: 2f4751f53678f2210930770605844cac766b1da4
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
 
   component.world-mujoco-step-executor:
     kind: component
@@ -393,8 +393,8 @@ units:
         organism: 637bc21a7e2a1aa9e0870f55f134e839657687f4
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
-        observation: 2f4751f53678f2210930770605844cac766b1da4
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.embodiment-physical-state:
     kind: component
@@ -477,7 +477,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
         embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
         environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
         observation: 2f4751f53678f2210930770605844cac766b1da4
@@ -516,7 +516,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
         embodiment: 5a23e1fbeaa31109647aec4d4dc36eddbe0a6321
         environment: d09e45c40633c9b2bf927c7aec3f6326318c2ea8
         observation: 2f4751f53678f2210930770605844cac766b1da4
@@ -541,7 +541,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.lab-body-interoception-transducer:
     kind: component
@@ -572,8 +572,14 @@ units:
       - explanation/observation/semantic-claim-model.md
     implementation:
       - observation:src/observation/semantic.py
+      - observation:src/observation/spatial_contracts.py
+      - observation:src/observation/embodiment.py
+      - observation:src/observation/environment.py
     tests:
       - observation:tests/test_semantic_model.py
+      - observation:tests/test_embodiment_observation.py
+      - observation:tests/test_environment_observation.py
+      - observation:tests/test_committed_owner_state_adapters.py
     design:
       - docs:technical/design/observability/observation-semantic-model-v1.md
       - docs:technical/design/observation/observation-architecture-biopeia-v1.md
@@ -584,7 +590,7 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 2f4751f53678f2210930770605844cac766b1da4
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
 
   component.observation-plane:
@@ -597,8 +603,13 @@ units:
       - explanation/observation/observation-plane.md
     implementation:
       - observation:src/observation/plane.py
+      - observation:src/observation/archive.py
+      - observation:src/observation/capture.py
     tests:
       - observation:tests/test_plane.py
+      - observation:tests/test_archive.py
+      - observation:tests/test_archive_reader.py
+      - observation:tests/test_capture.py
     design:
       - docs:technical/design/observation/observation-architecture-biopeia-v1.md
       - docs:technical/design/observability/observation-semantic-model-v1.md
@@ -611,7 +622,7 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 2f4751f53678f2210930770605844cac766b1da4
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
 
   component.observation-inherited-projection:
     kind: component
@@ -638,9 +649,9 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 2f4751f53678f2210930770605844cac766b1da4
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
         world: 1f35e92611ed76f1863136916601f07fc2fd78c1
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   mechanism.organism-action-path:
     kind: mechanism
@@ -971,7 +982,7 @@ units:
         world: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
         modality: 62af4aba07146d5dfdc978af07bb72111112d873
         observation: 2f4751f53678f2210930770605844cac766b1da4
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   component.embodiment-articulated-body:
     kind: component
@@ -1707,7 +1718,7 @@ units:
     review:
       status: RECORDED
       basis:
-        lab: 800488dfccadf2a62e193405de141da0195f53f4
+        lab: e7bb66c44517e279ca3180d929377682e251d796
 
   concept.organism-continuation-closure-v1:
     kind: concept
@@ -1748,6 +1759,10 @@ units:
       - frontend:scripts/frontend-server.js
       - frontend:src/model.js
       - frontend:src/views.js
+      - frontend:src/spatial-renderer.js
+      - frontend:src/spatial-render-controller.js
+      - frontend:src/observation-store.js
+      - frontend:src/presentation-scheduler.js
     tests:
       - observation:tests/test_http_bridge.py
       - frontend:tests/observation-client.test.js
@@ -1755,6 +1770,10 @@ units:
       - frontend:tests/frontend-server.test.js
       - frontend:tests/model.test.js
       - frontend:tests/views.test.js
+      - frontend:tests/spatial-renderer.test.js
+      - frontend:tests/spatial-render-controller.test.js
+      - frontend:tests/observation-store.test.js
+      - frontend:tests/presentation-scheduler.test.js
     adrs:
       - docs:technical/adr/ADR-0078-observation-is-causally-passive.md
       - docs:technical/adr/ADR-0100-observation-capability-and-evidence-custody.md
@@ -1762,8 +1781,8 @@ units:
     review:
       status: RECORDED
       basis:
-        observation: 2f4751f53678f2210930770605844cac766b1da4
-        frontend: 496c05dcd062eb0833abdfb1030cfb87f6f80aa7
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
+        frontend: b21748d0929e21286c179eb02ca866abb7d8a718
 
   component.world-m1-process-bootstrap:
     kind: component

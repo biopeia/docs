@@ -1,7 +1,7 @@
 # The Lab observation consumer
 
-Reviewed against `lab` at commit `0baff4d0208b2f19d244078eb8576931ba524c08`
-(main on 2026-10-14). Statements are marked by what supports them: the code,
+Reviewed against `lab` at commit `e7bb66c44517e279ca3180d929377682e251d796`
+(main on 2026-10-16). Statements are marked by what supports them: the code,
 the tests, or an accepted decision.
 
 ## What it is

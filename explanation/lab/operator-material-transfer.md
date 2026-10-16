@@ -1,7 +1,7 @@
 # The operator material transfer
 
-Reviewed against `lab` at commit `0baff4d0208b2f19d244078eb8576931ba524c08` (main on
-2026-10-14); first written against `29e25d8`. Everything below describes the
+Reviewed against `lab` at commit `e7bb66c44517e279ca3180d929377682e251d796` (main on
+2026-10-16); first written against `29e25d8`. Everything below describes the
 later revision. Statements are marked by what
 supports them: the code, the tests, or an accepted decision. A decision
 states intent; it is not a result.

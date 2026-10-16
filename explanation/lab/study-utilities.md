@@ -1,7 +1,7 @@
 # The study utilities
 
-Reviewed against `lab` at commit `c73f5b4321bfd5ccf74d1fb9e6b4e44a7bf3cea4`.
-Everything below describes that revision. Statements are marked by what
+Reviewed against `lab` at commit `e7bb66c44517e279ca3180d929377682e251d796`
+(main on 2026-10-16). Everything below describes that revision. Statements are marked by what
 supports them: the code, the tests, or an ad hoc run.
 
 ## What they are
