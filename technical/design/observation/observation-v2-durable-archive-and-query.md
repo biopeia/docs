@@ -32,10 +32,12 @@ The design preserves ADR-0078 (causal passivity), ADR-0095/0099 (semantic author
 | Embodiment | `957af224e4400fc30a9d8d78d987cec16a8e959e` | Source owner of body/morphology claims; no new source publication contract is introduced here. |
 | Environment | `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1` | Source owner of environmental claims; no new source publication contract is introduced here. |
 | Modality | `62af4aba07146d5dfdc978af07bb72111112d873` | Capability/transduction lineage only; it is not an independent semantic authority. |
-| Lab | `ef62790560c5cc6fbe85bdea54c5e274259621aa` | Scientific apparatus/evidence custody remains separate. Archive retrieval is not evidence admission. |
+| Lab | `03c7cb64c6e98226c0737fc6f8b8d341ae6eaf36` | Scientific apparatus/evidence custody remains separate. Archive retrieval is not evidence admission. |
 | Docs | `5edb112a462c2436d71afa44949aef36ef15e768` | Includes ADR-0100, V1 proposal, security/deployment design, and registry. |
 
 The source inspection distinguishes implemented behavior from proposed target behavior. In particular, the local archive is not a remote deployment, a browser API, or a production retention/security policy.
+
+Observation #40 is a separate, now-closed same-process Lab read-boundary decision. Its bounded in-process consumer disposition does not depend on durable archive queries, does not make Lab an Observation publisher, and does not authorize browser/network history access. Lab #332's limited consumer slice is likewise not a V2 archive acceptance gate. This proposal does not hold that work open or broaden its accepted scope.
 
 ## 3. Minimal record and identity model
 
@@ -119,7 +121,19 @@ Frontend requires current view plus bounded history, provenance inspection, and 
 
 ## 7. Exact-source readiness delta for Observation #37
 
-Observation #37 remains the owner-inventory and contract disposition issue; this document does not close it. Based on the revisions in §2:
+Observation #37 remains the exact-source Frontend consumer-readiness issue; this document does not close it or substitute for the required Observation-owner disposition and independent review. The following consumer matrix is a readiness delta against its seven-screen product specification, not an approval to implement those screens:
+
+| Frontend screen / capability | Current source-backed status | Durable V2 / readiness gap |
+|---|---|---|
+| Worlds & Runs | **Not established** as a durable World/run catalog. Local capture sessions are Observation capture identities, not World/run identities. | Needs an owner-authorized run/catalog projection and stable references; do not derive them from capture IDs. |
+| World Overview | **Partial** for the bounded local current-view claim set; **not established** for browser-accessible durable history. | Needs a stable read contract and explicit stale/incomplete state across capture sessions. |
+| Spatial Explorer | **Partial** for separately carried static Environment/Embodiment owner projections; **not established** as a coherent dynamic scene. | No pose-to-geometry or shared-cut inference; requires owner/World evidence before a joined scene can be represented. |
+| Causal Timeline | **Not established** as causal history or browser replay. Local `receipt_sequence` is only archive receipt order. | Requires explicit World cut assertions and a consumer read path; presentation order must not be labeled causal replay. |
+| Sensorimotor Trace | **Not established** for a complete, linked sensorimotor claim graph. | Requires explicit typed owner links and access to all relevant authorized claims; no heuristic joins. |
+| Claim Inspector | **Partial** for claims available in the current local view; durable cross-restart/browser inspection is **not established**. | Requires stable claim/publication references and provenance-preserving history queries. |
+| Connection & Access | **Partial** for bounded local-process availability; shared/remote authorization is **not authorized**. | Docs #167 remains open for future shared/remote security and deployment; local-only readiness must stay distinct. |
+
+Based on the exact source revisions in §2 and the merged capture-integrity increment:
 
 | Readiness dimension | Current bounded evidence | V2 target / remaining gap |
 |---|---|---|
@@ -127,8 +141,8 @@ Observation #37 remains the owner-inventory and contract disposition issue; this
 | Local ordering and recovery accounting | PR #61 implements receipt order and capture sessions; source sequence is explicitly local delivery accounting | No causal inference. Confirm per-source reset/continuity semantics; unknown intervals remain unverifiable. |
 | World causal association | World owns cut authority; exact query may filter only explicit verified association | A consumer-verifiable shared-cut record and conformance cases must be evidenced by World; tick equality is insufficient. |
 | Queryable durable history | SQLite archive query currently pages by family and local receipt cursor | The Python archive exposes `query(family, after_receipt_sequence, limit)`, `capture_sessions()` and `capture_coverage()`; the local HTTP bridge exposes bounded current-view `GET /v1/current`, not durable history. No public history API or browser transport is approved; query shapes above are logical requirements only. |
-| Frontend consumer readiness | Current-view local reads and spatial claim carriage exist in bounded scope | Durable history, access/auth, cross-restart consumer reads and a coherent multi-owner scene are not established. |
-| Lab use | Lab remains evidence custodian under ADR-0100 | No automatic evidence admission from archive presence; Lab must reference exact source/capture identities under its own protocol. |
+| Frontend consumer readiness | Current-view local reads and bounded static spatial claim carriage exist | The screen matrix above is not a readiness approval. Durable browser history and a coherent multi-owner scene are not established. |
+| Lab same-process use | Observation #40 and Lab #332 disposition the bounded read-only same-process slice | Independent of durable archive/history queries; no automatic evidence admission. Lab retains its own evidence references and custody under ADR-0100. |
 | Security/retention/operations | Local prototype bounds only | Docs #167, classification/access authority, deletion/retention and shared deployment remain unresolved. |
 
 The V2 target does not add producer fields or transport behavior to make a row appear ready. Each publisher must separately define stable identity, source delivery accounting and any cut relationship within its own authority. Consumers must preserve unsupported and unverified states.
@@ -139,7 +153,7 @@ The V2 target does not add producer fields or transport behavior to make a row a
 2. **Next implementable increment — local reader only:** extend the existing local reader (currently optional family plus receipt-cursor pagination) with exact subject, revision and domain-time selection using fields already present in archived owner publications; expose existing capture catalog/coverage. Results retain original provenance separately from receipt metadata and pagination remains anchored in local `receipt_sequence`. Selection must be scoped to an explicit scan cursor/window so sparse matches cannot be mistaken for a complete history. A World-cut filter is available only when a row already carries an explicit World-authored verifiable assertion; otherwise return `unsupported/not established`. Do not add tables/schema fields, producer contracts, HTTP/browser API, cross-run joins or remote access in this increment. Acceptance tests prove pagination, exact filtering, provenance, unsupported/unverified responses, no tick/run joins and no mutation. Existing PR #61 write-path, SQLite fault-injection, capacity and recovery tests are not repeated unless reader changes invalidate them.
 3. **Owner-specific source/cut readiness:** each producer owner defines and tests any publication ID, source sequence/watermark, cut association, or explicit absence contract it owns. World alone tests cut validity. Observation consumes only approved records; no implementation can manufacture missing fields.
 4. **Security and shared access gate:** Docs #167 and competent security/operations authority decide identity, authorization, classification, audit, deployment, backup/deletion and capacity operations before exposing data beyond local use.
-5. **Consumer integration:** Frontend and Lab use approved read contracts. Browser acceptance covers multiple sessions, explicit incomplete/stale state, provenance, and refusal to show a causally coherent combined scene without World verification. Lab separately records evidence admission.
+5. **Consumer integration:** Frontend uses approved read contracts. Browser acceptance covers multiple sessions, explicit incomplete/stale state, provenance, and refusal to show a causally coherent combined scene without World verification. The already-dispositioned #40/#332 same-process Lab slice proceeds independently; any future Lab use of durable history needs its own consumer acceptance and separate evidence admission.
 
 ### Acceptance evidence required for Issue #38
 
@@ -158,8 +172,9 @@ These are bounded decisions, not requests to reopen the architecture direction:
 
 1. Observation and producer owners: which currently published families provide stable publication identity and meaningful source sequence/watermark semantics, and which remain explicitly unverifiable?
 2. World: what exact existing or minimal World-authored record proves that a publication belongs to a committed cut, and whether such association is individual or an explicitly complete shared projection?
-3. Security/operations authority under Docs #167: whether/when history may be served to Frontend/Lab outside the local process boundary and under what classification, access, audit, backup and deletion rules.
-4. Lab: what separate evidence-admission reference it needs when citing an archived observation, without making Observation the custodian.
+3. Frontend consumer readiness: Observation owner disposition and author-distinct independent review of the exact-source #37 matrix above; until then it is a proposed readiness delta, not an approved client contract.
+4. Security/operations authority under Docs #167: whether/when history may be served to Frontend outside the local process boundary and under what classification, access, audit, backup and deletion rules. Docs #167 still leaves shared/remote deployment unauthorized; it does not block the local-only reader increment.
+5. Lab: any future durable-history consumer requirements and the distinct Lab evidence-admission reference, without making Observation the custodian. This is not a blocker for the #40 same-process slice already dispositioned.
 
 No human decision is requested for routine technical choices inside the bounded design. The remaining items require the listed authorities because they concern source-owned contracts, World causal authority, security/access, or Lab evidence custody. This proposal documents the next bounded reader increment but does not itself authorize code changes or any public/remote exposure.
 
