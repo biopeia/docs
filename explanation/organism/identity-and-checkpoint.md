@@ -122,10 +122,9 @@ silence means every declared dependency was present and intact
 
 The envelope does not perform this check when it is decoded. Decoding
 validates the document; the closure is verified only when someone calls the
-method with a reader. One caller in the package does so: restoring the
-composed cognitive payload from an envelope that declares dependencies
-requires a reader and verifies the closure first
-(`test_organism_checkpoint_restore_requires_and_verifies_dependency_closure`).
+method with a reader. The composed cognitive payload does not call it:
+restoring that payload from an envelope refuses any declared dependency
+outright (`test_owner_payload_rejects_caller_declared_dependencies`). (Corrected on 2026-10-16: the tests first cited here had been replaced by organism `c34147a` before this document's revision; finding F-0168.)
 The transition state offers the same check under the same name and passes it
 straight to the envelope (`test_dependency_verification_remains_owner_declared`).
 

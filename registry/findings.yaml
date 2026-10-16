@@ -2064,7 +2064,9 @@ findings:
       - explanation/organism/generative-resident.md
       - explanation/organism/identity-and-checkpoint.md
     material: false
-    status: open
+    status: resolved
+    disposition: >
+      Resolved in the documentation on 2026-10-16: the three explanations now cite the tests present at de16558 (test_prior_portable_checkpoint_schemas_are_not_accepted, test_owner_payload_requires_dependency_manifest, test_owner_payload_rejects_unsupported_dependency_manifest, test_owner_payload_rejects_caller_declared_dependencies, test_portable_checkpoint_restores_with_explicit_empty_model_registry, test_owner_payload_rejects_injected_registry) and state the semantics of c34147a read from portable_checkpoint.py at that revision: an empty, mandatory dependency_closure; envelope dependencies refused, not verified; only an empty model registry accepted. Each corrected passage carries a note; review bases are unchanged.
 
   F-0169:
     class: documentation_inconsistency
