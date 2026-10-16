@@ -22,4 +22,5 @@ parts:
     title: Operator procedures and recovery
     chapters:
       - how-to/operator/m1-process-execution.md
+      - how-to/operator/observation-v2-local-archive.md
       - how-to/operator/recover-previous-cut.md
