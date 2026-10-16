@@ -496,3 +496,29 @@ designs:
       from Lab. ADR-0100 assessment is scoped to a passive operational archive;
       a constitutional boundary change remains reserved to the Architecture
       Owner. No further implementation is authorized by this design.
+
+  design.embodiment.post-step-joint-kinematics-projection-v1:
+    title: "Embodiment — Post-step Joint Kinematics Projection v1"
+    path: technical/design/embodiment/post-step-joint-kinematics-projection-v1.md
+    domain: embodiment
+    participating_domains: [world, observation, lab]
+    document_status: in_review
+    implementation_status: not_started
+    architecture_scope: TARGET
+    implementation_evidence:
+      evaluated_on: "2026-10-16"
+      basis:
+        embodiment: 957af224e4400fc30a9d8d78d987cec16a8e959e
+        observation: 0e11ab728b4debb30e2d851ef3aa4149cc32dcb0
+        lab: 4234ff0f5a182e587b5fc4eb66f837dcdab9912a
+      observed: >
+        Embodiment implements owner-held articulated state and adoption, but
+        the inspected sources do not implement a joint-kinematics Observation
+        projection or consumer mapping. This candidate design is not runtime
+        implementation or runtime-observation evidence.
+    editorial_notes: >
+      Records the bounded Embodiment Owner disposition from Issue #75 that an
+      adopted articulated owner state is an intended projection candidate.
+      The design is under independent review and is not implementation or
+      Observation API authorization. The solver-independent joint coordinate
+      sign/zero/frame semantics remain unverified and gate any consumer mapping.

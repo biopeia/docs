@@ -53,6 +53,7 @@ Explanatory documents of the Embodiment domain (semantic-authority).
 - [Observation Architecture for Biopeia v1](../../technical/design/observation/observation-architecture-biopeia-v1.md): document approved, implementation partial, scope TARGET
 - [Biopeia Observation — Passive Observational Data Lake v1](../../technical/design/observation/observation-data-lake-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 - [Biopeia Observation V2 — Durable Archive and Read Queries](../../technical/design/observation/observation-v2-durable-archive-and-query.md): document proposed, implementation partial, scope UNRESOLVED
+- [Embodiment — Post-step Joint Kinematics Projection v1](../../technical/design/embodiment/post-step-joint-kinematics-projection-v1.md): document in_review, implementation not_started, scope TARGET
 
 ## Decision records
 
