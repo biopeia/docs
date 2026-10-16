@@ -25,6 +25,9 @@ something nobody has decided to build. A claim can carry several statuses at
 once, for example *Formally defined* and *Covered by tests*, each with its
 own source. A formal proof about a definition is evidence about the
 definition, not about the code, until a test or audit ties the code to it.
+In the registry, a parameter whose `source` is `FORMAL`
+(`registry/schema.yaml`) takes its value from such a definition; its symbols
+belong in `registry/notation.yaml`.
 
 Avoid "proves", "guarantees", "always" and "never" unless the claim is
 genuinely established by the relevant contract and all reachable code paths.

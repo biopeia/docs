@@ -149,6 +149,10 @@ finding_classes:
 # the code; the resolution is recorded.
 finding_statuses: [open, issue_opened, accepted, resolved]
 
+# Where a parameter's value comes from. FORMAL: the value is fixed by a formal
+# definition (an equation, invariant or type law); see the evidence status
+# 'Formally defined' in reference/evidence-status.md. It says nothing about
+# whether code implements that value.
 parameter_sources: [CODE, DESIGN, STUDY, FORMAL]
 
 metric_classes: [organism_internal, scientific_evaluation, operational, historical]
