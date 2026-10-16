@@ -237,19 +237,25 @@ the repository's. Stated here so they are not lost:
   (`test_process_termination_during_partial_owner_checkpoint_write_requires_recovery`);
   while the manifest's temporary file is partly written
   (`test_process_termination_during_partial_manifest_write_keeps_previous_cut`);
-  while the journal's temporary file is partly written
-  (`test_process_termination_during_partial_journal_write_requires_recovery`);
-  and at three points of journal publication, before the file is flushed,
-  after it is flushed and before it is linked, and after it is linked and
-  before the directory is flushed
-  (`test_process_termination_during_journal_publication_keeps_previous_cut`).
-  One more test injects an exception where the journal directory would be
-  flushed
-  (`test_journal_directory_fsync_failure_requires_recovery_to_previous_cut`).
+  and, since world `9f65707` made the journal an append-only file of
+  fixed-size records, after a candidate record has been appended and flushed
+  but before the manifest references it
+  (`test_process_termination_after_uncommitted_journal_append_recovers_prior_prefix`).
+  One more test injects a flush error on the journal append
+  (`test_journal_append_fsync_failure_keeps_previous_committed_prefix`). In
+  both, the committed prefix still replays to the previous records, the manifest
+  requires recovery, and `recover_previous_cut` returns the runtime to the
+  previous committed tick; the flush-error test also checks that the journal
+  file is truncated back to its committed size.
+  (This list of journal cases was updated on 2026-10-16 against `world`
+  `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`; both tests also exist at this
+  unit's recorded basis `1f35e92`. The three temporary-file publication tests
+  this document described earlier were removed by `9f65707`.)
   These are process terminations on the filesystem the tests ran on. The
-  repository says they are "not power-loss/storage-device testing", and they
-  are not an exhaustive crash-point analysis, a test of a real flush error,
-  or a multi-process recovery proof.
+  repository says this evidence "is not power-loss fault injection or a
+  general crash-consistency proof" (`world:MIGRATION.md`), and it is not an
+  exhaustive crash-point analysis, a test of a real flush error, or a
+  multi-process recovery proof.
 - **Completeness of the roster rests on the genesis declaration.**
 - **Presence ownership is explicit and durable.** Each active presence has
   exactly one registered owner link, persisted in the manifest and changed

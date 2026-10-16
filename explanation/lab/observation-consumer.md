@@ -76,5 +76,5 @@ The consumer requires the caller to rebase (`REBASE_REQUIRED`) whenever:
 |---|---|
 | Association matching, validation, and rebase rules | Code and tests in `lab:tests/unit/test_observation_consumer.py` |
 | End-to-end integration with World commit and ObservationPlane | Integration tests in `lab:tests/observation_integration/test_lab_observation_publication.py` |
-| Consumption of owner projections from production World causal cycle | Integration tests in `lab:tests/observation_integration/test_lab_production_world_cycle.py` |
+| Consumption of owner projections from production World causal cycle | Integration tests in `lab:tests/observation_integration/test_lab_production_world_cycle.py`, at Lab's pinned World revision; at the heads of 2026-10-16 it fails (finding F-0173) |
 | Architectural role of Lab and passivity of observation | Accepted decisions ADR-0078, ADR-0100, ADR-0102 |

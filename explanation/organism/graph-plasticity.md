@@ -109,20 +109,34 @@ finding F-0142.
 
 ### What the one end-to-end test shows
 
+> Section updated on 2026-10-16 against `organism`
+> `637bc21a7e2a1aa9e0870f55f134e839657687f4`, after organism#174; the rest of
+> this document keeps the review revision stated at its top.
+
 One test puts these together:
-`test_a_predictor_measurably_learns_a_periodic_signal_over_many_ticks`. Its
-name makes a claim, so what it does is set out exactly.
+`test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline`. Until
+organism `b674450` (#174, for organism#44) its name said that a predictor
+"measurably learns a periodic signal over many ticks", and it passed if the mean loss over the last 20 errors was lower than over the first
+20.
 
 The test builds a sense node, a predictor node naming it, and one edge between
 them with weight 0.05. For 200 ticks it feeds a signal alternating between
-+0.8 and −0.8, activates the graph, computes the prediction error, calls
-`update_eligibility`, and calls `apply_oja_update` with `modulation=1.0` and
-`eligible=True`. It passes if the mean loss over the last 20 errors is lower
-than over the first 20.
++0.8 and −0.8, activates the graph, computes the prediction error, and calls
+`apply_oja_update` with `learning_rate=0.05`, `modulation=1.0` and
+`eligible=True`. Each error is scored against the causally subsequent target
+before that tick's update. The test now passes only if the model's mean loss
+is **higher** than that of a predictor that always outputs zero, the
+persistence baseline is higher still, and the weight ends below 1e-3; its
+comment says the loop "is not evidence of predictive learning". It no longer
+calls `update_eligibility`.
 
-The loop was reproduced and run at `organism`
-`6543188ff302a5f2dc8002c0086252d6061e5310`. `learning.py` and the test have
-not changed since (diff inspected); the run was not repeated. Result:
+The original loop was reproduced at `organism`
+`6543188ff302a5f2dc8002c0086252d6061e5310`. The current test's loop was re-run
+on 2026-10-16 at `organism` `0ce7a031b6e9ee79ecbf7905c69452a5567f2dd2`
+(`learning.py` and the test are identical at `637bc21a7e2a`) and gives the
+same first- and last-20 means. Over all 199 scored samples the model's mean
+loss is 0.3252, against 0.3200 for zero output and 1.1000 for persistence, and
+the weight ends at 7.7e-5. Result:
 
 | | Value |
 |---|---|
@@ -140,14 +154,18 @@ The end state is a predictor that outputs approximately nothing. Predicting
 this signal would require a negative weight, and the rule's fixed point here
 is zero.
 
-What the test establishes is therefore: on an alternating signal, this loop
-drives a mis-signed weight to zero and the loss falls by about 7 per cent to
-the level of no prediction. It does not show a predictor coming to predict the
-signal. The error computed in the loop is recorded and plays no part in the
-update, and removing the call to `update_eligibility` gave the same numbers.
+What the loop establishes is therefore: on an alternating signal, it drives a
+mis-signed weight to zero and the loss falls by about 7 per cent to the level
+of no prediction. It does not show a predictor coming to predict the signal,
+and since #174 the test asserts exactly that. The error computed in the loop
+is recorded and plays no part in the update; in the original analysis,
+removing the call to `update_eligibility` gave the same numbers, and the
+current test no longer makes that call.
 For contrast, the same loop on a constant signal of 0.8 raised the weight to
 1.11 and the late loss fell to 0.004; a constant is the case a Hebbian rule
-fits. Neither run is kept as a test. Recorded as finding F-0071.
+fits. The constant-signal run is not kept as a test. Recorded as finding
+F-0071, which stays open with organism#44: no test shows a predictor beating
+a zero-output or persistence baseline.
 
 ## Candidates kept outside the graph
 

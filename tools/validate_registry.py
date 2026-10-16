@@ -706,6 +706,78 @@ def unaligned_review_bases(registry_dir: Path, docs_root: Path) -> list[str]:
     return problems
 
 
+HEADER_COMMIT_RE = re.compile(r"`?([a-z][a-z-]*)`?(?:@|\s+at\s+(?:commit\s+)?)`?([0-9a-f]{7,40})\b")
+
+
+def _commit_exists(checkout: Path, sha: str) -> bool:
+    return subprocess.run(
+        ["git", "-C", str(checkout), "cat-file", "-e", f"{sha}^{{commit}}"],
+        capture_output=True,
+    ).returncode == 0
+
+
+def unresolvable_review_commits(registry_dir: Path, docs_root: Path, repos_root: Path) -> list[str]:
+    """Review commits, in a unit's basis or its document's header, that name no commit.
+
+    A commit that does not exist cannot be the revision anything was reviewed
+    against. Only repositories with a local checkout are checked.
+    """
+    units = load_registry(registry_dir).get("coverage") or {}
+    problems: list[str] = []
+    for uid, unit in sorted(units.items()):
+        named = [("basis", repo, sha) for repo, sha in ((unit.get("review") or {}).get("basis") or {}).items()]
+        for canonical in as_list(unit.get("canonical_docs")):
+            path = docs_root / canonical
+            if path.is_file():
+                header = path.read_text(encoding="utf-8")[:800]
+                named += [(canonical, repo, sha) for repo, sha in HEADER_COMMIT_RE.findall(header)]
+        for where, repo, sha in named:
+            checkout = repos_root / repo
+            if (checkout / ".git").exists() and not _commit_exists(checkout, sha):
+                problems.append(f"{uid}: {where} names {repo}@{sha}, which is not a commit in {repo}")
+    return sorted(set(problems))
+
+
+def cited_tests_absent_at_basis(registry_dir: Path, docs_root: Path, repos_root: Path) -> list[str]:
+    """Tests a unit's documents cite that no test file defines at the unit's review basis.
+
+    Unlike ``unknown_cited_tests``, which compares with the current checkout,
+    this is the revision the document claims to describe: a test absent there
+    was not checked at that basis.
+    """
+    units = load_registry(registry_dir).get("coverage") or {}
+    defined: dict[tuple[str, str], set[str]] = {}
+
+    def tests_at(repo: str, sha: str) -> set[str]:
+        if (repo, sha) not in defined:
+            out = subprocess.run(
+                ["git", "-C", str(repos_root / repo), "grep", "-hoE", r"def test_[a-z0-9_]+\(", sha, "--", "tests"],
+                capture_output=True,
+                text=True,
+            ).stdout
+            defined[(repo, sha)] = set(re.findall(r"def (test_[a-z0-9_]+)\(", out))
+        return defined[(repo, sha)]
+
+    problems: list[str] = []
+    for uid, unit in sorted(units.items()):
+        basis = {
+            repo: sha
+            for repo, sha in ((unit.get("review") or {}).get("basis") or {}).items()
+            if (repos_root / repo / ".git").exists()
+        }
+        if not basis:
+            continue
+        known = set().union(*(tests_at(repo, sha) for repo, sha in basis.items()))
+        for canonical in as_list(unit.get("canonical_docs")):
+            path = docs_root / canonical
+            if not path.is_file():
+                continue
+            for name in sorted(set(CITED_TEST_RE.findall(path.read_text(encoding="utf-8")))):
+                if name not in known:
+                    problems.append(f"{uid}: {canonical} cites {name}, absent at its basis")
+    return problems
+
+
 def source_coverage(registry_dir: Path, repos_root: Path) -> dict[str, dict[str, Any]]:
     """Per domain repository: which source modules are named by some unit.
 
@@ -750,6 +822,8 @@ def main(argv: list[str] | None = None) -> int:
 
     errors, unresolved = validate(args.registry, args.docs_root, args.repos_root)
     errors += broken_links(args.docs_root)
+    if args.repos_root is not None:
+        errors += unresolvable_review_commits(args.registry, args.docs_root, args.repos_root)
     for line in errors:
         print(f"ERROR {line}")
     if unresolved:
@@ -782,6 +856,10 @@ def main(argv: list[str] | None = None) -> int:
         for line in unaligned:
             print(f"REVIEW-BASE {line}")
         print(f"Unaligned review bases: {len(unaligned)}")
+        at_basis = cited_tests_absent_at_basis(args.registry, args.docs_root, args.repos_root)
+        for line in at_basis:
+            print(f"BASIS-CITED {line}")
+        print(f"Cited tests absent at their review basis: {len(at_basis)}")
         if stale and args.fail_on_stale:
             return 1
 
