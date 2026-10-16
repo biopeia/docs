@@ -203,25 +203,35 @@ scientific validity, or owner authority. A correction is a separately
 identified owner publication/revision, never an in-place edit to history.
 
 **Retention and deletion.** Retention is explicit policy, not incidental
-storage cleanup. Each retained class must have an accountable policy owner,
-scope, trigger, and declared expiry or preservation condition before
-implementation. Until such policy is accepted, no automatic age-based
-expiration or garbage collection of accepted originals is authorized. A
-retention decision for the operational archive does not admit, retain, or
-delete Lab scientific evidence; Lab's evidence policy remains independent
-under ADR-0100. A deletion request must be authorized and recorded separately
-from source correction. Logical suppression/tombstoning and physical erasure
-are distinct outcomes; legal hold blocks any deletion it covers. The design
-must report which outcome occurred and its scope. No consumer may infer source
-absence from an access-denied, suppressed, expired, or unavailable record.
-This proposal does not assign authority to approve logical suppression or
-tombstoning, and does not presume that Observation may override an originating
-domain's semantic authority or Lab's evidence-custody obligations. The
-competent authorizer, grounds, scope, review path, and effects on retained
-originals and cross-referenced evidence remain an explicit owner decision
-required before implementation.
-Physical erasure obligations, including replicas/backups and legal exceptions,
-require competent legal/security/operations disposition before implementation.
+storage cleanup. The Owner's blanket authorization was used to select this
+conservative **proposed local-prototype policy**: accepted original
+observations are retained without automatic age-based expiration; accepted
+originals are not silently overwritten or pruned. This selection is recorded
+in [Observation #38](https://github.com/biopeia/observation/issues/38#issuecomment-6211915578).
+It is a proposal for the operational archive only, not an indefinite legal
+retention promise, a legal hold, or a change to Lab's independent scientific
+evidence policy under ADR-0100. No deletion mechanism or deletion authority is
+defined here. A future deletion request must be authorized and recorded
+separately from source correction; logical suppression/tombstoning and
+physical erasure remain distinct outcomes, and legal hold blocks any deletion
+it covers. The competent authorizer, grounds, scope, review path, and effects
+on retained originals and cross-referenced evidence still require a specific
+disposition before a deletion capability is implemented. Physical-erasure
+obligations, including replicas/backups and legal exceptions, require
+competent legal/security/operations disposition before implementation. No
+consumer may infer source absence from an access-denied, suppressed, expired,
+or unavailable record.
+
+**Resource ceiling and capture gaps.** The local prototype must use a declared
+resource ceiling. Reaching that ceiling stops further Observation capture
+cleanly and records/reports an explicit capture or retention gap; it must not
+block, roll back, or alter a World commit, and it must not trigger deletion of
+older accepted originals. Capture may resume only when capacity is available,
+and the uncovered interval remains visible as a gap. The ceiling, its
+measurement and the operator-visible stop signal are implementation
+parameters to validate; this design does not select a storage technology,
+numeric quota, service, or deployment model. It does not authorize shared,
+remote, or production exposure.
 
 **Recovery.** Recovery must verify retained originals before exposing them,
 rebuild derived indexes/views from verified originals, and report any missing,
@@ -237,7 +247,11 @@ open.
 
 These proposed rules require explicit disposition by the Observation Owner
 for archive identity, capture conflicts, integrity and recovery, and by the
-Lab Owner for the separation from evidence retention/admission. The competent
+Lab Owner for the separation from evidence retention/admission. The retention
+selection above records the agent's conservative design choice under the
+Owner's blanket authorization; it does not resolve the separate constitutional
+question of whether this archive requires a derived ADR to clarify
+ADR-0100/P7. The competent
 authority for logical suppression/tombstoning and its effects on source-owner
 records and Lab-held evidence remains unresolved and must be identified and
 recorded before implementation. Architecture Owner disposition remains
@@ -506,7 +520,39 @@ storage authorization;
 while clearly leaving owner acceptance, implementation mechanisms, and
 constitutional/security/legal dispositions open.
 
-## 14. References and related work
+## 14. Candidate conformance tests before implementation acceptance
+
+These are executable acceptance cases for a future local prototype; they do
+not authorize implementation or select its mechanism. A prototype is not
+conformant unless an independent test can demonstrate all of the following:
+
+1. **World independence:** with Observation capture unavailable or at its
+   resource ceiling, a valid World transition can still commit; Observation
+   reports the capture gap separately and cannot roll back or delay the
+   causal result.
+2. **Retention at ceiling:** reaching the configured ceiling stops new
+   capture without overwriting or pruning a previously accepted original.
+3. **Visible gap:** the missed interval is reported as a gap, not as source
+   absence, an empty result, or a complete history; its producer and scope
+   are identified to the extent supported by the source contract.
+4. **Resumption:** after capacity is available, capture resumes only for new
+   eligible publications or an explicitly authorized retry of an existing
+   publication. The uncovered interval remains visible unless an owner
+   publication contract supplies and verifies the missing content.
+5. **Integrity and recovery:** accepted originals remain byte/logically
+   verifiable after process restart; corruption or missing records produce
+   an explicit unavailable interval and never a fabricated repair.
+6. **No accidental deletion:** neither restart, recovery, index rebuild nor
+   normal resource pressure silently deletes accepted originals.
+
+The prototype must record its declared ceiling and measurement, exact source
+revisions, stop/resume events, accepted-original identities before and after
+the test, World commit outcomes, and gap results. Passing these cases proves
+only the tested local behavior; it does not establish unlimited retention,
+scientific evidence custody, universal completeness, shared/remote security,
+or production readiness.
+
+## 15. References and related work
 
 - [ADR-0078 — Observation is causally passive](../../adr/ADR-0078-observation-is-causally-passive.md)
 - [ADR-0095 — Surviving semantic authorities](../../adr/ADR-0095-surviving-semantic-authorities.md)
