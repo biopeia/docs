@@ -59,11 +59,29 @@ assert runtime.is_recovery_required(), "World runtime is not in recovery-require
 
 ### Step 3: Execute `recover_previous_cut` with domain owner restoration
 
-Recovery requires passing a callable `restorer(references: tuple[CheckpointReference, ...])` that reads the authoritative checkpoint at `ref.locator` and restores the live owner state:
+Recovery requires passing a callable `restorer(references: tuple[CheckpointReference, ...])` to `recover_previous_cut`. The runtime passes the tuple of `CheckpointReference` objects recorded at the last committed cut, and the caller must ensure each participating domain owner (Organism, Embodiment, Environment) restores its live state from the payload at `ref.locator` before returning.
+
+The example below illustrates the integration contract. Note that `restore_organism_checkpoint`, `restore_embodiment_checkpoint`, and `restore_environment_checkpoint` are **illustrative integration handlers** that the runtime host or orchestrator provides to reload checkpoint state into the running domain subsystems. If any domain restoration fails or raises an exception, the World runtime does not commit the recovery receipt, and the uncommitted journal tail remains untouched.
 
 ```python
 from pathlib import Path
 from world.checkpoint_reference import CheckpointReference
+
+# Illustrative integration handlers: integrators implement these to route checkpoint
+# payloads to their running subsystem instances or continuation engines.
+def restore_organism_checkpoint(locator: Path) -> None:
+    """Illustrative: dispatch to Organism continuation / cognitive memory loader."""
+    ...
+
+
+def restore_embodiment_checkpoint(locator: Path) -> None:
+    """Illustrative: dispatch to Embodiment somatic / joint state loader."""
+    ...
+
+
+def restore_environment_checkpoint(locator: Path) -> None:
+    """Illustrative: dispatch to Environment static scene / entity state loader."""
+    ...
 
 
 def owner_restorer(references: tuple[CheckpointReference, ...]) -> None:

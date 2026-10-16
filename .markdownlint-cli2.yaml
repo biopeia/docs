@@ -20,4 +20,6 @@ ignores:
   - "build/**"
   - ".git/**"
   - ".local/**"
+  - ".worktrees/**"
   - "technical/templates/**"
+
