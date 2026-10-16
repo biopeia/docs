@@ -59,6 +59,7 @@ documentation repository
 commit `586dcbb8376c2800fc7ea8e04ba0b486db3e87db`, updated for MuJoCo 3.15.0.
 
 The profile defines:
+
 - World identifier and source revisions.
 - Embodiment morphology, mass, damping, actuator mappings, and receptor offsets.
 - Environment static arena boundaries, geometry, and scalar field parameters.
@@ -95,6 +96,7 @@ Execution runs the bounded session loop (`run_scalar_sensorimotor_session`) up
 to the requested number of cycles.
 
 Process shutdown is governed by strict signal coordination:
+
 - Traps `SIGINT` and `SIGTERM` signals (`world:src/world/m1_process.py:139-142`),
   setting an internal stop flag.
 - The stop flag is checked strictly between completed cycles. An in-flight

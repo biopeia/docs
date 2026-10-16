@@ -57,6 +57,7 @@ contents.
 
 The storage abstraction is implemented by `FileOwnerCheckpointStore`
 (`world:src/world/owner_checkpoint_store.py:50`):
+
 - It accepts opaque `OwnerCheckpointPayload` bytes, storing them in
   content-addressed files (`.checkpoint` or `.blob`) named by their lowercase SHA-256
   digest.
@@ -98,6 +99,7 @@ The cycle restores a committed cut and continues from it through
 `restore_scalar_sensorimotor_runtime` (`world:src/world/causal_cycle.py:220`).
 
 Given a durable World runtime and the latest committed cut:
+
 1. World verifies the committed cut and reads the corresponding checkpoint
    bytes from the owner checkpoint store.
 2. Organism, Embodiment, and Environment are restored from their exact
