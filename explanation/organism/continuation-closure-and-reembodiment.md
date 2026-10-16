@@ -59,7 +59,7 @@ enforces strict actuator applicability validation
   current embodiment's active morphology.
 - Stable actuator identities and channel counts are verified.
 - Any mismatch raises an applicability error before the action composer can
-  issue commands to the physics engine (`test_recovery_rejects_unapplicable_actuator`).
+  issue commands to the physics engine (`test_production_composer_stages_identity_bound_exploration_without_evidence_claims`).
 
 ## Preserving knowledge without somatic confusion
 

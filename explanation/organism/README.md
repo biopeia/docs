@@ -101,10 +101,10 @@ Explanatory documents of the Organism domain (semantic-authority).
 
 ## Open findings
 
-45 findings on these units are open, 15 of them with an issue in the owning repository:
+47 findings on these units are open, 15 of them with an issue in the owning repository:
 
 - contract gap: 10
-- documentation inconsistency: 4
+- documentation inconsistency: 6
 - evidence gap: 5
 - implementation finding: 20
 - performance concern: 1
