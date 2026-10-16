@@ -73,8 +73,8 @@ geometry or cross-owner coherence for a browser scene.
 
 ### Earlier bounded owner candidate-field dispositions (2026-10-15)
 
-The Domain Owner accepted the candidate field subsets recorded in [Embodiment
-#77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6197195602),
+The Domain Owner accepted the candidate field subsets recorded in
+[Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6197195602),
 [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6197196000),
 and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6197196506).
 These earlier dispositions bounded candidate fields; they were not completed
@@ -100,14 +100,13 @@ wire schemas or permission to add fields outside the candidates:
 
 The Owner has authorized the next bounded design and contract-definition work,
 but has **not** approved implementation, publication, or a completed wire
-contract. The direction is recorded in the Owner's disposition on [Frontend
-#22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732),
-with affected-domain records on [Embodiment
-#77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6199062525),
+contract. The direction is recorded in the Owner's disposition on
+[Frontend #22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732),
+with affected-domain records on
+[Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6199062525),
 [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6199062981),
 [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6199063376),
-and [Observation
-#37](https://github.com/biopeia/observation/issues/37#issuecomment-6199063932).
+and [Observation #37](https://github.com/biopeia/observation/issues/37#issuecomment-6199063932).
 These dispositions unblock design only; owners still need to review the exact
 proposed contract before implementation.
 
@@ -162,8 +161,8 @@ compatibility.
 The current-source capability matrix and issue/dependency inventory are
 recorded in the preceding **Current-source revalidation** section. This update
 adds only the subsequent World #156 owner disposition, rather than duplicating
-that matrix. A clean-current-main production/browser run is recorded in [World
-#156's evidence log](https://github.com/biopeia/world/issues/156#issuecomment-6195150220):
+that matrix. A clean-current-main production/browser run is recorded in
+[World #156's evidence log](https://github.com/biopeia/world/issues/156#issuecomment-6195150220):
 it reached 1,224 confirmed commits within unchanged Embodiment position and
 velocity bounds, then stopped before the next commit because Organism produced
 no motor command. The Owner's [bounded engineering acceptance](https://github.com/biopeia/world/issues/156#issuecomment-6195474291)
@@ -186,8 +185,8 @@ geometry.” This is bounded M1 evidence, not 3D-rendering or humanoid evidence.
 
 ### Explicit no-actuation result: design gate, not an interpretation of `None`
 
-The Owner's decision on [Frontend
-#22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732)
+The Owner's decision on
+[Frontend #22](https://github.com/biopeia/frontend/issues/22#issuecomment-6199059732)
 distinguishes a valid, explicit no-actuation result from a missing, malformed,
 incomplete or failed Organism result. World may advance physical evolution
 without an actuation request only for the valid explicit outcome. It must not
@@ -214,14 +213,14 @@ candidate `None` is not yet a demonstrated valid no-actuation result, and
 the current caller treats it as a failed transition. This observation does
 not determine the broader contract meaning of every no-command path.
 
-The design-only follow-ups are [Organism
-#176](https://github.com/biopeia/organism/issues/176) and [World
-#165](https://github.com/biopeia/world/issues/165). They must inspect the exact
+The design-only follow-ups are
+[Organism #176](https://github.com/biopeia/organism/issues/176) and
+[World #165](https://github.com/biopeia/world/issues/165). They must inspect the exact
 result path, validity checks, physical no-actuation integration and cut
 preservation. No change to the present `None` treatment or to actuator/
 termination semantics is authorized until those designs and owner reviews
 establish the required contract. This investigation does not alter World
-#156's bounded grid-v2 acceptance.
+\#156's bounded grid-v2 acceptance.
 
 ### Frontend current-main presentation evidence (2026-10-15)
 
@@ -373,8 +372,8 @@ and [OrbitControls camera interaction](https://threejs.org/docs/pages/OrbitContr
 | Cross-domain architecture and readiness reconciliation | Architecture Owner | Are owner proposals compatible with accepted ADRs and does the implementation-start gate pass? |
 
 Docs #167 remains the separate security/deployment design gate. The
-Observation consumer-contract inventory remains tracked by [Observation
-#37](https://github.com/biopeia/observation/issues/37). This Issue does not
+Observation consumer-contract inventory remains tracked by
+[Observation #37](https://github.com/biopeia/observation/issues/37). This Issue does not
 replace or close either dependency.
 
 ## Cross-contract readiness examples
@@ -620,8 +619,8 @@ evidence of a shared physical coordinate system.
 
 ### Owner dispositions and candidate conformance sketches (2026-10-15)
 
-The Owner accepted the architectural direction in Embodiment #77, Environment
-#73, World #162 and Observation #37 as design base. The recorded dispositions
+The Owner accepted the architectural direction in Embodiment #77,
+Environment #73, World #162 and Observation #37 as design base. The recorded dispositions
 are [Embodiment #77](https://github.com/biopeia/embodiment/issues/77#issuecomment-6200248780),
 [Environment #73](https://github.com/biopeia/environment/issues/73#issuecomment-6200249144),
 [World #162](https://github.com/biopeia/world/issues/162#issuecomment-6200249455),

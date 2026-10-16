@@ -93,6 +93,28 @@ def test_markdown_unclosed_fence_is_an_error():
         markdown.parse("```text\nnever closed\n")
 
 
+def test_markdown_callout_and_alert_blocks():
+    text = (
+        "> [!IMPORTANT]\n"
+        "> **Notice:** Operational warning with `code`.\n"
+        ">\n"
+        "> Continued note paragraph.\n\n"
+        "> Plain quotation block without alert.\n"
+    )
+    blocks = markdown.parse(text)
+    assert len(blocks) == 2
+    assert blocks[0]["type"] == "callout"
+    assert blocks[0]["kind"] == "IMPORTANT"
+    assert len(blocks[0]["paragraphs"]) == 2
+    assert blocks[0]["paragraphs"][0][0]["bold"] is True
+    assert blocks[0]["paragraphs"][0][0]["text"] == "Notice:"
+    assert blocks[1]["type"] == "callout"
+    assert blocks[1]["kind"] is None
+    assert len(blocks[1]["paragraphs"]) == 1
+    assert blocks[1]["paragraphs"][0][0]["text"] == "Plain quotation block without alert."
+
+
+
 # --- DOCX -----------------------------------------------------------------------
 
 

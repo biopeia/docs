@@ -63,6 +63,7 @@ The 30 affected source files (corresponding to 32 historical `SPLIT` rows in `or
 Under [ADR-0075](../adr/ADR-0075-authority-boundaries-derive-from-semantic-ownership-not-repository-topology.md), authority boundaries derive from semantic domain ownership, not repository topology or historical mono-ledger convenience. Dispositions are adjudicated according to the ratified domain owners.
 
 ### 3.1 `symbiont/src/symbiont/core/embodiment/**` (Embodiment vs Organism)
+
 - **Authoritative Semantic Owner:** **Embodiment** (`biopeia/embodiment`) per [ADR-0094](../adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md) and [ADR-0095](../adr/ADR-0095-surviving-semantic-authorities.md).
 - **Adjudication Principle:** Embodiment holds concrete somatic state, morphology, energetics, and kinematic viability. Organism owns longitudinal identity, cognition, and behavioral regulation. Where Organism's historical ledger claimed `SPLIT` or `REWRITE` on somatic files, Embodiment's granular inventory in `embodiment/MIGRATION.md` is the authoritative baseline.
 
@@ -95,6 +96,7 @@ Under [ADR-0075](../adr/ADR-0075-authority-boundaries-derive-from-semantic-owner
 | `core/embodiment/transition.py` | `4c6f47478223e67fe6234c984c832aaec4aeae18` | `DROP` | Embodiment | Legacy in-memory transition runner dropped; World durable runtime coordinates causal transitions. |
 
 ### 3.2 `environment/src/environment/**` (Environment vs World)
+
 - **Authoritative Semantic Owners:**
   - Environmental state, fields, resources, terrain laws $\rightarrow$ **Environment** (`biopeia/environment`) per [ADR-0074](../adr/ADR-0074-biopeia-world-environment-authority-split.md).
   - Causal transactions, ordering, journals, active presence $\rightarrow$ **World** (`biopeia/world`) per [ADR-0074](../adr/ADR-0074-biopeia-world-environment-authority-split.md).
@@ -116,6 +118,7 @@ Under [ADR-0075](../adr/ADR-0075-authority-boundaries-derive-from-semantic-owner
 | `environment/src/environment/topology.py` | `2bdd5eb8e99b48fb70611c78cc46cdc51a3a2415` | `SPLIT` | Environment / World | `HexCoord` coordinate primitive extracted to Environment (`src/environment/spatial.py`); occupancy grid belongs to World. |
 
 ### 3.3 `symbiont/src/symbiont/core/orchestration/runtime.py` (Lab vs Modality vs Organism)
+
 - **Authoritative Semantic Decomposition:** **`SPLIT`** across Organism, Lab, World, and `DROP`.
   - Pinned Blob SHA-1: `c436087ec1d1f4bfab6bfa7c4e4d801514c69708`.
   - Governing Invariant: No monolithic runtime loop or combined controller survives the migration.

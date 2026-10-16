@@ -148,6 +148,7 @@ and revision (`test_scalar_field_observation_projection_is_distinct_from_source_
 `test_scalar_field_sample_rejects_invalid_checkpoint_digest`).
 
 What this operation deliberately does not do:
+
 - **It does not prove World authorization or adoption.** The context is
   caller-supplied correlation data, not a cryptographic receipt of World commit.
 - **It does not identify a receptor or transduce a signal.** Embodiment owns
@@ -164,12 +165,14 @@ resource can be projected as an observational claim via
 
 Environment does not import World types. Instead, it interacts with World
 records through two structural protocols:
+
 - `_CommittedCheckpointReference`: expects `owner`, `owner_identity`,
   `checkpoint_id`, `schema_version`, and lowercase SHA-256 `sha256`.
 - `_CommittedWorldCutReceipt`: expects `world_id`, `causal_tick` (integer $\ge 0$),
   `commit_id`, and a tuple `owner_checkpoint_references`.
 
 The projection enforces strict structural consistency:
+
 1. The `committed_cut` must carry non-empty `world_id` and `commit_id`, and a
    non-negative integer `causal_tick`.
 2. The `owner_reference` must be an element of the receipt's

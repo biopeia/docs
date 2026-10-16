@@ -112,3 +112,33 @@ def test_a_selection_need_not_place_every_document(tmp_path):
         parts=[{"id": "w", "title": "W", "chapters": ["explanation/world/a.md"]}],
     )
     load_manifest(write(tmp_path, data), tmp_path)
+
+
+def test_howto_and_tutorial_chapters_are_accepted_by_model(tmp_path):
+    (tmp_path / "how-to" / "operator").mkdir(parents=True)
+    (tmp_path / "tutorials" / "getting-started").mkdir(parents=True)
+    (tmp_path / "how-to" / "operator" / "run.md").write_text("# Run\n", encoding="utf-8")
+    (tmp_path / "tutorials" / "getting-started" / "start.md").write_text("# Start\n", encoding="utf-8")
+
+    data = {
+        "publication": {"id": "ops", "title": "Ops", "output": "Ops", "selection": True},
+        "parts": [
+            {"id": "guides", "title": "Guides", "chapters": ["how-to/operator/run.md"]},
+            {"id": "learn", "title": "Learn", "chapters": ["tutorials/getting-started/start.md"]},
+        ],
+    }
+    m = write(tmp_path, data)
+    loaded = load_manifest(m, tmp_path)
+    assert len(loaded["parts"]) == 2
+
+
+def test_corpus_coverage_fails_closed_for_howto_and_tutorials(tmp_path):
+    (tmp_path / "how-to" / "operator").mkdir(parents=True)
+    (tmp_path / "tutorials" / "getting-started").mkdir(parents=True)
+    (tmp_path / "how-to" / "operator" / "orphan_guide.md").write_text("# Orphan\n", encoding="utf-8")
+    (tmp_path / "tutorials" / "getting-started" / "orphan_tut.md").write_text("# Orphan Tut\n", encoding="utf-8")
+
+    manifests = [{"publication": {"id": "m"}, "parts": [{"id": "p", "title": "P", "chapters": []}]}]
+    errors = corpus_coverage_errors(manifests, tmp_path)
+    assert any("how-to/operator/orphan_guide.md" in err for err in errors)
+    assert any("tutorials/getting-started/orphan_tut.md" in err for err in errors)

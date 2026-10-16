@@ -305,6 +305,7 @@ runtime state, the package provides a loopback HTTP bridge
   rejected with `405 method_not_allowed`.
 - **Envelope declaration:** The endpoint responds with JSON conforming to
   `biopeia.observation.current.v1`. The response declares explicit boundaries:
+
   ```json
   {
     "schema": "biopeia.observation.current.v1",
@@ -316,6 +317,7 @@ runtime state, the package provides a loopback HTTP bridge
     "messages": [...]
   }
   ```
+
   If no approved observations are present in the plane, the bridge returns
   status `200` with `availability: "current_view_empty"`, reminding consumers
   that empty views are not evidence of source absence.
@@ -324,6 +326,7 @@ runtime state, the package provides a loopback HTTP bridge
 
 The bridge does not expose raw internal objects. It filters and validates
 payloads against an explicit allowlist of approved M1 families:
+
 1. `embodiment.body_pose` (contract `embodiment.body_pose`, revision `v1`):
    validates 3D position vector in meters, XYZW unit quaternion orientation
    conforming to right-handed Hamilton conventions, reference frame, body
