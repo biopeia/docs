@@ -2031,3 +2031,61 @@ findings:
       - explanation/world/recovery.md
     material: false
     status: open
+
+  F-0167:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: 0ce7a031b6e9ee79ecbf7905c69452a5567f2dd2
+    units:
+      - mechanism.organism-graph-plasticity
+    summary: >
+      The graph-plasticity explanation describes and cites `test_a_predictor_measurably_learns_a_periodic_signal_over_many_ticks`. Organism b674450 (#174, for organism#44) renamed it `test_alternating_signal_oja_loop_does_not_beat_zero_output_baseline` and inverted its assertion: the test now requires the model's mean loss on causally subsequent samples to exceed both the zero-output and persistence baselines and the weight to end below 1e-3, and states that the loop is not evidence of predictive learning. This agrees with the analysis already recorded in F-0071, which stays open with organism#44, but the explanation still cites the old name and the old pass condition and needs re-review at a current revision.
+    documented_in:
+      - explanation/organism/graph-plasticity.md
+    material: false
+    status: open
+
+  F-0168:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: de16558faeba04f05eee6d2035a8f7f1e64b822b
+    units:
+      - mechanism.organism-cognitive-checkpoint
+      - component.organism-generative-resident
+    summary: >
+      Both explanations state they were reviewed at de16558, yet cite tests that organism c34147a (#99) had already removed before that revision: `test_portable_checkpoint_schema_v6_is_not_accepted_as_a_current_payload` (now the parametrized `test_prior_portable_checkpoint_schemas_are_not_accepted`), `test_organism_checkpoint_restore_requires_and_verifies_dependency_closure` and `test_portable_checkpoint_restore_uses_explicit_external_model_registry`. The replacements are not renames with the same meaning: c34147a makes the owner payload reject caller-declared dependencies and restore with an explicitly empty model registry. The statements those citations support therefore describe the dependency-closure semantics before c34147a and need re-review, not a substitution of names.
+    documented_in:
+      - explanation/organism/cognitive-checkpoint.md
+      - explanation/organism/generative-resident.md
+    material: false
+    status: open
+
+  F-0169:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: e2be58700c870419a309ef3e2460b30b95c256be
+    units:
+      - component.world-durable-runtime
+    summary: >
+      The durable-runtime explanation states it was reviewed at e2be587, yet its process-termination paragraph cites three tests that world 9f65707 (#92, journal v3 delta append) had already removed: `test_process_termination_during_partial_journal_write_requires_recovery`, `test_process_termination_during_journal_publication_keeps_previous_cut` and `test_journal_directory_fsync_failure_requires_recovery_to_previous_cut`. 9f65707 adds `test_process_termination_after_uncommitted_journal_append_recovers_prior_prefix` and `test_journal_append_fsync_failure_keeps_previous_committed_prefix`, which exercise an append path rather than a temporary-file publication, so the paragraph's description of three publication crash points needs re-review against the current journal.
+    documented_in:
+      - explanation/world/durable-runtime.md
+    material: false
+    status: open
+
+  F-0170:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: 1f35e92611ed76f1863136916601f07fc2fd78c1
+    units:
+      - component.world-causal-cycle
+      - concept.organism-continuation-closure-v1
+    summary: >
+      Two explanations cited tests that exist in no revision of any Biopeia repository. causal-cycle.md supported "subsequent ticks ... produce bit-identical causal journal records, body poses, and checkpoint digests" with `test_restored_causal_cycle_matches_live_continuation` and said the cycle "proves full crash-recovery continuation"; the nearest real test, `test_committed_cycle_restores_and_continues_in_fresh_process`, compares one continued tick's summary and no journal records. continuation-closure-and-reembodiment.md cited `test_recovery_rejects_unapplicable_actuator`; the rejection it describes is asserted inside `test_production_composer_stages_identity_bound_exploration_without_evidence_claims` (organism 3674cc7). Five Environment explanations and the Modality current-state document also cited `environment@d09e45c47fe86c23b2fc977e26938920eb9058b8`, an object that does not exist; the registry basis is d09e45c40633c9b2bf927c7aec3f6326318c2ea8, which shares its seven-character prefix.
+    documented_in:
+      - explanation/world/causal-cycle.md
+      - explanation/organism/continuation-closure-and-reembodiment.md
+    material: false
+    status: resolved
+    disposition: >
+      Corrected in the documentation: the causal-cycle claim is narrowed to what the cited acceptance test compares, both citations name the real tests, and the six headers name the existing commit. No code was involved, and the review bases recorded for these units are unchanged.
