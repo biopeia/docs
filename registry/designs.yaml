@@ -479,28 +479,36 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-16"
       basis:
-        observation: 29a6ba7a8cdd9772eec0e40087f748a7b7df2444
+        observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
       tests:
         - "observation:tests/test_archive_reader.py"
       observed: >
-        Observation PRs #61 and #62 are merged on the evaluated Observation
-        main revision; PR #63 adds an integration test for the existing
-        capture-to-reader path without changing its contract. Source
-        inspection confirms the bounded local archive, capture accounting,
-        and local read-only archive reader. At this revision, the focused
-        archive reader suite passes (10 tests) and the full suite passes
-        (188 tests). Observation #38 is currently closed by the Owner, but
-        the closure event provides no rationale; this bounded implementation
-        evidence does not establish broader V2 acceptance. The broader query
-        contracts, source/cut readiness, consumer access, and operational
-        retention/security requirements remain incomplete or unresolved.
+        Current source inspection confirms the bounded local archive, capture
+        accounting, and read-only local ArchiveReader on Observation
+        572c86f8fce66a73cc3899a4a929448416f1e6bf. A local SQLite artifact
+        reopens with integrity ok and a stopped, closed_verified capture of
+        11 persisted receipts (local sequence 1 through 11); World manifest
+        commit tick is 3. The artifact has no recorded capture invocation
+        (runtime-capture.json is empty), and the available harness script's
+        arguments cannot be recovered, so reproducible runtime generation is
+        not established. GitHub Observation #38 is open as checked 2026-10-16.
+        No current full-suite result is claimed. Historical test results are
+        not upgraded to this source basis. Historical World #176 review at
+        world c165acb confirms current contracts do not support durable
+        historical-cut membership or complete multi-owner joins. Browser
+        history, remote access and operational retention/security remain
+        incomplete or unresolved; this evidence does not establish broader
+        V2 acceptance.
     editorial_notes: >
       Issue #38 architecture proposal. The bounded local archive/capture and
       read-only local reader are implemented in Observation PRs #61 and #62;
       PR #63 adds integration-test coverage only.
       This is partial implementation of the broader V2 target, not V2
-      acceptance. The design approves no producer contract, public API,
-      remote service, security or retention policy, and does not transfer
+      acceptance. A real bounded archive artifact is observed, but its exact
+      operator invocation is not reproducible from retained records; a
+      traceable runtime capture path remains the next increment. The design
+      approves no producer contract, public API, remote service, security or
+      retention policy, and does not transfer
       scientific evidence custody from Lab. ADR-0100 assessment is scoped to
       a passive operational archive; a constitutional boundary change remains
       reserved to the Architecture Owner.
