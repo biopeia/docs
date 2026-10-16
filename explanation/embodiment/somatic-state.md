@@ -1,8 +1,12 @@
 # Somatic state: what a body holds
 
-Reviewed against `embodiment` at commit `5a23e1fbeaa31109647aec4d4dc36eddbe0a6321` (main on
-2026-10-14); first written against `6114f3d9`. Everything below describes the
-later revision. Statements are marked by what supports them: the code, the
+Reviewed against `embodiment` at commit `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` (main on
+2026-10-16); first written against `6114f3d9`, then reviewed at `5a23e1fb`.
+Between `5a23e1fb` and `8f9576a8` the unit's sources changed only in
+`metabolism.py` and `physiology.py`, and only in how depletion marks death
+and where the tick of death comes from (diff read in full on 2026-10-16); the
+sections that describe that were rewritten, and the rest describes code that
+did not change. Everything below describes the later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
 The ad hoc runs were made at an earlier revision,
 `a5129f03aa4b024e33d332f917b9235afe97959c`, and were not repeated. Between
@@ -157,12 +161,8 @@ record states that the extraction "does not reinterpret it as TARGET
 
 ### One moment of death for depletion
 
-> Section updated on 2026-10-16 against `embodiment`
-> `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` ("unify reserve depletion death
-> timing", closing embodiment#26); the rest of this document keeps the review
-> revision stated at its top.
-
-Until that commit, emptying the reserve through the ledger left the body
+Until `embodiment` `8f9576a` ("unify reserve depletion death timing",
+closing embodiment#26), emptying the reserve through the ledger left the body
 `active` until a controller was next advanced, while the same depletion
 through the record was death at once, and the controller took the tick of
 death from its caller. Now:

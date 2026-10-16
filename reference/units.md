@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-59 units, 11 cross-domain contracts, 127 findings.
+59 units, 11 cross-domain contracts, 128 findings.
 
 ## World
 
@@ -253,7 +253,7 @@ restates it so that the answers about one unit can be read in one place.
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md) |
 | Tests | `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
 | Reviewed at | world@1f35e92611ed (RECORDED) |
-| Known findings | F-0170 documentation inconsistency (resolved) |
+| Known findings | F-0170 documentation inconsistency (resolved); F-0174 documentation inconsistency (resolved) |
 
 ### World M1 process bootstrap and operator profile
 
@@ -423,7 +423,7 @@ restates it so that the answers about one unit can be read in one place.
 | Cross-domain contracts | Operator material transfer (shared_type) |
 | Governed by | [technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md](../technical/adr/ADR-0094-somatic-state-ownership-body-holds-organism-regulates-and-feels.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md) |
 | Tests | `embodiment:tests/test_somatic_state.py`, `embodiment:tests/test_intake.py`, `embodiment:tests/test_checkpoint.py` |
-| Reviewed at | lab@800488dfccad, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
+| Reviewed at | lab@800488dfccad, embodiment@8f9576a8cf5b, environment@d09e45c40633, observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
 | Known findings | F-0021 contract gap (open); F-0024 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/26)); F-0025 recovery durability gap ([issue](https://github.com/biopeia/embodiment/issues/27)); F-0026 documentation inconsistency (open); F-0027 implementation finding ([issue](https://github.com/biopeia/embodiment/issues/20)) |
 
 ### Articulated body specification, active morphology and joint state
