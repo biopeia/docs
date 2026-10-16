@@ -62,6 +62,14 @@ directory flush, then a COMMITTED manifest.
 
 ## 3. Points no test covers
 
+Coverage was checked by mechanism as well as by name. `git grep` over all of
+`tests/` at this revision found process termination (`os._exit`) only in the
+five `test_durable_runtime.py` tests above. Injected `os.fsync` failures
+appear only in the journal-append test. `_fsync_directory`, `_record_failure`
+and `_discard_uncommitted_tail` are called directly in the tests named in the
+table. `tests/test_owner_checkpoint_store.py` has no retry or crash test, and
+`tests/test_journal.py` exercises the in-memory journal, not the journal file.
+
 None of these is known to fail. Each is a point the guarantee claims and no
 test exercises.
 
@@ -70,7 +78,7 @@ test exercises.
 | G1 | Termination during a partial **COMMITTED** manifest temporary write | `os.replace` has not run, so the PREPARING manifest remains and reopening requires recovery | Only the PREPARING write is tested; the COMMITTED write is the one that decides the cut |
 | G2 | Termination after the COMMITTED `os.replace`, before the directory flush | The new cut is committed | It is the commit point itself; no test terminates there |
 | G3 | Termination after the journal `truncate` to the committed offset, before the delta write | Same state as before the append | It is the only step that shortens a file during a tick |
-| G4 | Termination during `_record_failure` (the RECOVERY_REQUIRED write) | PREPARING remains, so reopening requires recovery, as in the first test | The failure path has no termination test |
+| G4 | Termination during `_record_failure` (the RECOVERY_REQUIRED write) | PREPARING remains, so reopening requires recovery, as in the first test | The write itself is exercised directly (`test_manifest.py::test_failure_detail_is_durable_and_does_not_clear_recovery_state`), but not under termination |
 | G5 | Termination inside `recover_previous_cut`: after the tail is discarded, after owners restore, or between receipt and manifest | Retry completes the same recovery; receipts are identity-stable (finding F-0011) | Recovery is tested for an exception, not for termination at each step |
 | G6 | Termination between an owner checkpoint hard link and its directory flush, or before the temporary file is removed | A content-addressed retry is idempotent; the code comments on this case (around line 180) | Leftover temporary files and retry idempotence have no termination test |
 | G7 | Termination during the first journal write (temporary file, link) as opposed to the append path | The genesis or first cut stays recoverable | Only the append path is tested since `9f65707` |
