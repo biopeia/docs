@@ -1,0 +1,1841 @@
+[
+  {
+    "canonical_id": "DOC-001",
+    "current_path": "explanation/biopeia/capability-maturity.md",
+    "title": "Capability maturity: what the documented evidence supports",
+    "domain": "biopeia",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/biopeia/capability-maturity.md",
+    "extract_to_reference": [
+      "reference/schemas/capability-maturity-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "Summary",
+      "Reading the labels"
+    ],
+    "line_count": 41
+  },
+  {
+    "canonical_id": "DOC-002",
+    "current_path": "explanation/biopeia/one-step-across-the-domains.md",
+    "title": "One step across the domains",
+    "domain": "biopeia",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/biopeia/one-step-across-the-domains.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [
+      "tutorials/getting-started/tracing-one-causal-step.md"
+    ],
+    "extract_to_audit": [],
+    "headings": [
+      "Why this document exists",
+      "The chain today, in one table",
+      "Link by link",
+      "What binds one domain to the next",
+      "The same step as it is decided",
+      "What would let an implementation be accepted",
+      "What this does not show",
+      "Where the open points are tracked"
+    ],
+    "line_count": 265
+  },
+  {
+    "canonical_id": "DOC-003",
+    "current_path": "explanation/biopeia/research-hypotheses.md",
+    "title": "What Biopeia sets out to find out: candidate hypotheses",
+    "domain": "biopeia",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/biopeia/research-hypotheses.md",
+    "extract_to_reference": [
+      "reference/parameters/research-hypotheses-parameters.md",
+      "reference/schemas/research-hypotheses-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "The question",
+      "Why several hypotheses and not one",
+      "The candidates",
+      "Directions with nothing to test yet",
+      "What all five have in common today",
+      "Open, for the owner"
+    ],
+    "line_count": 269
+  },
+  {
+    "canonical_id": "DOC-004",
+    "current_path": "explanation/biopeia/what-biopeia-is.md",
+    "title": "What Biopeia is",
+    "domain": "biopeia",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/biopeia/what-biopeia-is.md",
+    "extract_to_reference": [
+      "reference/parameters/what-biopeia-is-parameters.md",
+      "reference/schemas/what-biopeia-is-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "The question",
+      "Names",
+      "Who owns what",
+      "What the decisions fix",
+      "What this does not say"
+    ],
+    "line_count": 232
+  },
+  {
+    "canonical_id": "DOC-005",
+    "current_path": "explanation/cross-domain/observation-presentation-boundary.md",
+    "title": "The human-facing presentation boundary",
+    "domain": "cross-domain",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/cross-domain/observation-presentation-boundary.md",
+    "extract_to_reference": [
+      "reference/contracts/observation-presentation-boundary-contract.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/observation-presentation-boundary-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Seven peer views",
+      "Fail-closed availability and baseline state",
+      "The bounded M1 local read profile",
+      "Serial snapshot refresh and temporal disclaimers",
+      "Live multi-cycle browser acceptance",
+      "Readiness gate status",
+      "What supports this description"
+    ],
+    "line_count": 167
+  },
+  {
+    "canonical_id": "DOC-006",
+    "current_path": "explanation/embodiment/actuation-projection.md",
+    "title": "From a motor command to effector channels",
+    "domain": "embodiment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/embodiment/actuation-projection.md",
+    "extract_to_reference": [
+      "reference/parameters/actuation-projection-parameters.md",
+      "reference/schemas/actuation-projection-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/actuation-projection-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What goes in",
+      "The actuator binding",
+      "How a command is accepted",
+      "What comes out",
+      "What it does not check",
+      "Revision-bound joint torque projection",
+      "Composing paired motor activations into joint torque",
+      "Correspondence with the decision on commands",
+      "Where it is used",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 243
+  },
+  {
+    "canonical_id": "DOC-007",
+    "current_path": "explanation/embodiment/articulated-body.md",
+    "title": "The articulated body: what it is made of and where its joints are",
+    "domain": "embodiment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/embodiment/articulated-body.md",
+    "extract_to_reference": [
+      "reference/parameters/articulated-body-parameters.md",
+      "reference/schemas/articulated-body-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/articulated-body-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What a body is made of",
+      "The active morphology descriptor",
+      "The joint state",
+      "Adoption",
+      "Checkpoint",
+      "Time",
+      "Lifecycle",
+      "Where it is used",
+      "Correspondence with the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 386
+  },
+  {
+    "canonical_id": "DOC-008",
+    "current_path": "explanation/embodiment/physical-projection.md",
+    "title": "What Embodiment hands to a solver: the physical projection, the body pose and its conventions",
+    "domain": "embodiment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/embodiment/physical-projection.md",
+    "extract_to_reference": [
+      "reference/parameters/physical-projection-parameters.md",
+      "reference/schemas/physical-projection-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/physical-projection-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The body pose sample",
+      "The projection",
+      "The declared conventions",
+      "Time",
+      "Where it is used",
+      "Receptors: stable attachment and sample-point projection",
+      "BodyPose semantic family declaration",
+      "Correspondence with the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 314
+  },
+  {
+    "canonical_id": "DOC-009",
+    "current_path": "explanation/embodiment/physical-state.md",
+    "title": "The body's physical state and the adoption of a solver candidate",
+    "domain": "embodiment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/embodiment/physical-state.md",
+    "extract_to_reference": [
+      "reference/parameters/physical-state-parameters.md",
+      "reference/schemas/physical-state-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/physical-state-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Three values",
+      "Adoption",
+      "What adoption does not check",
+      "Checkpoint",
+      "Lifecycle",
+      "Correspondence with the decision on solver candidates",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 228
+  },
+  {
+    "canonical_id": "DOC-010",
+    "current_path": "explanation/embodiment/somatic-state.md",
+    "title": "Somatic state: what a body holds",
+    "domain": "embodiment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/embodiment/somatic-state.md",
+    "extract_to_reference": [
+      "reference/parameters/somatic-state-parameters.md",
+      "reference/schemas/somatic-state-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/somatic-state-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The body's record",
+      "Energy: one pool, four accounts",
+      "From energy to condition",
+      "Clocks",
+      "Receiving material",
+      "Checkpoint",
+      "Projecting the reserve from a committed cut",
+      "What crosses to the Organism, and what does not",
+      "Lifecycle",
+      "Who uses it",
+      "What supports this description",
+      "Notes in the code that point elsewhere",
+      "Open questions"
+    ],
+    "line_count": 354
+  },
+  {
+    "canonical_id": "DOC-011",
+    "current_path": "explanation/environment/dynamic-state.md",
+    "title": "A piece of the environment that changes",
+    "domain": "environment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/environment/dynamic-state.md",
+    "extract_to_reference": [
+      "reference/parameters/dynamic-state-parameters.md",
+      "reference/schemas/dynamic-state-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/dynamic-state-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What it holds",
+      "How the position changes",
+      "What adoption does not judge",
+      "Recovery",
+      "Who uses it",
+      "What supports this description"
+    ],
+    "line_count": 96
+  },
+  {
+    "canonical_id": "DOC-012",
+    "current_path": "explanation/environment/finite-resource.md",
+    "title": "The finite resource",
+    "domain": "environment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/environment/finite-resource.md",
+    "extract_to_reference": [
+      "reference/parameters/finite-resource-parameters.md",
+      "reference/schemas/finite-resource-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/finite-resource-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What it holds",
+      "The field around it",
+      "How it is used up",
+      "What is not enforced",
+      "Identity and recovery",
+      "Sampling the field and projecting an observation",
+      "Projecting committed resource state",
+      "Time",
+      "How it is used across domains",
+      "What supports this description"
+    ],
+    "line_count": 229
+  },
+  {
+    "canonical_id": "DOC-013",
+    "current_path": "explanation/environment/procedural-genesis.md",
+    "title": "Procedural genesis of a scene",
+    "domain": "environment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/environment/procedural-genesis.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/procedural-genesis-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What goes in",
+      "How a scene is produced",
+      "What comes out",
+      "What it does not ensure",
+      "Time",
+      "What supports this description"
+    ],
+    "line_count": 94
+  },
+  {
+    "canonical_id": "DOC-014",
+    "current_path": "explanation/environment/resource-geometry.md",
+    "title": "Giving a resource a physical shape",
+    "domain": "environment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/environment/resource-geometry.md",
+    "extract_to_reference": [
+      "reference/parameters/resource-geometry-parameters.md",
+      "reference/schemas/resource-geometry-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/resource-geometry-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What it does",
+      "What it deliberately does not do",
+      "What supports this description"
+    ],
+    "line_count": 64
+  },
+  {
+    "canonical_id": "DOC-015",
+    "current_path": "explanation/environment/static-scene.md",
+    "title": "The static scene and its owner",
+    "domain": "environment",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/environment/static-scene.md",
+    "extract_to_reference": [
+      "reference/parameters/static-scene-parameters.md",
+      "reference/schemas/static-scene-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/static-scene-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What a scene says",
+      "The owner, and what \"adopting\" means for something that never changes",
+      "Recovery",
+      "Time",
+      "What is checked about the World, and what is not",
+      "What supports this description"
+    ],
+    "line_count": 141
+  },
+  {
+    "canonical_id": "DOC-016",
+    "current_path": "explanation/lab/body-interoception-transducer.md",
+    "title": "The body interoception transducer",
+    "domain": "lab",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/lab/body-interoception-transducer.md",
+    "extract_to_reference": [
+      "reference/parameters/body-interoception-transducer-parameters.md",
+      "reference/schemas/body-interoception-transducer-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/body-interoception-transducer-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What it reads",
+      "What it returns",
+      "What it keeps",
+      "Beside the accepted decisions",
+      "What this is not evidence of",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 177
+  },
+  {
+    "canonical_id": "DOC-017",
+    "current_path": "explanation/lab/observation-consumer.md",
+    "title": "The Lab observation consumer",
+    "domain": "lab",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/lab/observation-consumer.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/observation-consumer-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The execution association",
+      "Association rules",
+      "Reading modes",
+      "What supports this description"
+    ],
+    "line_count": 77
+  },
+  {
+    "canonical_id": "DOC-018",
+    "current_path": "explanation/lab/operator-material-transfer.md",
+    "title": "The operator material transfer",
+    "domain": "lab",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/lab/operator-material-transfer.md",
+    "extract_to_reference": [
+      "reference/contracts/operator-material-transfer-contract.md"
+    ],
+    "extract_to_howto": [
+      "how-to/operator/material-transfer-intervention.md"
+    ],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/operator-material-transfer-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The request",
+      "What happens in one transfer",
+      "The evidence checkpoint",
+      "When it fails",
+      "What reaches Observation",
+      "Owner checkpoint restoration",
+      "What Lab does not own",
+      "Beside the accepted decisions",
+      "What this is not evidence of",
+      "Time",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 451
+  },
+  {
+    "canonical_id": "DOC-019",
+    "current_path": "explanation/lab/study-utilities.md",
+    "title": "The study utilities",
+    "domain": "lab",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/lab/study-utilities.md",
+    "extract_to_reference": [
+      "reference/parameters/study-utilities-parameters.md",
+      "reference/schemas/study-utilities-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/study-utilities-review.md"
+    ],
+    "headings": [
+      "What they are",
+      "Seed checks",
+      "Scalar summaries",
+      "Digests",
+      "State and time",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 171
+  },
+  {
+    "canonical_id": "DOC-020",
+    "current_path": "explanation/modality/current-state.md",
+    "title": "Modality: a narrow transduction contract, not a sensory system",
+    "domain": "modality",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/modality/current-state.md",
+    "extract_to_reference": [
+      "reference/parameters/current-state-parameters.md",
+      "reference/schemas/current-state-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/current-state-review.md"
+    ],
+    "headings": [
+      "The short answer",
+      "What is decided",
+      "The contract in source",
+      "The World fixture",
+      "What remains absent",
+      "Evidence boundary"
+    ],
+    "line_count": 115
+  },
+  {
+    "canonical_id": "DOC-021",
+    "current_path": "explanation/observation/inherited-projection.md",
+    "title": "The inherited projection",
+    "domain": "observation",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/observation/inherited-projection.md",
+    "extract_to_reference": [
+      "reference/parameters/inherited-projection-parameters.md",
+      "reference/schemas/inherited-projection-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/inherited-projection-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Records projected from one mapping",
+      "The rule it follows: absent stays absent",
+      "Two keys left out on purpose",
+      "What the tidying does to values",
+      "The frame",
+      "Who calls the projection today",
+      "Set beside the claim model",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 243
+  },
+  {
+    "canonical_id": "DOC-022",
+    "current_path": "explanation/observation/observation-plane.md",
+    "title": "The observation plane",
+    "domain": "observation",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/observation/observation-plane.md",
+    "extract_to_reference": [
+      "reference/parameters/observation-plane-parameters.md",
+      "reference/schemas/observation-plane-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/observation-plane-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Publishing",
+      "The delivery sequence is not a clock",
+      "What current means",
+      "Streams",
+      "Clearing, and the run boundary",
+      "What it holds, and whose it is",
+      "The plane and the decisions that govern it",
+      "The bounded local current read bridge",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 375
+  },
+  {
+    "canonical_id": "DOC-023",
+    "current_path": "explanation/observation/semantic-claim-model.md",
+    "title": "The semantic claim model",
+    "domain": "observation",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/observation/semantic-claim-model.md",
+    "extract_to_reference": [
+      "reference/schemas/semantic-claim-model-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/semantic-claim-model-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "A claim, and an observation of it",
+      "Who is who",
+      "What a claim is about",
+      "Time",
+      "Where a claim came from",
+      "Conditions",
+      "What the types enforce, and what they leave to the caller",
+      "The model and the decisions that govern it",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 294
+  },
+  {
+    "canonical_id": "DOC-024",
+    "current_path": "explanation/organism/action-path.md",
+    "title": "From an affordance to a motor command",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/action-path.md",
+    "extract_to_reference": [
+      "reference/parameters/action-path-parameters.md",
+      "reference/schemas/action-path-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/action-path-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The six steps at a glance",
+      "Step 1: an affordance",
+      "Step 2: admission",
+      "Step 3: an intent",
+      "Step 4: a proposal and its arbitration",
+      "Step 5: a commitment",
+      "Step 6: a controller frame and the command",
+      "The actuator surface",
+      "Time",
+      "What the path does not establish",
+      "The one composition: World's physical step fixture",
+      "Beside the decision on commands",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 447
+  },
+  {
+    "canonical_id": "DOC-025",
+    "current_path": "explanation/organism/actuator-evidence.md",
+    "title": "Evidence that an actuator does something",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/actuator-evidence.md",
+    "extract_to_reference": [
+      "reference/parameters/actuator-evidence-parameters.md",
+      "reference/schemas/actuator-evidence-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/actuator-evidence-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What is kept for each channel",
+      "What the numbers depend on",
+      "Becoming active",
+      "Saving and restoring",
+      "Across bodies",
+      "Small types in the same package",
+      "Time and randomness",
+      "Who uses it",
+      "What supports this description"
+    ],
+    "line_count": 187
+  },
+  {
+    "canonical_id": "DOC-026",
+    "current_path": "explanation/organism/attention-allocation.md",
+    "title": "Allocating a bounded budget of attention",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/attention-allocation.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/attention-allocation-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "How the choice is made",
+      "What it is not",
+      "Who uses it",
+      "What supports this description"
+    ],
+    "line_count": 61
+  },
+  {
+    "canonical_id": "DOC-027",
+    "current_path": "explanation/organism/capacity-pressure-and-pair-statistics.md",
+    "title": "Capacity pressure and pair statistics",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/capacity-pressure-and-pair-statistics.md",
+    "extract_to_reference": [
+      "reference/parameters/capacity-pressure-and-pair-statistics-parameters.md",
+      "reference/schemas/capacity-pressure-and-pair-statistics-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/capacity-pressure-and-pair-statistics-review.md"
+    ],
+    "headings": [
+      "What they are",
+      "Capacity pressure",
+      "The pair accumulator",
+      "Time and randomness",
+      "At each lifecycle boundary",
+      "Whose state this is",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 198
+  },
+  {
+    "canonical_id": "DOC-028",
+    "current_path": "explanation/organism/causal-evidence-and-controllability.md",
+    "title": "Effects, causal evidence and controllability",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/causal-evidence-and-controllability.md",
+    "extract_to_reference": [
+      "reference/parameters/causal-evidence-and-controllability-parameters.md",
+      "reference/schemas/causal-evidence-and-controllability-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/causal-evidence-and-controllability-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The parts",
+      "What an effect is",
+      "What a row of evidence is",
+      "The question the counts answer",
+      "Controllability as computed here",
+      "Agency as computed here",
+      "The forward model",
+      "Naming what was done: signatures and dimensions",
+      "Footprints",
+      "Across a restart and a change of body",
+      "Time",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 341
+  },
+  {
+    "canonical_id": "DOC-029",
+    "current_path": "explanation/organism/causal-provenance-log.md",
+    "title": "The causal provenance log",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/causal-provenance-log.md",
+    "extract_to_reference": [
+      "reference/parameters/causal-provenance-log-parameters.md",
+      "reference/schemas/causal-provenance-log-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/causal-provenance-log-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "An event",
+      "The ring and the frontier",
+      "The one producer",
+      "Subscribers, and a journal that is elsewhere",
+      "Across a restart",
+      "At each lifecycle boundary",
+      "Beside the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 206
+  },
+  {
+    "canonical_id": "DOC-030",
+    "current_path": "explanation/organism/cognitive-checkpoint.md",
+    "title": "What a cognitive checkpoint carries",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/cognitive-checkpoint.md",
+    "extract_to_reference": [
+      "reference/parameters/cognitive-checkpoint-parameters.md",
+      "reference/schemas/cognitive-checkpoint-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/cognitive-checkpoint-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The payload parts",
+      "Restoring",
+      "Exact: the graph comes back as it was",
+      "Not complete: what has no place in it",
+      "Who calls it",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 289
+  },
+  {
+    "canonical_id": "DOC-031",
+    "current_path": "explanation/organism/cognitive-graph.md",
+    "title": "The cognitive graph and its explicit-tick transition",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/cognitive-graph.md",
+    "extract_to_reference": [
+      "reference/parameters/cognitive-graph-invariants.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/organism-cognitive-graph-audit.md",
+      "audits/implementation/cognitive-graph-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The graph",
+      "One pass of activation",
+      "The transition",
+      "The normalizer",
+      "Birth",
+      "Where it is used",
+      "Time and randomness",
+      "Names that point outside the repository",
+      "At each lifecycle boundary",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 377
+  },
+  {
+    "canonical_id": "DOC-032",
+    "current_path": "explanation/organism/competence-development.md",
+    "title": "How a repeated motor pattern becomes a competence",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/competence-development.md",
+    "extract_to_reference": [
+      "reference/parameters/competence-development-parameters.md",
+      "reference/schemas/competence-development-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/competence-development-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The loop it expects",
+      "Where the activations come from",
+      "From activations to a candidate",
+      "From a candidate to a primitive, and the gate",
+      "Replaying a primitive",
+      "What leaves the engine, and where it stops",
+      "Across a restart",
+      "Across a change of body",
+      "At each lifecycle boundary",
+      "Time and determinism",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 354
+  },
+  {
+    "canonical_id": "DOC-033",
+    "current_path": "explanation/organism/continuation-closure-and-reembodiment.md",
+    "title": "Organism continuation closure and re-embodiment",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/continuation-closure-and-reembodiment.md",
+    "extract_to_reference": [
+      "reference/parameters/continuation-closure-and-reembodiment-parameters.md",
+      "reference/schemas/continuation-closure-and-reembodiment-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/continuation-closure-and-reembodiment-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The four-tier state taxonomy",
+      "Actuator applicability validation at restore",
+      "Preserving knowledge without somatic confusion",
+      "What supports this description"
+    ],
+    "line_count": 83
+  },
+  {
+    "canonical_id": "DOC-034",
+    "current_path": "explanation/organism/execution-binding-and-affordances.md",
+    "title": "Execution bindings, availability and the affordance resolver",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/execution-binding-and-affordances.md",
+    "extract_to_reference": [
+      "reference/schemas/execution-binding-and-affordances-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/execution-binding-and-affordances-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "A binding",
+      "The registry",
+      "Four questions and their answers",
+      "The resolver",
+      "Across a restart",
+      "At each lifecycle boundary",
+      "Beside the decision on body schema and competence",
+      "Time",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 257
+  },
+  {
+    "canonical_id": "DOC-035",
+    "current_path": "explanation/organism/executive-outcome-ledger.md",
+    "title": "The executive outcome ledger",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/executive-outcome-ledger.md",
+    "extract_to_reference": [
+      "reference/parameters/executive-outcome-ledger-parameters.md",
+      "reference/schemas/executive-outcome-ledger-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/executive-outcome-ledger-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What an outcome is",
+      "From counts to a factor",
+      "Suppression",
+      "Bounds",
+      "Across a restart",
+      "At each lifecycle boundary",
+      "Whose state this is",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 199
+  },
+  {
+    "canonical_id": "DOC-036",
+    "current_path": "explanation/organism/experience-record-and-ledger.md",
+    "title": "The experience record and its ledger",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/experience-record-and-ledger.md",
+    "extract_to_reference": [
+      "reference/parameters/experience-record-and-ledger-parameters.md",
+      "reference/schemas/experience-record-and-ledger-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/experience-record-and-ledger-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "One record",
+      "The ledger",
+      "At each lifecycle boundary",
+      "Whose state this is",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 201
+  },
+  {
+    "canonical_id": "DOC-037",
+    "current_path": "explanation/organism/foundation-conventions.md",
+    "title": "Foundation conventions: thresholds, an evidence count and limits",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/foundation-conventions.md",
+    "extract_to_reference": [
+      "reference/parameters/foundation-conventions-parameters.md",
+      "reference/schemas/foundation-conventions-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/foundation-conventions-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The conventions",
+      "The evidence count",
+      "The limits",
+      "Nothing to keep",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 145
+  },
+  {
+    "canonical_id": "DOC-038",
+    "current_path": "explanation/organism/generative-resident.md",
+    "title": "The generative resident and what a \"private model\" is in code",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/generative-resident.md",
+    "extract_to_reference": [
+      "reference/parameters/generative-resident-parameters.md",
+      "reference/schemas/generative-resident-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/generative-resident-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The parts",
+      "One step",
+      "What a \"private model\" is in code",
+      "From \"predicted\" to \"supported\" or \"contradicted\"",
+      "The separation from fact, and what enforces it",
+      "What other code is offered",
+      "Bounded memory and resolution of F-0074",
+      "Time",
+      "At each lifecycle boundary",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 331
+  },
+  {
+    "canonical_id": "DOC-039",
+    "current_path": "explanation/organism/genome-and-inheritance.md",
+    "title": "The genome, its expression and the germline record",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/genome-and-inheritance.md",
+    "extract_to_reference": [
+      "reference/parameters/genome-and-inheritance-parameters.md",
+      "reference/schemas/genome-and-inheritance-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/genome-and-inheritance-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The genome",
+      "Expression: five numbers that move",
+      "The germline record",
+      "What is and is not heritable",
+      "The self-check that names things that are not there",
+      "Randomness and time",
+      "Across a restart",
+      "At each lifecycle boundary",
+      "Beside the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 481
+  },
+  {
+    "canonical_id": "DOC-040",
+    "current_path": "explanation/organism/graph-plasticity.md",
+    "title": "How the cognitive graph is changed",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/graph-plasticity.md",
+    "extract_to_reference": [
+      "reference/parameters/graph-plasticity-parameters.md",
+      "reference/schemas/graph-plasticity-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/graph-plasticity-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Changing a weight",
+      "Candidates kept outside the graph",
+      "Changing the structure",
+      "Two restraints",
+      "What is kept, and for how long",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 306
+  },
+  {
+    "canonical_id": "DOC-041",
+    "current_path": "explanation/organism/identity-and-checkpoint.md",
+    "title": "Organism identity and the checkpoint envelope",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/identity-and-checkpoint.md",
+    "extract_to_reference": [
+      "reference/parameters/identity-and-checkpoint-parameters.md",
+      "reference/schemas/identity-and-checkpoint-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/identity-and-checkpoint-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Identity",
+      "The envelope",
+      "The dependency closure",
+      "What the closure and the digests do not establish",
+      "What a portable checkpoint carries today",
+      "Continuations and branches",
+      "At each lifecycle boundary",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 290
+  },
+  {
+    "canonical_id": "DOC-042",
+    "current_path": "explanation/organism/life-of-an-organism.md",
+    "title": "The life of an Organism, as the code has it",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/life-of-an-organism.md",
+    "extract_to_reference": [
+      "reference/parameters/life-of-an-organism-parameters.md",
+      "reference/schemas/life-of-an-organism-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "The life that is decided",
+      "The life in one table",
+      "Being born",
+      "Meeting an environment",
+      "Changing with what happens",
+      "Finding what follows what",
+      "From a pattern to something that can be done",
+      "Choosing and acting",
+      "Guessing ahead and keeping a record",
+      "Being saved and resuming",
+      "Changing body",
+      "Reproducing, resting, ending",
+      "What this adds up to"
+    ],
+    "line_count": 274
+  },
+  {
+    "canonical_id": "DOC-043",
+    "current_path": "explanation/organism/prospective-deliberation.md",
+    "title": "Prospective deliberation and the outcome-value ledger",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/prospective-deliberation.md",
+    "extract_to_reference": [
+      "reference/parameters/prospective-deliberation-parameters.md",
+      "reference/schemas/prospective-deliberation-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/prospective-deliberation-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The outcome-value ledger",
+      "One deliberation",
+      "The policy",
+      "The record returned and its reasons",
+      "Where candidates come from",
+      "Across a restart",
+      "At each lifecycle boundary",
+      "Beside the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 260
+  },
+  {
+    "canonical_id": "DOC-044",
+    "current_path": "explanation/organism/sense-to-checkpoint-transition.md",
+    "title": "From an opaque sense signal to an accepted step",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/sense-to-checkpoint-transition.md",
+    "extract_to_reference": [
+      "reference/parameters/sense-to-checkpoint-transition-parameters.md",
+      "reference/schemas/sense-to-checkpoint-transition-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/sense-to-checkpoint-transition-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "A signal and its binding",
+      "The composition",
+      "The accepted step",
+      "Who calls it",
+      "Time and randomness",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 359
+  },
+  {
+    "canonical_id": "DOC-045",
+    "current_path": "explanation/organism/transition-and-continuation.md",
+    "title": "The Organism transition boundary and the continuation registry",
+    "domain": "organism",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/organism/transition-and-continuation.md",
+    "extract_to_reference": [
+      "reference/schemas/transition-and-continuation-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/transition-and-continuation-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The transition state",
+      "The continuation",
+      "The registry",
+      "Who calls it",
+      "Time and randomness",
+      "At each lifecycle boundary",
+      "Beside the decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 392
+  },
+  {
+    "canonical_id": "DOC-046",
+    "current_path": "explanation/world/causal-cycle.md",
+    "title": "The sensorimotor causal cycle",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/causal-cycle.md",
+    "extract_to_reference": [
+      "reference/schemas/causal-cycle-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/causal-cycle-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The operational sequence",
+      "The owner checkpoint store and genesis persistence",
+      "Bounded multi-cycle session loop",
+      "Restoration and live continuation",
+      "What supports this description"
+    ],
+    "line_count": 118
+  },
+  {
+    "canonical_id": "DOC-047",
+    "current_path": "explanation/world/causal-journal.md",
+    "title": "The World causal journal",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/causal-journal.md",
+    "extract_to_reference": [
+      "reference/parameters/causal-journal-parameters.md",
+      "reference/schemas/causal-journal-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/causal-journal-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What a record carries",
+      "How a record enters the journal",
+      "The running digest",
+      "What can be read from it",
+      "What the journal does not enforce",
+      "How World uses it",
+      "Time",
+      "What persists",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 201
+  },
+  {
+    "canonical_id": "DOC-048",
+    "current_path": "explanation/world/causal-manifest.md",
+    "title": "The World causal manifest",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/causal-manifest.md",
+    "extract_to_reference": [
+      "reference/schemas/causal-manifest-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/causal-manifest-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What the manifest records",
+      "Presence-to-owner association",
+      "What a manifest must satisfy to exist",
+      "The three states",
+      "What commits a cut",
+      "What recovery does, and does not do",
+      "How it is stored",
+      "What it does not guarantee",
+      "Time and identity",
+      "What supports this description",
+      "Correspondence with the decision on persistence",
+      "Open questions"
+    ],
+    "line_count": 262
+  },
+  {
+    "canonical_id": "DOC-049",
+    "current_path": "explanation/world/durable-runtime.md",
+    "title": "The durable World runtime",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/durable-runtime.md",
+    "extract_to_reference": [
+      "reference/parameters/durable-runtime-parameters.md",
+      "reference/schemas/durable-runtime-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/durable-runtime-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "How a World starts",
+      "What happens in one tick",
+      "What the journal keeps for each cut",
+      "A World with no presence",
+      "What World checks, and what it trusts",
+      "After a failure",
+      "What it does not guarantee",
+      "Time and identity",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 287
+  },
+  {
+    "canonical_id": "DOC-050",
+    "current_path": "explanation/world/genesis-and-rosters.md",
+    "title": "World genesis, rosters and participant closure",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/genesis-and-rosters.md",
+    "extract_to_reference": [
+      "reference/schemas/genesis-and-rosters-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/genesis-and-rosters-review.md"
+    ],
+    "headings": [
+      "What this is about",
+      "Two rosters, and a third list",
+      "How a World starts",
+      "How membership changes",
+      "What closure means here",
+      "What closure does not mean",
+      "How this stands against the accepted contract",
+      "What supports this description"
+    ],
+    "line_count": 176
+  },
+  {
+    "canonical_id": "DOC-051",
+    "current_path": "explanation/world/in-memory-runtime.md",
+    "title": "The in-memory World runtime",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/in-memory-runtime.md",
+    "extract_to_reference": [
+      "reference/schemas/in-memory-runtime-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/in-memory-runtime-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What a tick does",
+      "When a tick fails",
+      "What supports this description"
+    ],
+    "line_count": 70
+  },
+  {
+    "canonical_id": "DOC-052",
+    "current_path": "explanation/world/journal-snapshot-store.md",
+    "title": "The journal snapshot store",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/journal-snapshot-store.md",
+    "extract_to_reference": [
+      "reference/schemas/journal-snapshot-store-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/journal-snapshot-store-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What it writes: The v3 append-only journal",
+      "Two different fingerprints",
+      "Reading, verifying and tail recovery",
+      "What supports this description"
+    ],
+    "line_count": 77
+  },
+  {
+    "canonical_id": "DOC-053",
+    "current_path": "explanation/world/m1-process-bootstrap.md",
+    "title": "The M1 bounded process bootstrap and operator profile",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/m1-process-bootstrap.md",
+    "extract_to_reference": [
+      "reference/schemas/m1-profile-schema.md"
+    ],
+    "extract_to_howto": [
+      "how-to/operator/m1-process-execution.md"
+    ],
+    "extract_to_tutorial": [
+      "tutorials/getting-started/first-m1-simulation.md"
+    ],
+    "extract_to_audit": [
+      "audits/implementation/m1-process-bootstrap-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "Fail-closed preflight validation",
+      "The operator profile",
+      "Genesis persistence and runtime construction",
+      "Cooperative signals and teardown protection",
+      "What supports this description"
+    ],
+    "line_count": 121
+  },
+  {
+    "canonical_id": "DOC-054",
+    "current_path": "explanation/world/mujoco-step-executor.md",
+    "title": "The MuJoCo step executor",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/mujoco-step-executor.md",
+    "extract_to_reference": [
+      "reference/schemas/mujoco-step-executor-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/mujoco-step-executor-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "What goes in and what comes out",
+      "What it checks",
+      "What it deliberately does not do",
+      "Who calls it",
+      "How this bears on what was said before",
+      "State, time and failure",
+      "Beside the accepted decisions",
+      "What supports this description",
+      "Open questions"
+    ],
+    "line_count": 210
+  },
+  {
+    "canonical_id": "DOC-055",
+    "current_path": "explanation/world/observation-publication.md",
+    "title": "Post-commit observation publication and outcome classification",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/observation-publication.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/observation-publication-review.md"
+    ],
+    "headings": [
+      "What it is",
+      "The four caller-visible outcomes",
+      "The publication guard and concurrency",
+      "Pre-publication validation of owner observations",
+      "Passive observation non-interference",
+      "Integration with the local observation read bridge",
+      "What supports this description"
+    ],
+    "line_count": 118
+  },
+  {
+    "canonical_id": "DOC-056",
+    "current_path": "explanation/world/physical-step.md",
+    "title": "The physical causal step, as it exists today",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/physical-step.md",
+    "extract_to_reference": [
+      "reference/parameters/physical-step-parameters.md",
+      "reference/schemas/physical-step-schema.md"
+    ],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/physical-step-review.md"
+    ],
+    "headings": [
+      "What this is about",
+      "The sequence the fixture carries out",
+      "What the tests establish",
+      "The second fixture: a generated scene",
+      "The third fixture: a sensed value",
+      "What they do not establish",
+      "At the heads of the other repositories",
+      "What supports this description"
+    ],
+    "line_count": 277
+  },
+  {
+    "canonical_id": "DOC-057",
+    "current_path": "explanation/world/recovery.md",
+    "title": "World recovery",
+    "domain": "world",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "explanation",
+    "target_primary_quadrant": "explanation",
+    "target_primary_path": "explanation/world/recovery.md",
+    "extract_to_reference": [
+      "reference/contracts/world-recovery-contract.md"
+    ],
+    "extract_to_howto": [
+      "how-to/operator/recover-previous-cut.md"
+    ],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [
+      "audits/implementation/recovery-review.md"
+    ],
+    "headings": [
+      "What this is about",
+      "Three ways a World comes to need recovery",
+      "What is refused while recovery is required",
+      "The recovery itself",
+      "Starting again from a committed cut",
+      "What is left behind",
+      "What recovery does not establish",
+      "A question the decision left open",
+      "What supports this description"
+    ],
+    "line_count": 165
+  },
+  {
+    "canonical_id": "DOC-058",
+    "current_path": "reference/evidence-status.md",
+    "title": "Evidence status and review status",
+    "domain": "global",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "reference",
+    "target_primary_quadrant": "reference",
+    "target_primary_path": "reference/evidence-status.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "Evidence status: how strong is the support for the claim?",
+      "Review status: has the documentation of a unit been independently checked?",
+      "Architectural status of a unit"
+    ],
+    "line_count": 42
+  },
+  {
+    "canonical_id": "DOC-059",
+    "current_path": "reference/units.md",
+    "title": "Units",
+    "domain": "global",
+    "review_repo": "unknown",
+    "review_sha": "unknown",
+    "current_quadrant": "reference",
+    "target_primary_quadrant": "reference",
+    "target_primary_path": "reference/units.md",
+    "extract_to_reference": [],
+    "extract_to_howto": [],
+    "extract_to_tutorial": [],
+    "extract_to_audit": [],
+    "headings": [
+      "World",
+      "Environment",
+      "Embodiment",
+      "Organism",
+      "Modality",
+      "Observation",
+      "Lab"
+    ],
+    "line_count": 1043
+  }
+]

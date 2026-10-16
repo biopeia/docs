@@ -1,0 +1,24 @@
+schema_version: 1
+
+# Composition of the Biopeia Guided Learning publication (Volume IV).
+# Learning-oriented, step-by-step verified executable tutorials.
+publication:
+  id: biopeia-guided-learning
+  title: Biopeia
+  subtitle: Guided Learning and Step-by-Step Tutorials
+  type: Guided Learning
+  output: Biopeia-Guided-Learning
+  selection: true
+
+# Front matter that follows the contents list and precedes Part I.
+front:
+  - id: reader-guide
+    title: Reader guide
+    generated: [reader-guide]
+
+# Parts of the Guided Learning publication.
+parts:
+  - id: getting-started
+    title: Getting started
+    chapters:
+      - tutorials/getting-started/first-m1-simulation.md

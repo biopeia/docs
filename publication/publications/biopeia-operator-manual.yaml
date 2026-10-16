@@ -1,0 +1,25 @@
+schema_version: 1
+
+# Composition of the Biopeia Operator Manual publication (Volume III).
+# Task-oriented operational procedures, runtime commands, and recovery guides.
+publication:
+  id: biopeia-operator-manual
+  title: Biopeia
+  subtitle: Operations, Procedures and Diagnostics Manual
+  type: Operator Manual
+  output: Biopeia-Operator-Manual
+  selection: true
+
+# Front matter that follows the contents list and precedes Part I.
+front:
+  - id: reader-guide
+    title: Reader guide
+    generated: [reader-guide]
+
+# Parts of the Operator Manual publication.
+parts:
+  - id: operator-procedures
+    title: Operator procedures and recovery
+    chapters:
+      - how-to/operator/m1-process-execution.md
+      - how-to/operator/recover-previous-cut.md

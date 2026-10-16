@@ -278,6 +278,7 @@ When hypotheses are full, a finished one is discarded to make room, and if all
 are active no new one is created.
 
 Following the resolution of finding F-0074:
+
 - The scheduler (`organism:src/organism/cognition/generative/scheduler.py:4`) prunes
   past-tick entries in `_used`, preventing unbounded growth across ticks.
 - The calibration store (`organism:src/organism/cognition/generative/calibration.py:47-94`)

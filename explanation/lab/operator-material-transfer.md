@@ -8,6 +8,7 @@ states intent; it is not a result.
 
 The code this component calls in other repositories is pinned in
 `lab:pyproject.toml`:
+
 - `embodiment` `c456401e9517bbb1fec02d84cbac7e94fddf9d68`
 - `environment` `0ce1a4e3f4dd12529639f032929b8e09df4ce7d7`
 - `observation` `d351df3d7cd2706fdd280a8d4e17359001689dd8`
@@ -29,8 +30,8 @@ owner state, or writing checkpoints
 
 The reason is architectural: an `InterventionRequest` carries caller-declared
 identifiers and constraints (`operator_id`, `intervention_id`, etc.); it does
-not constitute authenticated identity or verified authorization. Under Lab proposal
-#330 (`docs/design/proposals/lab-target-authority-request-boundary-v1.md`), verified
+not constitute authenticated identity or verified authorization. Under
+Lab proposal #330 (`docs/design/proposals/lab-target-authority-request-boundary-v1.md`), verified
 authorization remains unsupported.
 
 Integration tests executing the transfer path
@@ -258,6 +259,7 @@ through `world.observation_publication.publish_committed_owner_observations`.
 ### Cryptographic and journal binding
 
 Publication fails with a `ValueError` unless the following bindings strictly hold:
+
 - **Explicit run context:** `result.experiment_id` and `result.run_id` must be present.
 - **World cut match:** `cut.world_id` and `cut.causal_tick` must match `result.record`.
 - **Exact transition record:** `world.records` must contain exactly one committed
@@ -288,6 +290,7 @@ instance method, creating a contract mismatch with World's 3-argument verificati
 Lab resolves this through `lab:src/lab/interventions/material_transfer_restoration.py::MaterialTransferOwnerRestoration`.
 
 The restorer:
+
 1. Validates that the cut contains exactly one Environment and one Embodiment owner reference.
 2. Reads and validates the checkpoint bytes against `IdentifiedFiniteResource.validate_checkpoint`
    and `EmbodimentCheckpoint.validate_checkpoint`.

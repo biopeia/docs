@@ -250,6 +250,7 @@ fixed metre offset `position_in_body_frame_m: tuple[float, float, float]`.
 
 At the start of a physical step, `project_receptor_sample_point` (lines 80-142) resolves
 the receptor's sample location in the world reference frame at the source cut:
+
 1. Validates `state` against `world_step: ReceptorWorldStepContext` (`world_id`, `body_id`,
    `embodiment_episode_id`, `morphology_revision`, `source_causal_tick`).
 2. Rotates `position_in_body_frame_m` by the state root pose quaternion using the right-handed
