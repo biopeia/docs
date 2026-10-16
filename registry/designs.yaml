@@ -479,6 +479,11 @@ designs:
     implementation_evidence:
       evaluated_on: "2026-10-17"
       basis:
+        world: 8266b8968b4dd52231723564d833077675a316d2
+        organism: 779c097d21236cba0409f5fc52fbcd71bf2049d9
+        embodiment: 8f9576a8cf5bc7213940c593033a1f0f4d0584d4
+        environment: 4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1
+        modality: 9b72e16f6bfea4b24191015177364d560f7f6715
         observation: 572c86f8fce66a73cc3899a4a929448416f1e6bf
       tests:
         - "observation:tests/test_capture.py"
@@ -502,6 +507,16 @@ designs:
         history, shared/remote access, and operational retention/security
         remain incomplete or unresolved; this evidence does not establish
         broader V2 acceptance.
+        A second exact-source bounded reproduction on 2026-10-17 completed 10
+        World cycles, captured 32 ObservationPlane receipts, matched every
+        original serialized publication and provenance envelope against an
+        independent plane stream, and reopened the archive read-only in a
+        separate process. SQLite integrity was ok and the archive hash was
+        unchanged. The run and capture IDs, revisions, query matrix, and
+        limitations are recorded in the design document. The harness remains
+        an unversioned local artifact and `make run` has no archive-capture
+        option; thus independent operator reproduction and a supported capture
+        workflow are not yet demonstrated.
     editorial_notes: >
       Issue #38 architecture proposal. The bounded local archive/capture and
       read-only local reader are implemented in Observation PRs #61 and #62;

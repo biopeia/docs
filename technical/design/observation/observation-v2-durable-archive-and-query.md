@@ -215,7 +215,7 @@ This dated evidence update supersedes the earlier O1 artifact assessment above o
 | Claim | Evidence | Type and limits |
 |---|---|---|
 | In this opt-in harness, a bounded World runtime can feed the local capture path, and the resulting capture can be reopened. | Artifact `.local/observation-v2-o1-20261016T-success/`; World run `obs-v2-10110dc3-535e-487c-9d2b-173dcd0434ce`; profile `m1.scalar-sensorimotor.operator-r3` / SHA-256 `1b16404ff02b000f458f8f0718d27356681efcb5a5c7bcd9140b651c50e03bbb`; 3 committed cycles ending at tick 3 / `...:commit:3`. Capture `5e728c30-480e-43bb-897c-721c05a14dfa` is recorded as stopped; declared source interval is 0–11. | **OBSERVED, bounded.** This used an opt-in local harness, not `make run` or a documented operator command. It is not evidence of indefinite operation, source-wide publication completeness, or producer-to-Observation delivery under arbitrary failures. |
-| Persisted publications and capture coverage are explicitly recoverable. | The archive has 11 persisted receipt rows (local receipt sequences 1–11), coverage `closed_verified` only for the capture's declared source interval, no recorded received-but-not-persisted publications, source gaps, or unverifiable intervals, and SQLite integrity result `ok`. Every stored payload round-tripped exactly. | **OBSERVED for this capture only.** The receipt sequence is local archive order, not causal order; `closed_verified` is not a producer-wide or scientific-completeness claim. |
+| Persisted publications are queryable, and this capture's declared interval is marked closed and verified. | The archive has 11 persisted receipt rows (local receipt sequences 1–11), coverage `closed_verified` only for the capture's declared source interval, no recorded received-but-not-persisted publications, source gaps, or unverifiable intervals, and SQLite integrity result `ok`. Every stored payload round-tripped exactly. | **OBSERVED for this capture only.** The receipt sequence is local archive order, not causal order; `closed_verified` is not a producer-wide or scientific-completeness claim, nor a general recovery guarantee. |
 | The reader returns pages, exact metadata filters, catalog and coverage without mutating the archive. | A separate OS process reopened the SQLite file read-only. Pagination returned 4+4+3 rows. Exact owner, family, subject, revision and domain-time filters returned 4, 3, 3, 4 and 3 rows respectively; the combined filter returned 3. The archive SHA-256 remained `4bbe7cd30fd6cbe52f4827785595a4bc4fa632af34755219be1b31f1919533e2` before and after the reads. | **OBSERVED, bounded.** `run_id` and `world_tick` return `unsupported_filter`; a subject miss is not asserted as global absence. No arbitrary time-range, capture-scoped pagination, causal join, HTTP or browser-history query is established. |
 | Existing focused archive, reader and capture tests pass on the current Observation source. | On `observation@572c86f8fce66a73cc3899a4a929448416f1e6bf`, `python -m pytest -q tests/test_archive.py tests/test_archive_reader.py tests/test_capture.py` returned `42 passed`. | **TESTED on the stated source SHA.** Fault injection and interruption/reopen tests are not physical ENOSPC, hardware power-loss or durability testing. No scale or sustained-volume claim is made. |
 
@@ -303,6 +303,53 @@ This additive run repeats the bounded composition test with source-checkout iden
 | A separate process reopened the archive read-only after runtime exit and verified integrity, capture coverage, pagination, filters, exact payload digests, and non-mutation. | `evidence/read-only-reopen.json`: SQLite `integrity_check=ok`; capture catalog available with status `stopped`; coverage `closed_verified`, 32 persisted, no capture-reported received-not-persisted, known source gaps or unverifiable intervals; eight pages of four records; local receipt/source sequences 1–32; valid digests; exact family counts: 10 `embodiment.body_pose`, 10 `embodiment.render_link_pose`, 1 `embodiment.render_morphology`, 10 `environment.finite_scalar_field`, 1 `environment.render_scene`; `run_id` filter explicitly `unsupported_filter`. Archive SHA-256 was `fab54262ed4d2360c10656497547bd03a7c3e14e791459f3e807ea2b7bb61ade` both before and after. | **OBSERVED, bounded separate-process read-only test.** `closed_verified` is limited to this capture's declared interval and durable markers; it does not mean every possible producer publication exists in the file. This did not test interruption, capacity exhaustion, physical disk-full, or power-loss behavior; those have separate limited evidence above. |
 
 This exact-source refresh strengthens only the local composition and provenance-comparison evidence. It does not supply a supported operator workflow, archive-backed Frontend/browser history, historical World-cut membership, longitudinal analysis, multi-owner snapshot completeness, remote/shared access, operational retention/backup acceptance, or scientific evidence custody. Observation #38 remains open and unaccepted.
+
+### Operator reproduction and closed-archive query refresh (2026-10-17)
+
+This reproduction uses the existing low-level runtime and archive APIs. It does
+not change the operator interface: `make run` still does not offer an
+Observation archive option. The scripts and complete machine-readable outputs
+are retained in the local artifact bundle
+`.local/observation-v2-operator-reproduction-20261017T232721Z/` (not committed
+with this document). The exact commands, from the workspace root, were:
+
+```sh
+ART=.local/observation-v2-operator-reproduction-20261017T232721Z
+PYTHONPATH="$PWD/repos/world/src:$PWD/repos/organism/src:$PWD/repos/embodiment/src:$PWD/repos/environment/src:$PWD/repos/modality/src:$PWD/repos/observation/src" \
+  repos/world/.venv/bin/python "$ART/evidence/capture_runtime.py"
+repos/world/.venv/bin/python "$ART/evidence/reopen_readonly.py"
+```
+
+The first command runs a fresh runtime for at most 10 cycles and closes the
+local capture in a `finally` block; the second is a distinct Python process
+that opens the SQLite archive read-only after runtime exit. The explicit
+`PYTHONPATH` is essential: a prior attempt without it imported an installed
+Organism package from uv's cache rather than the recorded workspace source and
+failed before starting World. That failed preflight produced no runtime or
+archive and is not counted as a run.
+
+| Claim | Evidence | Type and limits |
+|---|---|---|
+| The six intended source checkouts were imported and remained at the recorded identities during the run. | Local `evidence/runtime-capture.json`: World `8266b8968b4dd52231723564d833077675a316d2`, Organism `779c097d21236cba0409f5fc52fbcd71bf2049d9`, Embodiment `8f9576a8cf5bc7213940c593033a1f0f4d0584d4`, Environment `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1`, Modality `9b72e16f6bfea4b24191015177364d560f7f6715`, Observation `572c86f8fce66a73cc3899a4a929448416f1e6bf`; MuJoCo `3.15.0`. The script checks module paths and before/after source snapshots. | **OBSERVED provenance for this local run.** The Organism and Observation worktrees had pre-existing untracked nested `.worktrees/` paths; no tracked source changes were made by this exercise. This is not release provenance. |
+| The bounded runtime and opt-in capture completed and were independently reopened. | Run ID `m2-prov-2493c8ee-8a5b-437a-8ade-a2828f6dd1bf`; profile `m1.scalar-sensorimotor.operator-r3`, SHA-256 `1b16404ff02b000f458f8f0718d27356681efcb5a5c7bcd9140b651c50e03bbb`; World completed 10 cycles through causal tick 10 / `...:commit:10`. Capture `77b4e522-58c8-4e05-a036-d60188129591` recorded 32 local receipts and closed `closed_verified` for its declared local interval. The persisted file is `archive-dir/observations.sqlite`. | **OBSERVED, bounded custom harness.** The run identifier is supplied by the harness; it is not an Observation-supported run identity/filter. `closed_verified` concerns the capture's declared interval only, not every possible producer publication or causal completeness. |
+| Every capture receipt matched a separately retained ObservationPlane stream at the capture boundary. | The independent pre-capture-watermark stream contained 32 publications; all 32 serialized publication-plus-provenance payloads matched byte-for-byte against the persisted originals by source sequence. | **OBSERVED at the ObservationPlane boundary only.** Not a producer-side completeness audit, global sequence guarantee, or causal join. Local receipt/plane sequence is not World causal order. |
+| Read-only queries recovered the records and coverage without mutation. | Separate-process `evidence/read-only-reopen.json`: SQLite `integrity_check=ok`; 8 pages × 4 records; local receipt and source sequences 1–32; exact family counts: `embodiment.body_pose` 10, `embodiment.render_link_pose` 10, `embodiment.render_morphology` 1, `environment.finite_scalar_field` 10, `environment.render_scene` 1; payload digests valid; `run_id` returned `unsupported_filter`. File SHA-256 remained `b8a09e68b6178774ac0f4d65b8a17b0b1c2eb656bf15041e765b4fe37d2e8b4e` before and after. | **OBSERVED, bounded local archive.** Exact family filters are supported; a run-ID filter is not. No World-cut membership query, UI/browser history, shared access, remote API, or causal join was tested. |
+
+This run provides a reproducible command sequence only where the operator has
+the listed source checkouts and an existing World runtime environment. Because
+the capture scripts and archive bundle are unversioned local artifacts, it is
+not yet a self-contained reproduction package for an independent checkout.
+The missing supported `make run` capture option and portable distribution of
+the harness remain operator-readiness gaps; resolving them would require
+separately scoped implementation, not an undocumented change to World or
+Workspace. The failure of the first attempt demonstrates source-resolution
+sensitivity, not a defect in the persisted archive.
+
+The local acceptance boundary is therefore limited to: (1) a bounded custom
+runtime/capture composition, (2) byte-exact capture at the ObservationPlane
+boundary for this run, and (3) a separate-process read-only query of its closed
+archive. It does not establish the complete Observation V2 criteria, and
+Observation #38 remains open.
 
 ## References
 
