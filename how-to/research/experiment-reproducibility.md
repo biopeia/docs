@@ -29,7 +29,8 @@ it does not open it.
 | Decision | Competent authority | Source |
 |---|---|---|
 | A scientific question, protocol or claim | Lab, as scientific apparatus; approval stays with the designated scientific authority | [ADR-0102](../../technical/adr/ADR-0102-lab.md); `review-policy.md`, "Authority-class overrides" |
-| Durable evidence custody and admission | Lab / scientific apparatus. Observation emits facts and is not evidence | [ADR-0100](../../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md) |
+| Durable evidence custody | Lab / scientific apparatus: "Observation can emit facts; Lab/scientific apparatus records durable evidence" | [ADR-0100](../../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md) |
+| Acceptance of evidence or claims | "Lab/evidence-owner acceptance of evidence or claims" | `agent-work-contract-v1.md`, SCIENTIFIC |
 | Mechanisms under test (cognition, causality, body, environment) | Each owning domain | ADR-0102; lab#466 "Proposed design" |
 | Whether a candidate hypothesis becomes an approved research question | The owner | [docs#235](https://github.com/biopeia/docs/issues/235); [research hypotheses](../../explanation/biopeia/research-hypotheses.md) |
 
@@ -52,18 +53,17 @@ direction ratified for investigation").
 State the question in observable terms. A candidate hypothesis from
 [the research hypotheses](../../explanation/biopeia/research-hypotheses.md)
 stays a candidate. Its owner disposition (docs#235) selects research
-questions, not results. New Lab protocols name their operational hypotheses
-`LAB-<PROTOCOL>-H<n>` (docs#235).
+questions, not results. For the operational hypotheses of new Lab protocols,
+the owner prefers `LAB-<PROTOCOL>-H<n>` (docs#235).
 
 ### 2. Write each hypothesis with its null
 
-Every hypothesis needs a stated null, or an outcome that would count against
-it. Write the outcome so that a run can come out negative. Required by
-agent-work-contract-v1 ("explicit scientific question/hypothesis") and by lab#466
-("explicit null hypotheses and controls").
+The SCIENTIFIC work contract requires an "explicit scientific
+question/hypothesis where applicable" (agent-work-contract-v1). For H0, lab#466
+asks for "explicit null hypotheses and controls" as a deliverable, and lab#467
+asks for "separate falsifiable hypotheses" for H1 and H2.
 
-The measure is set by existing decisions, not by what changed inside
-Organism:
+Existing decisions point to measures of behaviour, not of internal change:
 
 - lab#465 gate 1 asks for "executed, nontrivial learning relative to naive
   baselines";
@@ -72,7 +72,8 @@ Organism:
 - for DOC-H2, "used again" means context-conditional issuance followed by the
   observed effect, compared with matched controls, "not raw issue count".
 
-A weight change or the appearance of a primitive is therefore not, by itself,
+docs#235 states that these dispositions select research questions; they are
+not result thresholds. A weight change or the appearance of a primitive is therefore not, by itself,
 a measure of learning. For how strongly evidence supports a statement, use the
 vocabulary in [evidence status](../../reference/evidence-status.md).
 
@@ -80,10 +81,17 @@ vocabulary in [evidence status](../../reference/evidence-status.md).
 
 | For | Controls and baselines named | Source |
 |---|---|---|
-| H0, development from birth | passive/yoked and randomized-action controls; plasticity-disabled control; birth structures A empty, B small, C larger; persistence, zero and random baselines; holdout sequences; causal ablation; equivalent exposure "as feasible" | lab#466, "Proposed design" |
+| H0, development from birth | passive/yoked and randomized-action controls; plasticity-disabled control (but see below); birth structures A empty, B small, C larger "only where valid"; persistence, zero and random baselines; holdout sequences; causal ablation; equivalent exposure "as feasible" | lab#466, "Proposed design" |
 | H1–H2, adaptation and transfer | matched seeds for changed and unchanged trajectories; frozen-plasticity, reset-organism and no-action controls "where scientifically meaningful"; held-out configurations | lab#467, "Design principles" |
 
 No success signal may enter Organism (lab#466).
+
+A validated plasticity-off control does not exist yet, according to the source check below. Organism's per-edge
+`frozen` flag stops the weight update but not the eligibility trace, and there
+is no global learning-disabled condition. The source says the arm should be narrowed to what the
+interface does, or left infeasible until the Organism owner reviews it.
+The source checked Organism `cedce522696f7d5a0ba458018eebd61a18972a4c`
+([lab#466 comment 6215196647](https://github.com/biopeia/lab/issues/466#issuecomment-6215196647)).
 
 ### 4. Fix the seeds, and check their pairing and disjointness
 
@@ -91,7 +99,7 @@ Lab provides seed checks and paired summaries. They are covered by
 `tests/unit/test_pairing.py` and `tests/unit/test_statistics.py` at the
 revision above.
 
-**Executable example** (run against `lab@08f95d1`; outputs shown as observed):
+**Executable example** (run against `lab@08f95d1`; the comments show the observed outputs):
 
 ```python
 from lab.studies.common.pairing import assert_disjoint_seeds, assert_paired_seeds, assert_unique_seeds
@@ -106,9 +114,10 @@ assert_disjoint_seeds(treatment_seeds, holdout_seeds, "design", "holdout")
 
 treatment = [0.42, 0.40, None]            # None: a run that produced no value
 baseline = [0.40, 0.41, 0.39]
-paired_deltas(treatment, baseline)        # [0.02, -0.01]: pairs with a missing value are dropped
-mean_delta(treatment, baseline)           # 0.005
-aggregate_metric(treatment)               # {'mean': 0.41, 'median': 0.41, 'std': 0.0141..., 'count': 2}
+paired_deltas(treatment, baseline)        # [0.019999999999999962, -0.009999999999999953]
+mean_delta(treatment, baseline)           # 0.0050000000000000044
+aggregate_metric(treatment)               # {'mean': 0.41000000000000003, 'median': 0.41000000000000003,
+                                          #  'std': 0.014142135623730923, 'count': 2}
 ```
 
 `assert_paired_seeds([1, 2], [2, 1])` raises `ValueError: Seed pairing
@@ -133,19 +142,20 @@ uncertainty estimates".
 
 ### 6. Freeze the protocol, have it reviewed, and obtain run authorization
 
-Publish the protocol at an exact Git revision with its file hash **before** any
-data are collected, then have it reviewed by someone other than its author.
-lab#466 readiness gate 4 requires that independent scientific review accepts the
+The sources require preregistration (step 5) and an independent review of the
+protocol before execution. They do not say what form the frozen record takes
+(see [Undecided](#undecided-for-the-competent-owner), item 2). lab#466
+readiness gate 4 requires that independent scientific review accepts the
 protocol, budgets, controls, safeguards and stopping conditions. lab#467 gate 4
 adds a "subsequent explicit run authorization". A passing test, benchmark or
 run "does not by itself authorize a scientific claim"
 (agent-work-contract-v1).
 
-Under BAW-004 (`review-policy.md`), a reviewer is independent when they did not
-author the candidate. For Lab documentary dispositions, the owner has accepted a
-revision-pinned review recorded in a comment. A review of an earlier candidate
-"cannot silently approve later edits"
-([lab#141](https://github.com/biopeia/lab/issues/141#issuecomment-6231876478)).
+Under BAW-004 (`review-policy.md`, "Independence and reviewer inputs"), "a
+reviewer is independent when they did not author the candidate under review and
+can inspect primary evidence without being required to accept the executor's
+interpretation". The reviewer is given, as applicable, the exact base and
+candidate revisions. "The executor's summary is context, not evidence".
 
 ### 7. Record an execution manifest while running
 
@@ -158,9 +168,7 @@ binding list:
 
 - the clean-tree state of each repository;
 - the environment lock;
-- the exact command;
-- the output paths;
-- a configuration digest.
+- output paths that are not absolute, machine-specific paths.
 
 **Executable example** (`lab@08f95d1`, covered by `tests/unit/test_digests.py`):
 
@@ -176,13 +184,17 @@ authorization: `describe_intent` returns `'status': 'unapproved_intent'` and
 dispatches nothing (`tests/unit/test_experiment_intent.py`,
 `test_intent_does_not_authorize_execution`).
 
-### 8. Record every deviation; never edit the frozen protocol
+### 8. Record deviations next to the frozen protocol
 
 If execution departs from the frozen text (a parameter, a phase, a stopping
 point, a script edited after a failure), record the deviation next to the
 protocol. Report the results as outcomes of the variant actually run.
-Correcting the protocol afterwards to match the results would make it
-evidence of nothing. The preservation principle is
+This is how Campaign V1 was handled. The owner asked for its frozen protocol
+to be preserved "even if a later revision is proposed"
+([lab#465 comment 6231879768](https://github.com/biopeia/lab/issues/465#issuecomment-6231879768)).
+Its deviations are kept in a separate document (lab#563). The general
+principle, that provenance "may require preservation" with item-level scope
+open, is
 [ADR-0076](../../technical/adr/ADR-0076-preserving-scientific-meaning-without-backward-compatibility.md).
 
 ### 9. Report negative and inconclusive results, limitations and alternative explanations
@@ -194,23 +206,24 @@ results are valid".
 ### 10. Ask for acceptance from the competent authority
 
 Evidence and claims are accepted by Lab as evidence owner, after independent
-scientific review where required (agent-work-contract-v1). CI, a green test or
-an Observation capture is not acceptance (ADR-0100). Keep the program issue
-open until its own gates are met.
+scientific review where required (agent-work-contract-v1). A passing test,
+benchmark or run "does not by itself authorize a scientific claim"
+(agent-work-contract-v1). An Observation capture is not durable evidence
+(ADR-0100).
 
 ## Historical example: what Campaign V1 shows
 
 The Campaign V1 pilot (2026-10-16) is a **record kept with care, not a learning
 result**. Its custody record is in Lab under
-`docs/campaigns/longitudinal-learning-v1/` (lab#561, lab#563). Read against
+`docs/campaigns/longitudinal-learning-v1/` (lab#563; the frozen protocol is from lab#561). Read against
 the steps above:
 
 | Step | What happened |
 |---|---|
 | 5–6 | The protocol was written about four minutes before the runs, in the same session, and reviewed afterwards. It is classified as an exploratory pilot, not preregistered |
 | 4, 9 | One deterministic run per cell; no seeds; no estimand |
-| 7 | No clean-tree check or environment lock was recorded; the scripts used absolute paths |
-| 8 | Execution deviated from the frozen text. The deviations are recorded in `deviations.md` without editing the protocol. This is step 8 done correctly |
+| 7 | The commands were recorded, but no clean-tree check or environment lock; the scripts and outputs used absolute paths |
+| 8 | Execution deviated from the frozen text. The deviations are recorded in `deviations.md` without editing the protocol (corrections by Claude). The review on lab#563 (5557430740) was "favorable with explicit reservations", for documentary custody only and not scientific admission. It covered candidate `059c93cc`, and `README.md` changed after it. It was posted from the same GitHub account |
 | 2 | The pilot shows a weight change under an experimenter-scheduled update and the formation of one primitive. It shows **no** functional change (none was measured) and no adaptive learning |
 
 lab#465 stays open; review observations B3 and B4 still block scientific
@@ -230,3 +243,12 @@ scientific owner, not something this guide fixes:
    authorization; its form and its recording place are not specified.
 4. **Long-term evidence store.** Lab is the custodian (ADR-0100). Campaign V1
    was kept in the Lab repository as a precedent, not as a ratified store.
+5. **Open points of the H0 protocol.** These are recorded on lab#466
+   ([comment 6227396812](https://github.com/biopeia/lab/issues/466#issuecomment-6227396812)):
+   - the primary estimand and replication unit;
+   - active–yoked pairing and the handling of unmatched exposure;
+   - the operational bootstrap endpoint;
+   - the replication or power rationale;
+   - a validated plasticity-off control.
+
+   Run authorization (item 3) applies to H0 as well as H1–H2.
