@@ -808,7 +808,8 @@ units:
   concept.biopeia-research-hypotheses:
     kind: concept
     title: Candidate research hypotheses
-    # UNRESOLVED: candidates drafted for the owner; none confirmed, nothing decided.
+    # UNRESOLVED: no candidate is established as a result. Owner disposition of 2026-10-17
+    # (docs#235) selected DOC-H1..H5 as candidate research questions and split H3/H4.
     status: UNRESOLVED
     owner_domain: lab
     participating_domains:

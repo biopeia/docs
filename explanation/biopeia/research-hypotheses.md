@@ -4,10 +4,37 @@
 Biopeia are born from the owner's curiosity, in conversation, and an agent
 writes them down; a hypothesis stays a candidate until the owner has
 confirmed it (decision recorded on
-[docs#99](https://github.com/biopeia/docs/issues/99), 2026-10-10). None has
-been confirmed yet. This is a first draft to be argued with, assembled from
-the project's public statement of purpose and from what the unit documents
-say exists.
+[docs#99](https://github.com/biopeia/docs/issues/99), 2026-10-10). This
+document was first assembled from the project's public statement of purpose
+and from what the unit documents say exists.
+
+**Owner disposition, 2026-10-17**
+([docs#235](https://github.com/biopeia/docs/issues/235#issuecomment-6231865109)). The owner
+decided on the formulations in the
+[decision brief](../../research/hypotheses-decision-brief-v1.md):
+
+| Identifier | Decision |
+|---|---|
+| DOC-H1 | Approved as a candidate hypothesis |
+| DOC-H2 | Approved as a candidate hypothesis |
+| DOC-H3 | Split: the absence of an external objective is an architectural principle; the influence of interoceptive state on action and viability is a gated candidate hypothesis |
+| DOC-H4 | Split: identity is a definition and exact restore an engineering invariant; recovery of competence after re-embodiment is a gated candidate hypothesis |
+| DOC-H5 | Approved as a future candidate hypothesis, not runnable |
+
+These decisions select research questions and classify them. They are not
+scientific validation, protocol admission, implementation approval or result
+thresholds, and they give no permission to inject goals or rewards into an
+Organism. Lab specifies and independently reviews any executable protocol;
+the owning domains approve mechanisms.
+
+**Identifiers.** DOC-H1 … DOC-H5 are stable documentary identifiers for
+research questions. Lab owns the operational hypotheses of its protocols, for
+which the owner prefers `LAB-<PROTOCOL>-H<n>` in new protocols. The H0, H1
+and H2 labels of Lab's scientific program
+([lab#465](https://github.com/biopeia/lab/issues/465),
+[lab#466](https://github.com/biopeia/lab/issues/466),
+[lab#467](https://github.com/biopeia/lab/issues/467)) are a separate series
+and are not renamed.
 
 This synthesis was refreshed after the cognition/continuity review at
 `organism@ba0011797a6a3b4d48c7731651e50560c4043f18` and the cross-domain
@@ -46,12 +73,20 @@ Organism does, and what it was given.
 
 ## The candidates
 
-### H1. A relation between commands and consequences can be acquired from experience alone
+### DOC-H1. A relation between commands and consequences can be acquired from experience alone
 
 **Candidate statement.** An Organism that starts with no information about
 what its channels do comes, after acting, to hold a record of which commands
 were followed by which changes in its signals, and that record is accurate
 for the body it has.
+
+**Owner disposition (2026-10-17).** Approved as a candidate hypothesis.
+The primary measure is held-out prediction of the signal change that follows
+a command. A body-specific table of true effects may serve only as an
+independent external comparator, never as input to the Organism. The absence
+of innate channel semantics is a separate architectural principle, checked by
+audit. Execution waits on an authorized production association of action,
+observation and evidence.
 
 **What would count as evidence (candidate).** For a body whose channels have
 known effects, the Organism's record matches those effects more closely
@@ -88,11 +123,17 @@ action selection nor the evidence structures to sensing. The packaged birth
 graph is empty and the reviewed source supplies no first sense node. Those
 bounded paths are not the acquisition process proposed in H1.
 
-### H2. Repeated action with consequences gives rise to reusable behaviour
+### DOC-H2. Repeated action with consequences gives rise to reusable behaviour
 
 **Candidate statement.** Short patterns of activation that recur and are
 followed by a similar change come to be kept, and are later used again in
 circumstances where they apply.
+
+**Owner disposition (2026-10-17).** Approved as a candidate hypothesis.
+"Used again" means issued conditionally on context and followed by the
+observed effect, compared with matched lesioned, yoked or shuffled controls;
+a raw count of issues does not count. Execution waits on an authorized route
+by which competence influences action.
 
 **What would count as evidence (candidate).** Patterns are retained that
 were not present at birth; a retained pattern is issued again, later, more
@@ -126,14 +167,16 @@ acquired competence, binding and affordance, and a runtime joining that path
 to sensing and action. The coordinator is not evidence that a retained
 pattern is acquired or reused by an Organism.
 
-### H3. Behaviour can be organised by internal regulation, without one reward imposed from outside
+### DOC-H3. Behaviour can be organised by internal regulation, without one reward imposed from outside
 
-**Status of this one is itself open.** The public statement lists "internal
-regulation without a global reward" among its research *principles*: a
-constraint on how the system is built. Whether it is also a claim to be
-tested, that such an Organism does come to behave in an organised way, or
-only a rule the design obeys, has not been decided. It is written here as a
-candidate so that the question is not lost.
+**Owner disposition (2026-10-17): split.** "No externally assigned
+objective" is a constitutional and architectural principle, not an empirical
+hypothesis; the public statement lists "internal regulation without a global
+reward" among its research *principles*. The separate claim, that
+interoceptive state influences action and viability, is approved as a
+candidate hypothesis gated on a ratified physiological interoceptive path.
+Joint position and velocity feedback is proprioception and does not meet that
+prerequisite.
 
 **Candidate statement.** With no single externally assigned objective, what
 an Organism does comes to depend on the state of its body, in a way that
@@ -165,11 +208,19 @@ viability without an externally imposed reward. Somatic dynamics are tracked
 by [embodiment#20](https://github.com/biopeia/embodiment/issues/20); the issue
 and somatic-state unit, not this candidate, carry their implementation status.
 
-### H4. What was acquired survives a restart and a change of body, and the individual stays the same
+### DOC-H4. What was acquired survives a restart and a change of body, and the individual stays the same
 
 **Candidate statement.** After a checkpoint and a restore, an Organism
 behaves as its uninterrupted self would have. After re-embodiment it is the
 same individual, keeps what it acquired, and recovers the use of it.
+
+**Owner disposition (2026-10-17): split.** Being the same individual is a
+contract and a definition; equivalence after a deterministic cold restore is
+an engineering invariant, checked by tests. Only the preservation or recovery
+of functional competence after re-embodiment is approved, as a gated
+candidate hypothesis. It is to be judged by an observable competence
+criterion declared in advance, against a naive-body control. No tolerance or
+savings margin is set now.
 
 **What would count as evidence (candidate).** A restored Organism and its
 uninterrupted twin, given the same inputs, diverge by no more than a stated
@@ -199,15 +250,20 @@ object, not across processes or copied stores.
 **What stands in the way.** Complete state/dependency closure, durable
 continuation authority, and revalidation or rebinding of body-specific state.
 Changing a reference does not itself make retained competence executable on
-the new body. The owner still has to approve the behavioural comparison;
-exact graph round trips already have a stricter local test and should not be
+the new body. The competence criterion and the naive-body comparison still have
+to be declared in a reviewed Lab protocol; exact graph round trips already have a stricter local test and should not be
 described as an unresolved rounding problem.
 
-### H5. What is inherited makes an observable difference, distinct from what is acquired
+### DOC-H5. What is inherited makes an observable difference, distinct from what is acquired
 
 **Candidate statement.** Two Organisms with different genomes, given the
 same experience, come to differ in what they do; and that difference can be
 told apart from differences produced by different experience.
+
+**Owner disposition (2026-10-17).** Approved as a future candidate
+hypothesis, not runnable. With no behavioural consumer of a gene value
+today, a negative result now would follow by construction. No such consumer
+is to be added only to make a study pass.
 
 **What would count as evidence (candidate).** With experience held equal,
 behaviour varies with the genome beyond what repeated runs of one genome
@@ -262,8 +318,9 @@ the vocabulary of
 
 - Which of these, if any, is the question that started the project, and
   which is missing.
-- Whether H3 is a hypothesis to be tested or a principle of design.
-- For H4, the behavioural comparison and tolerance, distinct from the exact
-  graph-payload round-trip contract already tested.
 - Whether the evaluation criteria above, all of them candidates, are the
   right kind: each compares with a baseline and each can come out negative.
+
+The owner decided on 2026-10-17 ([docs#235](https://github.com/biopeia/docs/issues/235#issuecomment-6231865109)) whether DOC-H3 is a
+hypothesis or a principle (it is split), and that no tolerance is set for
+DOC-H4 now.

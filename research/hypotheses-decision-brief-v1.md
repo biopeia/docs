@@ -4,8 +4,18 @@
 of [What Biopeia sets out to find out](../explanation/biopeia/research-hypotheses.md)
 verbatim. It then separates what in each is an architectural principle, a
 definition or contract, or a falsifiable hypothesis, and proposes a falsifiable
-formulation. **Nothing here is accepted.** All five remain candidates
-(docs#99). Owner direction of 2026-10-17: do not promote them automatically,
+formulation.
+
+> **Decided, 2026-10-17.** The owner ruled on these formulations
+> ([docs#235](https://github.com/biopeia/docs/issues/235#issuecomment-6231865109)): DOC-H1 and DOC-H2 approved as candidate hypotheses;
+> DOC-H3 and DOC-H4 split as proposed below, with their hypothesis parts
+> approved as gated candidates; DOC-H5 approved as a future candidate, not
+> runnable. The identifiers DOC-H1 … DOC-H5 are kept. The canonical record
+> is [What Biopeia sets out to find out](../explanation/biopeia/research-hypotheses.md).
+> No protocol, threshold or result was approved. The entries below are kept
+> as the text that was decided on.
+
+All five were candidates (docs#99) when this brief was written. Owner direction of 2026-10-17: do not promote them automatically,
 and do not fix results or tolerances before observable mechanisms and
 protocols exist. Lab owns any protocol; Organism owns the mechanisms named.
 
