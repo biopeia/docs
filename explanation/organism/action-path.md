@@ -468,11 +468,35 @@ with external content-addressed history segments:
   explicit external dependency (`declared_dependency(locator=..., sha256=head_sha256)`).
   Restoring loads the historical segment chain backward to genesis via a caller-supplied resolver
   and verifies each link and count before restoring the domain
-  (`test_exploration_v5_round_trips_exact_domain_state`, `test_load_history_rejects_broken_chain`).
+  (`test_missing_dependency_is_refused`, `test_corrupted_dependency_is_refused`,
+  `test_foreign_or_miscounted_history_is_refused`,
+  `test_cold_restore_runs_canonical_validation_on_reconstructed_history`; citations
+  corrected on 2026-10-17 against `organism` `c26d0072ba9312a2ce7e7b47d3580e5be71fa48f`, finding F-0176).
 - **Production integration:** In World's causal cycle (`world:src/world/causal_cycle.py`),
   `OrganismExplorationComposer` coordinates step persistence, linking history segments into
   World's content-addressed dependency storage before committing the causal cut
   (`world:tests/integration/test_end_to_end_causal_cycle_acceptance.py`).
+
+## Somatic feedback staged before commit
+
+> Section added on 2026-10-17 against `organism` `c26d0072ba9312a2ce7e7b47d3580e5be71fa48f` (organism#188/#189).
+> Sources examined: `src/organism/actuation/bounded_action.py` and
+> `tests/source_unit/actuation/test_composer_somatic_feedback.py`. The rest of
+> this document keeps the review revision stated at its top.
+
+`OrganismExplorationComposer.stage_somatic_feedback_for_candidate` lets World
+hand the composer a post-physics observation, as a mapping from names to
+numbers, before the owner checkpoints are persisted. The composer feeds it
+to its competence engine (`engine.observe`) on the staged candidate, so the
+candidate checkpoint already contains the observation. It refuses a
+candidate it did not prepare or that is no longer staged, a value that is
+not a mapping, and a second staging for the same candidate
+(`test_stage_somatic_feedback_negative_cases`). When feedback was staged,
+`adopt_after_world_commit` does not observe it a second time
+(`test_stage_somatic_feedback_for_candidate_atomic_durability`); without
+staging it still accepts the observation at adoption
+(`test_adopt_after_world_commit_with_somatic_feedback`). World's side of
+this order is described in [the causal cycle](../world/causal-cycle.md).
 
 ## What supports this description
 
