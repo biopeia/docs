@@ -140,6 +140,38 @@ compact Organism exploration checkpoint format (`schema: biopeia-organism-explor
   exact v4 Organism state on demand
   (`test_end_to_end_causal_cycle_acceptance.py`).
 
+## Opt-in learning inputs and somatic feedback
+
+> Section added on 2026-10-17 against `world`
+> `873c8a96b9c94d8f745404d5a009b3b8bf00734c`. Sources examined:
+> `src/world/causal_cycle.py` and
+> `tests/integration/test_longitudinal_atomicity_and_interruption.py`. The
+> rest of this document keeps the review revision stated at its top.
+
+Two inputs the cycle accepts, both off by default:
+
+- **Learning instructions.** `learning` (a tuple of Organism
+  `EdgeLearningInstruction`) and `experience_policy` are passed through to the
+  Organism transition unchanged. World derives neither: the caller chooses
+  which edges learn, at what rate and with what modulation (world#179). With
+  the defaults the cycle is unchanged.
+- **Somatic feedback.** With `enable_somatic_feedback`, World requires a
+  `somatic_transduction` with a callable `transduce`, and refuses the cycle
+  otherwise (`test_reject_somatic_feedback_without_transducer`,
+  `test_reject_invalid_somatic_transducer`). The transducer used in the tests
+  is Modality's `KinematicSomaticTransductionV1`, which maps joint position
+  and velocity: proprioception, not the energy or integrity of the somatic
+  state in ADR-0094. Before the owner checkpoints are persisted, the
+  transduced joint state is staged on Organism's candidate, so it is inside
+  the checkpoint that the commit references. After the commit it is passed to
+  `adopt_after_world_commit`. Because of this order, a restore after
+  interruption keeps every feedback frame
+  (`test_longitudinal_atomicity_and_interruption_zero_loss`, world#181/#182).
+
+Neither input is evidence that anything is learned. They make learning and
+proprioceptive input possible inside the committed cycle; what they produce
+is a question for a Lab protocol.
+
 ## Restoration and live continuation
 
 The cycle restores a committed cut and continues from it through
