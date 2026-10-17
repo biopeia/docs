@@ -32,7 +32,9 @@ it (`world:M1_PROCESS_CONTRACT.md`, "Candidate command").
 
 The process contract (`world:M1_PROCESS_CONTRACT.md`) separates operator
 configuration inputs, durable simulation state and downstream observability.
-Its rule is that a run either starts cleanly or fails before changing anything.
+Preflight failures leave the target unchanged. A failure after the
+`initializing` record may already have written durable state, and is reported
+as known, unknown or recovery-required (`M1_PROCESS_CONTRACT.md`).
 
 ## Preflight
 
@@ -50,30 +52,41 @@ runs a block that the code marks as read-only:
    - the working tree state, `clean` or `dirty`. A dirty tree is **recorded**,
      with a `world_worktree_sha256` digest of the diff and untracked files,
      **not refused**;
-   - each runtime dependency's VCS commit, read from its `direct_url.json` and
-     recorded as found, or as `"unavailable"`. It is not compared with a pin;
+   - each runtime dependency's VCS commit, read from its `direct_url.json`.
+     A dependency that is not installed fails preflight; an installed one
+     without VCS metadata is recorded as `"unavailable"`. The commit is not
+     compared with the pin declared in `pyproject.toml`;
    - MuJoCo, which must be exactly `3.15.0`, or preflight fails.
 3. **The state root.** The path must not exist and must not be a symlink. Its
-   parent must resolve without symlinks.
+   parent must exist and resolve without symlinks.
 
 If any of this fails, the process prints one JSONL record to **standard
 output**, with `event: "failed"` and `outcome: "preflight_failed"`, and exits
 with code `2`. The target path is left unchanged. Tests:
 `test_preflight_failure_does_not_create_or_mutate_state_root`,
 `test_existing_state_target_is_byte_for_byte_unchanged_on_preflight_failure`,
-`test_incompatible_installed_world_version_fails_preflight_without_mutation` and
-`test_invalid_organism_checkpoint_fails_preflight`, all in
-`world:tests/integration/test_m1_process.py`.
+and `test_incompatible_installed_world_version_fails_preflight_without_mutation`,
+all in `world:tests/integration/test_m1_process.py`.
 
-**Contract and code differ.** `M1_PROCESS_CONTRACT.md` asks to "fail
-preflight if required revisions cannot be verified". At `07a4db8`, an
-unverifiable dependency revision is recorded as `"unavailable"` and preflight
-continues. This document describes the code.
+Invalid command-line values are a different case: an unknown
+`--organism-checkpoint`, or `--cycles` or `--archive-max-payload-bytes` out of
+range. `argparse` rejects them before preflight, with exit code `2`, a usage
+message on standard error and no JSONL record
+(`test_invalid_organism_checkpoint_fails_preflight`).
+
+**Contract and code differ** (finding F-0177). `M1_PROCESS_CONTRACT.md` asks
+to "require exact compatibility with the installed World package and declared
+dependency pins" and to "fail preflight if required revisions cannot be
+verified". At `07a4db8`, the declared pin (`uri` in `verified_revisions`) is
+parsed but never compared, and an installed dependency without VCS metadata is
+recorded as `"unavailable"` while preflight continues. This document describes
+the code.
 
 ## The operator profile
 
-A profile is a configuration input: *"Operator profiles are configuration
-inputs, not physical ground truth or simulation results"*
+A profile is a configuration input. Its values "are explicit
+profile/configuration inputs, not measured facts and not runtime observations",
+and "the profile does not claim external/physical-world truth"
 (`M1_PROCESS_CONTRACT.md`). Its schema is
 `biopeia.world.m1.scalar-sensorimotor-profile`, version `1`, the only accepted
 version (`PROFILE_SCHEMA_VERSION = 1` in `world:src/world/m1_profile.py`).
@@ -134,8 +147,9 @@ After the `starting` and `initializing` records, `construct_fresh_runtime`
    at tick 0 with the verified genesis references.
 3. It creates an in-memory `ObservationPlane` and a
    `LocalObservationReadBridge`. The bridge's host comes from the profile's
-   `observation_bridge` section; the shipped profiles use `127.0.0.1`, with
-   allowed origin `http://127.0.0.1:4173`. The port is ephemeral, since
+   `observation_bridge` section, which the profile validator requires to be
+   exactly `127.0.0.1`. The shipped profiles use allowed origin
+   `http://127.0.0.1:4173`. The port is ephemeral, since
    `main` passes `observation_port=0`.
 
 When the bridge has started, the process prints a `ready` record carrying the
@@ -161,7 +175,7 @@ committed cut and exits non-zero
 |---|---|
 | Entry point and options | `world:pyproject.toml` (`[project.scripts]`); `world:src/world/m1_process.py::main` |
 | Process contract and its rules | `world:M1_PROCESS_CONTRACT.md` |
-| Preflight checks, provenance recording, and no residue on failure | Code: `m1_process.py::verified_revisions` and `main`. The four preflight tests named above |
+| Preflight checks, provenance recording, and no residue on failure | Code: `m1_process.py::verified_revisions` and `main`. The three preflight tests named above; `test_invalid_organism_checkpoint_fails_preflight` for argument errors |
 | Profile schema version 1 and the two shipped profiles | `world:src/world/m1_profile.py` (`PROFILE_SCHEMA`, `PROFILE_SCHEMA_VERSION`, `load_operator_profile`). Both files loaded with `load_operator_profile` at `07a4db8` |
 | Genesis blobs, store layout and bridge construction | `m1_profile.py::construct_fresh_runtime`; `owner_checkpoint_store.py::write_genesis`, `_blob_path` |
 | Observation archive option | `m1_process.py::main`; the two archive tests named above; World #190 |
