@@ -92,6 +92,6 @@ journal file during recovery.
 | Claim | Support |
 |---|---|
 | Single JSONL append-only architecture, offset locators, schema `event-journal-v3` | Code in `world:src/world/durable_runtime.py::DurableJournalSnapshotStore` (lines 235–637) |
-| Prefix signature caching and bounded delta append | Code in `DurableJournalSnapshotStore._previous_prefix_is_cached` and `write` (lines 263 and 418–530) |
+| Prefix signature caching and bounded delta append | Code in the prefix cache helpers `_file_signature`, `_previous_prefix_is_cached` and `_cache_verified_prefix` (lines 259–275), and `write` (lines 418–530) |
 | POSIX flock locking and tail discard during recovery | Code in `write` (lock at lines 511–519) and `_discard_uncommitted_tail` (lines 581–609) and tests in `world:tests/test_durable_runtime.py` |
 | Role of the journal as causal and evidentiary history | Accepted decision ADR-0107 |
