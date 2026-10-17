@@ -980,7 +980,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-finite-resource`, `component.world-durable-runtime` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0101-operator-control.md](../technical/adr/ADR-0101-operator-control.md), [technical/adr/ADR-0102-lab.md](../technical/adr/ADR-0102-lab.md) |
 | Tests | `lab:tests/integration/test_material_transfer_intervention.py`, `lab:tests/integration/test_operator_material_transfer.py` |
-| Reviewed at | lab@e7bb66c44517, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@1f35e92611ed (RECORDED) |
+| Reviewed at | lab@e7bb66c44517, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@d66ac6197c8e (RECORDED) |
 | Known findings | F-0060 recovery durability gap ([issue](https://github.com/biopeia/lab/issues/31)); F-0061 contract gap ([issue](https://github.com/biopeia/lab/issues/32)); F-0062 implementation finding ([issue](https://github.com/biopeia/lab/issues/33)); F-0063 contract gap (open); F-0065 evidence gap (resolved); F-0068 documentation inconsistency (open); F-0163 contract gap (open); F-0165 evidence gap (open) |
 
 ### Study utilities
