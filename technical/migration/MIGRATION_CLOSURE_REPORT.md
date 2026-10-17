@@ -2,7 +2,7 @@
 
 **Assessment status:** `NOT CLOSED — closure criteria remain unmet`
 
-**Assessment date:** 2026-10-17 (live-state reassessment at 09:24 UTC; see §7)
+**Assessment date:** 2026-10-17 (live-state reassessment updated at 09:33 UTC; see §7)
 **Scope:** Biopeia migration closure readiness  
 **Tracking:** [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)  
 **Evidence base:** current Biopeia `main` revisions listed below; workspace objective and handoff identified below
@@ -141,7 +141,7 @@ Before any closure attestation:
 
 This reassessment does not authorize experiments, migration of historical code, reuse of historical thresholds, scientific evidence admission, or a claim of scientific equivalence. It preserves the historical report and narrows the current blocker to verifiable closure evidence rather than stale Issue counts.
 
-**Final result as of 2026-10-17 09:24 UTC: `NOT CLOSED`.**
+**Final result as of 2026-10-17 09:33 UTC: `NOT CLOSED`.**
 
 ### 7.4 Subsequent Organism #41 review evidence — 2026-10-17 09:25 UTC
 
