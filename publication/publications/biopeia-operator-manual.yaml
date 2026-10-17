@@ -24,3 +24,7 @@ parts:
       - how-to/operator/m1-process-execution.md
       - how-to/operator/observation-v2-local-archive.md
       - how-to/operator/recover-previous-cut.md
+  - id: research-procedures
+    title: Research procedures
+    chapters:
+      - how-to/research/experiment-reproducibility.md
