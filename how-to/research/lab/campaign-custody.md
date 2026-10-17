@@ -94,14 +94,14 @@ comment 6223647599).
 A `DEFER` row keeps its reason and a condition for reopening. It is
 "preserved", "not silently classified" (`custody-reconciliation-80d372a.md`,
 line 24). A result that is negative or inconclusive is kept like any other
-result. The SCIENTIFIC work contract requires "negative/inconclusive results
+result. For reporting such results, see step 9 of [the experiment reproducibility guide](../experiment-reproducibility.md). The SCIENTIFIC work contract requires "negative/inconclusive results
 retained" (`.github-private:workflow/agent-work-contract-v1.md` at
 `361bd91e3d7359c7be70058f3d855b0e194f3d5a`).
 
 ### 6. Write deviations and rectifications next to the record; do not rewrite history
 
 When the execution departed from the frozen protocol, list the departures in a
-separate document. When a written account overstated the data, add a dated
+separate document (see also step 8 of [the experiment reproducibility guide](../experiment-reproducibility.md)). When a written account overstated the data, add a dated
 rectification that keeps the historical version intact. Campaign V1 has both,
 `deviations.md` and `dossier-rectification.md`. Its frozen protocol and its
 original dossier are kept byte for byte. The principle is
@@ -125,17 +125,21 @@ agree with each other, and does not hash file contents.
 
 ### 8. Have the record reviewed by someone who did not write it
 
-BAW-004 (`.github-private:workflow/review-policy.md`) requires at least one
+BAW-004 (`.github-private:workflow/review-policy.md` at
+`361bd91e3d7359c7be70058f3d855b0e194f3d5a`) requires at least one
 independent review before merge when a change can materially affect
 "migration disposition or scientific evidence handling". It also says that
 "the reviewer must inspect the actual candidate diff and relevant primary
-evidence". A reviewer is independent when they did not author the candidate.
+evidence". A reviewer is independent when they "did not author the candidate
+under review and can inspect primary evidence without being required to accept
+the executor's interpretation".
 
 As a precedent for one bounded historical-migration disposition, the Lab Owner
 accepted an author-distinct review recorded in a comment. The condition was
 that the exact candidate and any later changes are checked, because "a review
 on an earlier candidate cannot silently approve later edits"
 ([lab#141](https://github.com/biopeia/lab/issues/141#issuecomment-6231876478)).
+Protocol review before a run is covered in step 6 of [the experiment reproducibility guide](../experiment-reproducibility.md).
 
 ### 9. Leave admission to Lab
 
@@ -159,7 +163,8 @@ experiment, see
 
 1. **Where campaign records live.** Campaign V1 is kept in the Lab repository,
    including a 1.3 MB archive. No ratified rule sets the store, or the size
-   above which artifacts go elsewhere.
+   above which artifacts go elsewhere. This is also Undecided item 4 of
+   [the experiment reproducibility guide](../experiment-reproducibility.md).
 2. **Admission.** The sources say who admits (Lab) and that custody is not
    admission. They state no criteria or procedure for admitting a campaign's
    evidence.
