@@ -2183,3 +2183,31 @@ findings:
     status: resolved
     disposition: >
       Corrected in the documentation: the citations name the real tests, with a dated note. The unit's review basis is unchanged.
+
+  F-0177:
+    class: contract_gap
+    repository: world
+    observed_at: 07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5
+    units:
+      - component.world-m1-process-bootstrap
+    summary: >
+      M1_PROCESS_CONTRACT.md says to "fail preflight if required revisions cannot be verified", but m1_process.py::verified_revisions records an unreadable runtime-dependency VCS commit as "unavailable" and preflight continues. A dirty World tree is likewise recorded with a digest, not refused. Which of contract or code is intended is World's decision.
+    documented_in:
+      - explanation/world/m1-process-bootstrap.md
+    material: false
+    status: open
+
+  F-0178:
+    class: documentation_inconsistency
+    repository: world
+    observed_at: d66ac6197c8ea8489dc4f2689641ff0a88b6482a
+    units:
+      - component.world-m1-process-bootstrap
+    summary: >
+      m1-process-bootstrap.md, reviewed at d66ac61, described a preflight that refuses a dirty tree and checks pinned dependency revisions, a profile schema version 2, a manifest/journal/checkpoints layout and a stderr failure record. None of these held at that revision (the provenance-recording preflight dates from 7668034).
+    documented_in:
+      - explanation/world/m1-process-bootstrap.md
+    material: false
+    status: resolved
+    disposition: >
+      Rewritten against world 07a4db8 with a dated review note; the unit's basis moved to that revision.

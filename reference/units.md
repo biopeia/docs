@@ -4,7 +4,7 @@ Generated from `registry/` by `tools/render_units.py`. Do not edit: change the
 registry and render again. The registry is the only source; this page
 restates it so that the answers about one unit can be read in one place.
 
-59 units, 11 cross-domain contracts, 130 findings.
+59 units, 11 cross-domain contracts, 132 findings.
 
 ## World
 
@@ -271,7 +271,8 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-cycle`, `component.world-observation-publication` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0112-repository-settings-and-actions-baseline.md](../technical/adr/ADR-0112-repository-settings-and-actions-baseline.md) |
 | Tests | `world:tests/integration/test_m1_process.py`, `world:tests/test_m1_profile.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
+| Known findings | F-0177 contract gap (open); F-0178 documentation inconsistency (resolved) |
 
 ## Environment
 
