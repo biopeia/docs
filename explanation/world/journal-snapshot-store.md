@@ -1,8 +1,10 @@
 # The journal snapshot store
 
-Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+Reviewed against `world` at commit `07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5`
 (main on 2026-10-16); first written against `95f5064c`. Statements are marked
 by what supports them: the code, the tests, or an accepted decision.
+
+> Revision delta, 2026-10-17. The review revision moved from `d66ac61` to `07a4db8`. Between the two, World changed `src/world/durable_runtime.py` once (`5d4abca`, #186: journal initialisation may be retried), `src/world/causal_cycle.py` (#179, #180, #182) and `src/world/m1_process.py` (#190), and added tests (#185, #186, #188). The first-write change is described under "The first write"; nothing else in this document changed.
 
 ## What it is
 
@@ -27,6 +29,23 @@ directory.
 Each committed cut appends only the delta records belonging to that tick,
 formatted as single-line JSON with an explicit newline (`\n`) terminator.
 Writes are serialized using POSIX advisory file locking (`fcntl.flock`).
+
+### The first write
+
+The first write creates the file through a temporary file and a hard link.
+Since `5d4abca` (#186), what happens depends on whether the file already
+exists at initialisation:
+
+- **Exact genesis bytes.** The file is reused. This happens when a process
+  stopped after the first journal and before the tick-zero manifest.
+- **Other contents.** The store raises "World journal already exists without
+  its committed reference"
+  (`test_initial_journal_rejects_existing_bytes_that_are_not_the_exact_candidate`).
+- **Unreadable file.** The store raises "World journal exists but cannot be
+  verified for initialization".
+- **Race.** "World journal was concurrently initialized" is raised only if
+  another initialiser links the file between the existence check and the
+  link.
 
 A journal checkpoint reference carries:
 
@@ -72,7 +91,7 @@ journal file during recovery.
 
 | Claim | Support |
 |---|---|
-| Single JSONL append-only architecture, offset locators, schema `event-journal-v3` | Code in `world:src/world/durable_runtime.py:216-560` |
-| Prefix signature caching and bounded delta append | Code in `world:src/world/durable_runtime.py:250-420` |
-| POSIX flock locking and tail discard during recovery | Code in `world:src/world/durable_runtime.py:540-560` and tests in `world:tests/test_durable_runtime.py` |
+| Single JSONL append-only architecture, offset locators, schema `event-journal-v3` | Code in `world:src/world/durable_runtime.py::DurableJournalSnapshotStore` (lines 235–637) |
+| Prefix signature caching and bounded delta append | Code in `DurableJournalSnapshotStore._previous_prefix_is_cached` and `write` (lines 263 and 418–530) |
+| POSIX flock locking and tail discard during recovery | Code in `write` (lock at lines 511–519) and `_discard_uncommitted_tail` (lines 581–609) and tests in `world:tests/test_durable_runtime.py` |
 | Role of the journal as causal and evidentiary history | Accepted decision ADR-0107 |

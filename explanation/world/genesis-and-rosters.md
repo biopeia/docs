@@ -1,8 +1,10 @@
 # World genesis, rosters and participant closure
 
-Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`
+Reviewed against `world` at commit `07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5`
 (main on 2026-10-16); first written against `95f5064c`. Statements are marked
 by what supports them: the code, the tests, or neither.
+
+> Revision delta, 2026-10-17. The review revision moved from `d66ac61` to `07a4db8`. Between the two, World changed `src/world/durable_runtime.py` once (`5d4abca`, #186: journal initialisation may be retried), `src/world/causal_cycle.py` (#179, #180, #182) and `src/world/m1_process.py` (#190), and added tests (#185, #186, #188). Initialisation may now be retried after a termination between the first journal write and the tick-zero manifest (see [the durable runtime](durable-runtime.md)); the genesis checks below are unchanged.
 
 ## What this is about
 

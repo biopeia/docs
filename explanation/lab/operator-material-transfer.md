@@ -14,6 +14,11 @@ The code this component calls in other repositories is pinned in
 - `observation` `d351df3d7cd2706fdd280a8d4e17359001689dd8`
 - `world` `95bafc14ecd579b5573c4fadd1d7d3b5833b6c2f`
 
+> Revision delta, 2026-10-17. The statements about World's head were last
+> checked at `world` `d66ac61`; they now refer to `07a4db8`. The only World
+> change between the two in the files this unit traces is the retry of journal
+> initialisation (`5d4abca`, #186), which does not affect them.
+
 ## What it is
 
 Somebody outside the simulated life decides that a quantity should move from

@@ -1,9 +1,11 @@
 # The durable World runtime
 
-Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+Reviewed against `world` at commit `07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5` (main on
 2026-10-16); first written against `95f5064c`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
+
+> Revision delta, 2026-10-17. The review revision moved from `d66ac61` to `07a4db8`. Between the two, World changed `src/world/durable_runtime.py` once (`5d4abca`, #186: journal initialisation may be retried), `src/world/causal_cycle.py` (#179, #180, #182) and `src/world/m1_process.py` (#190), and added tests (#185, #186, #188). The initialisation retry and the termination tests added since are described below; nothing else in this document changed.
 
 ## What it is
 
@@ -45,6 +47,13 @@ every reference, and publishes the manifest of tick zero in a way that cannot
 overwrite an existing World. The journal of a new World is therefore not
 empty: in an ad hoc run the manifest of tick zero placed the journal boundary
 at position 0, with that one record.
+
+Since `5d4abca` (#186), initialisation can be retried after a process stops
+between writing the first journal and publishing the tick-zero manifest. The
+existing journal is reused only when its bytes are exactly the genesis bytes
+being proposed; any other existing journal is refused with `ManifestError`.
+Tests: `test_process_termination_during_first_journal_publication_allows_genesis_retry`
+and `test_initial_journal_rejects_existing_bytes_that_are_not_the_exact_candidate`.
 
 ## What happens in one tick
 
@@ -252,14 +261,29 @@ the repository's. Stated here so they are not lost:
   previous committed tick; the flush-error test also checks that the journal
   file is truncated back to its committed size.
   (This list of journal cases was updated on 2026-10-16 against `world`
-  `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`, which is now also this unit's
-  recorded basis; both tests already existed at the earlier basis `1f35e92`. The three temporary-file publication tests
+  `d66ac6197c8ea8489dc4f2689641ff0a88b6482a`, then this unit's recorded
+  basis; both tests already existed at the earlier basis `1f35e92`. The three temporary-file publication tests
   this document described earlier were removed by `9f65707`.)
   These are process terminations on the filesystem the tests ran on. The
   repository says this evidence "is not power-loss fault injection or a
   general crash-consistency proof" (`world:MIGRATION.md`), and it is not an
   exhaustive crash-point analysis, a test of a real flush error, or a
   multi-process recovery proof.
+  Between `d66ac61` and `07a4db8` (World `c5f055c`, `5d4abca`, `20653e8`) the
+  suite gained terminations at further points.
+  World #185 and #186 add terminations after the COMMITTED manifest replace
+  (`test_process_termination_after_committed_manifest_replace_keeps_new_cut`),
+  after the journal truncate
+  (`test_process_termination_after_journal_truncate_before_delta_keeps_prior_cut`)
+  and during the first journal publication. The partial-manifest test is now
+  parametrised for PREPARING, COMMITTED and RECOVERY_REQUIRED. The last case
+  stops the process while `_record_failure` is half-way through writing its
+  temporary manifest, then checks that PREPARING stays authoritative and that
+  recovery succeeds. World #188 adds
+  `tests/test_systematic_fault_injection.py`, which terminates at each
+  intercepted `replace`, `link`, `unlink` and `fsync` of the normal tick and
+  recovery paths. It also adds a TLA+ model that the `formal-tlc` CI job checks
+  with TLC. These are still process terminations, not power-loss proofs.
 - **Completeness of the roster rests on the genesis declaration.**
 - **Presence ownership is explicit and durable.** Each active presence has
   exactly one registered owner link, persisted in the manifest and changed

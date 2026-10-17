@@ -171,7 +171,7 @@ and #186 (`5d4abca26b4cd88232b9c69feae42b38760c5f6b`):
 | G1 partial COMMITTED manifest write | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `PREPARING` and `COMMITTED` | covered |
 | G2 after the COMMITTED `os.replace`, before the directory flush | `test_process_termination_after_committed_manifest_replace_keeps_new_cut` | covered |
 | G3 after the journal `truncate`, before the delta write | `test_process_termination_after_journal_truncate_before_delta_keeps_prior_cut` | covered |
-| G4 during `_record_failure` (the RECOVERY_REQUIRED write) | none; the partial-manifest test is parametrised only for `PREPARING` and `COMMITTED` | **not covered** |
+| G4 during `_record_failure` (the RECOVERY_REQUIRED write) | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `RECOVERY_REQUIRED` since `5d4abca` | covered. *Corrected 2026-10-17: this row first said "not covered"; the independent review on docs#283 found the RECOVERY_REQUIRED case.* |
 | G5 inside `recover_previous_cut` | `test_process_termination_during_owner_restoration_keeps_recovery_retryable` | **partly**: termination during owner restoration. Termination after the tail is discarded, or between the receipt and the manifest, has no dedicated test |
 | G6 owner checkpoint link and directory flush | `test_process_termination_after_owner_blob_link_is_retryable`, parametrised `after-link` and `after-directory-fsync` | covered |
 | G7 first journal write | `test_process_termination_during_first_journal_publication_allows_genesis_retry`, with `test_initial_journal_rejects_existing_bytes_that_are_not_the_exact_candidate` | covered, **with a source change** (below) |
@@ -204,7 +204,7 @@ process at each intercepted filesystem effect (`replace`, `link`, `unlink`,
 `fsync`) along the normal path of `tick()` and of `recover_previous_cut()`.
 It does not intercept `truncate` or `write`, and I did not map each G5
 sub-point to an effect index. G4 is on the failure path (`_record_failure`),
-which the harness does not trace, so **G4 is still not covered**.
+which the harness does not trace; G4 is covered instead by the `RECOVERY_REQUIRED` case of the partial-manifest test (corrected 2026-10-17).
 
 World #188 also adds a TLA+ model, `specs/WorldCommitRecovery.tla`. A `formal-tlc`
 CI job runs TLC on it with a pinned JAR digest; on the merge commit it

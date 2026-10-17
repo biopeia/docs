@@ -1,10 +1,12 @@
 # The physical causal step, as it exists today
 
-Reviewed against `world@d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+Reviewed against `world@07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5` (main on
 2026-10-16); first written against `e423a04a`. The fixtures described here
 import the other repositories at their pinned revisions, while production
 sensorimotor execution is provided by `world:src/world/causal_cycle.py` and
 `world:src/world/physical_step_publication.py`.
+
+> Revision delta, 2026-10-17. The review revision moved from `d66ac61` to `07a4db8`. Between the two, World changed `src/world/durable_runtime.py` once (`5d4abca`, #186: journal initialisation may be retried), `src/world/causal_cycle.py` (#179, #180, #182) and `src/world/m1_process.py` (#190), and added tests (#185, #186, #188). None of these changes alters what this document describes.
 
 ## What this is about
 
