@@ -195,6 +195,24 @@ reported stale. For `world-durable-runtime`, `world-causal-transition`,
 Reviewing these units and moving their bases waits for the World
 documentation work in preparation (owner disposition of 2026-10-17).
 
-The open World PR #188 proposes a systematic harness over every filesystem
-effect of tick and recovery, which would reach G4 and the rest of G5. It is
-not merged, and nothing in this section depends on it.
+> Section note, 2026-10-17, later the same day. World #188 merged as
+> `20653e845867d1e0bbc4745e354b9a6d81cdd8b8`. The text below replaces the
+> earlier line that called it open.
+
+World #188 adds `tests/test_systematic_fault_injection.py`. It terminates the
+process at each intercepted filesystem effect (`replace`, `link`, `unlink`,
+`fsync`) along the normal path of `tick()` and of `recover_previous_cut()`.
+It does not intercept `truncate` or `write`, and I did not map each G5
+sub-point to an effect index. G4 is on the failure path (`_record_failure`),
+which the harness does not trace, so **G4 is still not covered**.
+
+World #188 also adds a TLA+ model, `specs/WorldCommitRecovery.tla`. A `formal-tlc`
+CI job runs TLC on it with a pinned JAR digest; on the merge commit it
+reported "No error has been found", with 142 distinct states. Invariant `I3`
+now requires the committed journal length to equal the committed tick plus
+one on a COMMITTED manifest, which is the "no duplicated effect on resume"
+condition of the architecture review. The model checks a single owner
+identity, with `MaxTick = 2`.
+
+The pinned TLC release, `v1.8.0`, is a GitHub prerelease that upstream
+republishes. When it does, the digest check will fail closed.
