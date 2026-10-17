@@ -12,3 +12,4 @@ Task-oriented, step-by-step procedures for operators, developers, and researcher
 - [How to Capture and Read a Local Observation V2 Archive](operator/observation-v2-local-archive.md)
 - [How to Recover a World Runtime from a Failed Causal Cut (Programmatic Contract)](operator/recover-previous-cut.md)
 - [How to prepare, run and report a Biopeia experiment reproducibly](research/experiment-reproducibility.md)
+- [How to keep a Lab campaign's evidence under custody](research/lab/campaign-custody.md)
