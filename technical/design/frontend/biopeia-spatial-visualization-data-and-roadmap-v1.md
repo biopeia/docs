@@ -973,3 +973,34 @@ The browser routes `/`, `/spatial`, `/sensorimotor`, and `/timeline` were inspec
 The user's reported `EADDRINUSE` on port 4173 is consistent with that address already being occupied at the time of their command. In this run port 4173 was available. Port 4174 is not a valid workaround without changing the configured exact-origin allowlist: an attempted request on that alternate origin was rejected with HTTP 403. No process was killed, no source/configuration was changed to bypass this policy, and the reported original error was not reproduced in this environment. After the run and viewer were stopped, requests to the ended local service returned 503/connection-refused as expected; those post-stop responses are not evidence of failure during the active browser session. A browser favicon 404 and WebGL GPU-stall warnings were also observed, but they do not establish failure of the exercised data views.
 
 This browser observation narrows the evidence gap but does not close it. Still unproven are a non-empty authorized Environment scene in active M1; a contract-backed common frame and joint scene/cut; an exact-current-main, all-current-dependency browser build; the required transition-level ObsV1 pre-cut/command/adoption/post-cut trace; and a clean committed Workspace-main end-to-end lifecycle run with independent review. Therefore Frontend #22 remains open, and no implementation, contract, remote-exposure, or scientific authorization is inferred.
+
+### Exact current-main delta revalidation (2026-10-18)
+
+This focused refresh supersedes the source revisions above for current source
+status only. It is not a re-audit of every capability in the Phase 0 matrix,
+does not replace the 2026-10-17 browser observation, and does not upgrade that
+older run to current-head integration evidence. No contract or owner decision
+is changed here.
+
+| Repository and exact checked-out `main` revision | Delta since 2026-10-17 baseline | Spatial V1 consequence |
+|---|---|---|
+| Embodiment — `15347cf5522e92e49cb8b1fa4cba28235032e053` | `src/embodiment/checkpoint.py` adds owner reserve-checkpoint and adoption-binding validation; spatial renderer/projection sources remain unchanged. | Stronger checkpoint/adoption lineage does not create a general kinematics model or a jointly renderable scene. `PARTIAL`. |
+| Environment — `99dc2d0aea0ef414f706beb03827048fbf68a37b` | No `src/` delta since `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1`. | Existing owner geometry capability remains, but the active World M1 profile still constructs an empty Environment scene (`objects=()`). `PARTIAL`. |
+| World — `3c8dc140505d6fb0fad675a252d7c0f39b0e9a84` | `src/world/causal_cycle.py` and related runtime/checkpoint files persist and validate Embodiment physical/reserve/adoption-binding checkpoint references across causal cuts and restore. The merged change is World [PR #191](https://github.com/biopeia/world/pull/191) (merge commit `04c1677269f30e4b3198c2e479643942b99c529d`), dependent on Embodiment `15347cf`. | Better adoption/restore integrity; not a publication contract for a common scene, nor the UI-level pre-cut/command/adoption/post-cut/sensory trace required by ObsV1. `PARTIAL`. |
+| Observation — `246581f1f19fe888f69918b979d2880015cc1e5a` | Adds `src/observation/archive_http.py`, an opt-in loopback, read-only metadata adapter. Receipt filtering is bounded to `after`, `limit`, `owner`, `family`, and `revision`; archive payloads are not exposed by this adapter. | This is archive access, not spatial publication or cross-owner correlation. Observation #66 and #67 remain open approval/readiness gates. `PARTIAL` for spatial carriage; archive adapter status is separately gated. |
+| Frontend — `7d483059e999b044314adcded52ddc7d2b254f1d` | Adds archive-receipt routes/client handling and owner/family/revision filters (`src/archive-receipts.js`, `src/main.js`, `src/model.js`, `src/views.js`); no spatial-renderer or spatial contract delta in this change. | Archive metadata UI does not supply geometry or a common World scene. Existing separate owner projections remain separate; no causal join is inferred. `PARTIAL`. |
+| Modality — `f486260163b7f40503b42e93a7e2d4cdb7a6be01` | No `src/` delta since `9b72e16f6bfea4b24191015177364d560f7f6715`. | No spatial geometry/frame publication authority. `ABSENT` (spatial publication role). |
+| Organism — `de2acf06663e49d808434b2c55d81b5058ebf49b` | Adds/changes checkpoint, action-history, and longitudinal state code; no physical geometry or spatial rendering authority was found in the inspected delta. | Does not authorize private cognition exposure or establish a spatial owner role. `ABSENT` (physical geometry role). |
+| Lab — `08f95d1ea737065e72ee00dc01ec7f2aa349ccb0` | No relevant `src/` delta since `e7bb66c44517e279ca3180d929377682e251d796`. | No reusable current-target renderer identified; Lab remains separate evidence custody. `ABSENT` (reusable current-target renderer). |
+| Docs — `776d82af52419bb3562f33018c10f508d6c653bf` | Current design remains the proposed roadmap; the latest main change aligns the Observation presentation boundary with Frontend V2 archive receipts. | This evidence refresh does not alter `registry/designs.yaml` status (`proposed`, `not_evaluated`, `UNRESOLVED`) or grant implementation authorization. `EXISTING` (proposed design/governance record only). |
+| Workspace — `330f7e6a51f9e8d992a01214f20f809ad5c7f5c1` | The checked-out Workspace root is dirty; its local changes were not used for this source delta review. | No clean committed Workspace integration claim is made. `PARTIAL` (local integration evidence). |
+
+Live issue state was queried on 2026-10-18: Frontend #22 and #41 are open;
+Observation #66 and #67 are open; Docs #176 is closed as the proposed design
+deliverable, not as implementation or acceptance. World PR #191 is merged.
+This refresh records evidence and limitations only. It leaves unresolved the
+non-empty authorized Environment scene in active M1, contract-backed common
+frame and shared-scene/cut requirements, exact-current-main all-dependency
+real-browser transition trace, and clean committed Workspace lifecycle run.
+No new child issue or contract is justified by these deltas alone; the
+competent owners' existing gates remain in force.
