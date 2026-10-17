@@ -2,7 +2,7 @@
 
 **Assessment status:** `NOT CLOSED — closure criteria remain unmet`
 
-**Assessment date:** 2026-10-17 (live-state reassessment updated at 09:33 UTC; see §7)
+**Assessment date:** 2026-10-17 (live-state reassessment updated at 09:40 UTC; see §7)
 **Scope:** Biopeia migration closure readiness  
 **Tracking:** [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)  
 **Evidence base:** current Biopeia `main` revisions listed below; workspace objective and handoff identified below
@@ -117,23 +117,23 @@ These are revision observations only. This reassessment did not run the E2E acce
 
 | Gate | Current status | Evidence and limitation |
 |---|---|---|
-| Bounded end-to-end causal-cycle acceptance | `HISTORICAL PASS; current-head revalidation outstanding` | The accepted report and prior exact-candidate review establish the bounded run only at their recorded integrated revisions. The nine `main` revisions above differ from that integrated snapshot; this reassessment did not rerun the acceptance on current `main`. No expanded capability or scientific-efficacy claim follows. |
+| Bounded end-to-end causal-cycle acceptance | `PASS on current source heads, bounded` | The acceptance test file was rerun from World `main@5d4abca26b4cd88232b9c69feae42b38760c5f6b` with Organism, Embodiment, Environment, Modality and Observation source imports pinned to the exact `main` SHAs in §7.1. Result: 26 passed, no skips, CPython 3.14.3, MuJoCo 3.15.0. This is a targeted acceptance-file run, not the full domain suites or GitHub CI for all repositories. The bounded scenario/claim limits in the integrated report remain unchanged. |
 | Bounded portable continuation for the accepted profile | `CLOSED, bounded` | Organism #34 is closed. This does not establish universal Organism continuity. |
 | Historical Lab artifact custody reconciliation | `CLOSED, bounded` | Lab #23 is closed. Its final recorded disposition covers 477 pinned source artifacts (448 classified and 29 reasoned `DEFER` exceptions) and reports path/blob/bytes/SHA-256 identity checks for 477/477. This is custody bookkeeping only; it does not establish scientific validation, evidence admission, method equivalence, or completion of the separate protocol-disposition work. |
 | Lab protocol disposition worklist | `CLOSED, documentary` | Lab #77 is closed (2026-10-17 08:53 UTC); its latest recorded reconciliation reports all 86 linked children closed and the canonical 95-row manifest disposition register reconciled. Its bounded `DEFER` decisions remain documentary dispositions with reopening conditions, not scientific resolution, experiment authorization, or evidence admission. |
 | Lab aggregate and split-source reconciliation | `CLOSED, tracker state` | Lab #45 and #78 are closed. Docs #63 is closed. Their exact acceptance records remain authoritative; this report does not re-audit every row or infer scientific validity from closure. |
 | World and Organism follow-up trackers previously cited as migration gates | `CLOSED, tracker state` | World #32, #86 and #90; Organism #34 and #45 are closed. Closure of these Issues is not itself proof that their full original capability domains are implemented or scientifically validated. |
 | Organism #41 continuation/actuation scope | `OPEN; broad closure claim not accepted; migration-profile applicability unresolved` | Organism #41 remained open at 09:17 UTC. Its current-main reconciliation records component-level improvements but no production composition of the full declared owner state. An independent review posted at 09:25 UTC rejected a separate untracked 16-tick demonstration as evidence for longitudinal closure: it found no non-trivial learned state, no fresh-process mid-run restore, and no reproducible CI-owned test, while confirming only bounded same-process action-domain continuation. The review also identifies that several declared components are absent from the runtime. This does not establish whether those components are required by the already accepted migration profile. Therefore this report neither treats broad #41 closure as a required migration gate nor infers that every #41 gap is harmless; profile applicability must be bounded by owner-authoritative evidence. |
-| Current-main CI and repository validation | `NOT REASSESSED` | This turn queried current `main` SHAs and Issue states only. Checks on prior revisions or the prior report's CI record cannot be projected onto these heads. |
+| Current-main CI and repository validation | `NOT REASSESSED` | This reassessment ran the bounded World acceptance file against the source heads above, but did not query/execute GitHub CI or the full test/build suite for each of the nine repositories. Checks on prior revisions or the report PR's CI cannot be projected onto these heads. |
 | Independent adversarial review of this report | `REQUIRED; pending` | The prior review covered a different report candidate and snapshot. It cannot satisfy review of this exact refreshed candidate. The report remains a candidate assessment until exact-candidate review is recorded. |
 
 ### 7.3 Decision and remaining actions
 
-**Current decision: `NOT CLOSED`.** The Lab and other listed Issue trackers have materially advanced, but two closure conditions remain unproven: (1) whether the current bounded E2E acceptance remains valid on the present integrated `main` revisions, and (2) whether Organism #41's unproven owner-state composition intersects the state required by the accepted closure profile. The independent review of #41 narrows the evidence: it rejects a scratch demonstration as proof of broad longitudinal closure but confirms a bounded same-process action-domain continuation only. It does not decide applicability to the migration profile. In addition, current-head CI was not checked and this exact report candidate still requires independent adversarial review. These are evidence gaps, not scientific findings.
+**Current decision: `NOT CLOSED`.** The bounded E2E acceptance file now passes against the exact source heads in §7.1. Closure still requires deciding, with owner-authoritative evidence, whether Organism #41's unproven owner-state composition intersects the state required by the accepted migration profile. The independent review of #41 rejects a scratch demonstration as proof of broad longitudinal closure but confirms only bounded same-process action-domain continuation. In addition, current-head GitHub CI/full repository validation was not checked and this exact report candidate still requires independent adversarial review. These are remaining evidence gates, not scientific findings.
 
 Before any closure attestation:
 
-1. Re-run or otherwise validate the accepted bounded causal-cycle profile against an exact integrated set of current revisions, and record the run artifacts, configuration and limitations.
+1. The bounded acceptance rerun is recorded in §7.5. Its scope is one acceptance file; it does not substitute for full repository CI or establish capabilities excluded by the profile.
 2. Resolve the #41 applicability question against that same declared profile using owner-authoritative evidence. If required state intersects the profile, implement and test the missing composition/restore/continuation; if not, record the bounded non-applicability rationale and reopen condition without claiming universal continuity.
 3. Query and record required CI and relevant validation on the exact revisions used by the refreshed acceptance evidence; do not infer current checks from prior snapshots.
 4. Obtain mandatory independent adversarial review of the exact refreshed report candidate and record its outcome on the tracking Issue/PR. The review of Organism #41 is useful source evidence but is not a review of this report candidate.
@@ -141,10 +141,23 @@ Before any closure attestation:
 
 This reassessment does not authorize experiments, migration of historical code, reuse of historical thresholds, scientific evidence admission, or a claim of scientific equivalence. It preserves the historical report and narrows the current blocker to verifiable closure evidence rather than stale Issue counts.
 
-**Final result as of 2026-10-17 09:33 UTC: `NOT CLOSED`.**
+**Final result as of 2026-10-17 09:40 UTC: `NOT CLOSED`.**
 
 ### 7.4 Subsequent Organism #41 review evidence — 2026-10-17 09:25 UTC
 
 After the 09:24 UTC state snapshot, an independent review was recorded on [Organism #41](https://github.com/biopeia/organism/issues/41#issuecomment-6232264497). It rejects the untracked 16-tick scratch demonstration as evidence for the broad longitudinal-closure claim. The bounded result it does credit is same-process continuation of an active exploration commitment across a restore; the review found the graph had no edges or learned weights, no active competencies/primitives or outcome records, and no fresh-process mid-run restore. It also records that the demo is not pinned/reproducible in CI and that several state classes in the declared owner closure are absent from the runtime. The reviewer recommends an exact, repository-owned test with non-trivial state, fresh-process restore, and an owner decision about which components the M2 profile requires.
 
-This review strengthens the finding that broad Organism longitudinal continuity is not demonstrated. It does not show that the accepted migration closure profile requires M2 breadth, does not independently reassess the accepted causal-cycle run, and is not a review of this report. Consequently the migration-profile applicability and current-head E2E revalidation gates above remain open; the closure result remains `NOT CLOSED`.
+This review strengthens the finding that broad Organism longitudinal continuity is not demonstrated. It does not show that the accepted migration closure profile requires M2 breadth, does not independently reassess the accepted causal-cycle run, and is not a review of this report. The migration-profile applicability remains unresolved. The bounded current-head E2E test rerun is recorded in §7.5; it does not resolve #41's broader claim or establish current-head full-suite/CI status. The closure result remains `NOT CLOSED`.
+
+### 7.5 Bounded E2E acceptance rerun — 2026-10-17
+
+The World acceptance file `tests/integration/test_end_to_end_causal_cycle_acceptance.py` was run from a disposable worktree at World `main@5d4abca26b4cd88232b9c69feae42b38760c5f6b`. `uv sync --locked --extra integration` installed the locked third-party test environment (CPython 3.14.3, MuJoCo 3.15.0); `PYTHONPATH` then explicitly selected current source trees for Organism `c26d0072ba9312a2ce7e7b47d3580e5be71fa48f`, Embodiment `8f9576a8cf5bc7213940c593033a1f0f4d0584d4`, Environment `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1`, Modality `9b72e16f6bfea4b24191015177364d560f7f6715`, Observation `572c86f8fce66a73cc3899a4a929448416f1e6bf`, and the World worktree. Import-path inspection confirmed those six packages loaded from the stated source directories.
+
+Command, from the World worktree after the locked sync:
+
+```bash
+PYTHONPATH="<organism-main>/src:<embodiment-main>/src:<environment-main>/src:<modality-main>/src:<observation-main>/src:<world-worktree>/src" \
+  uv run --extra integration python -m pytest -q tests/integration/test_end_to_end_causal_cycle_acceptance.py
+```
+
+Result: `26 passed in 4.96s`; no tests skipped. This confirms that the existing bounded acceptance file passes with the stated current source heads and locked third-party environment. It is not a run of all World tests or every repository suite, not a GitHub Actions result on all nine heads, and not a test of learning efficacy, broader Organism longitudinal state, or scientific validity.
