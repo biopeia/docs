@@ -1,9 +1,11 @@
 # World recovery
 
-Reviewed against `world` at commit `d66ac6197c8ea8489dc4f2689641ff0a88b6482a` (main on
+Reviewed against `world` at commit `07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5` (main on
 2026-10-16); first written against `95f5064c`. Everything below describes the
 later revision. Statements are marked by what supports them: the code, the
 tests, or an accepted decision.
+
+> Revision delta, 2026-10-17. The review revision moved from `d66ac61` to `07a4db8`. Between the two, World changed `src/world/durable_runtime.py` once (`5d4abca`, #186: journal initialisation may be retried), `src/world/causal_cycle.py` (#179, #180, #182) and `src/world/m1_process.py` (#190), and added tests (#185, #186, #188). The recovery termination tests added since are listed under "Terminations during recovery"; nothing else in this document changed.
 
 ## What this is about
 
@@ -174,6 +176,27 @@ World, or only that participant, to enter recovery. In this implementation
 the question does not arise in that form: a World runtime acts as at most
 one presence, and any failure in a tick after it opened puts the whole World
 in recovery.
+
+## Terminations during recovery
+
+> Section added on 2026-10-17 against `world`
+> `07a4db8f2fe6a0dde1a01a63ab27c158e71cf3f5`. Sources examined:
+> `tests/test_durable_runtime.py` and
+> `tests/test_systematic_fault_injection.py`.
+
+Recovery is tested under process termination at two kinds of point:
+
+- **During owner restoration.**
+  `test_process_termination_during_owner_restoration_keeps_recovery_retryable`
+  kills the recovery callback and checks that the manifest is still
+  RECOVERY_REQUIRED.
+- **At each intercepted filesystem effect** (`replace`, `link`, `unlink`,
+  `fsync`) of `recover_previous_cut()`.
+  `test_systematic_n_th_effect_recovery_fault_injection` checks that before
+  recovery's commit point the manifest is still RECOVERY_REQUIRED, and that
+  running recovery again succeeds.
+
+These are process terminations, not power-loss proofs.
 
 ## What supports this description
 

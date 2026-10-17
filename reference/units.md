@@ -42,7 +42,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-journal` |
 | Governed by | [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md), [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md](../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md), [technical/adr/ADR-0086-capture-manifest-last-sequence-semantics.md](../technical/adr/ADR-0086-capture-manifest-last-sequence-semantics.md) |
 | Tests | `world:tests/test_manifest.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0006 evidence gap ([issue](https://github.com/biopeia/world/issues/33)); F-0007 recovery durability gap (accepted); F-0011 implementation finding (resolved) |
 
 ### World journal snapshot store
@@ -61,7 +61,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-journal` |
 | Governed by | [technical/adr/ADR-0107-journal-role.md](../technical/adr/ADR-0107-journal-role.md), [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md) |
 | Tests | `world:tests/test_durable_runtime.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0003 recovery durability gap ([issue](https://github.com/biopeia/world/issues/30)); F-0005 performance concern ([issue](https://github.com/biopeia/world/issues/32)); F-0010 implementation finding (open); F-0161 implementation finding (open); F-0162 recovery durability gap (open) |
 
 ### Durable World runtime
@@ -81,7 +81,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-causal-journal`, `component.world-causal-manifest`, `component.world-journal-snapshot-store` |
 | Governed by | [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md), [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md](../technical/adr/ADR-0084-single-writer-or-explicit-coordination-for-shared-persistent-state.md), [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/integration/test_durable_checkpoint_restore_slice.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0003 recovery durability gap ([issue](https://github.com/biopeia/world/issues/30)); F-0004 implementation finding ([issue](https://github.com/biopeia/world/issues/31)); F-0005 performance concern ([issue](https://github.com/biopeia/world/issues/32)); F-0006 evidence gap ([issue](https://github.com/biopeia/world/issues/33)); F-0007 recovery durability gap (accepted); F-0161 implementation finding (open); F-0162 recovery durability gap (open); F-0163 contract gap (open); F-0166 evidence gap (open); F-0169 documentation inconsistency (resolved) |
 
 ### In-memory World runtime
@@ -116,7 +116,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-durable-runtime`, `component.world-causal-manifest`, `component.world-journal-snapshot-store` |
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0106-hybrid-multi-owner-persistence.md](../technical/adr/ADR-0106-hybrid-multi-owner-persistence.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/test_manifest.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0161 implementation finding (open); F-0169 documentation inconsistency (resolved) |
 
 ### World genesis, rosters and participant closure
@@ -131,7 +131,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-durable-runtime`, `component.world-causal-manifest` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0095-surviving-semantic-authorities.md](../technical/adr/ADR-0095-surviving-semantic-authorities.md), [technical/adr/ADR-0096-world-participation-including-singleton.md](../technical/adr/ADR-0096-world-participation-including-singleton.md) |
 | Tests | `world:tests/test_durable_runtime.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0001 contract gap ([issue](https://github.com/biopeia/world/issues/28)) |
 
 ### World recovery
@@ -146,7 +146,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.world-causal-transition` |
 | Governed by | [technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md](../technical/adr/ADR-0093-material-failure-before-commit-requires-explicit-recovery.md), [technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md](../technical/adr/ADR-0092-organism-owns-the-meaning-of-its-private-longitudinal-state.md) |
 | Tests | `world:tests/test_durable_runtime.py`, `world:tests/test_manifest.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0003 recovery durability gap ([issue](https://github.com/biopeia/world/issues/30)); F-0006 evidence gap ([issue](https://github.com/biopeia/world/issues/33)); F-0011 implementation finding (resolved); F-0162 recovery durability gap (open); F-0166 evidence gap (open) |
 
 ### Physical causal step
@@ -162,7 +162,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `mechanism.world-causal-transition`, `mechanism.world-genesis-and-rosters` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md), [technical/design/runtime/biopeia-physical-step-integration-v1.md](../technical/design/runtime/biopeia-physical-step-integration-v1.md) |
 | Tests | `world:tests/unit/test_physical_step.py`, `world:tests/integration/physical_step/test_first_biopeia_physical_causal_step.py`, `world:tests/integration/physical_step/test_procedural_sphere_world_step.py`, `world:tests/integration/sensing/test_environment_to_organism_scalar_field.py` |
-| Reviewed at | world@d66ac6197c8e, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, modality@62af4aba0714, observation@572c86f8fce6 (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6, organism@637bc21a7e2a, embodiment@8f9576a8cf5b, environment@4eb1f8c3393a, modality@62af4aba0714, observation@572c86f8fce6 (RECORDED) |
 | Known findings | F-0002 implementation finding ([issue](https://github.com/biopeia/world/issues/29)); F-0013 contract gap ([issue](https://github.com/biopeia/environment/issues/37)); F-0020 contract gap ([issue](https://github.com/biopeia/embodiment/issues/25)); F-0115 contract gap ([issue](https://github.com/biopeia/embodiment/issues/32)); F-0160 implementation finding (open); F-0164 evidence gap (accepted) |
 
 ### MuJoCo step executor
@@ -252,7 +252,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.world-durable-runtime`, `mechanism.physical-causal-step` |
 | Governed by | [technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md](../technical/adr/ADR-0083-causal-cycles-have-explicit-commit-semantics.md), [technical/adr/ADR-0098-physical-substrate-and-causal-integration.md](../technical/adr/ADR-0098-physical-substrate-and-causal-integration.md) |
 | Tests | `world:tests/integration/test_end_to_end_causal_cycle_acceptance.py` |
-| Reviewed at | world@d66ac6197c8e (RECORDED) |
+| Reviewed at | world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0170 documentation inconsistency (resolved); F-0174 documentation inconsistency (resolved) |
 
 ### World M1 process bootstrap and operator profile
@@ -980,7 +980,7 @@ restates it so that the answers about one unit can be read in one place.
 | Depends on | `component.environment-finite-resource`, `component.world-durable-runtime` |
 | Governed by | [technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md](../technical/adr/ADR-0073-biopeia-migration-causal-and-physical-contracts.md), [technical/adr/ADR-0100-observation-capability-and-evidence-custody.md](../technical/adr/ADR-0100-observation-capability-and-evidence-custody.md), [technical/adr/ADR-0101-operator-control.md](../technical/adr/ADR-0101-operator-control.md), [technical/adr/ADR-0102-lab.md](../technical/adr/ADR-0102-lab.md) |
 | Tests | `lab:tests/integration/test_material_transfer_intervention.py`, `lab:tests/integration/test_operator_material_transfer.py` |
-| Reviewed at | lab@e7bb66c44517, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@d66ac6197c8e (RECORDED) |
+| Reviewed at | lab@e7bb66c44517, embodiment@5a23e1fbeaa3, environment@d09e45c40633, observation@2f4751f53678, world@07a4db8f2fe6 (RECORDED) |
 | Known findings | F-0060 recovery durability gap ([issue](https://github.com/biopeia/lab/issues/31)); F-0061 contract gap ([issue](https://github.com/biopeia/lab/issues/32)); F-0062 implementation finding ([issue](https://github.com/biopeia/lab/issues/33)); F-0063 contract gap (open); F-0065 evidence gap (resolved); F-0068 documentation inconsistency (open); F-0163 contract gap (open); F-0165 evidence gap (open) |
 
 ### Study utilities
