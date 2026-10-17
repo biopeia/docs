@@ -269,19 +269,21 @@ the repository's. Stated here so they are not lost:
   general crash-consistency proof" (`world:MIGRATION.md`), and it is not an
   exhaustive crash-point analysis, a test of a real flush error, or a
   multi-process recovery proof.
-  Since `07a4db8` the suite also terminates the process at further points.
+  Between `d66ac61` and `07a4db8` (World `c5f055c`, `5d4abca`, `20653e8`) the
+  suite gained terminations at further points.
   World #185 and #186 add terminations after the COMMITTED manifest replace
   (`test_process_termination_after_committed_manifest_replace_keeps_new_cut`),
   after the journal truncate
   (`test_process_termination_after_journal_truncate_before_delta_keeps_prior_cut`)
   and during the first journal publication. The partial-manifest test is now
-  parametrised for both PREPARING and COMMITTED. World #188 adds
+  parametrised for PREPARING, COMMITTED and RECOVERY_REQUIRED. The last case
+  stops the process while `_record_failure` is half-way through writing its
+  temporary manifest, then checks that PREPARING stays authoritative and that
+  recovery succeeds. World #188 adds
   `tests/test_systematic_fault_injection.py`, which terminates at each
   intercepted `replace`, `link`, `unlink` and `fsync` of the normal tick and
   recovery paths. It also adds a TLA+ model that the `formal-tlc` CI job checks
-  with TLC. A termination during `_record_failure`, the RECOVERY_REQUIRED
-  write, has no test. These are still process terminations, not power-loss
-  proofs.
+  with TLC. These are still process terminations, not power-loss proofs.
 - **Completeness of the roster rests on the genesis declaration.**
 - **Presence ownership is explicit and durable.** Each active presence has
   exactly one registered owner link, persisted in the manifest and changed
