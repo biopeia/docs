@@ -614,6 +614,13 @@ def test_cited_test_that_no_repository_defines_is_reported(ws: Workspace) -> Non
     ]
 
 
+def test_cited_test_in_a_historical_document_is_not_reported(ws: Workspace) -> None:
+    (ws.organism / "tests").mkdir()
+    (ws.organism / "tests" / "test_genome.py").write_text("def test_genome_exists():\n    pass\n")
+    (ws.docs / "explanation" / "organism.md").write_text("# Organism\n\nWas covered by `test_genome_removed`.\n")
+    assert vr.unknown_cited_tests(ws.docs, ws.repos, ["organism"], frozenset({"explanation/organism.md"})) == []
+
+
 def test_unaligned_review_bases_reported(ws: Workspace) -> None:
     (ws.docs / "explanation" / "concept.md").write_text(
         "# Concept\n\nReviewed against `organism` at commit `111111111111`.\n"
