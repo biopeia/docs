@@ -1,6 +1,7 @@
 # The human-facing presentation boundary
 
-Reviewed against Frontend V2 merge `f721f70f67464e5ad585d5b4926fcd95f4437d08` and Observation archive adapter merges `097ab5a99714ae021008f5e31461d7f6474fa0b2` / `246581f1f19fe888f69918b979d2880015cc1e5a` (2026-10-17).
+Reviewed against `frontend` at commit `b21748d0929e21286c179eb02ca866abb7d8a718`
+(main on 2026-10-16) and `observation` at commit `572c86f8fce66a73cc3899a4a929448416f1e6bf`.
 Statements are marked by what supports them: the code,
 the tests, or an accepted decision. A decision states intent; it is not a
 result.
@@ -33,7 +34,9 @@ defines seven peer-level screens without hierarchy (`frontend:src/model.js::ROUT
 3. **Spatial Explorer** (`/spatial`): Spatial arrangement of embodiment and
    environmental resources rendered via passive WebGL link-precision projection
    (`frontend:src/spatial-renderer.js`).
-4. **Archive Receipts** (`/archive-receipts`): Bounded local Observation
+4. **Archive Receipts** (`/archive-receipts`; section-only update, 2026-10-17,
+   verified against `frontend` `f721f70f67464e5ad585d5b4926fcd95f4437d08`
+   and `observation` `246581f1f19fe888f69918b979d2880015cc1e5a`): Bounded local Observation
    receipt history in receipt order. These records are not an ordered sequence
    of committed World cuts, and neither causal completeness nor run membership
    may be inferred from delivery or receipt order.
