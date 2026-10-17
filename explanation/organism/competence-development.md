@@ -317,6 +317,20 @@ The engine does assume that ticks advance by one. Observations whose ticks are
 not consecutive are ignored for sequence statistics, without error
 (`test_noncontiguous_temporal_window_is_ignored_without_error`).
 
+## A byte export of the competence library
+
+> Section added on 2026-10-17 against `organism` `c26d0072ba9312a2ce7e7b47d3580e5be71fa48f` (organism#180).
+> Sources examined: `src/organism/actuation/competence.py` and
+> `tests/source_unit/actuation/test_competence_checkpoint.py`. The rest of
+> this document keeps the review revision stated at its top.
+
+`CompetenceLibrary.to_bytes` writes the library's checkpoint as canonical
+JSON (sorted keys, compact separators). `CompetenceLibrary.from_bytes`
+refuses input that is not bytes, has duplicate fields or does not decode to
+a valid library (`test_competence_library_checkpoint_roundtrip`). As with
+Organism's other byte codecs, decoding does not require canonical form:
+other encodings of the same library are accepted (finding F-0175).
+
 ## What supports this description
 
 | Claim | Support |

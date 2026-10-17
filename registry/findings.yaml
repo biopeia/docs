@@ -2165,5 +2165,21 @@ findings:
       Organism's byte codecs encode canonically (sorted keys, compact separators) but none of the six decoders re-encodes and compares, so non-canonical encodings of a state are accepted. In an ad hoc run, OrganismCheckpoint.from_bytes accepted pretty-printed, key-reordered, escape-substituted and newline-suffixed forms of one checkpoint, each decoding to the same state under a different SHA-256. World names owner checkpoints by the digest of the bytes it receives. In the normal path owners hand World their own canonical bytes; the gap opens for bytes from any other source. action_history.py encodes with ensure_ascii=False and the others with ensure_ascii=True.
     documented_in:
       - explanation/organism/identity-and-checkpoint.md
+      - explanation/organism/competence-development.md
     material: false
     status: open
+
+  F-0176:
+    class: documentation_inconsistency
+    repository: organism
+    observed_at: c26d0072ba9312a2ce7e7b47d3580e5be71fa48f
+    units:
+      - mechanism.organism-action-path
+    summary: >
+      The M3 section of action-path.md cited `test_exploration_v5_round_trips_exact_domain_state` and `test_load_history_rejects_broken_chain`, which exist in no revision or branch of the Organism repository. The behaviour it describes is asserted in tests/source_unit/actuation/test_action_history_prototype.py: missing and corrupted dependencies are refused, foreign or miscounted history is refused, and cold restore runs canonical validation on the reconstructed history.
+    documented_in:
+      - explanation/organism/action-path.md
+    material: false
+    status: resolved
+    disposition: >
+      Corrected in the documentation: the citations name the real tests, with a dated note. The unit's review basis is unchanged.
