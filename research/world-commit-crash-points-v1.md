@@ -113,6 +113,25 @@ interleaving, recovery included. The model verifies the protocol, not the
 Python. The harness in §4 ties them together: each enumerated trace from the
 code must be a path in the model's transition relation.
 
+> **Architecture review, 2026-10-17.** The owner relayed a delegated
+> technical review of this section: **favourable, with conditions**. Modelling
+> commit and recovery as a transition system, checked against an interruption
+> harness, is an adequate way to investigate the protocol. The model must
+> represent the manifest status, the journal offsets, the checkpoint
+> references, and the commit and recovery transitions. Three conditions:
+>
+> 1. **Explicit invariants:** no uncommitted cut is recovered; references
+>    from different cuts are never mixed; resuming duplicates no effect.
+> 2. **Model–implementation correspondence:** each formal transition names
+>    the World operation it stands for.
+> 3. **Model limits:** process termination is kept distinct from power loss,
+>    corruption and concurrent writers.
+>
+> This section is still a proposed model, not an executable formal
+> specification. The approach is approved for World to prepare the harness
+> and the model; the protocol is **not** verified. Architectural approval
+> remains with the Biopeia owner; implementation belongs to World.
+
 ## 6. Limits
 
 The effect sites were read from source, not traced at run time. Termination
