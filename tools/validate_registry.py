@@ -660,11 +660,15 @@ def broken_links(docs_root: Path) -> list[str]:
     return problems
 
 
-def unknown_cited_tests(docs_root: Path, repos_root: Path, domains: list[str]) -> list[str]:
+def unknown_cited_tests(
+    docs_root: Path, repos_root: Path, domains: list[str], historical_docs: frozenset[str] = frozenset()
+) -> list[str]:
     """Test names an explanation cites that no test file of any repository defines.
 
     A test that was renamed or removed after a document was written shows up
     here even when the file that held it is not among the unit's paths.
+    Documents in ``historical_docs`` describe removed code, whose tests are
+    expected to be gone, and are skipped.
     """
     defined: set[str] = set()
     for repo in domains:
@@ -676,6 +680,8 @@ def unknown_cited_tests(docs_root: Path, repos_root: Path, domains: list[str]) -
     if not defined:
         return problems
     for doc in sorted((docs_root / "explanation").rglob("*.md")):
+        if doc.relative_to(docs_root).as_posix() in historical_docs:
+            continue
         for name in sorted(set(CITED_TEST_RE.findall(doc.read_text(encoding="utf-8")))):
             if name not in defined:
                 problems.append(f"{doc.relative_to(docs_root).as_posix()}: cites {name}, defined in no repository")
@@ -857,9 +863,14 @@ def main(argv: list[str] | None = None) -> int:
         for uid, via in sorted(downstream.items()):
             print(f"DOWNSTREAM {uid} (depends on {', '.join(via)})")
         print(f"Staleness: {len(stale)} stale, {len(downstream)} downstream")
-        cited = unknown_cited_tests(
-            args.docs_root, args.repos_root, list(load_registry(args.registry)["schema"]["domains"])
+        registry = load_registry(args.registry)
+        historical = frozenset(
+            doc
+            for unit in registry["coverage"].values()
+            if unit.get("status") == "HISTORICAL"
+            for doc in as_list(unit.get("canonical_docs"))
         )
+        cited = unknown_cited_tests(args.docs_root, args.repos_root, list(registry["schema"]["domains"]), historical)
         for line in cited:
             print(f"CITED {line}")
         print(f"Cited tests not found: {len(cited)}")
