@@ -36,6 +36,7 @@ Explanations that cross domains. They are derived from the unit documents and ad
 - [Repository Settings and GitHub Actions Workflow Normalization v1](../../technical/design/governance/repository-settings-and-actions-workflow-normalization-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Design-First Work and Governance Procedure v1](../../technical/design/governance/design-first-work-and-governance-procedure-v1.md): document approved, implementation not_evaluated, scope UNRESOLVED
 - [Lab–World–Observation Integration v1 — AS-IS Evidence and Proposed Boundaries](../../technical/design/observability/lab-world-observation-integration-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
+- [DOC-018 — Web Publication Evaluation v1](../../technical/design/publication/doc018-web-publication-evaluation-v1.md): document proposed, implementation not_evaluated, scope UNRESOLVED
 
 ## Decision records
 
