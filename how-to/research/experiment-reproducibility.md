@@ -86,10 +86,11 @@ vocabulary in [evidence status](../../reference/evidence-status.md).
 
 No success signal may enter Organism (lab#466).
 
-A validated plasticity-off control does not exist yet. Organism's per-edge
+A validated plasticity-off control does not exist yet, according to the source check below. Organism's per-edge
 `frozen` flag stops the weight update but not the eligibility trace, and there
-is no global learning-disabled condition. The arm must be narrowed to what the
-interface does, or left infeasible until the Organism owner reviews it
+is no global learning-disabled condition. The source says the arm should be narrowed to what the
+interface does, or left infeasible until the Organism owner reviews it.
+The source checked Organism `cedce522696f7d5a0ba458018eebd61a18972a4c`
 ([lab#466 comment 6215196647](https://github.com/biopeia/lab/issues/466#issuecomment-6215196647)).
 
 ### 4. Fix the seeds, and check their pairing and disjointness
@@ -98,7 +99,7 @@ Lab provides seed checks and paired summaries. They are covered by
 `tests/unit/test_pairing.py` and `tests/unit/test_statistics.py` at the
 revision above.
 
-**Executable example** (run against `lab@08f95d1`; the comments show the observed outputs, rounded in two places):
+**Executable example** (run against `lab@08f95d1`; the comments show the observed outputs):
 
 ```python
 from lab.studies.common.pairing import assert_disjoint_seeds, assert_paired_seeds, assert_unique_seeds
@@ -167,8 +168,7 @@ binding list:
 
 - the clean-tree state of each repository;
 - the environment lock;
-- output paths that are not absolute, machine-specific paths;
-- a configuration digest.
+- output paths that are not absolute, machine-specific paths.
 
 **Executable example** (`lab@08f95d1`, covered by `tests/unit/test_digests.py`):
 
@@ -223,7 +223,7 @@ the steps above:
 | 5–6 | The protocol was written about four minutes before the runs, in the same session, and reviewed afterwards. It is classified as an exploratory pilot, not preregistered |
 | 4, 9 | One deterministic run per cell; no seeds; no estimand |
 | 7 | The commands were recorded, but no clean-tree check or environment lock; the scripts and outputs used absolute paths |
-| 8 | Execution deviated from the frozen text. The deviations are recorded in `deviations.md` without editing the protocol (corrections by Claude, independently reviewed in lab#563, review 5557430740) |
+| 8 | Execution deviated from the frozen text. The deviations are recorded in `deviations.md` without editing the protocol (corrections by Claude). The review on lab#563 (5557430740) was "favorable with explicit reservations", for documentary custody only and not scientific admission. It covered candidate `059c93cc`, and `README.md` changed after it. It was posted from the same GitHub account |
 | 2 | The pilot shows a weight change under an experimenter-scheduled update and the formation of one primitive. It shows **no** functional change (none was measured) and no adaptive learning |
 
 lab#465 stays open; review observations B3 and B4 still block scientific
