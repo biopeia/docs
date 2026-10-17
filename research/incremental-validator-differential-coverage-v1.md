@@ -25,3 +25,21 @@ exercises.
 
 Only incremental paths named in commit messages and test names were
 searched; other caches may exist.
+
+## Current-main revalidation (2026-10-17)
+
+World `main` was rechecked at
+`873c8a96b9c94d8f745404d5a009b3b8bf00734c`; Docs `main` was at
+`60b0f49678b1e9871b337ee2514e53278b3a4536`. The current
+`DurableJournalSnapshotStore.verify_cached` still uses the instance's recorded
+file identity/metadata to reuse a cached prefix and otherwise falls back to
+full verification. The tests still include the sequential owned-prefix/new-
+store revalidation case and a backing-file tamper rejection example. No
+generated or stateful differential sequence was found that compares
+`verify_cached(ref)` with `verify(ref)` after each mutation. The previously
+recorded **test-coverage gap remains**; this is not evidence of an observed
+verifier defect.
+
+This was a source/test inventory check only; no tests were run and no code was
+changed. The differential harness remains a proposal for World, not an
+accepted implementation requirement.

@@ -119,3 +119,20 @@ The effect sites were read from source, not traced at run time. Termination
 is the only failure model considered; power loss, filesystem bugs and
 concurrent writers are out of scope (ADR-0084 covers coordination). No claim
 is made that any uncovered point fails.
+
+## 7. Current-main revalidation (2026-10-17)
+
+The source/test inventory was rechecked against World `main` at
+`873c8a96b9c94d8f745404d5a009b3b8bf00734c` (with Docs `main` at
+`60b0f49678b1e9871b337ee2514e53278b3a4536`). The seven recorded termination
+points G1–G7 remain without corresponding process-termination tests in
+`tests/test_durable_runtime.py`. That file still has five termination tests:
+PREPARING publication, partial owner-checkpoint write, partial manifest temp
+write, uncommitted journal append, and one recovery/transition path. This
+revalidation confirms the previously identified **coverage gap only**; it
+neither demonstrates a failure at G1–G7 nor establishes power-loss safety.
+
+No test suite was run for this revalidation. No source code was changed. The
+harness and formal-model proposals above remain proposals, not accepted World
+work or verified guarantees. World retains authority to select or reject the
+next engineering step.
