@@ -677,3 +677,24 @@ def test_cited_test_absent_at_the_review_basis_is_reported(ws: Workspace) -> Non
     ]
     # The current checkout defines both, so the head-based report sees nothing.
     assert vr.unknown_cited_tests(ws.docs, ws.repos, ["organism"]) == []
+
+
+def test_test_defined_at_a_revision_named_in_the_document_is_not_reported(ws: Workspace) -> None:
+    (ws.organism / "tests").mkdir()
+    (ws.organism / "tests" / "test_genome.py").write_text("def test_genome_exists():\n    pass\n")
+    git(ws.organism, "add", "-A")
+    git(ws.organism, "commit", "-q", "-m", "tests")
+    basis = git(ws.organism, "rev-parse", "HEAD")
+    (ws.organism / "tests" / "test_genome.py").write_text(
+        "def test_genome_exists():\n    pass\n\n\ndef test_genome_added_later():\n    pass\n"
+    )
+    git(ws.organism, "add", "-A")
+    git(ws.organism, "commit", "-q", "-m", "later test")
+    later = git(ws.organism, "rev-parse", "HEAD")
+    ws.data["coverage"]["component.genome"]["review"]["basis"]["organism"] = basis
+    ws.write()
+    (ws.docs / "explanation" / "organism.md").write_text(
+        "# Organism\n\n> Section updated against `organism` "
+        f"`{later}`.\n\nCovered by `test_genome_added_later`.\n"
+    )
+    assert vr.cited_tests_absent_at_basis(ws.registry, ws.docs, ws.repos) == []

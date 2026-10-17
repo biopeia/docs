@@ -706,6 +706,7 @@ def unaligned_review_bases(registry_dir: Path, docs_root: Path) -> list[str]:
     return problems
 
 
+NOTE_COMMIT_RE = re.compile(r"`([a-z][a-z-]*)`[\s>]*`([0-9a-f]{40})`")
 HEADER_COMMIT_RE = re.compile(r"`?([a-z][a-z-]*)`?(?:@|\s+at\s+(?:commit\s+)?)`?([0-9a-f]{7,40})\b")
 
 
@@ -767,12 +768,22 @@ def cited_tests_absent_at_basis(registry_dir: Path, docs_root: Path, repos_root:
         }
         if not basis:
             continue
-        known = set().union(*(tests_at(repo, sha) for repo, sha in basis.items()))
+        base_known = set().union(*(tests_at(repo, sha) for repo, sha in basis.items()))
         for canonical in as_list(unit.get("canonical_docs")):
             path = docs_root / canonical
             if not path.is_file():
                 continue
-            for name in sorted(set(CITED_TEST_RE.findall(path.read_text(encoding="utf-8")))):
+            text = path.read_text(encoding="utf-8")
+            # A dated section note names the revision that section was checked
+            # against (reference/evidence-status.md#what-a-review-basis-covers);
+            # tests defined there are not absent for that document.
+            noted = {
+                (repo, sha)
+                for repo, sha in HEADER_COMMIT_RE.findall(text) + NOTE_COMMIT_RE.findall(text)
+                if repo in basis and len(sha) == 40 and _commit_exists(repos_root / repo, sha)
+            }
+            known = base_known.union(*(tests_at(repo, sha) for repo, sha in noted))
+            for name in sorted(set(CITED_TEST_RE.findall(text))):
                 if name not in known:
                     problems.append(f"{uid}: {canonical} cites {name}, absent at its basis")
     return problems
