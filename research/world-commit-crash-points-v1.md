@@ -168,7 +168,7 @@ and #186 (`5d4abca26b4cd88232b9c69feae42b38760c5f6b`):
 
 | Point | Test now covering it | Status |
 |---|---|---|
-| G1 partial COMMITTED manifest write | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `PREPARING` and `COMMITTED` | covered |
+| G1 partial COMMITTED manifest write | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `PREPARING`, `COMMITTED` and (since `5d4abca`) `RECOVERY_REQUIRED` | covered |
 | G2 after the COMMITTED `os.replace`, before the directory flush | `test_process_termination_after_committed_manifest_replace_keeps_new_cut` | covered |
 | G3 after the journal `truncate`, before the delta write | `test_process_termination_after_journal_truncate_before_delta_keeps_prior_cut` | covered |
 | G4 during `_record_failure` (the RECOVERY_REQUIRED write) | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `RECOVERY_REQUIRED` since `5d4abca` | covered. *Corrected 2026-10-17: this row first said "not covered"; the independent review on docs#283 found the RECOVERY_REQUIRED case.* |
