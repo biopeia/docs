@@ -11,7 +11,7 @@ and from what the unit documents say exists.
 **Owner disposition, 2026-10-17**
 ([docs#235](https://github.com/biopeia/docs/issues/235#issuecomment-6231865109)). The owner
 decided on the formulations in the
-[decision brief](../../research/hypotheses-decision-brief-v1.md):
+[decision brief](https://github.com/biopeia/docs/blob/main/research/hypotheses-decision-brief-v1.md):
 
 | Identifier | Decision |
 |---|---|
