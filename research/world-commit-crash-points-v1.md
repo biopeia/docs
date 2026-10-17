@@ -155,3 +155,46 @@ No test suite was run for this revalidation. No source code was changed. The
 harness and formal-model proposals above remain proposals, not accepted World
 work or verified guarantees. World retains authority to select or reject the
 next engineering step.
+
+## 8. Coverage after World #185 and #186 (2026-10-17)
+
+> Section note, 2026-10-17. Checked against `world` `5d4abca26b4cd88232b9c69feae42b38760c5f6b`.
+> The tests below were run there with World's virtual environment:
+> `pytest tests/test_durable_runtime.py tests/test_owner_checkpoint_store.py -k "process_termination or initial_journal_rejects"`,
+> 13 passed. §7 above describes the earlier revision `873c8a9` and is kept as it was.
+
+World added process-termination tests in #185 (`c5f055cef325e919ceb9ddc8a67c22c95c4c2a78`)
+and #186 (`5d4abca26b4cd88232b9c69feae42b38760c5f6b`):
+
+| Point | Test now covering it | Status |
+|---|---|---|
+| G1 partial COMMITTED manifest write | `test_process_termination_during_partial_manifest_write_keeps_previous_cut`, parametrised `PREPARING` and `COMMITTED` | covered |
+| G2 after the COMMITTED `os.replace`, before the directory flush | `test_process_termination_after_committed_manifest_replace_keeps_new_cut` | covered |
+| G3 after the journal `truncate`, before the delta write | `test_process_termination_after_journal_truncate_before_delta_keeps_prior_cut` | covered |
+| G4 during `_record_failure` (the RECOVERY_REQUIRED write) | none; the partial-manifest test is parametrised only for `PREPARING` and `COMMITTED` | **not covered** |
+| G5 inside `recover_previous_cut` | `test_process_termination_during_owner_restoration_keeps_recovery_retryable` | **partly**: termination during owner restoration. Termination after the tail is discarded, or between the receipt and the manifest, has no dedicated test |
+| G6 owner checkpoint link and directory flush | `test_process_termination_after_owner_blob_link_is_retryable`, parametrised `after-link` and `after-directory-fsync` | covered |
+| G7 first journal write | `test_process_termination_during_first_journal_publication_allows_genesis_retry`, with `test_initial_journal_rejects_existing_bytes_that_are_not_the_exact_candidate` | covered, **with a source change** (below) |
+
+**G7 changed the code, not only the tests.** At `5d4abca`,
+`DurableJournalSnapshotStore` no longer rejects an existing journal file at
+initialisation outright. It accepts the file only when its bytes equal the
+exact genesis bytes being proposed, which is the case after a termination
+between publishing the first journal and publishing its manifest. Any other
+content still raises `ManifestError`.
+
+This change is why most World units with review basis `d66ac61` are now
+reported stale. For `world-durable-runtime`, `world-causal-transition`,
+`world-genesis-and-rosters`, `world-recovery` and `physical-causal-step`,
+`durable_runtime.py` is the only file listed. Two units list more files:
+
+- `world-journal-snapshot-store` also lists Organism `bounded_action.py`;
+- `lab-operator-material-transfer` also lists World `causal_cycle.py` and
+  Organism `competence.py`.
+
+Reviewing these units and moving their bases waits for the World
+documentation work in preparation (owner disposition of 2026-10-17).
+
+The open World PR #188 proposes a systematic harness over every filesystem
+effect of tick and recovery, which would reach G4 and the rest of G5. It is
+not merged, and nothing in this section depends on it.
