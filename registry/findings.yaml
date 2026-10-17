@@ -2154,3 +2154,16 @@ findings:
     status: resolved
     disposition: >
       Corrected in the documentation: stage 7 now names only Organism's post-commit adoption and says where Embodiment and Environment adopt. The unit's review basis is unchanged.
+
+  F-0175:
+    class: implementation_finding
+    repository: organism
+    observed_at: 779c097d21236cba0409f5fc52fbcd71bf2049d9
+    units:
+      - component.organism-identity-checkpoint
+    summary: >
+      Organism's byte codecs encode canonically (sorted keys, compact separators) but none of the six decoders re-encodes and compares, so non-canonical encodings of a state are accepted. In an ad hoc run, OrganismCheckpoint.from_bytes accepted pretty-printed, key-reordered, escape-substituted and newline-suffixed forms of one checkpoint, each decoding to the same state under a different SHA-256. World names owner checkpoints by the digest of the bytes it receives. In the normal path owners hand World their own canonical bytes; the gap opens for bytes from any other source. action_history.py encodes with ensure_ascii=False and the others with ensure_ascii=True.
+    documented_in:
+      - explanation/organism/identity-and-checkpoint.md
+    material: false
+    status: open
