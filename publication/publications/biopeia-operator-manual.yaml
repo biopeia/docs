@@ -28,3 +28,4 @@ parts:
     title: Research procedures
     chapters:
       - how-to/research/experiment-reproducibility.md
+      - how-to/research/lab/campaign-custody.md
