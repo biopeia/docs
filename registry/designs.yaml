@@ -557,3 +557,19 @@ designs:
       The design is under independent review and is not implementation or
       Observation API authorization. The solver-independent joint coordinate
       sign/zero/frame semantics remain unverified and gate any consumer mapping.
+
+  design.docs.doc018-web-publication-evaluation-v1:
+    title: "DOC-018 — Web Publication Evaluation v1"
+    path: technical/design/publication/doc018-web-publication-evaluation-v1.md
+    domain: cross-domain
+    participating_domains: [organism, embodiment, environment, world, modality, observation, lab]
+    document_status: proposed
+    implementation_status: not_evaluated
+    architecture_scope: UNRESOLVED
+    editorial_notes: >
+      The in-repository Docs source was inspected and contains generated Markdown
+      indexes, document editions, and commit references but no evidenced web
+      deployment. External deployment was not evaluated. The design remains
+      proposed; no hosting, access model, public disclosure, or implementation
+      is approved. A future deployment decision depends on migration closure
+      reconciliation and separate owner approval.
