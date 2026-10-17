@@ -56,8 +56,8 @@ per artifact. Its columns are:
 `custodian`, `known_limitations_and_rationale`, `proposed_review_class`,
 `proposal_source_map`, `proposal_review_status`.
 
-For a campaign's own record, Campaign V1 keeps the same facts in
-`provenance.md`, with a `SHA256SUMS` file per directory. Where something could
+For a campaign's own record, Campaign V1 keeps comparable facts, not the same
+columns, in `provenance.md`, with a `SHA256SUMS` file per directory. Where something could
 not be established, the record says so: no clean-tree check, no environment
 lock, no seeds. It is not filled in by inference ("Reproducibility limits",
 "Not found").
@@ -82,8 +82,9 @@ NOT_SCIENTIFICALLY_VALIDATED; NOT_ADMITTED` in `proposal_review_status`.
 
 What Lab does with a historical study's method is a separate record:
 `migration/study-disposition-register-80d372a.tsv`. Its dispositions include
-`DEFER`, `HISTORICAL_PROTOCOL` and `REIMPLEMENT_METHOD`. Each row names
-the owner basis and a reopening condition. Whether a current research question
+`DEFER`, `HISTORICAL_PROTOCOL` and `REIMPLEMENT_METHOD`. Rows record an
+owner basis. Every `DEFER` row also states a condition for reopening, as do a
+few of the others. Whether a current research question
 needs a historical method is the Lab Owner's decision, recorded per manifest
 (for example [lab#141](https://github.com/biopeia/lab/issues/141), owner
 comment 6223647599).
@@ -94,7 +95,8 @@ A `DEFER` row keeps its reason and a condition for reopening. It is
 "preserved", "not silently classified" (`custody-reconciliation-80d372a.md`,
 line 24). A result that is negative or inconclusive is kept like any other
 result. The SCIENTIFIC work contract requires "negative/inconclusive results
-retained" (`.github-private:workflow/agent-work-contract-v1.md`).
+retained" (`.github-private:workflow/agent-work-contract-v1.md` at
+`361bd91e3d7359c7be70058f3d855b0e194f3d5a`).
 
 ### 6. Write deviations and rectifications next to the record; do not rewrite history
 
@@ -110,39 +112,48 @@ original dossier are kept byte for byte. The principle is
 **Executable example** (from a Lab checkout at the revision above):
 
 ```sh
-cd docs/campaigns/longitudinal-learning-v1/artifacts
-(cd original && sha256sum -c SHA256SUMS)   # 7 files: OK
-sha256sum -c SHA256SUMS                    # run-outputs.tar.gz, run-outputs-manifest.tsv: OK
-python -m pytest -q tests/unit/test_campaign_v1_custody.py   # from the repository root: 6 passed
+# from the root of the Lab checkout
+(cd docs/campaigns/longitudinal-learning-v1/artifacts/original && sha256sum -c SHA256SUMS)  # 7 files: OK
+(cd docs/campaigns/longitudinal-learning-v1/artifacts && sha256sum -c SHA256SUMS)           # archive and manifest: OK
+python -m pytest -q tests/unit/test_campaign_v1_custody.py                                   # 6 passed
 ```
 
 The custody test fails if a single byte of a preserved file changes. Lab's
-migration records are checked the same way, by
-`tests/unit/test_study_disposition_consistency.py`.
+migration records are checked differently:
+`tests/unit/test_study_disposition_consistency.py` checks that the ledgers
+agree with each other, and does not hash file contents.
 
 ### 8. Have the record reviewed by someone who did not write it
 
-Custody and disposition records are SCIENTIFIC work. For Lab documentary
-dispositions, the owner accepted a revision-pinned, author-distinct review
-recorded in a comment. The case owner links the exact review and the
-candidate's SHA, and checks any change made after the review. "A review on an
-earlier candidate cannot silently approve later edits"
+BAW-004 (`.github-private:workflow/review-policy.md`) requires at least one
+independent review before merge when a change can materially affect
+"migration disposition or scientific evidence handling". It also says that
+"the reviewer must inspect the actual candidate diff and relevant primary
+evidence". A reviewer is independent when they did not author the candidate.
+
+As a precedent for one bounded historical-migration disposition, the Lab Owner
+accepted an author-distinct review recorded in a comment. The condition was
+that the exact candidate and any later changes are checked, because "a review
+on an earlier candidate cannot silently approve later edits"
 ([lab#141](https://github.com/biopeia/lab/issues/141#issuecomment-6231876478)).
 
 ### 9. Leave admission to Lab
 
-Custody records keep `NOT_ADMITTED` until Lab decides otherwise. Keep the
-campaign's issue open while its blocking observations stand. Campaign V1's
-issue, [lab#465](https://github.com/biopeia/lab/issues/465), stays open:
-review observations B3 and B4 still block scientific acceptance.
+Custody records keep `NOT_ADMITTED` until Lab decides otherwise. For Campaign
+V1, the program issue [lab#465](https://github.com/biopeia/lab/issues/465) is
+kept open, by owner instruction, because review observations B3 and B4 still
+block scientific acceptance.
 
 ## Example: Campaign V1
 
 `docs/campaigns/longitudinal-learning-v1/` (lab#563, merged with the frozen
 protocol from lab#561) is a custody record of an exploratory pilot. It is **not
 an accepted result and not a demonstration of learning**. Its `README.md`
-lists what may and may not be stated. It shows steps 1–3, 6 and 7 applied to a
-campaign that had none of them while it ran.
+lists what may and may not be stated. It applies steps 1, 2, 6 and 7 to a
+campaign that had none of them while it ran. It carries no custody label (step
+3), and has not been admitted (step 9). For designing and running an
+experiment, see
+[the experiment reproducibility guide](../experiment-reproducibility.md).
 
 ## Undecided (for Lab's scientific owner)
 
