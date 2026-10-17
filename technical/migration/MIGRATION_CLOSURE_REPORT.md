@@ -2,14 +2,14 @@
 
 **Assessment status:** `NOT CLOSED — closure criteria remain unmet`
 
-**Assessment date:** 2026-10-13 (GitHub snapshot at approximately 02:50 UTC)
+**Assessment date:** 2026-10-17 (live-state reassessment at 09:24 UTC; see §7)
 **Scope:** Biopeia migration closure readiness  
 **Tracking:** [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)  
 **Evidence base:** current Biopeia `main` revisions listed below; workspace objective and handoff identified below
 
 ## 1. Decision
 
-The migration must **not** be declared closed on the evidence available for this assessment.
+The migration must **not** be declared closed on the evidence available for this assessment. The detailed gate table in §3 is the 2026-10-13 historical snapshot; §7 supersedes its issue states, repository revisions and current closure decision.
 
 The bounded end-to-end causal-cycle criterion is satisfied by the independently reviewed [Migration End-to-End Acceptance Report](MIGRATION_END_TO_END_ACCEPTANCE_REPORT.md). This is substantial evidence that the migrated domains compose through a real TARGET path. It does not satisfy the separate requirement to reconcile the migration source inventory and resolve its open `DEFER`/`SPLIT` work. The current canonical trackers still show that work in progress.
 
@@ -67,7 +67,9 @@ The accepted E2E report is [Migration End-to-End Acceptance Report](MIGRATION_EN
 
 That report explicitly does **not** demonstrate learning efficacy, action conditioning on the sensed value, physiological validity, moving-root receptor projection, production-scale solver performance, network delivery, visualization completeness, universal crash/power-loss guarantees, or migration closure. These limits remain in force.
 
-## 5. Required work before a future closure decision
+## 5. Required work before a future closure decision — historical snapshot
+
+The numbered actions below were written for the 2026-10-13 snapshot. Their completion states have since changed; use the replacement gate assessment in §7 rather than treating these items as current open work.
 
 1. Complete Docs #63 against its pinned historical source and current Biopeia revisions. Reconcile the canonical inventory and all identified gaps/conflicts; do not use stale audit totals as a proxy for completion.
 2. Resolve or explicitly bound each applicable Lab #77 protocol unit. A remaining `DEFER` must have an accountable owner, exact missing evidence/dependency, linked issue, closure trigger, and a statement that it does not block migration closure.
@@ -90,3 +92,53 @@ This assessment does not claim that:
 - the migration is complete.
 
 **Final result for this assessment: `NOT CLOSED`.** The E2E gate passes, but source-disposition/reconciliation gates remain open. Do not state that the migration objective is fulfilled until those gates are resolved and a later exact-revision closure assessment passes independent adversarial review.
+
+## 7. Live-state reassessment — 2026-10-17 09:24 UTC
+
+This section supersedes the dated issue states, repository revision table, CI snapshot and closure-gate disposition above. It does not rewrite the historical evidence or expand the accepted scientific profile. Revisions were read from each repository's `main` commit via GitHub REST; Issue states were read from the owning repositories at the times below. The report file at the assessment base was Docs `main@63ddc92f402a509c45322d70573eca387b34beb2` (file blob `307a953af7b1ed3d28bc41ec1146ecca34ee8ac2`). The workspace objective digest is `c8048bb78ce148fb20529fbd38a636dfc12cb748a248ec48db58c9ef49e1f896`; the operational handoff digest is `09405fd1bdb4c965f9ed81dfda2beeecbb5b5bed9705fa639bb03a4dd89e71af`. The handoff is dated 2026-10-14 and is not treated as a current state source.
+
+### 7.1 Repository snapshot
+
+| Repository | `main` SHA observed 2026-10-17 |
+|---|---|
+| `biopeia/organism` | `c26d0072ba9312a2ce7e7b47d3580e5be71fa48f` |
+| `biopeia/embodiment` | `8f9576a8cf5bc7213940c593033a1f0f4d0584d4` |
+| `biopeia/environment` | `4eb1f8c3393a7cdbabcfaf35b8630aaf57de20c1` |
+| `biopeia/modality` | `9b72e16f6bfea4b24191015177364d560f7f6715` |
+| `biopeia/world` | `5d4abca26b4cd88232b9c69feae42b38760c5f6b` |
+| `biopeia/observation` | `572c86f8fce66a73cc3899a4a929448416f1e6bf` |
+| `biopeia/lab` | `7059e6d91b58c0f251676eb8bcf29d1b8bc7ceac` |
+| `biopeia/docs` | `63ddc92f402a509c45322d70573eca387b34beb2` |
+| `biopeia/.github-private` | `e5d626d52239b4631f88dce00ed1dedd7a3ff0bf` |
+
+These are revision observations only. This reassessment did not run the E2E acceptance, repository test suites, CI checks or registry validation at these nine exact revisions. It makes no current-head CI or runtime-validation claim.
+
+### 7.2 Current closure-gate disposition
+
+| Gate | Current status | Evidence and limitation |
+|---|---|---|
+| Bounded end-to-end causal-cycle acceptance | `HISTORICAL PASS; current-head revalidation outstanding` | The accepted report and prior exact-candidate review establish the bounded run only at their recorded integrated revisions. The nine `main` revisions above differ from that integrated snapshot; this reassessment did not rerun the acceptance on current `main`. No expanded capability or scientific-efficacy claim follows. |
+| Bounded portable continuation for the accepted profile | `CLOSED, bounded` | Organism #34 is closed. This does not establish universal Organism continuity. |
+| Historical Lab artifact custody reconciliation | `CLOSED, bounded` | Lab #23 is closed. Its final recorded disposition covers 477 pinned source artifacts (448 classified and 29 reasoned `DEFER` exceptions) and reports path/blob/bytes/SHA-256 identity checks for 477/477. This is custody bookkeeping only; it does not establish scientific validation, evidence admission, method equivalence, or completion of the separate protocol-disposition work. |
+| Lab protocol disposition worklist | `CLOSED, documentary` | Lab #77 is closed (2026-10-17 08:53 UTC); its latest recorded reconciliation reports all 86 linked children closed and the canonical 95-row manifest disposition register reconciled. Its bounded `DEFER` decisions remain documentary dispositions with reopening conditions, not scientific resolution, experiment authorization, or evidence admission. |
+| Lab aggregate and split-source reconciliation | `CLOSED, tracker state` | Lab #45 and #78 are closed. Docs #63 is closed. Their exact acceptance records remain authoritative; this report does not re-audit every row or infer scientific validity from closure. |
+| World and Organism follow-up trackers previously cited as migration gates | `CLOSED, tracker state` | World #32, #86 and #90; Organism #34 and #45 are closed. Closure of these Issues is not itself proof that their full original capability domains are implemented or scientifically validated. |
+| Organism #41 continuation/actuation scope | `OPEN; closure relevance unresolved` | Organism #41 remained open at 09:17 UTC. Its 2026-10-17 current-main reconciliation records material component-level improvements, but also says production runtime composition with concrete owner codecs and live-versus-restored continuation remain unproven. The accepted E2E profile's dependence on the missing state has not been demonstrated or ruled out here. Therefore this report neither claims #41 is a required blocker nor infers it is harmless post-migration follow-up. The competent owner must explicitly bound its applicability to the accepted profile or the profile must be tested with the missing state represented. |
+| Current-main CI and repository validation | `NOT REASSESSED` | This turn queried current `main` SHAs and Issue states only. Checks on prior revisions or the prior report's CI record cannot be projected onto these heads. |
+| Independent adversarial review of this report | `REQUIRED; pending` | The prior review covered a different report candidate and snapshot. It cannot satisfy review of this exact refreshed candidate. The report remains a candidate assessment until exact-candidate review is recorded. |
+
+### 7.3 Decision and remaining actions
+
+**Current decision: `NOT CLOSED`.** The Lab and other listed Issue trackers have materially advanced, but two closure conditions remain unproven: (1) whether the current bounded E2E acceptance remains valid on the present integrated `main` revisions, and (2) whether Organism #41's unproven owner-state composition intersects the state required by the accepted closure profile. In addition, current-head CI was not checked and this exact report candidate still requires independent adversarial review. These are evidence gaps, not scientific findings.
+
+Before any closure attestation:
+
+1. Re-run or otherwise validate the accepted bounded causal-cycle profile against an exact integrated set of current revisions, and record the run artifacts, configuration and limitations.
+2. Resolve the #41 applicability question against that same declared profile using owner-authoritative evidence. If required state intersects the profile, implement and test the missing composition/restore/continuation; if not, record the bounded non-applicability rationale and reopen condition without claiming universal continuity.
+3. Query and record required CI and relevant validation on the exact revisions used by the refreshed acceptance evidence; do not infer current checks from prior snapshots.
+4. Obtain mandatory independent adversarial review of the exact refreshed report candidate and record its outcome on the tracking Issue/PR.
+5. Only after the preceding evidence supports every gate may the competent owner decide whether to attest closure and close [`.github-private#42`](https://github.com/biopeia/.github-private/issues/42).
+
+This reassessment does not authorize experiments, migration of historical code, reuse of historical thresholds, scientific evidence admission, or a claim of scientific equivalence. It preserves the historical report and narrows the current blocker to verifiable closure evidence rather than stale Issue counts.
+
+**Final result as of 2026-10-17 09:24 UTC: `NOT CLOSED`.**
