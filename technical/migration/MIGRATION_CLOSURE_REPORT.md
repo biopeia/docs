@@ -2,7 +2,7 @@
 
 **Assessment status:** `NOT CLOSED — closure criteria remain unmet`
 
-**Assessment date:** 2026-10-17 (live-state reassessment updated at 09:33 UTC; see §7)
+**Assessment date:** 2026-10-17 (live-state reassessment updated at 09:40 UTC; see §7)
 **Scope:** Biopeia migration closure readiness  
 **Tracking:** [biopeia/.github-private#42](https://github.com/biopeia/.github-private/issues/42)  
 **Evidence base:** current Biopeia `main` revisions listed below; workspace objective and handoff identified below
@@ -141,13 +141,13 @@ Before any closure attestation:
 
 This reassessment does not authorize experiments, migration of historical code, reuse of historical thresholds, scientific evidence admission, or a claim of scientific equivalence. It preserves the historical report and narrows the current blocker to verifiable closure evidence rather than stale Issue counts.
 
-**Final result as of 2026-10-17 09:33 UTC: `NOT CLOSED`.**
+**Final result as of 2026-10-17 09:40 UTC: `NOT CLOSED`.**
 
 ### 7.4 Subsequent Organism #41 review evidence — 2026-10-17 09:25 UTC
 
 After the 09:24 UTC state snapshot, an independent review was recorded on [Organism #41](https://github.com/biopeia/organism/issues/41#issuecomment-6232264497). It rejects the untracked 16-tick scratch demonstration as evidence for the broad longitudinal-closure claim. The bounded result it does credit is same-process continuation of an active exploration commitment across a restore; the review found the graph had no edges or learned weights, no active competencies/primitives or outcome records, and no fresh-process mid-run restore. It also records that the demo is not pinned/reproducible in CI and that several state classes in the declared owner closure are absent from the runtime. The reviewer recommends an exact, repository-owned test with non-trivial state, fresh-process restore, and an owner decision about which components the M2 profile requires.
 
-This review strengthens the finding that broad Organism longitudinal continuity is not demonstrated. It does not show that the accepted migration closure profile requires M2 breadth, does not independently reassess the accepted causal-cycle run, and is not a review of this report. Consequently the migration-profile applicability and current-head E2E revalidation gates above remain open; the closure result remains `NOT CLOSED`.
+This review strengthens the finding that broad Organism longitudinal continuity is not demonstrated. It does not show that the accepted migration closure profile requires M2 breadth, does not independently reassess the accepted causal-cycle run, and is not a review of this report. The migration-profile applicability remains unresolved. The bounded current-head E2E test rerun is recorded in §7.5; it does not resolve #41's broader claim or establish current-head full-suite/CI status. The closure result remains `NOT CLOSED`.
 
 ### 7.5 Bounded E2E acceptance rerun — 2026-10-17
 
