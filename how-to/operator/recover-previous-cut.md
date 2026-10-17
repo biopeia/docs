@@ -23,6 +23,10 @@ Under [ADR-0093](../../technical/adr/ADR-0093-material-failure-before-commit-req
 
 Recovery always rolls back to the previous confirmed cut; it **never** attempts to guess or complete an interrupted tick.
 
+## Read-only diagnosis and programmatic integration contract
+
+The diagnostic inspection in Step 1 can be performed with the installed World package. **Steps 2–4 are integration guidance, not a self-contained runnable recovery recipe.** They require a host with real owner checkpoint verifier, domain owner contracts and restoration callbacks. Do not execute the illustrative snippets against a real state root without those implementations and tested authorization. A successful return from a placeholder is not evidence that owner state was restored.
+
 ## Programmatic recovery procedure
 
 ### Step 1: Diagnose the recovery requirement
@@ -64,7 +68,7 @@ journal_store = DurableJournalSnapshotStore(state_root / "journal", world_id)
 
 Recovery is executed through the classmethod `DurableWorldRuntime.recover_previous_cut`, passing the stores, owner verification contracts, and an `owner_checkpoint_restorer` callback:
 
-The example below illustrates the integration contract. Note that `restore_organism_checkpoint`, `restore_embodiment_checkpoint`, and `restore_environment_checkpoint` are **illustrative integration handlers** that the runtime host or orchestrator provides to reload checkpoint state into running domain subsystems. If any domain restoration fails or raises an exception, the World runtime does not commit the recovery receipt, and the uncommitted journal tail remains untouched.
+**Pseudocode only — do not copy and execute as an operational recovery command.** The example below illustrates the integration contract. Note that `restore_organism_checkpoint`, `restore_embodiment_checkpoint`, and `restore_environment_checkpoint` are **illustrative integration handlers** that the runtime host or orchestrator provides to reload checkpoint state into running domain subsystems. The exact failure and journal-tail behavior must be checked against the pinned World implementation and its tests. An unsuccessful owner restoration must not be reported as a successful recovery.
 
 ```python
 from pathlib import Path
@@ -132,7 +136,7 @@ Verify that:
 
 3. An immutable recovery receipt is persisted under `state_root / "recoveries" / f"{receipt_sha256}.json"`.
 
-The World is now restored to a clean, consistent state and may be safely resumed.
+Only after a real owner restorer has successfully completed, the returned state and durable receipt have been independently verified, and the host has checked all owner contracts may the World be considered restored. This document by itself does not establish an operator-supported recovery path.
 
 ## What supports this procedure
 

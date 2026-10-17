@@ -96,7 +96,7 @@ Look for the committed status and causal tick fields:
 }
 ```
 
-This confirms that tick 10 was reached, all three owners participated, and their state updates were committed deterministically.
+If these fields are present in the *actual* manifest of your run, they provide evidence that tick 10 was committed with those registered owner identities. Check the exact owner checkpoint references separately; the illustrative JSON above is not itself a verification of checkpoint integrity.
 
 ## Step 4: Trace the append-only causal journal
 
@@ -120,7 +120,7 @@ Inspect the binary state blobs stored under `owners/`:
 find "$TARGET_RUN/owners" -type f
 ```
 
-Each file is stored using a content-addressed digest structure. This ensures that identical states share storage and that no checkpoint can be corrupted silently.
+Each file is stored using a content-addressed digest structure. Content-addressed storage permits digest-based identity and integrity checks, but listing filenames alone does not verify payload digests, full owner restoration, or absence of corruption. Use the documented World owner-reference verification path for those stronger claims.
 
 ## Congratulations
 
@@ -128,7 +128,7 @@ You have completed your first autonomous Biopeia simulation! You have seen first
 
 - The operator profile sets the starting parameters without dictating the causal outcome.
 - World acts as the authoritative coordinator and commit boundary.
-- Every state transition is recorded durably and verified against content hashes.
+- The run exposes committed-cut records and content-addressed owner payloads; verification of their integrity requires the corresponding validators, not merely listing the files.
 
 To explore further, see:
 
